@@ -1,41 +1,43 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { createContext, useEffect, useState } from "react";
 import { Editor as EditorClass } from "@video-editor/core";
 import TimeLine from "./TimeLine";
-import ElementList from "./ElementList";
+import ElementList from "./ElementList/ElementList";
 import Renderer from "./Renderer";
 import PropertyEditor from "./PropertyEditor";
 
+export const EditorContext = createContext<EditorClass | null>(null);
+
 const Editor = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const editor = useRef<EditorClass | null>(null);
+  const [editor, setEditor] = useState<EditorClass | null>(null);
 
   useEffect(() => {
-    if (canvasRef.current) {
-      editor.current = new EditorClass(canvasRef.current);
-      console.log(editor.current);
-    }
+    const editor = new EditorClass();
+    setEditor(editor);
+    console.log(editor);
   }, []);
 
   return (
-    <div className="flex h-full w-full flex-col">
-      <div className="flex h-1/2 w-full flex-row">
-        <div className="h-full flex-1">
-          <ElementList />
+    <EditorContext.Provider value={editor}>
+      <div className="flex h-full w-full flex-col">
+        <div className="flex h-1/2 w-full flex-row">
+          <div className="h-full flex-1">
+            <ElementList />
+          </div>
+          <div className="h-full flex-1">
+            <Renderer />
+          </div>
+          <div className="h-full flex-1">
+            <PropertyEditor />
+          </div>
         </div>
-        <div className="h-full flex-1">
-          <Renderer />
-        </div>
-        <div className="h-full flex-1">
-          <PropertyEditor />
-        </div>
-      </div>
 
-      <div className="h-1/2 flex-1">
-        <TimeLine />
+        <div className="flex-1">
+          <TimeLine />
+        </div>
       </div>
-    </div>
+    </EditorContext.Provider>
   );
 };
 
