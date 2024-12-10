@@ -10,7 +10,6 @@ class EventEmitter<
   private _emitter: Emitter<any>;
 
   constructor() {
-    // @ts-expect-error
     this._emitter = mitt();
   }
 

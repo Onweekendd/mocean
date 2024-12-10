@@ -13,9 +13,10 @@ const Editor = () => {
   const [editor, setEditor] = useState<EditorClass | null>(null);
 
   useEffect(() => {
-    const editor = new EditorClass();
-    setEditor(editor);
-    console.log(editor);
+    EditorClass.build().then((editor) => {
+      setEditor(editor);
+      console.log(editor);
+    });
   }, []);
 
   return (

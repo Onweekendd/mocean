@@ -1,10 +1,12 @@
+import DynamicEditor from "./components/DynamicEditor";
 import "./globals.css";
-import Editor from "../components/Editor";
 
 function Page() {
-  return <div className="w-full h-full">
-    <Editor />;
-  </div>
+  return (
+    <div className="h-full w-full">
+      <DynamicEditor />
+    </div>
+  );
 }
 
 export default Page;
