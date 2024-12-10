@@ -9,7 +9,7 @@ import type { Events } from "../types/events.d.ts";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { toBlobURL } from "@ffmpeg/util";
 
-const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.2/dist/umd";
+const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm";
 
 class Editor {
   eventEmitter: EventEmitter<Events>;
@@ -28,11 +28,23 @@ class Editor {
     this.commandManager = new CommandManager();
 
     this.ffmpeg = new FFmpeg();
+    this.ffmpeg.on("log", ({ message }) => {
+      console.log(message);
+    });
   }
 
   static async build() {
-    debugger;
     const editor = new Editor();
+
+    await editor.ffmpeg.load({
+      classWorkerURL: "/ffmpeg/worker.js",
+      coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
+      wasmURL: await toBlobURL(
+        `${baseURL}/ffmpeg-core.wasm`,
+        "application/wasm"
+      ),
+    });
+
     return editor;
   }
 }

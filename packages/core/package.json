@@ -11,13 +11,13 @@
       "default": "./dist/Editor.js"
     }
   },
-  "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
-    "typescript": "latest"
-  },
   "dependencies": {
     "@ffmpeg/ffmpeg": "^0.12.6",
     "@ffmpeg/util": "^0.12.1",
     "mitt": "^3.0.1"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "typescript": "latest"
   }
 }
