@@ -1,16 +1,22 @@
-import type { Editor } from "./Editor.js";
+import type { Editor } from "./Editor.ts";
+import { EventEmitter } from "./interfaces/EventEmitter.js";
 
-class ResourceManager {
+export type ResourceManagerEvents = {
+  onVideoUpload: (payload: { video: File }) => void;
+};
+
+class ResourceManager extends EventEmitter<ResourceManagerEvents> {
   videos: File[] = [];
   editor: Editor;
 
   constructor(editor: Editor) {
+    super();
     this.editor = editor;
   }
 
   addVideo(video: File) {
     this.videos.push(video);
-    this.editor.eventEmitter.emitEvent("onVideoUpload", { video });
+    this.emit("onVideoUpload", { video });
   }
 }
 

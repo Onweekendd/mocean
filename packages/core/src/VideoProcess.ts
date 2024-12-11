@@ -5,13 +5,13 @@ class VideoProcess {
 
   constructor(editor: Editor) {
     this.editor = editor;
-    this.editor.eventEmitter.addEventListener(
-      "onVideoUpload",
-      this.onVideoUpload
-    );
+
+    this.editor.resourceManager.on("onVideoUpload", this.onVideoUpload);
   }
 
-  onVideoUpload = ({ video }: { video: File }) => {};
+  onVideoUpload = ({ video }: { video: File }) => {
+    console.log(video);
+  };
 }
 
 export { VideoProcess };
