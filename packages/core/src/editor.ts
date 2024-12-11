@@ -2,13 +2,18 @@ import { CommandManager } from "./CommandManager.js";
 import { ResourceManager } from "./ResourceManager.js";
 import { TimeManager } from "./TimeManager.js";
 import { VideoProcess } from "./VideoProcess.js";
+import { EventEmitter } from "./interfaces/EventEmitter.js";
 
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { toBlobURL } from "@ffmpeg/util";
 
 const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm";
 
-class Editor {
+type EditorEvents = {
+  onChange: () => void;
+};
+
+class Editor extends EventEmitter<EditorEvents> {
   resourceManager: ResourceManager;
   timeManager: TimeManager;
   videoProcess: VideoProcess;
@@ -17,6 +22,8 @@ class Editor {
   ffmpeg: FFmpeg;
 
   constructor() {
+    super();
+
     this.resourceManager = new ResourceManager(this);
     this.videoProcess = new VideoProcess(this);
     this.timeManager = new TimeManager();

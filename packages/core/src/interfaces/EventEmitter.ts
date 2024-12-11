@@ -4,10 +4,14 @@ type ExtractPayload<T> = T extends (...args: infer R) => any ? R : never;
 
 type Array2Object<T> = T extends (infer R)[] ? { [K in keyof R]: R[K] } : never;
 
-class EventEmitter<
+abstract class EventEmitter<
   T extends Record<string | symbol | number, (...args: any[]) => any>,
 > {
-  emitter: Emitter<{ [K in keyof T]: Array2Object<ExtractPayload<T[K]>> }>;
+  emitter: Emitter<{
+    [K in keyof T]: ExtractPayload<T[K]> extends [any, ...any[]]
+      ? Array2Object<ExtractPayload<T[K]>>
+      : void;
+  }>;
 
   constructor() {
     // @ts-ignore
@@ -22,8 +26,19 @@ class EventEmitter<
     this.emitter.off(evtName);
   }
 
-  emit(evtName: keyof T, payload: Array2Object<ExtractPayload<T[keyof T]>>) {
-    this.emitter.emit(evtName, payload);
+  emit<K extends keyof T>(
+    evtName: K,
+    ...payload: ExtractPayload<T[K]> extends [any, ...any[]]
+      ? [Array2Object<ExtractPayload<T[K]>>]
+      : []
+  ) {
+    if (payload.length === 0) {
+      // @ts-expect-error 这里没有办法分辨是否需要传入 payload
+      this.emitter.emit(evtName);
+    } else {
+      // @ts-expect-error 这里没有办法分辨是否需要传入 payload
+      this.emitter.emit(evtName, payload[0]);
+    }
   }
 }
 

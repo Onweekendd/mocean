@@ -16,6 +16,9 @@ class ResourceManager extends EventEmitter<ResourceManagerEvents> {
 
   addVideo(video: File) {
     this.videos.push(video);
+
+    this.editor.emit("onChange");
+
     this.emit("onVideoUpload", { video });
   }
 }

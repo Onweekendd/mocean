@@ -71,7 +71,7 @@
       "containerId": "bukLgQMGkjUJDOR7xfxJp",
       "originalText": "视频",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -141,7 +141,7 @@
       "containerId": "3Tf8l6pbOaxcYU046uogI",
       "originalText": "音频",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -211,7 +211,7 @@
       "containerId": "KkAWrGW6rjyzdBYUCtYNf",
       "originalText": "图片",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -281,7 +281,7 @@
       "containerId": "18JE8JcAu_nooH-8XFL55",
       "originalText": "文字",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -355,7 +355,7 @@
       "containerId": null,
       "originalText": "组件类 Component",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -454,7 +454,7 @@
       "containerId": "STKhjnUo66ye1MSfbpx-B",
       "originalText": "动画",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -524,7 +524,7 @@
       "containerId": "BnO78YTvqBaj3qUSILswp",
       "originalText": "特效",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -594,7 +594,7 @@
       "containerId": "64NGbE5tyaQXbbvIuau3y",
       "originalText": "填充颜色",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -688,7 +688,7 @@
       "containerId": null,
       "originalText": "渲染窗口 （canvas 实现）",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -753,7 +753,7 @@
       "containerId": null,
       "originalText": "时间线 采用帧长度（默认） + 时间显示  设置帧率",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -827,7 +827,7 @@
       "containerId": null,
       "originalText": "timeController",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -892,7 +892,7 @@
       "containerId": null,
       "originalText": "组件属性编排",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -966,7 +966,7 @@
       "containerId": "d0pB0HAki36oo5uWVttu0",
       "originalText": "编辑器基座",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -1088,7 +1088,7 @@
       "containerId": null,
       "originalText": "效果类 Effect",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "arrow",
@@ -1185,7 +1185,7 @@
       "containerId": "VXD0wooBWosBSdp8zn6NQ",
       "originalText": "renderAble",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -1255,7 +1255,7 @@
       "containerId": null,
       "originalText": "canvas 元素",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "arrow",
@@ -1385,7 +1385,7 @@
       "containerId": "RuOm3nRhfchNU0pebYLPV",
       "originalText": "出现时间",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "arrow",
@@ -1482,7 +1482,7 @@
       "containerId": "5U3i-6MjORzPcK56OFpA3",
       "originalText": "传入一个\n当前时间",
       "lineHeight": 1.25,
-      "baseline": 46
+      "baseline": 41
     },
     {
       "type": "rectangle",
@@ -1547,7 +1547,7 @@
       "containerId": null,
       "originalText": "1",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "text",
@@ -1583,7 +1583,7 @@
       "containerId": null,
       "originalText": "2",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "text",
@@ -1619,7 +1619,7 @@
       "containerId": null,
       "originalText": "3",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "text",
@@ -1655,7 +1655,7 @@
       "containerId": null,
       "originalText": "4",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -1836,7 +1836,7 @@
       "containerId": null,
       "originalText": "开源项目目标\n\n多媒体混合编辑器1.0 （视频/音频/图片/文字 -> 视频/图片）\n以下功能：\n\n1.编辑器\n\n",
       "lineHeight": 1.25,
-      "baseline": 193
+      "baseline": 191
     },
     {
       "type": "rectangle",
@@ -1935,7 +1935,7 @@
       "containerId": "yR41lGEhYIkPwyB5jvDIL",
       "originalText": "缩放",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -2005,7 +2005,7 @@
       "containerId": "mwEILTHb-Oj8Rutb_mv3b",
       "originalText": "旋转",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -2075,7 +2075,7 @@
       "containerId": "PlbMiFRiGM-qyks43UN_f",
       "originalText": "裁剪",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -2149,7 +2149,7 @@
       "containerId": null,
       "originalText": "基础\n变化",
       "lineHeight": 1.25,
-      "baseline": 43
+      "baseline": 41
     },
     {
       "type": "rectangle",
@@ -2223,7 +2223,7 @@
       "containerId": "3Qt3JgJDUhBxM9Gh6L_96",
       "originalText": "亮度/对比度",
       "lineHeight": 1.25,
-      "baseline": 46
+      "baseline": 41
     },
     {
       "type": "rectangle",
@@ -2297,7 +2297,7 @@
       "containerId": "kMI15qq6CV3ClDNZWwlUO",
       "originalText": "色相/饱和度",
       "lineHeight": 1.25,
-      "baseline": 46
+      "baseline": 41
     },
     {
       "type": "rectangle",
@@ -2371,7 +2371,7 @@
       "containerId": "aUqE4MOmshkFuap6K3dSr",
       "originalText": "滤镜效果",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -2453,7 +2453,7 @@
       "containerId": null,
       "originalText": "颜色\n调整",
       "lineHeight": 1.25,
-      "baseline": 43
+      "baseline": 41
     },
     {
       "type": "rectangle",
@@ -2527,7 +2527,7 @@
       "containerId": "SZ3E-n3QDszCYI7BRqZon",
       "originalText": "成组",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -2601,7 +2601,7 @@
       "containerId": "REalLzzGnUZYuzKhXoSWe",
       "originalText": "模糊",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -2675,7 +2675,7 @@
       "containerId": "lsTzq8pHQWecZ01cuuCjX",
       "originalText": "锐化",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -2749,7 +2749,7 @@
       "containerId": "FeYmBflcqExvr0vSWmR4O",
       "originalText": "黑白",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -2827,7 +2827,7 @@
       "containerId": null,
       "originalText": "特效\n添加",
       "lineHeight": 1.25,
-      "baseline": 43
+      "baseline": 41
     },
     {
       "type": "rectangle",
@@ -2913,7 +2913,7 @@
       "containerId": "3lp_9OjJAcB5Ru1OfjqG5",
       "originalText": "视频",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -2995,7 +2995,7 @@
       "containerId": "r6gYUbEAOLQxy0Y-pBbFp",
       "originalText": "图片",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -3065,7 +3065,7 @@
       "containerId": "w0RvJ_msfwm41MYVaGoMo",
       "originalText": "音频",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -3139,7 +3139,7 @@
       "containerId": "99WfmcNFGCeiKmqdakaBx",
       "originalText": "文字",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "arrow",
@@ -3284,7 +3284,7 @@
       "containerId": "HdrDFYPWEHc4AlUFr5D9Q",
       "originalText": "暂时先按整个视频",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "arrow",
@@ -3566,7 +3566,7 @@
       "containerId": "9kdicgEgri9Sl1Xbtspcp",
       "originalText": "拼接",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -3640,7 +3640,7 @@
       "containerId": "NDLaaY00McCLCQjpfws8d",
       "originalText": "分割",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -3714,7 +3714,7 @@
       "containerId": "gENxFl0B4lwJGMNSErnja",
       "originalText": "删除",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -3792,7 +3792,7 @@
       "containerId": null,
       "originalText": "时间线\n操作",
       "lineHeight": 1.25,
-      "baseline": 43
+      "baseline": 41
     },
     {
       "type": "arrow",
@@ -3962,7 +3962,7 @@
       "containerId": null,
       "originalText": "字体\n操作",
       "lineHeight": 1.25,
-      "baseline": 43
+      "baseline": 41
     },
     {
       "type": "arrow",
@@ -4079,7 +4079,7 @@
       "containerId": null,
       "originalText": "项目流程",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -4149,7 +4149,7 @@
       "containerId": "z9JKnRyryjqgtHWbyt1L9",
       "originalText": "初始状态",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -4227,7 +4227,7 @@
       "containerId": "OYhZFexAW0Zhjk6YArKq6",
       "originalText": "上传视频",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "arrow",
@@ -4357,7 +4357,7 @@
       "containerId": "vwSTZINFM9DwmTWpdLMmX",
       "originalText": "是否携带音频",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "arrow",
@@ -4474,7 +4474,7 @@
       "containerId": null,
       "originalText": "渲染器 Konva 这一部分应该在app中完成",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "arrow",
@@ -4567,7 +4567,7 @@
       "containerId": "O4K14CJkryeqcOx-ecM0A",
       "originalText": "是",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -4653,7 +4653,7 @@
       "containerId": "UCpuvkEXsPOAxxiz37BFJ",
       "originalText": "视频切帧\n+\n音频波形图\n",
       "lineHeight": 1.25,
-      "baseline": 96
+      "baseline": 91
     },
     {
       "type": "rectangle",
@@ -4727,7 +4727,7 @@
       "containerId": null,
       "originalText": "添加视图元素",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -4813,7 +4813,7 @@
       "containerId": "0OR4ABgbEUIa-ey0tfEt5",
       "originalText": "视频帧图",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "arrow",
@@ -4910,7 +4910,7 @@
       "containerId": "UkqQfj0nB1OK7Kc3-tF0w",
       "originalText": "视频切帧",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "arrow",
@@ -5117,7 +5117,7 @@
       "containerId": null,
       "originalText": "新增轨道",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "arrow",
@@ -5286,7 +5286,7 @@
       "containerId": null,
       "originalText": "时间线",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -5393,7 +5393,7 @@
       "containerId": "mlwCXKD88owM6StpUrRlg",
       "originalText": "新增视图元素",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "arrow",
@@ -5537,7 +5537,7 @@
       "containerId": null,
       "originalText": "组件视图",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -5602,7 +5602,7 @@
       "containerId": null,
       "originalText": "属性编辑",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -5667,7 +5667,7 @@
       "containerId": null,
       "originalText": "可视区域 固定",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -5737,7 +5737,7 @@
       "containerId": "Q_n5HNp9US6wztNRghh1W",
       "originalText": "缩放 比例",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -5802,7 +5802,7 @@
       "containerId": null,
       "originalText": "轨道1",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -5867,7 +5867,7 @@
       "containerId": null,
       "originalText": "轨道2",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "line",
@@ -5951,7 +5951,7 @@
       "containerId": null,
       "originalText": "时间线",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -6029,7 +6029,7 @@
       "containerId": null,
       "originalText": "editor",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -6099,7 +6099,7 @@
       "containerId": null,
       "originalText": "resourceManager",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "arrow",
@@ -6187,7 +6187,7 @@
       "containerId": null,
       "originalText": "处理\n\n资源上传\n视频导出",
       "lineHeight": 1.25,
-      "baseline": 93
+      "baseline": 91
     },
     {
       "type": "rectangle",
@@ -6309,7 +6309,7 @@
       "containerId": null,
       "originalText": "TimeManager",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "text",
@@ -6345,7 +6345,7 @@
       "containerId": null,
       "originalText": "处理整个系统时间",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -6467,7 +6467,7 @@
       "containerId": null,
       "originalText": "CommonManager\n\n管理整个编辑器的命令",
       "lineHeight": 1.25,
-      "baseline": 68
+      "baseline": 66
     },
     {
       "type": "rectangle",
@@ -6532,7 +6532,7 @@
       "containerId": null,
       "originalText": "搭建界面基础UI",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -6606,7 +6606,7 @@
       "containerId": "Sd_0iCu0e5XeEZr9pRYaM",
       "originalText": "布局",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "rectangle",
@@ -6676,7 +6676,7 @@
       "containerId": "UeJzcpj61YbnbDNDP5WIw",
       "originalText": "元素列表\n+\n上传",
       "lineHeight": 1.25,
-      "baseline": 71
+      "baseline": 66
     },
     {
       "type": "arrow",
@@ -6802,7 +6802,7 @@
       "containerId": "6sbAHw71r-J0uWjb6aORp",
       "originalText": "渲染器\n渲染视频+操作",
       "lineHeight": 1.25,
-      "baseline": 46
+      "baseline": 41
     },
     {
       "type": "arrow",
@@ -6932,7 +6932,7 @@
       "containerId": "IqTYsfZv7em4V8c9AqLLb",
       "originalText": "属性编辑器",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "arrow",
@@ -7058,7 +7058,7 @@
       "containerId": "Dd99AoEKYENZGLk8gunvt",
       "originalText": "时间线",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 16
     },
     {
       "type": "arrow",
@@ -7175,7 +7175,482 @@
       "containerId": null,
       "originalText": "周末完成",
       "lineHeight": 1.25,
-      "baseline": 18
+      "baseline": 16
+    },
+    {
+      "id": "3bYzVoCzA9k2YzAlb9Fzq",
+      "type": "rectangle",
+      "x": 3020,
+      "y": 2820,
+      "width": 200,
+      "height": 160,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 2082143759,
+      "version": 21,
+      "versionNonce": 760023695,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "xyjaD76-2jHJNHzMM-gip"
+        },
+        {
+          "id": "obAgTW99OTiItoi-O-lJR",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1733924162684,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "xyjaD76-2jHJNHzMM-gip",
+      "type": "text",
+      "x": 3080,
+      "y": 2887.5,
+      "width": 80,
+      "height": 25,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 861487375,
+      "version": 41,
+      "versionNonce": 671085121,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1733924153582,
+      "link": null,
+      "locked": false,
+      "text": "上传文件",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "baseline": 16,
+      "containerId": "3bYzVoCzA9k2YzAlb9Fzq",
+      "originalText": "上传文件",
+      "lineHeight": 1.25
+    },
+    {
+      "id": "N6XcjtH8FXFAnMIcWWM5p",
+      "type": "rectangle",
+      "x": 3500,
+      "y": 2800,
+      "width": 540.0000000000001,
+      "height": 760.0000000000001,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 1363613185,
+      "version": 54,
+      "versionNonce": 1107944065,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "obAgTW99OTiItoi-O-lJR",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1733924298280,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "obAgTW99OTiItoi-O-lJR",
+      "type": "arrow",
+      "x": 3240,
+      "y": 2939.3254035600335,
+      "width": 240,
+      "height": 0.6745964399665354,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 2
+      },
+      "seed": 85191553,
+      "version": 136,
+      "versionNonce": 165276271,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1733924301309,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          240,
+          0.6745964399665354
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "3bYzVoCzA9k2YzAlb9Fzq",
+        "focus": 0.48564499184133714,
+        "gap": 20
+      },
+      "endBinding": {
+        "elementId": "N6XcjtH8FXFAnMIcWWM5p",
+        "focus": 0.6281792741980298,
+        "gap": 20
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow"
+    },
+    {
+      "id": "7lpwPV1O87u4Ppi0vVw-Y",
+      "type": "text",
+      "x": 3537.1280837286085,
+      "y": 2827.8261065801817,
+      "width": 138.639892578125,
+      "height": 25,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 1230301167,
+      "version": 15,
+      "versionNonce": 1761737679,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1733924171112,
+      "link": null,
+      "locked": false,
+      "text": "stateManager",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "baseline": 16,
+      "containerId": null,
+      "originalText": "stateManager",
+      "lineHeight": 1.25
+    },
+    {
+      "id": "eopXD2Q7f5bnqr7LP8Kbl",
+      "type": "text",
+      "x": 3540,
+      "y": 2880,
+      "width": 343.09979248046875,
+      "height": 125,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 1880085537,
+      "version": 175,
+      "versionNonce": 1339209889,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "FWy0QRGqafJ9BYHdXwJv4",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1733924309259,
+      "link": null,
+      "locked": false,
+      "text": "setState 更新自身状态\n\n通知editor更新 并把state传给editor\n\n触发更新UI",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "baseline": 116,
+      "containerId": null,
+      "originalText": "setState 更新自身状态\n\n通知editor更新 并把state传给editor\n\n触发更新UI",
+      "lineHeight": 1.25
+    },
+    {
+      "id": "y48eIvhm97JzXhBWMRf-f",
+      "type": "rectangle",
+      "x": 4240,
+      "y": 2800,
+      "width": 640.0000000000003,
+      "height": 800.0000000000001,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 1051744801,
+      "version": 75,
+      "versionNonce": 1327972527,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1733924413929,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "BSHccyvxThiv-86HfTJmi",
+      "type": "text",
+      "x": 4268.792774018786,
+      "y": 2828.750614811209,
+      "width": 57.679931640625,
+      "height": 25,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 790702945,
+      "version": 15,
+      "versionNonce": 1885498081,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1733924294596,
+      "link": null,
+      "locked": false,
+      "text": "editor",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "baseline": 16,
+      "containerId": null,
+      "originalText": "editor",
+      "lineHeight": 1.25
+    },
+    {
+      "id": "FWy0QRGqafJ9BYHdXwJv4",
+      "type": "arrow",
+      "x": 3900,
+      "y": 2940,
+      "width": 360,
+      "height": 0,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 2
+      },
+      "seed": 684197263,
+      "version": 110,
+      "versionNonce": 276067823,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1733924356212,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          360,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "eopXD2Q7f5bnqr7LP8Kbl",
+        "focus": -0.04,
+        "gap": 16.90020751953125
+      },
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": "arrow"
+    },
+    {
+      "id": "i_1G9swfN60XrttbRsOBF",
+      "type": "text",
+      "x": 4280,
+      "y": 2920,
+      "width": 418.639892578125,
+      "height": 100,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 1149645825,
+      "version": 138,
+      "versionNonce": 1028258127,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "aKE06VKJYFUOC6IJDn2vg",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1733924426783,
+      "link": null,
+      "locked": false,
+      "text": "ediot 触发执行内部对象操作\n\n\n操作执行完成，通知 stateManager 同步状态",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "baseline": 91,
+      "containerId": null,
+      "originalText": "ediot 触发执行内部对象操作\n\n\n操作执行完成，通知 stateManager 同步状态",
+      "lineHeight": 1.25
+    },
+    {
+      "id": "aKE06VKJYFUOC6IJDn2vg",
+      "type": "arrow",
+      "x": 4280,
+      "y": 3020,
+      "width": 560,
+      "height": 100,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 2
+      },
+      "seed": 187563777,
+      "version": 34,
+      "versionNonce": 584818287,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1733924444705,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -560,
+          100
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "i_1G9swfN60XrttbRsOBF",
+        "focus": -0.1444454783561668,
+        "gap": 1
+      },
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": "arrow"
+    },
+    {
+      "id": "1m1FujfPtGe9G1E1kSaiW",
+      "type": "text",
+      "x": 3557.2768351236973,
+      "y": 3114.95030684968,
+      "width": 137.679931640625,
+      "height": 75,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 1384624865,
+      "version": 48,
+      "versionNonce": 1752992993,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1733924440291,
+      "link": null,
+      "locked": false,
+      "text": "同步editor状态\n\n触发更新UI",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "baseline": 66,
+      "containerId": null,
+      "originalText": "同步editor状态\n\n触发更新UI",
+      "lineHeight": 1.25
     }
   ],
   "appState": {
