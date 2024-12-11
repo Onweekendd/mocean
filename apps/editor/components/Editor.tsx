@@ -1,23 +1,24 @@
 "use client";
 
-import { createContext, useEffect, useState } from "react";
-import { Editor as EditorClass } from "@video-editor/core";
+import { useEffect, useState } from "react";
+import { Editor as EditorSDK } from "@video-editor/core";
 import TimeLine from "./TimeLine";
 import ElementList from "./ElementList/ElementList";
 import Renderer from "./Renderer";
 import PropertyEditor from "./PropertyEditor";
-
-export const EditorContext = createContext<EditorClass | null>(null);
+import { EditorContext } from "../context/EditorContext";
 
 const Editor = () => {
-  const [editor, setEditor] = useState<EditorClass | null>(null);
+  const [editor, setEditor] = useState<EditorSDK | null>(null);
 
   useEffect(() => {
-    EditorClass.build().then((editor) => {
+    EditorSDK.build().then((editor) => {
       setEditor(editor);
-      console.log(editor);
     });
   }, []);
+
+  // TODO: 添加加载进度条
+  if (!editor) return <div>Loading...</div>;
 
   return (
     <EditorContext.Provider value={editor}>

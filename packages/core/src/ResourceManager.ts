@@ -9,8 +9,8 @@ class ResourceManager {
   }
 
   addVideo(video: File) {
-    this.editor.eventEmitter.emitEvent("onVideoUpload", { video });
     this.videos.push(video);
+    this.editor.eventEmitter.emitEvent("onVideoUpload", { video });
   }
 }
 

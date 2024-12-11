@@ -1,5 +1,7 @@
 import mitt, { type Emitter } from "mitt";
 
+const mittFunction = mitt as unknown as () => Emitter<any>;
+
 type ExtractPayload<T> = T extends (...args: infer R) => any ? R : never;
 
 type Array2Object<T> = T extends (infer R)[] ? { [K in keyof R]: R[K] } : never;
@@ -10,7 +12,7 @@ class EventEmitter<
   private _emitter: Emitter<any>;
 
   constructor() {
-    this._emitter = mitt();
+    this._emitter = mittFunction();
   }
 
   addEventListener<K extends keyof T>(evtName: K, callback: T[K]) {

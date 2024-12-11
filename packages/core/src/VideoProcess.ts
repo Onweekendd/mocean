@@ -11,9 +11,7 @@ class VideoProcess {
     );
   }
 
-  onVideoUpload = ({ video }: { video: File }) => {
-    console.log(video);
-  };
+  onVideoUpload = ({ video }: { video: File }) => {};
 }
 
 export { VideoProcess };
