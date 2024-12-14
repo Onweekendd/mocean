@@ -1,0 +1,15 @@
+{
+    "name": "@video-editor/react",
+    "version": "0.1.0",
+    "type": "module",
+    "private": true,
+    "dependencies": {
+        "@video-editor/core": "workspace:*",
+        "@video-editor/editor": "workspace:*",
+        "react": "19.0.0",
+        "react-dom": "19.0.0"
+    }
+}
+
+// pnpm add @video-editor/react @video-editor/core
+// pnpm add @video-editor/vue @video-editor/core

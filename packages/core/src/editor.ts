@@ -2,6 +2,7 @@ import { CommandManager } from "./CommandManager.js";
 import { ResourceManager } from "./ResourceManager.js";
 import { TimeManager } from "./TimeManager.js";
 import { VideoProcess } from "./VideoProcess.js";
+import { EditorStore } from "./EditorStore.js";
 import { EventEmitter } from "./interfaces/EventEmitter.js";
 
 import { FFmpeg } from "@ffmpeg/ffmpeg";
@@ -21,9 +22,13 @@ class Editor extends EventEmitter<EditorEvents> {
   commandManager: CommandManager;
 
   ffmpeg: FFmpeg;
+  private state: EditorStore
 
-  constructor() {
+
+
+  constructor(state: EditorStore) {
     super();
+    this.state = state
 
     this.resourceManager = new ResourceManager(this);
     this.videoProcess = new VideoProcess(this);
@@ -37,8 +42,9 @@ class Editor extends EventEmitter<EditorEvents> {
     });
   }
 
-  static async build() {
-    const editor = new Editor();
+
+  static async build(store: EditorStore) {
+    const editor = new Editor(store);
 
     await editor.ffmpeg.load({
       classWorkerURL: "/ffmpeg/worker.js",
@@ -51,6 +57,14 @@ class Editor extends EventEmitter<EditorEvents> {
 
     return editor;
   }
+
+  public getValues() {
+    return this.state.getState()
+  }
+  public setValus() {
+    return this.state.getState()
+  }
 }
 
+export { EditorStore }
 export { Editor };

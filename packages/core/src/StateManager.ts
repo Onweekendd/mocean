@@ -1,4 +1,4 @@
-import { Editor } from "./Editor.js";
+import { Editor } from "./editor.js";
 import type { Files } from "./ResourceManager.js";
 import type { Video } from "./elements/Video.js";
 
