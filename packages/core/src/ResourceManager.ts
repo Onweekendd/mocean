@@ -1,5 +1,5 @@
-import type { Editor } from "./editor.js";
-import { EventEmitter } from "./interfaces/EventEmitter.js";
+import { Editor } from "./Editor.ts";
+import { EventEmitter } from "./interfaces/EventEmitter.ts";
 
 export type ResourceManagerEvents = {
   onVideoUpload: (payload: { file: File; placeholderId?: string }) => void;

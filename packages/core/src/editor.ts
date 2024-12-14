@@ -1,9 +1,9 @@
-import { CommandManager } from "./CommandManager.js";
-import { ResourceManager } from "./ResourceManager.js";
-import { TimeManager } from "./TimeManager.js";
-import { VideoProcess } from "./VideoProcess.js";
-import { EditorStore } from "./EditorStore.js";
-import { EventEmitter } from "./interfaces/EventEmitter.js";
+import { CommandManager } from "./CommandManager.ts";
+import { ResourceManager } from "./ResourceManager.ts";
+import { TimeManager } from "./TimeManager.ts";
+import { VideoProcess } from "./VideoProcess.ts";
+import { EditorStore } from "./EditorStore.ts";
+import { EventEmitter } from "./interfaces/EventEmitter.ts";
 
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { toBlobURL } from "@ffmpeg/util";
@@ -22,13 +22,11 @@ class Editor extends EventEmitter<EditorEvents> {
   commandManager: CommandManager;
 
   ffmpeg: FFmpeg;
-  private state: EditorStore
-
-
+  private state: EditorStore;
 
   constructor(state: EditorStore) {
     super();
-    this.state = state
+    this.state = state;
 
     this.resourceManager = new ResourceManager(this);
     this.videoProcess = new VideoProcess(this);
@@ -41,7 +39,6 @@ class Editor extends EventEmitter<EditorEvents> {
       console.log(progress, time);
     });
   }
-
 
   static async build(store: EditorStore) {
     const editor = new Editor(store);
@@ -59,12 +56,12 @@ class Editor extends EventEmitter<EditorEvents> {
   }
 
   public getValues() {
-    return this.state.getState()
+    return this.state.getState();
   }
   public setValus() {
-    return this.state.getState()
+    return this.state.getState();
   }
 }
 
-export { EditorStore }
+export { EditorStore };
 export { Editor };

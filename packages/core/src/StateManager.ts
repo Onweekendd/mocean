@@ -1,6 +1,6 @@
-import { Editor } from "./editor.js";
-import type { Files } from "./ResourceManager.js";
-import type { Video } from "./elements/Video.js";
+import { Editor } from "./Editor.ts";
+import type { Files } from "./ResourceManager.ts";
+import type { Video } from "./elements/Video.ts";
 
 export interface EditorState {
   videos: Video[];

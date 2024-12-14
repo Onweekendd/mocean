@@ -1,8 +1,8 @@
 import { fetchFile } from "@ffmpeg/util";
-import { Editor } from "./editor.js";
-import { Video } from "./elements/Video.js";
-import { EventEmitter } from "./interfaces/EventEmitter.js";
-import { matchVideoBaseInfo } from "./utils/index.js";
+import { Editor } from "./Editor.ts";
+import { Video } from "./elements/Video.ts";
+import { EventEmitter } from "./interfaces/EventEmitter.ts";
+import { matchVideoBaseInfo } from "./utils/index.ts";
 
 type VideoProcessEvents = {
   onVideoProcessFinish: (payload: {
