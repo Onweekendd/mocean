@@ -69,21 +69,43 @@ class VideoProcess extends EventEmitter<VideoProcessEvents> {
     });
   }
 
+  private async getVideoCover(file: File) {
+    const outputFileName = `${file.name}_cover.jpg`;
+
+    await this.editor.ffmpeg.exec([
+      "-i",
+      file.name,
+      "-vf",
+      `thumbnail`,
+      "-vframes",
+      "1",
+      outputFileName,
+    ]);
+
+    const data = await this.editor.ffmpeg.readFile(outputFileName);
+    await this.editor.ffmpeg.deleteFile(outputFileName);
+
+    const blob = new Blob([data], { type: "image/jpeg" });
+    return URL.createObjectURL(blob);
+  }
+
   private async getVideoBaseInfo(file: File) {
     const infoLogPromise = this.collectFFmpegLogs();
-
     await this.editor.ffmpeg.exec(["-i", file.name]);
-
     const { width, height, frameRate, duration } = await infoLogPromise;
 
-    return { width, height, frameRate, duration };
+    const cover = await this.getVideoCover(file);
+
+    return { width, height, frameRate, duration, cover };
   }
 
   onVideoUpload = async ({ file }: { file: File }) => {
     this.editor.ffmpeg.writeFile(file.name, await fetchFile(file));
 
-    const { width, height, frameRate, duration } =
+    const { width, height, frameRate, duration, cover } =
       await this.getVideoBaseInfo(file);
+
+    this.editor.ffmpeg.deleteFile(file.name);
 
     const video = new Video({
       file,
@@ -92,6 +114,7 @@ class VideoProcess extends EventEmitter<VideoProcessEvents> {
       frameRate,
       createTime: new Date(),
       duration,
+      cover,
     });
 
     console.log(video);

@@ -26,6 +26,9 @@ class Video
   /**@description 高度 */
   height: number;
 
+  /**@description 封面图片 */
+  cover: string;
+
   constructor({
     file,
     width,
@@ -33,6 +36,7 @@ class Video
     frameRate,
     createTime,
     duration,
+    cover,
   }: {
     file: File;
     width: number;
@@ -40,6 +44,7 @@ class Video
     frameRate: number;
     createTime: Date;
     duration: number;
+    cover: string;
   }) {
     this.name = file.name;
     this.fileSize = file.size;
@@ -49,6 +54,7 @@ class Video
     this.frameRate = frameRate;
     this.width = width;
     this.height = height;
+    this.cover = cover;
   }
 
   onSplit = () => {

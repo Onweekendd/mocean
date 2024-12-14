@@ -31,6 +31,10 @@ class Editor extends EventEmitter<EditorEvents> {
     this.commandManager = new CommandManager();
 
     this.ffmpeg = new FFmpeg();
+
+    this.ffmpeg.on("progress", ({ progress, time }) => {
+      console.log(progress, time);
+    });
   }
 
   static async build() {
