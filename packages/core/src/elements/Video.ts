@@ -33,7 +33,9 @@ class Video
   cover: string;
 
   constructor({
-    file,
+    name,
+    fileSize,
+    fileType,
     width,
     height,
     frameRate,
@@ -41,7 +43,9 @@ class Video
     duration,
     cover,
   }: {
-    file: File;
+    name: string;
+    fileSize: number;
+    fileType: string;
     width: number;
     height: number;
     frameRate: number;
@@ -50,9 +54,9 @@ class Video
     cover: string;
   }) {
     this.id = uuidv4();
-    this.name = file.name;
-    this.fileSize = file.size;
-    this.fileType = file.type;
+    this.name = name;
+    this.fileSize = fileSize;
+    this.fileType = fileType;
     this.createTime = createTime;
     this.duration = duration;
     this.frameRate = frameRate;
@@ -68,6 +72,7 @@ class Video
   onMerge = () => {
     console.log("onMerge");
   };
+
   onRender = () => {
     console.log("onRender");
   };
@@ -75,9 +80,11 @@ class Video
   onTranslate = (x: number, y: number, z: number) => {
     console.log("onTranslate");
   };
+
   onRotate = (x: number, y: number, z: number) => {
     console.log("onRotate");
   };
+
   onScale = (x: number, y: number, z: number) => {
     console.log("onScale");
   };

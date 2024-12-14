@@ -2,31 +2,7 @@ import { fetchFile } from "@ffmpeg/util";
 import { Editor } from "./Editor.js";
 import { Video } from "./elements/Video.js";
 import { EventEmitter } from "./interfaces/EventEmitter.js";
-
-function matchVideoBaseInfo(videoInfo: string): {
-  width: number;
-  height: number;
-  frameRate: number;
-  duration: number;
-} {
-  const videoInfoMatch = videoInfo.match(
-    /Stream.*Video:.*?,.*?(\d+)x(\d+).*?(\d+(?:\.\d+)?)\s+fps/
-  );
-  const width = videoInfoMatch ? parseInt(videoInfoMatch[1] ?? "0") : 0;
-  const height = videoInfoMatch ? parseInt(videoInfoMatch[2] ?? "0") : 0;
-  const frameRate = videoInfoMatch ? parseFloat(videoInfoMatch[3] ?? "0") : 0;
-
-  const videoDurationMatch = videoInfo.match(
-    /Duration: (\d{2}):(\d{2}):(\d{2}.\d{2})/
-  );
-  const duration = videoDurationMatch
-    ? parseInt(videoDurationMatch[1] ?? "0") * 3600 +
-      parseInt(videoDurationMatch[2] ?? "0") * 60 +
-      parseFloat(videoDurationMatch[3] ?? "0")
-    : 0;
-
-  return { width, height, frameRate, duration };
-}
+import { matchVideoBaseInfo } from "./utils/index.js";
 
 type VideoProcessEvents = {
   onVideoProcessFinish: (payload: {
@@ -51,20 +27,21 @@ class VideoProcess extends EventEmitter<VideoProcessEvents> {
     height: number;
     frameRate: number;
     duration: number;
+    createTime: Date;
   }> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       let videoInfo = "";
 
-      const shouldListenerStop = (message: string) => {
-        return message.includes("Aborted()") || message.includes("error");
-      };
-
       const logHandler = ({ message }: { message: string }) => {
-        videoInfo += message;
-
-        if (shouldListenerStop(message)) {
-          resolve(matchVideoBaseInfo(videoInfo));
+        if (message.includes("error")) {
           this.editor.ffmpeg.off("log", logHandler);
+          reject(new Error(message));
+        }
+
+        videoInfo += message;
+        if (message.includes("Aborted()")) {
+          this.editor.ffmpeg.off("log", logHandler);
+          resolve(matchVideoBaseInfo(videoInfo));
         }
       };
 
@@ -95,11 +72,12 @@ class VideoProcess extends EventEmitter<VideoProcessEvents> {
   private async getVideoBaseInfo(file: File) {
     const infoLogPromise = this.collectFFmpegLogs();
     await this.editor.ffmpeg.exec(["-i", file.name]);
-    const { width, height, frameRate, duration } = await infoLogPromise;
+    const { width, height, frameRate, duration, createTime } =
+      await infoLogPromise;
 
     const cover = await this.getVideoCover(file);
 
-    return { width, height, frameRate, duration, cover };
+    return { width, height, frameRate, duration, createTime, cover };
   }
 
   onVideoUpload = async ({
@@ -111,20 +89,14 @@ class VideoProcess extends EventEmitter<VideoProcessEvents> {
   }) => {
     this.editor.ffmpeg.writeFile(file.name, await fetchFile(file));
 
-    const { width, height, frameRate, duration, cover } =
-      await this.getVideoBaseInfo(file);
+    const video = new Video({
+      fileSize: file.size,
+      fileType: file.type,
+      name: file.name,
+      ...(await this.getVideoBaseInfo(file)),
+    });
 
     this.editor.ffmpeg.deleteFile(file.name);
-
-    const video = new Video({
-      file,
-      width,
-      height,
-      frameRate,
-      createTime: new Date(),
-      duration,
-      cover,
-    });
 
     console.log(video);
     this.videos.push(video);

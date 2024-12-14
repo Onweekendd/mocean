@@ -1,4 +1,7 @@
 interface BaseElement {
+  /**@description 唯一标识 */
+  id: string;
+
   /**@description 名称 */
   name: string;
 
