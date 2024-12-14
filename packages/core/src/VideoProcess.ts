@@ -1,5 +1,5 @@
 import { fetchFile } from "@ffmpeg/util";
-import { Editor } from "./Editor.js";
+import { Editor } from "./editor.js";
 import { Video } from "./elements/Video.js";
 import { EventEmitter } from "./interfaces/EventEmitter.js";
 import { matchVideoBaseInfo } from "./utils/index.js";

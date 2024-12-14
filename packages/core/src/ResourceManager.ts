@@ -1,4 +1,4 @@
-import type { Editor } from "./Editor.js";
+import type { Editor } from "./editor.js";
 import { EventEmitter } from "./interfaces/EventEmitter.js";
 
 export type ResourceManagerEvents = {
