@@ -10,7 +10,7 @@ import {
   EditorContext,
   ReducerEditorState,
   ReducerEditorStateReducer,
-} from "../context/EditorContext";
+} from "./index";
 
 const Editor = () => {
   const [editor, setEditor] = useState<EditorSDK | null>(null);

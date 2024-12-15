@@ -1,13 +1,22 @@
 {
-  "extends": "@repo/typescript-config/base.json",
   "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "declaration": true,
+    "sourceMap": true,
+    "declarationMap": true,
+    "declarationDir": "dist",
     "outDir": "dist",
-    "rootDir": "src",
-    "module": "ES6",
-    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
     "allowImportingTsExtensions": true,
-    "emitDeclarationOnly": false
+    "emitDeclarationOnly": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
-  "include": ["src"],
+  "include": ["src", "src/index.ts"],
   "exclude": ["node_modules", "dist"]
 }

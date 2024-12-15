@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 
-const DynamicEditor = dynamic(() => import("../../components/Editor"), {
+const DynamicEditor = dynamic(() => import("../../components/Editor/Editor"), {
   ssr: false,
 });
 

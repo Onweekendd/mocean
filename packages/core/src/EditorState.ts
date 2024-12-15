@@ -1,4 +1,4 @@
-import { Video } from "./elements/Video.ts";
+import { Video } from "@/elements/Video.ts";
 
 export interface State {
   videos: Video[];

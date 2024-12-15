@@ -1,8 +1,8 @@
-import { CommandManager } from "./CommandManager.ts";
-import { ResourceManager } from "./ResourceManager.ts";
-import { TimeManager } from "./TimeManager.ts";
-import { VideoProcess } from "./VideoProcess.ts";
-import { EditorState } from "./EditorState.js";
+import { CommandManager } from "@/CommandManager.ts";
+import { ResourceManager } from "@/ResourceManager.ts";
+import { TimeManager } from "@/TimeManager.ts";
+import { VideoProcess } from "@/VideoProcess.ts";
+import { EditorState } from "@/EditorState.js";
 
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { toBlobURL } from "@ffmpeg/util";

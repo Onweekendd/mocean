@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import VideoUpload from "./components/VideoUpload";
-import { EditorContext } from "../../context/EditorContext";
+import { EditorContext } from "../index";
 import { Video } from "@video-editor/core";
 import Image from "next/image";
 
