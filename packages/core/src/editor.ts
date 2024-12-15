@@ -1,5 +1,4 @@
 import { CommandManager } from "./CommandManager.ts";
-import { ResourceManager } from "./ResourceManager.ts";
 import { TimeManager } from "./TimeManager.ts";
 import { VideoProcess } from "./VideoProcess.ts";
 import { EditorState } from "./EditorState.js";
@@ -10,7 +9,6 @@ import { toBlobURL } from "@ffmpeg/util";
 const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm";
 
 class Editor {
-  resourceManager: ResourceManager;
   timeManager: TimeManager;
   videoProcess: VideoProcess;
   commandManager: CommandManager;
@@ -26,12 +24,9 @@ class Editor {
       console.log(progress, time);
     });
 
-    this.resourceManager = new ResourceManager(this);
-
     this.videoProcess = new VideoProcess({
       ffmpeg: this.ffmpeg,
       state: this.state,
-      resourceManager: this.resourceManager,
     });
 
     this.timeManager = new TimeManager();

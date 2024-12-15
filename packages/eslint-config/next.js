@@ -33,7 +33,8 @@ export const nextJsConfig = [
     rules: {
       ...pluginNext.configs.recommended.rules,
       ...pluginNext.configs["core-web-vitals"].rules,
-      "react/self-closing-comp": ["error"],
+      "react/self-closing-comp": "error",
+      "react/prop-types": "off",
     },
   },
   {

@@ -6,16 +6,14 @@ import TimeLine from "./TimeLine";
 import ElementList from "./ElementList/ElementList";
 import Renderer from "./Renderer";
 import PropertyEditor from "./PropertyEditor";
-import {
-  EditorContext,
-  ReducerEditorState,
-  ReducerEditorStateReducer,
-} from "./index";
+import { EditorContext, ReducerEditorState, editorStateReducer } from "./index";
 
 const Editor = () => {
   const [editor, setEditor] = useState<EditorSDK | null>(null);
-  const [state, dispatch] = useReducer(ReducerEditorStateReducer, {
+  const [state, dispatch] = useReducer(editorStateReducer, {
+    activeVideoId: "",
     videos: [],
+    filesName: [],
   });
   const storeRef = useRef(new ReducerEditorState(state, dispatch));
 
@@ -29,7 +27,6 @@ const Editor = () => {
     storeRef.current.syncState(state);
   }, [state]);
 
-  // TODO: 添加加载进度条
   if (!editor) return <div>Loading...</div>;
 
   return (

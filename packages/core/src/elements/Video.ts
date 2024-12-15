@@ -32,6 +32,9 @@ class Video
   /**@description 封面图片 */
   cover: string;
 
+  /**@description 状态 */
+  status: "processing" | "finished" | "error";
+
   constructor({
     name,
     fileSize,
@@ -43,26 +46,28 @@ class Video
     duration,
     cover,
   }: {
-    name: string;
-    fileSize: number;
-    fileType: string;
-    width: number;
-    height: number;
-    frameRate: number;
-    createTime: Date;
-    duration: number;
-    cover: string;
-  }) {
+    name?: string;
+    fileSize?: number;
+    fileType?: string;
+    width?: number;
+    height?: number;
+    frameRate?: number;
+    createTime?: Date;
+    duration?: number;
+    cover?: string;
+  } = {}) {
     this.id = uuidv4();
-    this.name = name;
-    this.fileSize = fileSize;
-    this.fileType = fileType;
-    this.createTime = createTime;
-    this.duration = duration;
-    this.frameRate = frameRate;
-    this.width = width;
-    this.height = height;
-    this.cover = cover;
+    this.status = "processing";
+
+    this.name = name || "";
+    this.fileSize = fileSize || 0;
+    this.fileType = fileType || "";
+    this.createTime = createTime || new Date();
+    this.duration = duration || 0;
+    this.frameRate = frameRate || 0;
+    this.width = width || 0;
+    this.height = height || 0;
+    this.cover = cover || "";
   }
 
   onSplit = () => {

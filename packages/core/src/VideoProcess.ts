@@ -3,24 +3,14 @@ import { EditorState } from "./EditorState.ts";
 import { Video } from "./elements/Video.ts";
 import { matchVideoBaseInfo } from "./utils/index.ts";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { ResourceManager } from "./ResourceManager.ts";
 
 class VideoProcess {
   ffmpeg: FFmpeg;
   state: EditorState;
 
-  constructor({
-    ffmpeg,
-    state,
-    resourceManager,
-  }: {
-    ffmpeg: FFmpeg;
-    state: EditorState;
-    resourceManager: ResourceManager;
-  }) {
+  constructor({ ffmpeg, state }: { ffmpeg: FFmpeg; state: EditorState }) {
     this.ffmpeg = ffmpeg;
     this.state = state;
-    resourceManager.on("onVideoUpload", this.onVideoUpload);
   }
 
   private collectFFmpegLogs(): Promise<{
@@ -81,27 +71,37 @@ class VideoProcess {
     return { width, height, frameRate, duration, createTime, cover };
   }
 
-  onVideoUpload = async ({
-    file,
-    placeholderId,
-  }: {
-    file: File;
-    placeholderId?: string;
-  }) => {
-    this.ffmpeg.writeFile(file.name, await fetchFile(file));
-
-    const video = new Video({
+  onVideoUpload = async ({ file }: { file: File }) => {
+    const newVideo = new Video({
       fileSize: file.size,
       fileType: file.type,
       name: file.name,
-      ...(await this.getVideoBaseInfo(file)),
     });
 
-    console.log(video);
+    this.state.setVideos([...this.state.getVideos(), newVideo]);
 
-    this.ffmpeg.deleteFile(file.name);
+    try {
+      this.ffmpeg.writeFile(file.name, await fetchFile(file));
 
-    this.state.setVideos([...this.state.getVideos(), video]);
+      const { width, height, frameRate, duration, createTime, cover } =
+        await this.getVideoBaseInfo(file);
+
+      newVideo.width = width;
+      newVideo.height = height;
+      newVideo.frameRate = frameRate;
+      newVideo.duration = duration;
+      newVideo.createTime = createTime;
+      newVideo.cover = cover;
+      newVideo.status = "finished";
+    } catch (error) {
+      console.error(error);
+      newVideo.status = "error";
+    }
+
+    this.state.setVideos([
+      ...this.state.getVideos().filter((v) => v.id !== newVideo.id),
+      newVideo,
+    ]);
   };
 }
 

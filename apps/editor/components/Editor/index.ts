@@ -5,10 +5,7 @@ type EditorStateAction = {
   type: "setState";
   payload: Partial<State>;
 };
-export function ReducerEditorStateReducer(
-  state: State,
-  action: EditorStateAction,
-) {
+export function editorStateReducer(state: State, action: EditorStateAction) {
   switch (action.type) {
     case "setState":
       return { ...state, ...action.payload };
