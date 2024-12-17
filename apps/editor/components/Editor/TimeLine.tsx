@@ -1,5 +1,5 @@
 const TimeLine = () => {
-    return <div className="w-full h-full bg-green-500">TimeLine</div>;
+  return <div className="h-full w-full">TimeLine</div>;
 };
 
 export default TimeLine;

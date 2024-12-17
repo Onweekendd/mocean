@@ -12,12 +12,14 @@
   },
   "dependencies": {
     "@video-editor/core": "workspace:*",
+    "clsx": "^2.1.1",
+    "konva": "^9.3.16",
     "next": "15.0.4",
     "react": "19.0.0",
     "react-dom": "19.0.0",
+    "react-konva": "^19.0.1",
     "tailwindcss-animate": "^1.0.7",
-    "zustand": "^5.0.2",
-    "clsx": "^2.1.1"
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
@@ -32,3 +34,4 @@
     "typescript": "5.5.4"
   }
 }
+

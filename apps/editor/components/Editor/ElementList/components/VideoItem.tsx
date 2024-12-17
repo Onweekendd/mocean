@@ -29,7 +29,7 @@ const VideoItem: React.FC<VideoItemProps> = ({ video }) => {
           onClick={onFinishedVideoClick}
           className={clsx(
             "!relative h-full w-full cursor-pointer rounded-md border-2 border-transparent object-cover",
-            editor?.state.getActiveVideoId() === video.id && "border-sky-500",
+            editor?.state.getActiveVideoId() === video.id && "!border-sky-500",
           )}
           src={video.cover}
           alt={video.name}

@@ -31,20 +31,20 @@ const Editor = () => {
 
   return (
     <EditorContext.Provider value={editor}>
-      <div className="flex h-full w-full flex-col">
-        <div className="flex h-1/2 w-full flex-row">
-          <div className="h-full flex-1">
+      <div className="flex h-full w-full flex-col gap-2 bg-neutral-200 p-2">
+        <div className="flex h-2/3 w-full flex-row gap-2">
+          <div className="h-full flex-1 rounded-md bg-white">
             <ElementList />
           </div>
-          <div className="h-full flex-1">
+          <div className="box-border h-full flex-1 rounded-md bg-white p-1">
             <Renderer />
           </div>
-          <div className="h-full flex-1">
+          <div className="h-full flex-1 rounded-md bg-white">
             <PropertyEditor />
           </div>
         </div>
 
-        <div className="flex-1">
+        <div className="flex-1 rounded-md bg-white">
           <TimeLine />
         </div>
       </div>

@@ -41,7 +41,7 @@ const VideoUpload: FC<VideoUploadProps> = ({ onChange }) => {
             />
           </svg>
           <p className="mb-2 text-xs text-gray-500">
-            <span className="font-semibold">点击上传</span>
+            <span className="text-nowrap font-semibold">点击上传</span>
           </p>
         </div>
       </label>
