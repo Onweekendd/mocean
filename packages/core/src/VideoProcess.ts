@@ -73,9 +73,10 @@ class VideoProcess {
 
   onVideoUpload = async ({ file }: { file: File }) => {
     const newVideo = new Video({
+      name: file.name,
       fileSize: file.size,
       fileType: file.type,
-      name: file.name,
+      fileUrl: URL.createObjectURL(file),
     });
 
     this.state.setVideos([...this.state.getVideos(), newVideo]);

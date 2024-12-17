@@ -11,6 +11,9 @@ interface BaseElement {
   /**@description 文件类型 */
   fileType: string;
 
+  /**@description 文件路径 */
+  fileUrl: string;
+
   /**@description 文件创建时间 */
   createTime: Date;
 }

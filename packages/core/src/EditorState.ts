@@ -29,4 +29,10 @@ export abstract class EditorState {
   public getActiveVideoId() {
     return this.getState().activeVideoId;
   }
+
+  public getActiveVideo() {
+    return this.getState().videos.find(
+      (video) => video.id === this.getState().activeVideoId
+    );
+  }
 }

@@ -17,6 +17,8 @@ class Video
 
   createTime: Date;
 
+  fileUrl: string;
+
   /**@description 时长 */
   duration: number;
 
@@ -39,6 +41,7 @@ class Video
     name,
     fileSize,
     fileType,
+    fileUrl,
     width,
     height,
     frameRate,
@@ -49,6 +52,7 @@ class Video
     name?: string;
     fileSize?: number;
     fileType?: string;
+    fileUrl?: string;
     width?: number;
     height?: number;
     frameRate?: number;
@@ -63,6 +67,7 @@ class Video
     this.fileSize = fileSize || 0;
     this.fileType = fileType || "";
     this.createTime = createTime || new Date();
+    this.fileUrl = fileUrl || "";
     this.duration = duration || 0;
     this.frameRate = frameRate || 0;
     this.width = width || 0;
