@@ -9,21 +9,19 @@ class Video
 {
   id: string;
 
+  /**@description 状态 */
+  status: "processing" | "finished" | "error";
+
   name: string;
-
   fileSize: number;
-
   fileType: string;
-
+  fileUrl: string;
   createTime: Date;
 
-  fileUrl: string;
-
-  /**@description 时长 */
-  duration: number;
-
-  /**@description 帧率 */
-  frameRate: number;
+  x: number;
+  y: number;
+  renderWidth: number;
+  renderHeight: number;
 
   /**@description 宽度 */
   width: number;
@@ -31,11 +29,14 @@ class Video
   /**@description 高度 */
   height: number;
 
+  /**@description 时长 */
+  duration: number;
+
+  /**@description 帧率 */
+  frameRate: number;
+
   /**@description 封面图片 */
   cover: string;
-
-  /**@description 状态 */
-  status: "processing" | "finished" | "error";
 
   constructor({
     name,
@@ -48,6 +49,10 @@ class Video
     createTime,
     duration,
     cover,
+    x,
+    y,
+    renderWidth,
+    renderHeight,
   }: {
     name?: string;
     fileSize?: number;
@@ -59,6 +64,10 @@ class Video
     createTime?: Date;
     duration?: number;
     cover?: string;
+    x?: number;
+    y?: number;
+    renderWidth?: number;
+    renderHeight?: number;
   } = {}) {
     this.id = uuidv4();
     this.status = "processing";
@@ -66,13 +75,19 @@ class Video
     this.name = name || "";
     this.fileSize = fileSize || 0;
     this.fileType = fileType || "";
+
     this.createTime = createTime || new Date();
     this.fileUrl = fileUrl || "";
     this.duration = duration || 0;
     this.frameRate = frameRate || 0;
+    this.cover = cover || "";
     this.width = width || 0;
     this.height = height || 0;
-    this.cover = cover || "";
+
+    this.x = x || 0;
+    this.y = y || 0;
+    this.renderWidth = renderWidth || 0;
+    this.renderHeight = renderHeight || 0;
   }
 
   onSplit = () => {
