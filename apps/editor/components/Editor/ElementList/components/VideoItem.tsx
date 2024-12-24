@@ -15,13 +15,11 @@ const ProcessingVideo = () => (
 // 完成状态组件
 const FinishedVideo: React.FC<{
   video: Video;
-  onFinishedVideoClick: () => void;
   onAddClick: (e: React.MouseEvent) => void;
-}> = ({ video, onFinishedVideoClick, onAddClick }) => (
+}> = ({ video, onAddClick }) => (
   <div className="group relative flex w-full flex-1 items-center overflow-hidden rounded-md bg-gray-200">
     <div className="relative h-4/5 w-full">
       <Image
-        onClick={onFinishedVideoClick}
         className="object-fit h-full w-full"
         src={video.cover}
         alt={video.name}
@@ -63,24 +61,16 @@ interface VideoItemProps {
 const VideoItem: React.FC<VideoItemProps> = ({ video }) => {
   const editor = useContext(EditorContext);
 
-  const onFinishedVideoClick = () => {
-    editor?.state.setActiveVideoId(video.id);
-  };
-
   const onAddClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    editor?.state.addVideoToRenderingList(video.id);
+    editor?.renderer.addVideoToRenderer(video.id);
   };
 
   return (
     <div className="box-border flex h-full w-full flex-col">
       {video.status === "processing" && <ProcessingVideo />}
       {video.status === "finished" && (
-        <FinishedVideo
-          video={video}
-          onFinishedVideoClick={onFinishedVideoClick}
-          onAddClick={onAddClick}
-        />
+        <FinishedVideo video={video} onAddClick={onAddClick} />
       )}
       {video.status === "error" && <ErrorVideo />}
 

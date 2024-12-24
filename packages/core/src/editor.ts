@@ -5,6 +5,7 @@ import { EditorState } from "./EditorState.js";
 
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { toBlobURL } from "@ffmpeg/util";
+import { Renderer } from "./Renderer.ts";
 
 const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm";
 
@@ -12,6 +13,7 @@ class Editor {
   timeManager: TimeManager;
   videoProcess: VideoProcess;
   commandManager: CommandManager;
+  renderer: Renderer;
   ffmpeg: FFmpeg;
 
   state: EditorState;

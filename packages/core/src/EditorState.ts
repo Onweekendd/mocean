@@ -44,17 +44,7 @@ export abstract class EditorState {
     );
   }
 
-  public addVideoToRenderingList(id: string) {
-    this.setState({
-      renderingVideoIds: [...this.getState().renderingVideoIds, id],
-    });
-  }
-
-  public removeVideoFromRenderingList(id: string) {
-    this.setState({
-      renderingVideoIds: this.getState().renderingVideoIds.filter(
-        (id) => id !== id
-      ),
-    });
+  public getRenderingList() {
+    return this.getState().renderingVideoIds;
   }
 }
