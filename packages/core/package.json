@@ -18,6 +18,7 @@
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
+    "@video-editor/prettier-config": "workspace:*",
     "@rollup/plugin-alias": "^5.1.1",
     "@rollup/plugin-commonjs": "^28.0.1",
     "@rollup/plugin-node-resolve": "^15.3.0",

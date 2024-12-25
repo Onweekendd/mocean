@@ -23,17 +23,15 @@
     "zustand": "^5.0.2"
   },
   "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^4.0.0",
     "@repo/eslint-config": "workspace:*",
+    "@video-editor/prettier-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/node": "^20",
     "@types/react": "18.3.1",
     "@types/react-dom": "18.3.0",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
-    "prettier-plugin-tailwindcss": "^0.6.5",
     "tailwindcss": "^3.4.15",
     "typescript": "5.5.4"
   }
 }
-

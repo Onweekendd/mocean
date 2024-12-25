@@ -1,11 +1,11 @@
+import { FFmpeg } from "@ffmpeg/ffmpeg";
+
 import { CommandManager } from "./CommandManager.ts";
+import { EditorState } from "./EditorState.js";
+import { Renderer } from "./Renderer.ts";
+import { toBlobURL } from "@ffmpeg/util";
 import { TimeManager } from "./TimeManager.ts";
 import { VideoProcess } from "./VideoProcess.ts";
-import { EditorState } from "./EditorState.js";
-
-import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { toBlobURL } from "@ffmpeg/util";
-import { Renderer } from "./Renderer.ts";
 
 const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm";
 
@@ -48,7 +48,7 @@ class Editor {
       coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
       wasmURL: await toBlobURL(
         `${baseURL}/ffmpeg-core.wasm`,
-        "application/wasm"
+        "application/wasm",
       ),
     });
 

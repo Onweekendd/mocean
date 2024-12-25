@@ -1,0 +1,13 @@
+{
+  "name": "@video-editor/prettier-config",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./prettierrc.js"
+  },
+  "dependencies": {
+    "prettier": "^3.2.5",
+    "@trivago/prettier-plugin-sort-imports": "^4.2.0",
+    "prettier-plugin-tailwindcss": "^0.5.4"
+  }
+}
