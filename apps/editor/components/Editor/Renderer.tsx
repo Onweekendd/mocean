@@ -74,8 +74,8 @@ const Renderer = () => {
               video && (
                 <KonvaImage
                   key={video.id}
-                  x={0}
-                  y={0}
+                  x={video.x}
+                  y={video.y}
                   width={video.renderWidth}
                   height={video.renderHeight}
                   ref={(node) => {

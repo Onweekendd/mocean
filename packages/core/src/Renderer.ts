@@ -26,7 +26,7 @@ class Renderer {
     video.renderWidth = width;
     video.renderHeight = height;
 
-    console.log(video);
+    video.y = this.height / 2 - video.renderHeight / 2;
 
     this.state.setState({
       renderingVideoIds: [...this.state.getRenderingList(), id],
