@@ -15,6 +15,7 @@ import { Image as KonvaImage, Layer, Stage } from "react-konva";
 import { Video } from "@video-editor/core";
 
 import { EditorContext } from ".";
+import PlayControl from "./components/PlayControl";
 
 const Renderer = () => {
   const editor = useContext(EditorContext);
@@ -119,18 +120,7 @@ const Renderer = () => {
         </Stage>
       </div>
 
-      <div className="flex h-12 items-center justify-center border-t border-gray-200 bg-white">
-        <button
-          onClick={onPlayPause}
-          className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100"
-        >
-          {isPlaying ? (
-            <HiOutlinePause className="h-6 w-6 text-sky-500" />
-          ) : (
-            <HiOutlinePlay className="h-6 w-6 text-sky-500" />
-          )}
-        </button>
-      </div>
+      <PlayControl isPlaying={isPlaying} onPlayPause={onPlayPause} />
 
       {renderingVideos?.map(
         (video) =>
