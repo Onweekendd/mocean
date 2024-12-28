@@ -16,61 +16,22 @@ import { Video } from "@video-editor/core";
 
 import { EditorContext } from ".";
 
-const animate = (
-  videoElement: HTMLVideoElement,
-  videoNode: Image | undefined,
-) => {
-  if (videoElement.paused || videoElement.ended || !videoNode) {
-    return;
-  }
-
-  videoNode?.getLayer()?.batchDraw();
-  requestAnimationFrame(() => animate(videoElement, videoNode));
-};
-
 const Renderer = () => {
   const editor = useContext(EditorContext);
-
-  const canvasContainerRef = useRef<HTMLDivElement>(null);
 
   const renderingVideos = editor?.state
     .getRenderingList()
     .map((id) => editor?.state.getVideos().find((video) => video.id === id));
 
-  const videoRef = useRef<HTMLVideoElement[]>([]);
-  const renderingVideoNodesRef = useRef<Image[]>([]);
-
-  const videoToElementRef = useRef<
-    Array<{
-      video: Video;
-      canvas: Image;
-      element: HTMLVideoElement;
-    }>
+  const canvasContainerRef = useRef<HTMLDivElement>(null);
+  const videoNodesMap = useRef(new Map<string, Image>());
+  const videoElementsMap = useRef(new Map<string, HTMLVideoElement>());
+  const videoToElement = useRef<
+    { video: Video; canvas: Image; element: HTMLVideoElement }[]
   >([]);
 
-  const videoToElement = useMemo(() => {
-    const elements = (renderingVideos ?? [])
-      .map((video, index) => {
-        if (!video) return null;
-        const canvas = renderingVideoNodesRef.current[index];
-        const element = videoRef.current[index];
-
-        if (!canvas || !element) return null;
-
-        return {
-          video,
-          canvas,
-          element,
-        };
-      })
-      .filter((item) => item !== null);
-
-    videoToElementRef.current = elements;
-    return elements;
-  }, [renderingVideos]);
-
   const onVideoPlay = useCallback((video: Video) => {
-    const videoElement = videoToElementRef.current.find(
+    const videoElement = videoToElement.current.find(
       (item) => item.video.id === video.id,
     );
 
@@ -94,23 +55,33 @@ const Renderer = () => {
 
   const [, forceUpdate] = useReducer((x: number) => x + 1, 0);
   useEffect(() => {
+    videoToElement.current = (renderingVideos ?? [])
+      .map((video) => {
+        if (!video) return null;
+        const canvas = videoNodesMap.current.get(video.id);
+        const element = videoElementsMap.current.get(video.id);
+
+        if (!canvas || !element) return null;
+        return { video, canvas, element };
+      })
+      .filter((item) => item !== null);
     forceUpdate();
   }, [
     renderingVideos?.length,
-    videoRef.current.length,
-    renderingVideoNodesRef.current.length,
+    videoNodesMap.current.size,
+    videoElementsMap.current.size,
   ]);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const onPlayPause = useCallback(() => {
     if (isPlaying) {
-      videoToElement.forEach(({ element }) => {
+      videoToElement.current.forEach(({ element }) => {
         element.pause();
       });
       editor?.renderer?.onPause();
       setIsPlaying(false);
     } else {
-      videoToElement.forEach(({ element }) => {
+      videoToElement.current.forEach(({ element }) => {
         element.play();
       });
       editor?.renderer?.onPlay();
@@ -127,7 +98,7 @@ const Renderer = () => {
         >
           <Layer>
             {renderingVideos?.map(
-              (video, index) =>
+              (video) =>
                 video && (
                   <KonvaImage
                     key={video.id}
@@ -137,10 +108,10 @@ const Renderer = () => {
                     height={video.renderHeight}
                     ref={(node) => {
                       if (node) {
-                        renderingVideoNodesRef.current[index] = node;
+                        videoNodesMap.current.set(video.id, node);
                       }
                     }}
-                    image={videoRef.current[index]!}
+                    image={videoElementsMap.current.get(video.id)}
                   />
                 ),
             )}
@@ -161,19 +132,22 @@ const Renderer = () => {
         </button>
       </div>
 
-      {renderingVideos?.map((video, index) => (
-        <video
-          key={video?.id}
-          ref={(node) => {
-            if (node) {
-              videoRef.current[index] = node;
-            }
-          }}
-          src={video?.fileUrl}
-          hidden
-          onEnded={() => setIsPlaying(false)}
-        />
-      ))}
+      {renderingVideos?.map(
+        (video) =>
+          video && (
+            <video
+              key={video.id}
+              ref={(node) => {
+                if (node) {
+                  videoElementsMap.current.set(video.id, node);
+                }
+              }}
+              src={video?.fileUrl}
+              hidden
+              onEnded={() => setIsPlaying(false)}
+            />
+          ),
+      )}
     </div>
   );
 };
