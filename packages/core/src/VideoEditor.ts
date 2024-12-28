@@ -6,6 +6,7 @@ import { EditorState } from "./EditorState.js";
 import { Renderer } from "./Renderer.ts";
 import { TimeManager } from "./TimeManager.ts";
 import { VideoProcess } from "./VideoProcess.ts";
+import { Video } from "./index.ts";
 
 const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm";
 
@@ -13,7 +14,7 @@ class Editor {
   timeManager: TimeManager;
   videoProcess: VideoProcess;
   commandManager: CommandManager;
-  renderer: Renderer;
+  renderer?: Renderer;
   ffmpeg: FFmpeg;
 
   state: EditorState;
@@ -33,11 +34,6 @@ class Editor {
 
     this.timeManager = new TimeManager();
     this.commandManager = new CommandManager();
-    this.renderer = new Renderer({
-      state: this.state,
-      width: 0,
-      height: 0,
-    });
   }
 
   static async build(store: EditorState) {
@@ -55,9 +51,21 @@ class Editor {
     return editor;
   }
 
-  initRenderer({ width, height }: { width: number; height: number }) {
-    this.renderer.width = width;
-    this.renderer.height = height;
+  initRenderer({
+    width,
+    height,
+    onVideoPlay,
+  }: {
+    width: number;
+    height: number;
+    onVideoPlay: (video: Video) => void;
+  }) {
+    this.renderer = new Renderer({
+      state: this.state,
+      width,
+      height,
+      onVideoPlay,
+    });
   }
 }
 
