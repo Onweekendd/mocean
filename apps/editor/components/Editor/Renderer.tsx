@@ -2,14 +2,12 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
   useReducer,
   useRef,
   useState,
 } from "react";
 
 import type { Image } from "konva/lib/shapes/Image";
-import { HiOutlinePause, HiOutlinePlay } from "react-icons/hi";
 import { Image as KonvaImage, Layer, Stage } from "react-konva";
 
 import { Video } from "@video-editor/core";
@@ -25,21 +23,17 @@ const Renderer = () => {
     .map((id) => editor?.state.getVideos().find((video) => video.id === id));
 
   const canvasContainerRef = useRef<HTMLDivElement>(null);
-  const videoNodesMap = useRef(new Map<string, Image>());
-  const videoElementsMap = useRef(new Map<string, HTMLVideoElement>());
   const videoToElement = useRef<
-    { video: Video; canvas: Image; element: HTMLVideoElement }[]
-  >([]);
+    Map<string, { canvas?: Image; element?: HTMLVideoElement }>
+  >(new Map());
 
   const onVideoPlay = useCallback((video: Video) => {
-    const videoElement = videoToElement.current.find(
-      (item) => item.video.id === video.id,
-    );
+    const elements = videoToElement.current.get(video.id);
 
-    if (!videoElement) return;
-    const { element, canvas } = videoElement;
+    if (!elements) return;
+    const { element, canvas } = elements;
 
-    if (element.paused || element.ended || !canvas) {
+    if (element?.paused || element?.ended || !canvas) {
       return;
     }
 
@@ -54,41 +48,40 @@ const Renderer = () => {
     });
   }, [editor]);
 
-  const [, forceUpdate] = useReducer((x: number) => x + 1, 0);
   useEffect(() => {
-    videoToElement.current = (renderingVideos ?? [])
-      .map((video) => {
-        if (!video) return null;
-        const canvas = videoNodesMap.current.get(video.id);
-        const element = videoElementsMap.current.get(video.id);
+    const newMap = new Map<
+      string,
+      { canvas?: Image; element?: HTMLVideoElement }
+    >();
 
-        if (!canvas || !element) return null;
-        return { video, canvas, element };
-      })
-      .filter((item) => item !== null);
-    forceUpdate();
-  }, [
-    renderingVideos?.length,
-    videoNodesMap.current.size,
-    videoElementsMap.current.size,
-  ]);
+    (renderingVideos ?? []).forEach((video) => {
+      if (!video) return;
+      if (!videoToElement.current.has(video.id)) {
+        newMap.set(video.id, { canvas: undefined, element: undefined });
+      } else {
+        newMap.set(video.id, videoToElement.current.get(video.id)!);
+      }
+    });
+
+    videoToElement.current = newMap;
+  }, [renderingVideos?.length]);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const onPlayPause = useCallback(() => {
     if (isPlaying) {
-      videoToElement.current.forEach(({ element }) => {
-        element.pause();
-      });
+      for (const { element } of videoToElement.current.values()) {
+        element?.pause();
+      }
       editor?.renderer?.onPause();
       setIsPlaying(false);
     } else {
-      videoToElement.current.forEach(({ element }) => {
-        element.play();
-      });
+      for (const { element } of videoToElement.current.values()) {
+        element?.play();
+      }
       editor?.renderer?.onPlay();
       setIsPlaying(true);
     }
-  }, [isPlaying, editor?.renderer, videoToElement]);
+  }, [isPlaying, editor?.renderer]);
 
   return (
     <div className="flex h-full w-full flex-col">
@@ -109,10 +102,13 @@ const Renderer = () => {
                     height={video.renderHeight}
                     ref={(node) => {
                       if (node) {
-                        videoNodesMap.current.set(video.id, node);
+                        videoToElement.current.set(video.id, {
+                          ...videoToElement.current.get(video.id),
+                          canvas: node,
+                        });
                       }
                     }}
-                    image={videoElementsMap.current.get(video.id)}
+                    image={videoToElement.current.get(video.id)?.element}
                   />
                 ),
             )}
@@ -129,7 +125,10 @@ const Renderer = () => {
               key={video.id}
               ref={(node) => {
                 if (node) {
-                  videoElementsMap.current.set(video.id, node);
+                  videoToElement.current.set(video.id, {
+                    ...videoToElement.current.get(video.id),
+                    element: node,
+                  });
                 }
               }}
               src={video?.fileUrl}
