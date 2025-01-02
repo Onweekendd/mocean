@@ -32,7 +32,7 @@ class Editor {
       state: this.state,
     });
 
-    this.timeManager = new TimeManager();
+    this.timeManager = new TimeManager(this.state);
     this.commandManager = new CommandManager();
   }
 

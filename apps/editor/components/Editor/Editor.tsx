@@ -17,6 +17,9 @@ const Editor = () => {
     videos: [],
     filesName: [],
     renderingVideoIds: [],
+    unitTime: 100,
+    unitPixelOfTime: 50,
+    tracks: [],
   });
   const storeRef = useRef(new ReducerEditorState(state, dispatch));
 
@@ -35,7 +38,7 @@ const Editor = () => {
   return (
     <EditorContext.Provider value={editor}>
       <div className="flex h-full w-full flex-col gap-2 bg-neutral-200 p-2">
-        <div className="flex h-2/3 w-full flex-row gap-2">
+        <div className="flex h-[57%] w-full flex-row gap-2">
           <div className="h-full flex-1 rounded-md bg-white">
             <ElementList />
           </div>

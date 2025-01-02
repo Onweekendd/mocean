@@ -1,9 +1,13 @@
-import type { Video } from "@video-editor/core";
-import Image from "next/image";
-import { EditorContext } from "../..";
 import { useContext } from "react";
+
+import Image from "next/image";
+
 import clsx from "clsx";
 import { HiMiniPlus } from "react-icons/hi2";
+
+import type { Video } from "@video-editor/core";
+
+import { EditorContext } from "../..";
 
 // 处理中状态组件
 const ProcessingVideo = () => (
@@ -59,11 +63,12 @@ interface VideoItemProps {
 }
 
 const VideoItem: React.FC<VideoItemProps> = ({ video }) => {
-  const editor = useContext(EditorContext);
+  const editor = useContext(EditorContext)!;
 
   const onAddClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    editor?.renderer.addVideoToRenderer(video.id);
+    editor.renderer!.addVideoToRenderer(video.id);
+    editor.timeManager.addVideoToTrack(video);
   };
 
   return (
