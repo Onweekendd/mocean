@@ -9,6 +9,7 @@ class VideoClip implements Clip, CanvasRender {
   name: string;
   startTimestamp: number;
   endTimestamp: number;
+  type: "image" | "video" | "audio" | "text";
 
   x: number;
   y: number;
@@ -31,6 +32,7 @@ class VideoClip implements Clip, CanvasRender {
     this.name = name;
     this.startTimestamp = startTimestamp;
     this.endTimestamp = endTimestamp;
+    this.type = "video";
   }
 }
 

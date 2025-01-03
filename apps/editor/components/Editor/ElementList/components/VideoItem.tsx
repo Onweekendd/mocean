@@ -67,7 +67,6 @@ const VideoItem: React.FC<VideoItemProps> = ({ video }) => {
 
   const onAddClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    editor.renderer!.addVideoToRenderer(video.id);
     editor.timeManager.addVideoToTrack(video);
   };
 

@@ -13,4 +13,6 @@ export interface Clip {
 
   /** @description 结束时间戳 */
   endTimestamp: number;
+
+  type: "image" | "video" | "audio" | "text"
 }

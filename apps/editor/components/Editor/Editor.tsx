@@ -16,7 +16,6 @@ const Editor = () => {
     activeVideoId: "",
     videos: [],
     filesName: [],
-    renderingVideoIds: [],
     unitTime: 100,
     unitPixelOfTime: 50,
     tracks: [],

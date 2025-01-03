@@ -10,10 +10,20 @@ import PlayControl from "./components/PlayControl";
 
 const Renderer = () => {
   const editor = useContext(EditorContext)!;
+  const videos = editor.state.getVideos();
 
-  const renderingVideos = editor.state
-    .getRenderingList()
-    .map((id) => editor.state.getVideos().find((video) => video.id === id));
+  const tracks = editor.state.getTracks();
+
+  const currentTime = editor.state.getCurrentTime();
+
+  const renderElements = tracks
+    .map((track) => track.getRenderElementsAtTime(currentTime))
+    .flat();
+
+  const renderVideoElements = renderElements.map((element) => {
+    const video = videos.find((video) => video.id === element.resourceId);
+    return { ...element, video };
+  });
 
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const videoToElement = useRef<
@@ -47,17 +57,23 @@ const Renderer = () => {
       { canvas?: Image; element?: HTMLVideoElement }
     >();
 
-    (renderingVideos ?? []).forEach((video) => {
-      if (!video) return;
-      if (!videoToElement.current.has(video.id)) {
-        newMap.set(video.id, { canvas: undefined, element: undefined });
+    (renderVideoElements ?? []).forEach((renderVideo) => {
+      if (!renderVideo.video) return;
+      if (!videoToElement.current.has(renderVideo.video.id)) {
+        newMap.set(renderVideo.video.id, {
+          canvas: undefined,
+          element: undefined,
+        });
       } else {
-        newMap.set(video.id, videoToElement.current.get(video.id)!);
+        newMap.set(
+          renderVideo.video.id,
+          videoToElement.current.get(renderVideo.video.id)!,
+        );
       }
     });
 
     videoToElement.current = newMap;
-  }, [renderingVideos?.length]);
+  }, [renderVideoElements?.length]);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const onPlayPause = useCallback(() => {
@@ -84,24 +100,26 @@ const Renderer = () => {
           height={canvasContainerRef.current?.clientHeight ?? 0}
         >
           <Layer>
-            {renderingVideos?.map(
-              (video) =>
-                video && (
+            {renderVideoElements?.map(
+              (renderVideo) =>
+                renderVideo.video && (
                   <KonvaImage
-                    key={video.id}
+                    key={renderVideo.video.id}
                     x={0}
                     y={0}
-                    width={video.width}
-                    height={video.height}
+                    width={renderVideo.video.width}
+                    height={renderVideo.video.height}
                     ref={(node) => {
-                      if (node) {
-                        videoToElement.current.set(video.id, {
-                          ...videoToElement.current.get(video.id),
+                      if (node && renderVideo.video) {
+                        videoToElement.current.set(renderVideo.video.id, {
+                          ...videoToElement.current.get(renderVideo.video.id),
                           canvas: node,
                         });
                       }
                     }}
-                    image={videoToElement.current.get(video.id)?.element}
+                    image={
+                      videoToElement.current.get(renderVideo.video.id)?.element
+                    }
                   />
                 ),
             )}
@@ -111,20 +129,20 @@ const Renderer = () => {
 
       <PlayControl isPlaying={isPlaying} onPlayPause={onPlayPause} />
 
-      {renderingVideos?.map(
-        (video) =>
-          video && (
+      {renderVideoElements?.map(
+        (renderVideo) =>
+          renderVideo.video && (
             <video
-              key={video.id}
+              key={renderVideo.video.id}
               ref={(node) => {
-                if (node) {
-                  videoToElement.current.set(video.id, {
-                    ...videoToElement.current.get(video.id),
+                if (node && renderVideo.video) {
+                  videoToElement.current.set(renderVideo.video.id, {
+                    ...videoToElement.current.get(renderVideo.video.id),
                     element: node,
                   });
                 }
               }}
-              src={video?.fileUrl}
+              src={renderVideo.video?.fileUrl}
               hidden
               onEnded={() => setIsPlaying(false)}
             />

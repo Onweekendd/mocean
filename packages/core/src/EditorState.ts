@@ -13,9 +13,6 @@ export interface State {
   /**@description 文件名列表 */
   filesName: string[];
 
-  /**@description 正在渲染的视频Id列表 */
-  renderingVideoIds: string[];
-
   /**@description 单位时间(毫秒) */
   unitTime: number;
 
@@ -62,6 +59,7 @@ export abstract class EditorState {
     );
   }
 
+  
   public getUnitTime() {
     return this.getState().unitTime;
   }
@@ -102,7 +100,13 @@ export abstract class EditorState {
     });
   }
 
-  public getRenderingList() {
-    return this.getState().renderingVideoIds;
+  public getCurrentTime() {
+    return this.getState().currentTime;
+  }
+
+  public setCurrentTime(time: number) {
+    this.setState({
+      currentTime: time,
+    });
   }
 }

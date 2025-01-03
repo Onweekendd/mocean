@@ -106,15 +106,7 @@ class Renderer {
       cancelAnimationFrame(this.animationFrameId);
       this.animationFrameId = null;
     }
-  };
-
-  removeVideoFromRenderer(id: string) {
-    this.state.setState({
-      renderingVideoIds: this.state
-        .getRenderingList()
-        .filter((id) => id !== id),
-    });
-  }
+  };W
 }
 
 export { Renderer };
