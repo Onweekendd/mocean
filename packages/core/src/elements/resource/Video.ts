@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
-import type { BaseElement } from "./BaseElement.js";
+import type { BaseElement } from "../BaseElement.js";
 
 class Video implements BaseElement {
   id: string;

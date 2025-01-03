@@ -89,10 +89,10 @@ const Renderer = () => {
                 video && (
                   <KonvaImage
                     key={video.id}
-                    x={video.x}
-                    y={video.y}
-                    width={video.renderWidth}
-                    height={video.renderHeight}
+                    x={0}
+                    y={0}
+                    width={video.width}
+                    height={video.height}
                     ref={(node) => {
                       if (node) {
                         videoToElement.current.set(video.id, {
@@ -135,4 +135,3 @@ const Renderer = () => {
 };
 
 export default Renderer;
-

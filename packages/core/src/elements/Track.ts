@@ -26,4 +26,11 @@ export class Track {
     this.locked = false;
     this.renderElements = [];
   }
+
+  getRenderElementsAtTime(currentTime: number): Array<CanvasRender & Clip> {
+    const element = this.renderElements.find((element) =>
+      currentTime >= element.startTimestamp && currentTime <= element.endTimestamp
+    );
+    return element ? [element] : [];
+  }
 }

@@ -1,6 +1,6 @@
 import { fetchFile } from "@ffmpeg/util";
 import { EditorState } from "./EditorState.ts";
-import { Video } from "./elements/Video.ts";
+import { Video } from "./elements/resource/Video.ts";
 import { matchVideoBaseInfo } from "./utils/index.ts";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 

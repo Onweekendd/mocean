@@ -1,6 +1,6 @@
 import { EditorState } from "./EditorState.ts";
 import { Track } from "./elements/Track.ts";
-import { Video } from "./elements/Video.ts";
+import { Video } from "./elements/resource/Video.ts";
 import { VideoClip } from "./elements/clip/VideoClip.ts";
 
 class TimeManager {

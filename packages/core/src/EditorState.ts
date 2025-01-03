@@ -1,6 +1,6 @@
 import { BaseElement } from "./elements/BaseElement.ts";
 import { Track } from "./elements/Track.ts";
-import { Video } from "./elements/Video.ts";
+import { Video } from "./elements/resource/Video.ts";
 import { TimelineProcess } from "./interfaces/TimelineProcess.ts";
 
 export interface State {
@@ -27,6 +27,9 @@ export interface State {
 
   /**@description 帧率 */
   fps: number;
+
+  /**@description 全局当前时间 */
+  currentTime: number;
 }
 
 export abstract class EditorState {
