@@ -1,9 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { TimelineProcess } from "../interfaces/TimelineProcess";
-import { BaseElement } from "./BaseElement";
+import { Clip } from "./Clip";
 
-export class Track<T extends BaseElement & TimelineProcess> {
+export class Track {
   /**@description 轨道唯一标识 */
   id: string;
 
@@ -17,7 +16,7 @@ export class Track<T extends BaseElement & TimelineProcess> {
   locked: boolean;
 
   /**@description 轨道元素 */
-  elements: T[];
+  elements: Clip[];
 
   constructor(name: string) {
     this.id = uuidv4();

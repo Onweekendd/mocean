@@ -11,10 +11,7 @@
     "allowImportingTsExtensions": true,
     "noEmit": true,
     "useDefineForClassFields": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
+    "baseUrl": "."
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]
