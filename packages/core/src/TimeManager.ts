@@ -27,7 +27,7 @@ class TimeManager {
       this.renderer!.calculateElementInitPosition(video);
 
     const videoClip = new VideoClip({
-      resourceId: video.id,
+      videoResource: video,
       name: video.name,
       startTimestamp: 0,
       endTimestamp: video.duration,
@@ -54,11 +54,10 @@ class TimeManager {
   private updateVideoElements(currentPlayTime: number) {
     const tracks = this.state.getTracks();
     tracks.forEach((track) => {
-      track.getRenderElementsAtTime(currentPlayTime).forEach((element) => {
-        if (element.type === "video") {
-          this.renderer?.onVideoPlay(element, currentPlayTime);
-        }
-      });
+      const element = track.getRenderElementsAtTime(currentPlayTime);
+      if (element.type === "video" && element instanceof VideoClip) {
+        this.renderer?.onVideoPlay(element, currentPlayTime);
+      }
     });
   }
 

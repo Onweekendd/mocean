@@ -2,10 +2,11 @@ import { v4 as uuidv4 } from "uuid";
 
 import { CanvasRender } from "../../interfaces/CanvasRender";
 import { Clip } from "../../interfaces/Clip";
+import { Video } from "../resource/Video";
 
-class VideoClip implements Clip, CanvasRender {
+class VideoClip implements Clip<Video>, CanvasRender {
   id: string;
-  resourceId: string;
+  readonly resource: Video;
   name: string;
   startTimestamp: number;
   endTimestamp: number;
@@ -18,7 +19,7 @@ class VideoClip implements Clip, CanvasRender {
   rotation: number;
 
   constructor({
-    resourceId,
+    videoResource,
     name,
     startTimestamp,
     endTimestamp,
@@ -28,7 +29,7 @@ class VideoClip implements Clip, CanvasRender {
     renderHeight,
     rotation,
   }: {
-    resourceId: string;
+    videoResource: Video;
     name: string;
     startTimestamp: number;
     endTimestamp: number;
@@ -39,7 +40,7 @@ class VideoClip implements Clip, CanvasRender {
     rotation: number;
   }) {
     this.id = uuidv4();
-    this.resourceId = resourceId;
+    this.resource = videoResource;
     this.name = name;
     this.startTimestamp = startTimestamp;
     this.endTimestamp = endTimestamp;

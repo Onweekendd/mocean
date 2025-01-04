@@ -19,7 +19,7 @@ const Editor = () => {
     unitTime: 100,
     unitPixelOfTime: 50,
     tracks: [],
-    fps: 30,
+    fps: 24,
     currentTime: 0,
   });
   const storeRef = useRef(new ReducerEditorState(state, dispatch));

@@ -18,10 +18,8 @@ import { VideoSourceProvider } from "./provider/VideoSourceProvider";
 
 const Renderer = () => {
   const editor = useContext(EditorContext)!;
-  const videos = editor.state.getVideos();
 
   const tracks = editor.state.getTracks();
-
   const currentTime = editor.state.getCurrentTime();
 
   const renderVideoElements = useMemo(
@@ -29,12 +27,8 @@ const Renderer = () => {
       tracks
         .map((track) => track.getRenderElementsAtTime(currentTime))
         .flat()
-        .map((element) => {
-          console.log(element);
-          const video = videos.find((video) => video.id === element.resourceId);
-          return { ...element, video: video || null };
-        }),
-    [tracks, videos, currentTime],
+        .filter((element) => element !== null),
+    [tracks, currentTime],
   );
 
   const canvasContainerRef = useRef<HTMLDivElement>(null);
@@ -68,7 +62,7 @@ const Renderer = () => {
       height: canvasContainerRef.current?.clientHeight ?? 0,
       onVideoPlay,
     });
-  }, [editor]);
+  }, [editor, onVideoPlay]);
 
   useEffect(() => {
     const newMap = new Map<
@@ -77,7 +71,7 @@ const Renderer = () => {
     >();
 
     (renderVideoElements ?? []).forEach((renderVideo) => {
-      if (!renderVideo.video) return;
+      if (!renderVideo.resource) return;
       if (!videoToElement.current.has(renderVideo.id)) {
         newMap.set(renderVideo.id, {
           canvas: undefined,
@@ -122,7 +116,7 @@ const Renderer = () => {
           <Layer>
             {renderVideoElements?.map(
               (videoClip) =>
-                videoClip.video && (
+                videoClip.resource && (
                   <KonvaImage
                     key={videoClip.id}
                     x={videoClip.x}
@@ -130,7 +124,7 @@ const Renderer = () => {
                     width={videoClip.renderWidth}
                     height={videoClip.renderHeight}
                     ref={(node) => {
-                      if (node && videoClip.video) {
+                      if (node && videoClip.resource) {
                         videoToElement.current.set(videoClip.id, {
                           ...videoToElement.current.get(videoClip.id),
                           canvas: node,

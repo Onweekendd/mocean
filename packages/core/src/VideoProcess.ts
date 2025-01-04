@@ -1,8 +1,9 @@
+import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
+
 import { EditorState } from "./EditorState.ts";
 import { Video } from "./elements/resource/Video.ts";
 import { matchVideoBaseInfo } from "./utils/index.ts";
-import { FFmpeg } from "@ffmpeg/ffmpeg";
 
 class VideoProcess {
   ffmpeg: FFmpeg;
@@ -90,7 +91,7 @@ class VideoProcess {
       newVideo.width = width;
       newVideo.height = height;
       newVideo.frameRate = frameRate;
-      newVideo.duration = duration;
+      newVideo.duration = Number(duration.toFixed(2));
       newVideo.createTime = createTime;
       newVideo.cover = cover;
       newVideo.status = "finished";

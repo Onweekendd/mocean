@@ -1,9 +1,11 @@
-export interface Clip {
+import { BaseElement } from "../elements/BaseElement";
+
+export interface Clip<T extends BaseElement> {
   /** @description  唯一标识 */
   id: string;
 
-  /** @description 资源ID */
-  resourceId: string;
+  /** @description 资源 */
+  readonly resource: T;
 
   /** @description 名称 */
   name: string;
@@ -14,5 +16,5 @@ export interface Clip {
   /** @description 结束时间戳 */
   endTimestamp: number;
 
-  type: "image" | "video" | "audio" | "text"
+  type: "image" | "video" | "audio" | "text";
 }
