@@ -47,10 +47,6 @@ const Renderer = () => {
         return;
       }
 
-      if (videoElement.currentTime !== currentTime) {
-        videoElement.currentTime = currentTime;
-      }
-
       canvas.getLayer()?.batchDraw();
     },
     [],
@@ -88,13 +84,30 @@ const Renderer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const onPlayPause = useCallback(() => {
     if (!isPlaying) {
+      renderVideoClips?.forEach((videoClip) => {
+        const elements = videoToElement.current.get(videoClip.id);
+        if (!elements) return;
+        const { element: videoElement } = elements;
+        if (videoElement) {
+          videoElement.play();
+        }
+      });
       editor.timeManager.startPlay();
       setIsPlaying(true);
     } else {
+      renderVideoClips?.forEach((videoClip) => {
+        const elements = videoToElement.current.get(videoClip.id);
+
+        if (!elements) return;
+        const { element: videoElement } = elements;
+        if (videoElement) {
+          videoElement.pause();
+        }
+      });
       editor.timeManager.stopPlay();
       setIsPlaying(false);
     }
-  }, [isPlaying, editor.timeManager]);
+  }, [isPlaying, renderVideoClips]);
 
   const onElementUpdate = useCallback(
     (id: string, { element }: { element: HTMLVideoElement }) => {

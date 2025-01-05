@@ -7,7 +7,7 @@ import { Editor as EditorSDK } from "@video-editor/core";
 import ElementList from "./ElementList/ElementList";
 import PropertyEditor from "./PropertyEditor";
 import Renderer from "./Renderer/Renderer";
-import TimeLine from "./TimeLine";
+import TimeLine from "./TrackList/TrackList";
 import { EditorContext, ReducerEditorState, editorStateReducer } from "./index";
 
 const Editor = () => {

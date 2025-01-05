@@ -1,34 +1,37 @@
 import { useContext } from "react";
 
-import { HiEye, HiEyeSlash, HiLockClosed, HiLockOpen } from "react-icons/hi2";
-
 import type { Track } from "@video-editor/core";
 
-import { EditorContext } from "./index";
+import { EditorContext } from "../index";
+import { TrackControls } from "./components/TrackControls";
 
 const TimeLine = () => {
   const editor = useContext(EditorContext)!;
-
   const tracks = editor.state.getTracks();
 
   const onTrackLockChange = (trackId: string) => {
-    const updatedTracks = tracks.map((track) => {
+    const tracksWithUpdatedLock = tracks.map((track) => {
       if (track.id === trackId) {
         track.locked = !track.locked;
       }
       return track;
     });
-    editor.state.setTracks(updatedTracks);
+    editor.state.setTracks(tracksWithUpdatedLock);
   };
 
   const onTrackVisibilityChange = (trackId: string) => {
-    const updatedTracks = tracks.map((track) => {
+    const tracksWithUpdatedVisibility = tracks.map((track) => {
       if (track.id === trackId) {
         track.visible = !track.visible;
       }
       return track;
     });
-    editor.state.setTracks(updatedTracks);
+    editor.state.setTracks(tracksWithUpdatedVisibility);
+  };
+
+  const onTrackDelete = (trackId: string) => {
+    const tracksWithoutDeleted = tracks.filter((track) => track.id !== trackId);
+    editor.state.setTracks(tracksWithoutDeleted);
   };
 
   return (
@@ -39,26 +42,18 @@ const TimeLine = () => {
             key={track.id}
             className="box-border flex h-20 items-center justify-between px-2"
           >
-            <div className="flex h-full w-full items-center justify-center gap-1 rounded-md bg-neutral-100 p-2">
-              <button
-                onClick={() => onTrackVisibilityChange(track.id)}
-                className="flex h-6 w-6 items-center justify-center hover:text-blue-500"
-              >
-                {track.visible ? <HiEye /> : <HiEyeSlash />}
-              </button>
-
-              <button
-                onClick={() => onTrackLockChange(track.id)}
-                className="flex h-6 w-6 items-center justify-center hover:text-blue-500"
-              >
-                {track.locked ? <HiLockClosed /> : <HiLockOpen />}
-              </button>
-            </div>
+            <TrackControls
+              visible={track.visible}
+              locked={track.locked}
+              onVisibilityChange={() => onTrackVisibilityChange(track.id)}
+              onLockChange={() => onTrackLockChange(track.id)}
+              onDelete={() => onTrackDelete(track.id)}
+            />
           </div>
         ))}
       </div>
 
-      <div className="flex h-full flex-1 flex-col justify-center gap-2">
+      <div className="ml-4 flex h-full flex-1 flex-col justify-center gap-2">
         {tracks.map((track) =>
           track.renderElements.map((renderElement) => (
             <div key={renderElement.id} className="flex h-20 items-center">
