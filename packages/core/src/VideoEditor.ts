@@ -1,6 +1,3 @@
-import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { toBlobURL } from "@ffmpeg/util";
-
 import { CommandManager } from "./CommandManager.ts";
 import { EditorState } from "./EditorState.js";
 import { Renderer } from "./Renderer.ts";
@@ -8,27 +5,17 @@ import { TimeManager } from "./TimeManager.ts";
 import { VideoProcess } from "./VideoProcess.ts";
 import { VideoClip } from "./elements/clip/VideoClip.ts";
 
-const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm";
-
 class Editor {
   timeManager: TimeManager;
   videoProcess: VideoProcess;
   commandManager: CommandManager;
   renderer?: Renderer;
-  ffmpeg: FFmpeg;
-
   state: EditorState;
 
   constructor(state: EditorState) {
     this.state = state;
 
-    this.ffmpeg = new FFmpeg();
-    this.ffmpeg.on("progress", ({ progress, time }) => {
-      console.log(progress, time);
-    });
-
     this.videoProcess = new VideoProcess({
-      ffmpeg: this.ffmpeg,
       state: this.state,
     });
 
@@ -38,16 +25,6 @@ class Editor {
 
   static async build(store: EditorState) {
     const editor = new Editor(store);
-
-    await editor.ffmpeg.load({
-      classWorkerURL: "/ffmpeg/worker.js",
-      coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
-      wasmURL: await toBlobURL(
-        `${baseURL}/ffmpeg-core.wasm`,
-        "application/wasm",
-      ),
-    });
-
     return editor;
   }
 
