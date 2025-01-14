@@ -155,13 +155,13 @@ class VideoProcess {
       fileUrl: URL.createObjectURL(file),
     });
 
+    const chunks = await this.quickParseMP4(newVideo.fileUrl);
+    console.log(chunks);
+
     this.state.setVideos([...this.state.getVideos(), newVideo]);
 
     try {
       const buffer = await fetchFile(file);
-
-      const chunks = await this.quickParseMP4(buffer);
-      console.log(chunks);
 
       this.ffmpeg.writeFile(file.name, buffer);
 
@@ -189,14 +189,13 @@ class VideoProcess {
   /**
    * 快速解析 MP4 文件，避免一次性加载过大数据
    */
-  async quickParseMP4(buffer: ArrayBuffer): Promise<EncodedVideoChunk[]> {
+  async quickParseMP4(fileUrl: string): Promise<EncodedVideoChunk[]> {
     return new Promise((resolve, reject) => {
-      debugger;
       const mp4File = MP4Box.createFile(false);
       const chunks: EncodedVideoChunk[] = [];
 
       mp4File.onMoovStart = () => {
-        console.log("onMoovStart");
+        console.log(mp4File.moov);
       };
 
       mp4File.onError = (error) => {
@@ -204,6 +203,7 @@ class VideoProcess {
       };
 
       mp4File.onReady = (info) => {
+        console.log("onReady", info);
         const videoTrack = info.videoTracks[0];
         if (videoTrack) {
           mp4File.setExtractionOptions(videoTrack.id, "video", {
@@ -227,7 +227,12 @@ class VideoProcess {
         chunks.push(...newChunks);
       };
 
-      mp4File.appendBuffer(buffer as MP4ArrayBuffer);
+      fetch(fileUrl).then((res) => {
+        const reader = res.body!.getReader();
+        this.parseStream(reader, mp4File).then(() => {
+          resolve(chunks);
+        });
+      });
     });
   }
 
@@ -242,14 +247,11 @@ class VideoProcess {
 
     while (true) {
       try {
-        debugger;
         const { value, done } = await reader.read();
         if (done || !value) break;
 
         const buffer = value.buffer as MP4ArrayBuffer;
         buffer.fileStart = cursor;
-
-        console.log(mp4File.ftyp);
 
         const nextPos = mp4File.appendBuffer(buffer);
         if (nextPos == null) break;
