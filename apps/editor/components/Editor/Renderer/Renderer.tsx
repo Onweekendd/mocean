@@ -131,6 +131,7 @@ const Renderer = () => {
               (videoClip) =>
                 videoClip.resource && (
                   <KonvaImage
+                    draggable
                     key={videoClip.id}
                     x={videoClip.x}
                     y={videoClip.y}

@@ -1,8 +1,30 @@
 import MP4Box from "@webav/mp4box.js";
-import type { MP4ArrayBuffer, MP4File, TrakBoxParser } from "@webav/mp4box.js";
+import type {
+  MP4ArrayBuffer,
+  MP4File,
+  MP4Sample,
+  TrakBoxParser,
+} from "@webav/mp4box.js";
 
 import { EditorState } from "./EditorState.ts";
 import { Video } from "./elements/resource/Video.ts";
+
+interface VideoInfo {
+  width: number;
+  height: number;
+  frameRate: number;
+  duration: number;
+  createTime: Date;
+  codec: string;
+  description: Uint8Array;
+  samples: MP4Sample[];
+}
+
+interface DecodedFrame {
+  img: ImageBitmap;
+  duration: number;
+  timestamp: number;
+}
 
 class VideoProcess {
   state: EditorState;
@@ -52,33 +74,12 @@ class VideoProcess {
   }
 
   /**
-   * 获取视频基本信息
+   * 采集视频样本数据
    */
-  private async getVideoBaseInfo(fileUrl: string): Promise<{
-    width: number;
-    height: number;
-    frameRate: number;
-    duration: number;
-    createTime: Date;
-    codec: string;
-    videoFrames: VideoFrame[];
-  }> {
+  private async collectVideoSamples(fileUrl: string): Promise<VideoInfo> {
     return new Promise((resolve, reject) => {
       const mp4File = MP4Box.createFile();
-      let width: number;
-      let height: number;
-      let frameRate: number;
-      let duration: number;
-      let createTime: Date;
-      let codec: string;
-      let description: Uint8Array;
-      const videoFrames: VideoFrame[] = [];
-
-      let decoder: VideoDecoder;
-
-      const BATCH_SIZE = 100;
-      let currentSamples = 0;
-      let totalSamples = 0;
+      const samples: MP4Sample[] = [];
 
       mp4File.onError = (error) => {
         reject(new Error(error));
@@ -91,74 +92,39 @@ class VideoProcess {
           return;
         }
 
-        width = videoTrack.track_width;
-        height = videoTrack.track_height;
-
+        const width = videoTrack.track_width;
+        const height = videoTrack.track_height;
         const totalSeconds = videoTrack.duration / videoTrack.timescale;
-        frameRate = Math.round(videoTrack.nb_samples / totalSeconds);
-        totalSamples = videoTrack.nb_samples;
-
-        duration = videoTrack.duration / videoTrack.timescale;
-        createTime = new Date(videoTrack.created);
-        codec = videoTrack.codec;
-
-        description = this.parseVideoCodecDesc(
+        const frameRate = Math.round(videoTrack.nb_samples / totalSeconds);
+        const duration = videoTrack.duration / videoTrack.timescale;
+        const createTime = new Date(videoTrack.created);
+        const codec = videoTrack.codec;
+        const description = this.parseVideoCodecDesc(
           mp4File.getTrackById(videoTrack.id),
         );
 
-        decoder = new VideoDecoder({
-          output: (chunk) => {
-            videoFrames.push(chunk);
-
-            if (currentSamples >= totalSamples) {
-              mp4File.stop();
-              decoder.flush();
-
-              resolve({
-                width,
-                height,
-                frameRate,
-                duration,
-                createTime,
-                codec,
-                videoFrames,
-              });
-            }
-          },
-          error: (error) => {
-            reject(new Error(error.message));
-          },
-        });
-
-        decoder.configure({
-          codec,
-          description,
-          codedHeight: height,
-          codedWidth: width,
-        });
-
-        mp4File.setExtractionOptions(videoTrack.id, "video", {
-          nbSamples: BATCH_SIZE,
+        mp4File.setExtractionOptions(videoTrack.id, null, {
+          nbSamples: videoTrack.nb_samples, // 获取所有样本
         });
         mp4File.start();
-      };
 
-      mp4File.onSamples = (id, user, samples) => {
-        currentSamples += samples.length;
-        for (const sample of samples) {
-          decoder.decode(
-            new EncodedVideoChunk({
-              type: sample.is_sync ? "key" : "delta",
-              timestamp: sample.cts,
-              duration: sample.duration,
-              data: sample.data,
-            }),
-          );
-        }
-      };
+        mp4File.onSamples = (id, user, newSamples) => {
+          samples.push(...newSamples);
+          if (samples.length === videoTrack.nb_samples) {
+            mp4File.stop();
 
-      mp4File.onFlush = () => {
-        console.log("flush");
+            resolve({
+              width,
+              height,
+              frameRate,
+              duration,
+              createTime,
+              codec,
+              description,
+              samples,
+            });
+          }
+        };
       };
 
       fetch(fileUrl)
@@ -167,9 +133,161 @@ class VideoProcess {
           const arrayBuffer = buffer as MP4ArrayBuffer;
           arrayBuffer.fileStart = 0;
           mp4File.appendBuffer(arrayBuffer);
+          mp4File.flush();
         })
         .catch(reject);
     });
+  }
+
+  /**
+   * 解码视频帧
+   */
+  private async decodeVideoFrames(
+    videoInfo: VideoInfo,
+  ): Promise<DecodedFrame[]> {
+    return new Promise((resolve, reject) => {
+      const decodedFrames: DecodedFrame[] = [];
+      let isDecoderClosed = false;
+      let lastDecodeTime = 0;
+      let noNewFrameCount = 0;
+
+      // 检查解码是否完成
+      const checkDecodeComplete = () => {
+        const currentTime = Date.now();
+
+        if (decodedFrames.length > 0) {
+          if (currentTime - lastDecodeTime > 500) {
+            // 如果500ms内没有新帧
+            noNewFrameCount++;
+          } else {
+            noNewFrameCount = 0;
+          }
+
+          // 连续3次检查都没有新帧，认为解码完成
+          if (noNewFrameCount >= 3) {
+            if (!isDecoderClosed) {
+              isDecoderClosed = true;
+              decoder.close();
+              // 按时间戳排序确保帧顺序正确
+              decodedFrames.sort((a, b) => a.timestamp - b.timestamp);
+              resolve(decodedFrames);
+            }
+            return;
+          }
+        }
+
+        // 继续检查
+        setTimeout(checkDecodeComplete, 200);
+      };
+
+      const decoder = new VideoDecoder({
+        output: async (frame) => {
+          try {
+            const bitmap = await createImageBitmap(frame);
+            decodedFrames.push({
+              img: bitmap,
+              duration: frame.duration,
+              timestamp: frame.timestamp,
+            });
+
+            frame.close();
+            lastDecodeTime = Date.now();
+
+            // 打印进度
+            if (decodedFrames.length % 10 === 0) {
+              console.log(`Decoded frames: ${decodedFrames.length}`);
+            }
+          } catch (error) {
+            console.warn("Failed to create bitmap:", error);
+          }
+        },
+        error: (error) => {
+          if (!isDecoderClosed) {
+            isDecoderClosed = true;
+            decoder.close();
+            reject(new Error(error.message));
+          }
+        },
+      });
+
+      // 配置解码器
+      decoder.configure({
+        codec: videoInfo.codec,
+        description: videoInfo.description,
+        codedHeight: videoInfo.height,
+        codedWidth: videoInfo.width,
+      });
+
+      // 批量处理样本
+      const BATCH_SIZE = 30;
+      let currentBatch = 0;
+
+      const processBatch = () => {
+        const start = currentBatch * BATCH_SIZE;
+        const end = Math.min(start + BATCH_SIZE, videoInfo.samples.length);
+
+        if (start >= videoInfo.samples.length) {
+          return;
+        }
+
+        // 处理当前批次的样本
+        for (let i = start; i < end; i++) {
+          const sample = videoInfo.samples[i];
+          try {
+            decoder.decode(
+              new EncodedVideoChunk({
+                type: sample.is_sync ? "key" : "delta",
+                timestamp: sample.cts,
+                duration: sample.duration,
+                data: sample.data,
+              }),
+            );
+          } catch (error) {
+            console.warn(`Failed to decode frame ${i}:`, error);
+          }
+        }
+
+        currentBatch++;
+
+        // 检查解码器状态，如果解码器队列未满，继续处理下一批
+        if (decoder.state === "configured" && !isDecoderClosed) {
+          setTimeout(processBatch, 0);
+        }
+      };
+
+      // 开始批量处理和检查
+      processBatch();
+      checkDecodeComplete();
+    });
+  }
+
+  /**
+   * 获取视频基本信息并解码
+   */
+  private async getVideoBaseInfo(fileUrl: string): Promise<{
+    width: number;
+    height: number;
+    frameRate: number;
+    duration: number;
+    createTime: Date;
+    codec: string;
+    videoFrames: DecodedFrame[];
+  }> {
+    // 1. 先采集视频样本
+    const videoInfo = await this.collectVideoSamples(fileUrl);
+
+    // 2. 解码视频帧
+    const videoFrames = await this.decodeVideoFrames(videoInfo);
+
+    return {
+      width: videoInfo.width,
+      height: videoInfo.height,
+      frameRate: videoInfo.frameRate,
+      duration: videoInfo.duration,
+      createTime: videoInfo.createTime,
+      codec: videoInfo.codec,
+      videoFrames,
+    };
   }
 
   onVideoUpload = async ({ file }: { file: File }) => {
