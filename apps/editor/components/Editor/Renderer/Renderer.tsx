@@ -14,7 +14,6 @@ import { VideoClip } from "@video-editor/core";
 
 import { EditorContext } from "..";
 import PlayControl from "../components/PlayControl";
-import { VideoSourceProvider } from "./provider/VideoSourceProvider";
 
 const Renderer = () => {
   const editor = useContext(EditorContext)!;
@@ -33,21 +32,26 @@ const Renderer = () => {
 
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const videoToElement = useRef<
-    Map<string, { canvas?: Image; element?: HTMLVideoElement }>
+    Map<string, { canvas?: Image; imageBitmap?: CanvasImageSource }>
   >(new Map());
+  const frameToImageBitmapCache = useRef<Map<number, ImageBitmap>>(new Map());
 
   const onVideoPlay = useCallback(
     (videoClip: VideoClip, currentTime: number) => {
       const elements = videoToElement.current.get(videoClip.id);
+      if (!elements?.canvas) return;
 
-      if (!elements) return;
-      const { element: videoElement, canvas } = elements;
+      // 找到当前时间对应的帧
+      const currentFrame = videoClip.resource?.videoFrame.find(
+        (frame) =>
+          frame.timestamp <= currentTime &&
+          frame.timestamp + frame.duration > currentTime,
+      );
 
-      if (!videoElement || !canvas) {
-        return;
+      if (currentFrame) {
+        // 更新画布
+        elements.canvas.getLayer()?.batchDraw();
       }
-
-      canvas.getLayer()?.batchDraw();
     },
     [],
   );
@@ -63,7 +67,7 @@ const Renderer = () => {
   useEffect(() => {
     const newMap = new Map<
       string,
-      { canvas?: Image; element?: HTMLVideoElement }
+      { canvas?: Image; element?: CanvasImageSource }
     >();
 
     (renderVideoClips ?? []).forEach((renderVideo) => {
@@ -81,43 +85,55 @@ const Renderer = () => {
     videoToElement.current = newMap;
   }, [renderVideoClips?.length]);
 
+  // 处理视频帧的逻辑
+  useEffect(() => {
+    const processVideoFrame = async (videoClip: VideoClip) => {
+      if (!videoClip.resource?.videoFrame) return;
+
+      for (const frame of videoClip.resource.videoFrame) {
+        // 检查缓存中是否已有该帧的 ImageBitmap
+        if (!frameToImageBitmapCache.current.has(frame.timestamp)) {
+          try {
+            const imageBitmap = await createImageBitmap(frame.frame);
+            frameToImageBitmapCache.current.set(frame.timestamp, imageBitmap);
+
+            // 更新到 KonvaImage
+            videoToElement.current.set(videoClip.id, {
+              ...videoToElement.current.get(videoClip.id),
+              imageBitmap: imageBitmap,
+            });
+          } catch (error) {
+            console.error("Failed to create ImageBitmap:", error);
+          } finally {
+            // 释放 VideoFrame 资源
+            frame.frame.close();
+          }
+        }
+      }
+    };
+
+    renderVideoClips.forEach(processVideoFrame);
+
+    // 清理函数
+    return () => {
+      // 清理缓存的 ImageBitmap
+      frameToImageBitmapCache.current.forEach((bitmap) => {
+        bitmap.close();
+      });
+      frameToImageBitmapCache.current.clear();
+    };
+  }, [renderVideoClips]);
+
   const [isPlaying, setIsPlaying] = useState(false);
   const onPlayPause = useCallback(() => {
     if (!isPlaying) {
-      renderVideoClips?.forEach((videoClip) => {
-        const elements = videoToElement.current.get(videoClip.id);
-        if (!elements) return;
-        const { element: videoElement } = elements;
-        if (videoElement) {
-          videoElement.play();
-        }
-      });
       editor.timeManager.startPlay();
       setIsPlaying(true);
     } else {
-      renderVideoClips?.forEach((videoClip) => {
-        const elements = videoToElement.current.get(videoClip.id);
-
-        if (!elements) return;
-        const { element: videoElement } = elements;
-        if (videoElement) {
-          videoElement.pause();
-        }
-      });
       editor.timeManager.stopPlay();
       setIsPlaying(false);
     }
-  }, [isPlaying, renderVideoClips]);
-
-  const onElementUpdate = useCallback(
-    (id: string, { element }: { element: HTMLVideoElement }) => {
-      videoToElement.current.set(id, {
-        ...videoToElement.current.get(id),
-        element,
-      });
-    },
-    [],
-  );
+  }, [isPlaying, editor.timeManager]);
 
   return (
     <div className="flex h-full w-full flex-col">
@@ -145,7 +161,9 @@ const Renderer = () => {
                         });
                       }
                     }}
-                    image={videoToElement.current.get(videoClip.id)?.element}
+                    image={
+                      videoToElement.current.get(videoClip.id)?.imageBitmap
+                    }
                   />
                 ),
             )}
@@ -154,11 +172,6 @@ const Renderer = () => {
       </div>
 
       <PlayControl isPlaying={isPlaying} onPlayPause={onPlayPause} />
-
-      <VideoSourceProvider
-        videoClips={renderVideoClips}
-        onElementUpdate={onElementUpdate}
-      />
     </div>
   );
 };
