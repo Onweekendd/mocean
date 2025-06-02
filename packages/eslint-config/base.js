@@ -3,6 +3,7 @@ import eslintConfigPrettier from "eslint-config-prettier";
 import turboPlugin from "eslint-plugin-turbo";
 import tseslint from "typescript-eslint";
 import prettierPlugin from "eslint-plugin-prettier";
+import globals from "globals";
 
 /**
  * A shared ESLint configuration for the repository.
@@ -13,6 +14,14 @@ export const config = [
   js.configs.recommended,
   eslintConfigPrettier,
   ...tseslint.configs.recommended,
+  {
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        ...globals.browser,
+      },
+    },
+  },
   {
     plugins: {
       turbo: turboPlugin,
