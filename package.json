@@ -5,8 +5,11 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
+    "lint:check": "turbo lint -- --max-warnings=0",
+    "lint:fix": "turbo lint -- --fix",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
+  "packageManager": "pnpm@10.5.2",
   "devDependencies": {
     "prettier": "^3.2.5",
     "turbo": "^2.3.3",
