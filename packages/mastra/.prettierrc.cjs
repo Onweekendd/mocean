@@ -1,7 +1,4 @@
 module.exports = {
-  endOfLine: "crlf",
-  printWidth: 80,
-  proseWrap: "preserve",
   plugins: ["@trivago/prettier-plugin-sort-imports"],
   importOrder: [
     "^react$",

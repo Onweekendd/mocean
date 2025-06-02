@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint --max-warnings 0",
+    "fix": "eslint --fix .",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
@@ -48,4 +49,3 @@
     "typescript": "5.5.4"
   }
 }
-

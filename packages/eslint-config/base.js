@@ -35,7 +35,18 @@ export const config = [
       prettier: prettierPlugin,
     },
     rules: {
-      "prettier/prettier": "error",
+      "prettier/prettier": [
+        "error",
+        {
+          endOfLine: "lf",
+          printWidth: 80,
+          tabWidth: 2,
+          useTabs: false,
+          semi: true,
+          singleQuote: false,
+          quoteProps: "as-needed",
+        },
+      ],
     },
   },
   {
