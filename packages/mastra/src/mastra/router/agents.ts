@@ -2,7 +2,7 @@ import { registerApiRoute } from "@mastra/core/server";
 
 import { getAgents } from "../prisma/agents";
 
-registerApiRoute("/get-agents", {
+export const agentsRouter = registerApiRoute("/get-agents", {
   method: "GET",
 
   handler: async (req) => {

@@ -9,6 +9,9 @@
     "lint": "eslint .",
     "fix": "eslint --fix ."
   },
+  "exports": {
+    "./prismaType": "./generated/prisma/model.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -35,6 +38,7 @@
     "eslint": "^9.15.0",
     "mastra": "^0.10.0",
     "prisma": "^6.8.2",
+    "@prisma/client": "6.8.2",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3"
   }
