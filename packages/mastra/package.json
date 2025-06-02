@@ -28,8 +28,10 @@
   "devDependencies": {
     "@mocean/eslint-config": "workspace:*",
     "@mocean/typescript-config": "workspace:*",
+    "@prisma/adapter-better-sqlite3": "^6.8.2",
     "@trivago/prettier-plugin-sort-imports": "^4.2.0",
     "@types/node": "^20.17.6",
+    "better-sqlite3": "^11.10.0",
     "eslint": "^9.15.0",
     "mastra": "^0.10.0",
     "prisma": "^6.8.2",
@@ -37,4 +39,3 @@
     "typescript": "^5.8.3"
   }
 }
-
