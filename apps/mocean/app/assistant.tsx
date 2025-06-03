@@ -14,8 +14,9 @@ export const Assistant = () => {
   });
 
   useEffect(() => {
-    fetch("http://localhost:4111/get-agents").then((res) => {
-      console.log(res);
+    fetch("http://localhost:4111/get-agents").then(async (res) => {
+      const result = await res.json();
+      console.log(result);
     });
   }, []);
 
