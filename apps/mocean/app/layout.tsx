@@ -1,4 +1,5 @@
-import { TooltipProvider } from "@/components/ui/tooltip";
+import AppSidebar from "@/components/app-sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 import "./globals.css";
 
@@ -8,11 +9,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html>
       <body>
-        <div className="h-screen w-screen overflow-hidden">
-          <TooltipProvider>{children}</TooltipProvider>
-        </div>
+        <SidebarProvider>
+          <AppSidebar />
+          <main>{children}</main>
+        </SidebarProvider>
       </body>
     </html>
   );

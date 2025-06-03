@@ -1,12 +1,15 @@
-import { Assistant } from "./assistant";
-import "./globals.css";
+"use client";
 
-function Page() {
-  return (
-    <div className="h-full w-full">
-      <Assistant />
-    </div>
-  );
+import { useEffect } from "react";
+
+import { useRouter } from "next/navigation";
+
+export default function Chat() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push("chat");
+  }, [router]);
+
+  return <div />;
 }
-
-export default Page;

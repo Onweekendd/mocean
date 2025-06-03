@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "@mocean/app",
+        "title": "墨海AI",
         "width": 800,
         "height": 600,
         "resizable": true,
