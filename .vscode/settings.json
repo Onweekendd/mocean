@@ -14,6 +14,15 @@
       "mode": "auto"
     }
   ],
-  "cSpell.words": ["demux", "Konva", "trivago", "uuidv", "vframes"],
-  "rust-analyzer.linkedProjects": ["apps\\mocean\\src-tauri\\Cargo.toml"]
+  "cSpell.words": [
+    "demux",
+    "Konva",
+    "mastra",
+    "mocean",
+    "trivago",
+    "uuidv",
+    "vframes"
+  ],
+  "rust-analyzer.linkedProjects": ["apps\\mocean\\src-tauri\\Cargo.toml"],
+  "files.eol": "\n"
 }
