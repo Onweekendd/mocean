@@ -1,5 +1,5 @@
 import { agentsRouter } from "./agents";
 
-const apiRoutes = [agentsRouter];
+const apiRoutes = [...agentsRouter];
 
 export { apiRoutes };
