@@ -1,28 +1,42 @@
 import { AgentModel, TopicModel } from "@mocean/mastra/prismaType";
 import { create } from "zustand";
 
-const useStore = create((set) => ({
+export type Store = {
   /**
    * @description 助手列表
    */
-  agentList: [] as AgentModel[],
-  setAgentList: (agents: AgentModel[]) => set({ agentList: agents }),
+  agentList: AgentModel[];
+  setAgentList: (agents: AgentModel[]) => void;
 
   /**
    * @description 当前助手
    */
+  activeAgent: AgentModel | null;
+  setActiveAgent: (agent: AgentModel) => void;
+
+  /**
+   * @description 话题列表
+   */
+  topicList: TopicModel[];
+  setTopicList: (topics: TopicModel[]) => void;
+
+  /**
+   * @description 当前话题
+   */
+  activeTopic: TopicModel | null;
+  setActiveTopic: (topic: TopicModel) => void;
+};
+
+const useStore = create<Store>((set) => ({
+  agentList: [] as AgentModel[],
+  setAgentList: (agents: AgentModel[]) => set({ agentList: agents }),
+
   activeAgent: null as AgentModel | null,
   setActiveAgent: (agent: AgentModel) => set({ activeAgent: agent }),
 
-  /**
-   * @description 当前助手 对应 话题列表
-   */
   topicList: [] as TopicModel[],
   setTopicList: (topics: TopicModel[]) => set({ topicList: topics }),
 
-  /**
-   * @description 当前
-   */
   activeTopic: null as TopicModel | null,
   setActiveTopic: (topic: TopicModel) => set({ activeTopic: topic }),
 }));
