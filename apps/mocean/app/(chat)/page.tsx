@@ -14,7 +14,7 @@ export default function Chat() {
   const defaultAssistant: AgentModel = {
     id: "1",
     name: "默认助手",
-    description: "默认助手",
+    description: "我是默认助手，你可以和我对话",
     prompt: "",
     type: "assistant",
     emoji: "",

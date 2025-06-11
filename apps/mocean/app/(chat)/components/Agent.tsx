@@ -7,7 +7,6 @@ const AgentSelect = () => {
       {agentList.map((agent) => (
         <div key={agent.id}>
           <div>{agent.name}</div>
-          <div>{agent.description}</div>
         </div>
       ))}
     </div>
