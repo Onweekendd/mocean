@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 
-import { AgentModel } from "@mocean/mastra/prismaType";
+import { AssistantModel } from "@mocean/mastra/prismaType";
 
 import { useStore } from "@/app/store/useStore";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import AgentSelect from "./Agent";
+import AssistantSelect from "./Assistant";
 import TopicSelect from "./TopicSelect";
 
 const ChatConfig = () => {
@@ -26,15 +26,15 @@ const ChatConfig = () => {
     },
   ];
 
-  const { setActiveAgent } = useStore();
+  const { setActiveAssistant } = useStore();
 
   const [activeTab, setActiveTab] = useState<string>(
     tabsConfig[0]?.value || "assistant",
   );
 
-  const onAgentSelect = (agent: AgentModel) => {
+  const onAssistantSelect = (assistant: AssistantModel) => {
     setActiveTab(tabsConfig[1]?.value || "topic");
-    setActiveAgent(agent);
+    setActiveAssistant(assistant);
   };
   return (
     <Tabs defaultValue={activeTab} className="w-[400px] px-2">
@@ -46,7 +46,7 @@ const ChatConfig = () => {
         ))}
       </TabsList>
       <TabsContent value="assistant">
-        <AgentSelect onClick={onAgentSelect} />
+        <AssistantSelect onClick={onAssistantSelect} />
       </TabsContent>
       <TabsContent value="topic">
         <TopicSelect />

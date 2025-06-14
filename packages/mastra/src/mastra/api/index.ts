@@ -1,10 +1,19 @@
 import { agentsApiMethods, useAgentsApi } from "./agents-client";
 import { assistantsApiMethods, useAssistantsApi } from "./assistants-client";
 
+export { BASE_URL } from "./base-client";
+
 /**
  * API 客户端统一导出
  * @description 提供所有API客户端的统一入口
  */
+
+// 基础API客户端
+export {
+  BaseApiClient,
+  type ApiResponse,
+  type ApiClientConfig,
+} from "./base-client";
 
 // 代理相关API
 export {
@@ -13,8 +22,6 @@ export {
   agentsApiMethods,
   useAgentsApi,
   type AgentInput,
-  type ApiResponse,
-  type ApiClientConfig,
 } from "./agents-client";
 
 // 助手相关API

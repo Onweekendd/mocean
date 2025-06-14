@@ -2,41 +2,48 @@
 
 import { useEffect } from "react";
 
-import { useAgentsApi } from "@mocean/mastra/apiClient";
-import { AgentModel } from "@mocean/mastra/prismaType";
+import { useAssistantsApi } from "@mocean/mastra/apiClient";
+import { AssistantModel } from "@mocean/mastra/prismaType";
+
+import { Thread } from "@/components/thread";
 
 import { useStore } from "../store/useStore";
 
 export default function Chat() {
-  const { getAgents } = useAgentsApi();
-  const { setAgentList } = useStore();
+  const { getAssistants } = useAssistantsApi();
+  const { setAssistantList } = useStore();
 
-  const defaultAssistant: AgentModel = {
+  const defaultAssistant: AssistantModel = {
     id: "1",
     name: "默认助手",
     description: "我是默认助手，你可以和我对话",
     prompt: "",
     type: "assistant",
     emoji: "",
-    groupJson: {},
     enableWebSearch: false,
     webSearchProviderId: "",
     enableGenerateImage: false,
     knowledgeRecognition: "",
+    modelId: "",
+    defaultModelId: "",
     createdAt: new Date(),
     updatedAt: new Date(),
   };
 
   useEffect(() => {
-    getAgents().then((res) => {
+    getAssistants().then((res) => {
       if (!res.data) {
         return;
       }
 
-      setAgentList([...res.data, defaultAssistant]);
+      setAssistantList([...res.data, defaultAssistant]);
     });
   }, []);
 
   // 直接返回聊天界面，不再进行跳转
-  return <div>Chat</div>;
+  return (
+    <div className="h-full flex-1">
+      <Thread />
+    </div>
+  );
 }

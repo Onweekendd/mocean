@@ -1,25 +1,26 @@
 import { useApi } from "@mocean/mastra/apiClient";
 
-const AgentAddButton = () => {
+const AssistantAddButton = () => {
   const {
-    agents: { createAgent },
+    assistants: { createAssistant },
   } = useApi();
 
-  const handleAddAgent = () => {
-    createAgent({
+  const handleAddAssistant = () => {
+    createAssistant({
       name: "新助手",
       description: "新助手",
       prompt: "新助手",
       type: "assistant",
       emoji: "🤖",
-      groupJson: {},
       enableWebSearch: false,
       webSearchProviderId: "",
       enableGenerateImage: false,
       knowledgeRecognition: "",
+      modelId: "",
+      defaultModelId: "",
     });
   };
-  return <div onClick={handleAddAgent}>AgentAddButton</div>;
+  return <div onClick={handleAddAssistant}>AssistantAddButton</div>;
 };
 
-export default AgentAddButton;
+export default AssistantAddButton;

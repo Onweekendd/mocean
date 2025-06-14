@@ -13,7 +13,7 @@ export default function RootLayout({
       <body>
         <SidebarProvider>
           <AppSidebar />
-          <main>{children}</main>
+          <main className="min-h-svh flex-1">{children}</main>
         </SidebarProvider>
       </body>
     </html>

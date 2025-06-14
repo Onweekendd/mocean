@@ -1,18 +1,18 @@
-import { AgentModel, TopicModel } from "@mocean/mastra/prismaType";
+import { AssistantModel, TopicModel } from "@mocean/mastra/prismaType";
 import { create } from "zustand";
 
 export type Store = {
   /**
    * @description 助手列表
    */
-  agentList: AgentModel[];
-  setAgentList: (agents: AgentModel[]) => void;
+  assistantList: AssistantModel[];
+  setAssistantList: (assistants: AssistantModel[]) => void;
 
   /**
    * @description 当前助手
    */
-  activeAgent: AgentModel | null;
-  setActiveAgent: (agent: AgentModel) => void;
+  activeAssistant: AssistantModel | null;
+  setActiveAssistant: (assistant: AssistantModel) => void;
 
   /**
    * @description 话题列表
@@ -28,11 +28,13 @@ export type Store = {
 };
 
 const useStore = create<Store>((set) => ({
-  agentList: [] as AgentModel[],
-  setAgentList: (agents: AgentModel[]) => set({ agentList: agents }),
+  assistantList: [] as AssistantModel[],
+  setAssistantList: (assistants: AssistantModel[]) =>
+    set({ assistantList: assistants }),
 
-  activeAgent: null as AgentModel | null,
-  setActiveAgent: (agent: AgentModel) => set({ activeAgent: agent }),
+  activeAssistant: null as AssistantModel | null,
+  setActiveAssistant: (assistant: AssistantModel) =>
+    set({ activeAssistant: assistant }),
 
   topicList: [] as TopicModel[],
   setTopicList: (topics: TopicModel[]) => set({ topicList: topics }),

@@ -1,6 +1,8 @@
 /// <reference lib="dom" />
 import { AgentModel } from "generated/prisma/models";
 
+import { ApiClientConfig, ApiResponse, BaseApiClient } from "./base-client";
+
 /**
  * 代理创建和更新的输入类型
  */
@@ -19,75 +21,12 @@ export type AgentInput = Pick<
 >;
 
 /**
- * API 响应的基础类型
- */
-export interface ApiResponse<T> {
-  data?: T;
-  error?: string;
-}
-
-/**
- * API 客户端配置
- */
-export interface ApiClientConfig {
-  baseUrl?: string;
-  headers?: Record<string, string>;
-}
-
-/**
- * 请求选项类型
- */
-interface RequestOptions {
-  method?: string;
-  headers?: Record<string, string>;
-  body?: string;
-}
-
-/**
  * 代理 API 客户端类
  * @description 提供类型安全的代理相关 API 调用方法
  */
-export class AgentsApiClient {
-  private baseUrl: string;
-  private defaultHeaders: Record<string, string>;
-
+export class AgentsApiClient extends BaseApiClient {
   constructor(config: ApiClientConfig = {}) {
-    this.baseUrl = config.baseUrl || "http://localhost:4111";
-    this.defaultHeaders = {
-      "Content-Type": "application/json",
-      ...config.headers,
-    };
-  }
-
-  /**
-   * 发送 HTTP 请求的通用方法
-   * @param endpoint - API 端点
-   * @param options - 请求选项
-   */
-  private async request<T>(
-    endpoint: string,
-    options: RequestOptions = {},
-  ): Promise<ApiResponse<T>> {
-    try {
-      const url = `${this.baseUrl}${endpoint}`;
-      const response = await fetch(url, {
-        ...options,
-        headers: {
-          ...this.defaultHeaders,
-          ...options.headers,
-        },
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        return { error: data.error || `HTTP ${response.status}` };
-      }
-
-      return { data };
-    } catch (error) {
-      return { error: error instanceof Error ? error.message : "网络请求失败" };
-    }
+    super(config);
   }
 
   /**
@@ -95,9 +34,7 @@ export class AgentsApiClient {
    * @description 获取系统中所有可用的代理列表
    */
   async getAgents(): Promise<ApiResponse<AgentModel[]>> {
-    return this.request<AgentModel[]>("/agents", {
-      method: "GET",
-    });
+    return this.get<AgentModel[]>("/agents");
   }
 
   /**
@@ -106,9 +43,7 @@ export class AgentsApiClient {
    * @param id - 代理的唯一标识符
    */
   async getAgentById(id: string): Promise<ApiResponse<AgentModel>> {
-    return this.request<AgentModel>(`/agents/${id}`, {
-      method: "GET",
-    });
+    return this.get<AgentModel>(`/agents/${id}`);
   }
 
   /**
@@ -117,10 +52,7 @@ export class AgentsApiClient {
    * @param agentData - 代理信息对象
    */
   async createAgent(agentData: AgentInput): Promise<ApiResponse<AgentModel>> {
-    return this.request<AgentModel>("/agents", {
-      method: "POST",
-      body: JSON.stringify(agentData),
-    });
+    return this.post<AgentModel>("/agents", agentData);
   }
 
   /**
@@ -133,10 +65,7 @@ export class AgentsApiClient {
     id: string,
     agentData: Partial<AgentInput>,
   ): Promise<ApiResponse<AgentModel>> {
-    return this.request<AgentModel>(`/agents/${id}`, {
-      method: "PUT",
-      body: JSON.stringify(agentData),
-    });
+    return this.put<AgentModel>(`/agents/${id}`, agentData);
   }
 
   /**
@@ -145,9 +74,7 @@ export class AgentsApiClient {
    * @param id - 代理的唯一标识符
    */
   async deleteAgent(id: string): Promise<ApiResponse<AgentModel>> {
-    return this.request<AgentModel>(`/agents/${id}`, {
-      method: "DELETE",
-    });
+    return this.delete<AgentModel>(`/agents/${id}`);
   }
 }
 

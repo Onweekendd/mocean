@@ -6,17 +6,21 @@ import { useStore } from "@/app/store/useStore";
 import { ThreadList } from "@/components/thread-list";
 
 const TopicSelect = () => {
-  const { activeAgent } = useStore();
+  const { activeAssistant } = useStore();
 
   const { topicList, setTopicList } = useStore();
 
   useEffect(() => {
-    if (activeAgent) {
-      // setTopicList(activeAgent.topicList);
+    if (activeAssistant) {
+      // setTopicList(activeAssistant.topicList);
     }
-  }, [activeAgent]);
+  }, [activeAssistant]);
 
-  return <div>TopicSelect</div>;
+  return (
+    <div>
+      <ThreadList />
+    </div>
+  );
 };
 
 export default TopicSelect;

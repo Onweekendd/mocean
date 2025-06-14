@@ -233,13 +233,15 @@ const chatWithAssistant = registerApiRoute("/assistants/chat", {
         });
       }
 
-      return DynamicAgent.stream(message, {
+      const stream = DynamicAgent.stream(message, {
         runtimeContext: createCommonRunTime({
           name: assistant.name,
           instructions: assistant.prompt,
           model: assistant.model.name,
         }) as RuntimeContext,
       });
+
+      return (await stream).toTextStreamResponse();
     } catch (error) {
       if (error instanceof z.ZodError) {
         return new Response(

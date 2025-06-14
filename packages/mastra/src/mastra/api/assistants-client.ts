@@ -1,6 +1,8 @@
 /// <reference lib="dom" />
 import { AssistantModel } from "generated/prisma/models";
 
+import { ApiClientConfig, ApiResponse, BaseApiClient } from "./base-client";
+
 /**
  * 助手创建和更新的输入类型
  */
@@ -20,75 +22,12 @@ export type AssistantInput = Pick<
 >;
 
 /**
- * API 响应的基础类型
- */
-export interface ApiResponse<T> {
-  data?: T;
-  error?: string;
-}
-
-/**
- * API 客户端配置
- */
-export interface ApiClientConfig {
-  baseUrl?: string;
-  headers?: Record<string, string>;
-}
-
-/**
- * 请求选项类型
- */
-interface RequestOptions {
-  method?: string;
-  headers?: Record<string, string>;
-  body?: string;
-}
-
-/**
  * 助手 API 客户端类
  * @description 提供类型安全的助手相关 API 调用方法
  */
-export class AssistantsApiClient {
-  private baseUrl: string;
-  private defaultHeaders: Record<string, string>;
-
+export class AssistantsApiClient extends BaseApiClient {
   constructor(config: ApiClientConfig = {}) {
-    this.baseUrl = config.baseUrl || "http://localhost:4111";
-    this.defaultHeaders = {
-      "Content-Type": "application/json",
-      ...config.headers,
-    };
-  }
-
-  /**
-   * 发送 HTTP 请求的通用方法
-   * @param endpoint - API 端点
-   * @param options - 请求选项
-   */
-  private async request<T>(
-    endpoint: string,
-    options: RequestOptions = {},
-  ): Promise<ApiResponse<T>> {
-    try {
-      const url = `${this.baseUrl}${endpoint}`;
-      const response = await fetch(url, {
-        ...options,
-        headers: {
-          ...this.defaultHeaders,
-          ...options.headers,
-        },
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        return { error: data.error || `HTTP ${response.status}` };
-      }
-
-      return { data };
-    } catch (error) {
-      return { error: error instanceof Error ? error.message : "网络请求失败" };
-    }
+    super(config);
   }
 
   /**
@@ -96,9 +35,7 @@ export class AssistantsApiClient {
    * @description 获取系统中所有可用的助手列表
    */
   async getAssistants(): Promise<ApiResponse<AssistantModel[]>> {
-    return this.request<AssistantModel[]>("/assistants", {
-      method: "GET",
-    });
+    return this.get<AssistantModel[]>("/assistants");
   }
 
   /**
@@ -107,9 +44,7 @@ export class AssistantsApiClient {
    * @param id - 助手的唯一标识符
    */
   async getAssistantById(id: string): Promise<ApiResponse<AssistantModel>> {
-    return this.request<AssistantModel>(`/assistants/${id}`, {
-      method: "GET",
-    });
+    return this.get<AssistantModel>(`/assistants/${id}`);
   }
 
   /**
@@ -120,10 +55,7 @@ export class AssistantsApiClient {
   async createAssistant(
     assistantData: AssistantInput,
   ): Promise<ApiResponse<AssistantModel>> {
-    return this.request<AssistantModel>("/assistants", {
-      method: "POST",
-      body: JSON.stringify(assistantData),
-    });
+    return this.post<AssistantModel>("/assistants", assistantData);
   }
 
   /**
@@ -136,10 +68,7 @@ export class AssistantsApiClient {
     id: string,
     assistantData: Partial<AssistantInput>,
   ): Promise<ApiResponse<AssistantModel>> {
-    return this.request<AssistantModel>(`/assistants/${id}`, {
-      method: "PUT",
-      body: JSON.stringify(assistantData),
-    });
+    return this.put<AssistantModel>(`/assistants/${id}`, assistantData);
   }
 
   /**
@@ -148,9 +77,7 @@ export class AssistantsApiClient {
    * @param id - 助手的唯一标识符
    */
   async deleteAssistant(id: string): Promise<ApiResponse<AssistantModel>> {
-    return this.request<AssistantModel>(`/assistants/${id}`, {
-      method: "DELETE",
-    });
+    return this.delete<AssistantModel>(`/assistants/${id}`);
   }
 }
 
