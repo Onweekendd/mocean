@@ -16,7 +16,7 @@ const AssistantSelect: React.FC<AssistantSelectProps> = ({ onClick }) => {
   };
 
   return (
-    <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <div className="p-6 bg-gray-50 dark:bg-gray-900 h-full rounded-md">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">

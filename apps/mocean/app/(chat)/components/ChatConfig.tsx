@@ -37,7 +37,7 @@ const ChatConfig = () => {
     setActiveAssistant(assistant);
   };
   return (
-    <Tabs defaultValue={activeTab} className="w-[400px] px-2">
+    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-[400px] px-2 flex flex-col">
       <TabsList className="w-full">
         {tabsConfig.map((tab) => (
           <TabsTrigger className="flex-1" key={tab.value} value={tab.value}>
@@ -45,7 +45,7 @@ const ChatConfig = () => {
           </TabsTrigger>
         ))}
       </TabsList>
-      <TabsContent value="assistant">
+      <TabsContent value="assistant" className="flex-1">
         <AssistantSelect onClick={onAssistantSelect} />
       </TabsContent>
       <TabsContent value="topic">
