@@ -1,0 +1,256 @@
+---
+description: 当需要生成 tsx 的组件时，就需要应用这份规则
+globs: 
+alwaysApply: false
+---
+# UI组件设计系统规范
+
+## 🎨 设计原则
+
+### 1. 基础组件使用
+- **必须使用**: 仅使用 `/components/ui` 文件夹中的组件
+- **禁止使用**: 外部UI库（如Ant Design、Material-UI等）
+- **图标库**: 仅使用 `lucide-react`
+
+### 2. 布局系统
+- **主布局**: 优先使用 `flex flex-col` 垂直布局
+- **间距**: 使用 `gap-4` 作为标准间距（16px）
+- **容器**: 使用 `Card` 组件作为主要容器
+
+## 🎯 组件规范
+
+### Card组件标准
+```tsx
+// 基础Card结构
+<Card className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 group">
+  <CardHeader className="pb-3">
+    {/* 头部内容 */}
+  </CardHeader>
+  <CardContent className="pt-0">
+    {/* 主要内容 */}
+  </CardContent>
+  <CardFooter className="pt-0">
+    {/* 底部内容 */}
+  </CardFooter>
+</Card>
+```
+
+### 交互效果标准
+- **悬停效果**: `hover:shadow-lg hover:-translate-y-1`
+- **过渡动画**: `transition-all duration-200`
+- **组状态**: 使用 `group` 和 `group-hover:` 前缀
+
+## 🎨 颜色系统
+
+### 主色调
+- **主要渐变**: `bg-gradient-to-br from-blue-500 to-purple-600`
+- **次要渐变**: `bg-gradient-to-r from-blue-500/5 to-purple-500/5`
+
+### 语义化颜色
+- **成功/启用**: `text-green-600` / `bg-green-100 dark:bg-green-900/30`
+- **功能/特性**: `text-purple-600` / `bg-purple-100 dark:bg-purple-900/30`
+- **信息**: `text-blue-500` / `bg-blue-100 dark:bg-blue-900/30`
+
+### CSS变量使用
+- **背景**: `bg-background`, `bg-card`, `bg-muted/50`
+- **文字**: `text-foreground`, `text-muted-foreground`, `text-card-foreground`
+- **边框**: `border-border`, `border-muted-foreground/25`
+- **主题色**: `text-primary`, `bg-primary`, `hover:text-primary`
+
+## 📐 尺寸规范
+
+### 图标尺寸
+- **大图标**: `w-12 h-12` (48px) - 主要展示
+- **中图标**: `w-6 h-6` (24px) - 标准图标
+- **小图标**: `w-4 h-4` (16px) - Badge内图标
+- **微图标**: `w-3 h-3` (12px) - 装饰图标
+
+### 圆角规范
+- **卡片**: `rounded-xl` (12px)
+- **图标容器**: `rounded-lg` (8px)
+- **小元素**: `rounded-md` (6px)
+- **圆形**: `rounded-full`
+
+### 间距规范
+- **组件间距**: `gap-4` (16px)
+- **内容间距**: `space-x-3`, `space-y-3` (12px)
+- **紧密间距**: `space-x-2`, `space-y-2` (8px)
+- **松散间距**: `space-x-6`, `space-y-6` (24px)
+
+## 📱 响应式规范
+
+### 布局响应式
+```tsx
+// 垂直布局为主，避免复杂的grid响应式
+<div className="flex flex-col gap-4">
+  {/* 内容 */}
+</div>
+
+// 如需水平布局，使用简单的flex
+<div className="flex items-center space-x-4">
+  {/* 内容 */}
+</div>
+```
+
+### 文字响应式
+- **标题**: `text-lg` (18px) - 主标题
+- **副标题**: `text-base` (16px) - 次要标题
+- **正文**: `text-sm` (14px) - 描述文字
+- **小字**: `text-xs` (12px) - 辅助信息
+
+## 🏷️ Badge使用规范
+
+### Badge变体
+- **类型标识**: `<Badge variant="secondary">类型</Badge>`
+- **功能标识**: `<Badge variant="outline">功能</Badge>`
+- **状态标识**: `<Badge variant="default">状态</Badge>`
+
+### Badge内图标
+```tsx
+<Badge variant="secondary" className="text-xs">
+  <Icon className="w-3 h-3 mr-1" />
+  文字
+</Badge>
+```
+
+## 🎭 特殊组件规范
+
+### 创建类组件
+- **边框**: `border-2 border-dashed border-muted-foreground/25`
+- **背景**: `bg-muted/20`
+- **悬停**: `hover:border-primary/50`
+
+### 文本截断
+```tsx
+// 2行截断
+<p style={{
+  display: '-webkit-box',
+  WebkitLineClamp: 2,
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden'
+}}>
+  内容
+</p>
+
+// 3行截断
+<p style={{
+  display: '-webkit-box',
+  WebkitLineClamp: 3,
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden'
+}}>
+  内容
+</p>
+```
+
+## 🔄 动画规范
+
+### 标准动画
+- **缩放**: `group-hover:scale-110 transition-transform duration-200`
+- **旋转**: `group-hover:rotate-12 transition-transform duration-200`
+- **透明度**: `opacity-0 group-hover:opacity-100 transition-opacity`
+
+### 动画时长
+- **快速**: `duration-200` (200ms) - 悬停效果
+- **标准**: `duration-300` (300ms) - 状态切换
+- **慢速**: `duration-500` (500ms) - 页面转换
+
+## 📋 组件模板
+
+### 标准列表项组件
+```tsx
+const ListItemCard: React.FC<Props> = ({ data, onClick }) => {
+  return (
+    <Card 
+      className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 group"
+      onClick={() => onClick(data)}
+    >
+      <CardContent className="flex items-center p-6">
+        <div className="flex items-center space-x-4 w-full">
+          {/* 图标区域 */}
+          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white">
+            <Icon className="w-6 h-6" />
+          </div>
+          
+          {/* 内容区域 */}
+          <div className="flex-1">
+            <CardTitle className="text-lg group-hover:text-primary transition-colors">
+              {data.title}
+            </CardTitle>
+            <CardDescription className="mt-1">
+              {data.description}
+            </CardDescription>
+            
+            {/* Badge区域 */}
+            <div className="flex items-center space-x-2 mt-2">
+              <Badge variant="secondary">{data.type}</Badge>
+            </div>
+          </div>
+          
+          {/* 右侧功能区 */}
+          <div className="flex space-x-2">
+            {/* 功能图标 */}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+```
+
+### 创建类组件模板
+```tsx
+const CreateCard: React.FC<Props> = ({ onClick }) => {
+  return (
+    <Card 
+      className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 group border-2 border-dashed border-muted-foreground/25 bg-muted/20 hover:border-primary/50"
+      onClick={onClick}
+    >
+      <CardContent className="flex items-center p-6">
+        <div className="flex items-center space-x-4 w-full">
+          <div className="relative">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-200">
+              <Plus className="w-6 h-6" />
+            </div>
+          </div>
+          
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold mb-1 group-hover:text-primary transition-colors">
+              创建新项目
+            </h3>
+            <p className="text-sm text-muted-foreground mb-3">
+              描述文字
+            </p>
+            
+            <div className="flex items-center space-x-2">
+              {/* Badge列表 */}
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+```
+
+## ✅ 检查清单
+
+在创建新组件时，请确保：
+
+- [ ] 使用了正确的UI组件（Card、Badge等）
+- [ ] 应用了标准的悬停效果和动画
+- [ ] 使用了CSS变量而非硬编码颜色
+- [ ] 图标尺寸符合规范
+- [ ] 间距使用了标准值
+- [ ] 文本截断使用了内联样式
+- [ ] 响应式布局简洁明了
+- [ ] 深色模式兼容性良好
+
+## 🚫 禁止事项
+
+- ❌ 不使用复杂的grid响应式布局
+- ❌ 不使用外部UI组件库
+- ❌ 不使用硬编码的颜色值
+- ❌ 不使用过于复杂的动画
+- ❌ 不修改全局CSS文件
+- ❌ 不使用非标准的间距值

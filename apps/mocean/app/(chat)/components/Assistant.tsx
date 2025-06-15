@@ -28,8 +28,8 @@ const AssistantSelect: React.FC<AssistantSelectProps> = ({ onClick }) => {
           </p>
         </div>
 
-        {/* Assistant Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {/* Assistant List */}
+        <div className="flex flex-col gap-4">
           {/* Create New Assistant Card */}
           <CreateAssistantCard onClick={handleCreateAssistant} />
 
