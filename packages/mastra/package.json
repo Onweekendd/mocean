@@ -8,7 +8,8 @@
     "dev": "dotenvx run -- mastra dev",
     "build": "mastra build",
     "lint": "eslint .",
-    "fix": "eslint --fix ."
+    "fix": "eslint --fix .",
+    "import-agents": "tsx scripts/import-agents.ts"
   },
   "exports": {
     "./prismaType": {
