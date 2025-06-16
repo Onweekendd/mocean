@@ -1,3 +1,6 @@
+"use client";
+
+import ToasterProvider from "@/app/context/ToasterProvider";
 import AppSidebar from "@/components/app-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 
@@ -12,8 +15,10 @@ export default function RootLayout({
     <html>
       <body>
         <SidebarProvider>
-          <AppSidebar />
-          <main className="min-h-svh flex-1">{children}</main>
+          <ToasterProvider>
+            <AppSidebar />
+            <main className="min-h-svh flex-1">{children}</main>
+          </ToasterProvider>
         </SidebarProvider>
       </body>
     </html>

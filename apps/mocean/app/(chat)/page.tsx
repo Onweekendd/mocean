@@ -6,12 +6,15 @@ import { useAssistantsApi } from "@mocean/mastra/apiClient";
 import { AssistantModel } from "@mocean/mastra/prismaType";
 
 import { Thread } from "@/components/thread";
+import useCustomRequest from "@/hooks/useCustomRequest";
 
 import { useStore } from "../store/useStore";
 
 export default function Chat() {
   const { getAssistants } = useAssistantsApi();
   const { setAssistantList } = useStore();
+
+  const { request } = useCustomRequest();
 
   const defaultAssistant: AssistantModel = {
     id: "1",
@@ -31,11 +34,8 @@ export default function Chat() {
   };
 
   useEffect(() => {
-    getAssistants().then((res) => {
-      if (!res.data) {
-        return;
-      }
-
+    request(getAssistants()).then((res) => {
+      if (!res) return;
       setAssistantList([...res.data, defaultAssistant]);
     });
   }, []);
