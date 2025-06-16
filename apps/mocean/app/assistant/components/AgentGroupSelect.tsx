@@ -1,25 +1,24 @@
 "use client";
 
-import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AgentGroupIcon, iconMap } from "./AgentGroupIcon";
+import { useStore } from "@/app/store/useStore";
 
 export interface AgentGroupSelectProps {
-    selectedGroup?: string;
     onGroupSelect?: (group: string) => void;
     className?: string;
 }
 
 export const AgentGroupSelect: React.FC<AgentGroupSelectProps> = ({
-    selectedGroup = "精选",
     onGroupSelect,
     className = "",
 }) => {
-    const [currentGroup, setCurrentGroup] = useState(selectedGroup);
+    const { activeAgentGroup, setActiveAgentGroup } = useStore();
+    const currentGroup = activeAgentGroup || "精选";
 
     const handleGroupSelect = (group: string) => {
-        setCurrentGroup(group);
+        setActiveAgentGroup(group);
         onGroupSelect?.(group);
     };
 

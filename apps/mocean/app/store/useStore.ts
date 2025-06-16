@@ -13,6 +13,12 @@ export type Store = {
   setAssistantList: (assistants: AssistantModel[]) => void;
 
   /**
+   * @description 当前智能体分组
+   */
+  activeAgentGroup: string | null;
+  setActiveAgentGroup: (group: string) => void;
+
+  /**
    * @description 智能体列表
    */
   agentList: AgentModel[];
@@ -41,6 +47,9 @@ const useStore = create<Store>((set) => ({
   assistantList: [] as AssistantModel[],
   setAssistantList: (assistants: AssistantModel[]) =>
     set({ assistantList: assistants }),
+
+  activeAgentGroup: "精选",
+  setActiveAgentGroup: (group: string) => set({ activeAgentGroup: group }),
 
   agentList: [] as AgentModel[],
   setAgentList: (agents: AgentModel[]) => set({ agentList: agents }),
