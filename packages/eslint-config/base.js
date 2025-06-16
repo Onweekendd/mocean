@@ -51,7 +51,7 @@ export const config = [
   },
   {
     rules: {
-      "no-console": "error",
+      "no-console": "warn",
       "no-debugger": "error",
       "no-alert": "error",
       "no-unused-vars": "error",

@@ -1,6 +1,6 @@
 ---
 description: 当需要生成 tsx 的组件时，就需要应用这份规则
-globs: 
+globs:
 alwaysApply: false
 ---
 # UI组件设计系统规范
@@ -161,7 +161,7 @@ alwaysApply: false
 ```tsx
 const ListItemCard: React.FC<Props> = ({ data, onClick }) => {
   return (
-    <Card 
+    <Card
       className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 group"
       onClick={() => onClick(data)}
     >
@@ -171,7 +171,7 @@ const ListItemCard: React.FC<Props> = ({ data, onClick }) => {
           <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white">
             <Icon className="w-6 h-6" />
           </div>
-          
+
           {/* 内容区域 */}
           <div className="flex-1">
             <CardTitle className="text-lg group-hover:text-primary transition-colors">
@@ -180,13 +180,13 @@ const ListItemCard: React.FC<Props> = ({ data, onClick }) => {
             <CardDescription className="mt-1">
               {data.description}
             </CardDescription>
-            
+
             {/* Badge区域 */}
             <div className="flex items-center space-x-2 mt-2">
               <Badge variant="secondary">{data.type}</Badge>
             </div>
           </div>
-          
+
           {/* 右侧功能区 */}
           <div className="flex space-x-2">
             {/* 功能图标 */}
@@ -202,7 +202,7 @@ const ListItemCard: React.FC<Props> = ({ data, onClick }) => {
 ```tsx
 const CreateCard: React.FC<Props> = ({ onClick }) => {
   return (
-    <Card 
+    <Card
       className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 group border-2 border-dashed border-muted-foreground/25 bg-muted/20 hover:border-primary/50"
       onClick={onClick}
     >
@@ -213,7 +213,7 @@ const CreateCard: React.FC<Props> = ({ onClick }) => {
               <Plus className="w-6 h-6" />
             </div>
           </div>
-          
+
           <div className="flex-1">
             <h3 className="text-lg font-semibold mb-1 group-hover:text-primary transition-colors">
               创建新项目
@@ -221,7 +221,7 @@ const CreateCard: React.FC<Props> = ({ onClick }) => {
             <p className="text-sm text-muted-foreground mb-3">
               描述文字
             </p>
-            
+
             <div className="flex items-center space-x-2">
               {/* Badge列表 */}
             </div>
@@ -248,7 +248,6 @@ const CreateCard: React.FC<Props> = ({ onClick }) => {
 
 ## 🚫 禁止事项
 
-- ❌ 不使用复杂的grid响应式布局
 - ❌ 不使用外部UI组件库
 - ❌ 不使用硬编码的颜色值
 - ❌ 不使用过于复杂的动画

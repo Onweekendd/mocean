@@ -3,6 +3,7 @@ import { registerApiRoute } from "@mastra/core/server";
 import { z } from "zod";
 
 import { DynamicAgent } from "../agents/dynamicAgent";
+import { PREFIX } from "../api/base-client";
 import {
   chatWithAssistantSchema,
   createAssistant,
@@ -16,7 +17,7 @@ import {
   updateAssistantSchema,
 } from "../prisma/assistant";
 import { createCommonRunTime } from "../runtime/CommonRunTime";
-import { PREFIX } from "../api/base-client";
+
 /**
  * 获取所有助手的路由处理器
  * @description 返回系统中所有可用的助手列表
@@ -31,10 +32,13 @@ const getAssistantsRouter = registerApiRoute(`${PREFIX}/assistants`, {
         headers: { "Content-Type": "application/json" },
       });
     } catch (error) {
-      return new Response(JSON.stringify({ error, message: "获取助手列表失败" }), {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ error, message: "获取助手列表失败" }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json" },
+        },
+      );
     }
   },
 });
