@@ -9,7 +9,8 @@
     "build": "mastra build",
     "lint": "eslint .",
     "fix": "eslint --fix .",
-    "import-agents": "tsx scripts/import-agents.ts"
+    "import-agents": "tsx scripts/import-agents.ts",
+    "import-providers-models": "tsx scripts/import-providers-models.ts"
   },
   "exports": {
     "./prismaType": {
