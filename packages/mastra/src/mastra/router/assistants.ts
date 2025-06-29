@@ -239,7 +239,7 @@ const chatWithAssistant = registerApiRoute(`${PREFIX}/assistants/chat`, {
         });
       }
 
-      const stream = DynamicAgent.stream(messages, {
+      const stream = await DynamicAgent.stream(messages, {
         threadId,
         resourceId: config.resourceId,
         runtimeContext: createCommonRunTime({
@@ -249,8 +249,9 @@ const chatWithAssistant = registerApiRoute(`${PREFIX}/assistants/chat`, {
         }) as RuntimeContext,
       });
 
-      return (await stream).toTextStreamResponse();
+      return stream.toTextStreamResponse();
     } catch (error) {
+      console.error(error);
       if (error instanceof z.ZodError) {
         return new Response(
           JSON.stringify({
@@ -263,7 +264,7 @@ const chatWithAssistant = registerApiRoute(`${PREFIX}/assistants/chat`, {
           },
         );
       }
-      return new Response(JSON.stringify({ error: "聊天请求失败" }), {
+      return new Response(JSON.stringify({ message: "聊天请求失败", error }), {
         status: 500,
         headers: { "Content-Type": "application/json" },
       });

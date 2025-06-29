@@ -9,6 +9,6 @@
   "webSearchProviderId": "",
   "enableGenerateImage": false,
   "knowledgeRecognition": "",
-  "modelId": "",
+  "modelId": "gpt-4o",
   "defaultModelId": ""
 }
