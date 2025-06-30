@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 import { useParams } from "next/navigation";
 
@@ -13,43 +13,46 @@ import { useAssistantsSWR } from "@/hooks/useAssistantsSWR";
 import ChatConfig from "./components/ChatConfig";
 
 const ChatLayout = ({ children }: { children: React.ReactNode }) => {
-  const { assistants, isLoading, error } = useAssistantsSWR();
   const { setAssistantList, setActiveAssistant } = useStore();
+  const { assistants, isLoading, error } = useAssistantsSWR();
   const params = useParams();
   const id = params.id as string;
 
   // 处理助手列表数据更新
-  const onAssistantListUpdate = (
-    assistants: AssistantModel[] | undefined,
-    isLoading: boolean,
-    error: Error | null | undefined,
-  ) => {
-    if (error) {
-      console.error("获取助手列表失败:", error);
-      setAssistantList([]);
-      return [];
-    } else if (assistants && assistants.length > 0) {
-      setAssistantList(assistants);
-      return assistants;
-    } else if (!isLoading) {
-      setAssistantList([]);
-      return [];
-    }
-    return assistants || [];
-  };
+  const onAssistantListUpdate = useCallback(
+    (
+      assistants: AssistantModel[] | undefined,
+      isLoading: boolean,
+      error: Error | null | undefined,
+    ) => {
+      if (error) {
+        console.error("获取助手列表失败:", error);
+        setAssistantList([]);
+        return [];
+      } else if (assistants && assistants.length > 0) {
+        setAssistantList(assistants);
+        return assistants;
+      } else if (!isLoading) {
+        setAssistantList([]);
+        return [];
+      }
+      return assistants || [];
+    },
+    [setAssistantList],
+  );
 
   // 根据ID激活对应的助手
-  const onActiveAssistantById = (
-    id: string,
-    assistantList: AssistantModel[],
-  ) => {
-    if (id && assistantList.length > 0) {
-      const assistant = assistantList.find((item) => item.id === id);
-      if (assistant) {
-        setActiveAssistant(assistant);
+  const onActiveAssistantById = useCallback(
+    (id: string, assistantList: AssistantModel[]) => {
+      if (id && assistantList.length > 0) {
+        const assistant = assistantList.find((item) => item.id === id);
+        if (assistant) {
+          setActiveAssistant(assistant);
+        }
       }
-    }
-  };
+    },
+    [setActiveAssistant],
+  );
 
   // 统一处理助手数据和激活状态
   useEffect(() => {
@@ -59,7 +62,14 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
       error,
     );
     onActiveAssistantById(id, currentAssistants);
-  }, [assistants, isLoading, error, id, setAssistantList, setActiveAssistant]);
+  }, [
+    assistants,
+    isLoading,
+    error,
+    id,
+    onAssistantListUpdate,
+    onActiveAssistantById,
+  ]);
 
   return (
     <MyRuntimeProvider>

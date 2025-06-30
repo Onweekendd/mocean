@@ -1,6 +1,8 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import { Agent } from "@mastra/core/agent";
 import { RuntimeContext } from "@mastra/core/di";
+import { LibSQLStore } from "@mastra/libsql";
+import { Memory } from "@mastra/memory";
 
 import { CommonRunTimeType } from "../runtime/CommonRunTime";
 
@@ -29,4 +31,17 @@ export const DynamicAgent = new Agent({
 
     return model;
   },
+
+  memory: new Memory({
+    storage: new LibSQLStore({
+      url: "file:./mastra.db", // path is relative to the .mastra/output directory
+    }),
+    options: {
+      lastMessages: 10,
+      semanticRecall: false,
+      threads: {
+        generateTitle: true,
+      },
+    },
+  }),
 });
