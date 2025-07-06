@@ -6,6 +6,7 @@ import { DynamicAgent } from "../agents/dynamicAgent";
 import { PREFIX } from "../api/base-client";
 import {
   assistantIdParamSchema,
+  assistantThreadIdParamSchema,
   chatWithAssistantSchema,
   createAssistant,
   createAssistantSchema,
@@ -13,7 +14,6 @@ import {
   getAssistantById,
   getAssistantWithModelByAssistantId,
   getAssistants,
-  threadIdParamSchema,
   updateAssistant,
   updateAssistantSchema,
 } from "../prisma/assistant";
@@ -338,24 +338,25 @@ const getAssistantThreads = registerApiRoute(
   },
 );
 
-const getAssistantHistoryByThreadId = registerApiRoute(
-  `${PREFIX}/assistants/history/:assistantId/:threadId`,
+const getAssistantUIMessageByThreadId = registerApiRoute(
+  `${PREFIX}/assistants/messages/:assistantId/:threadId`,
   {
     method: "GET",
     handler: async (c) => {
       try {
-        const { assistantId, threadId } = threadIdParamSchema.parse({
-          assistantId: c.req.param("assistantId"),
+        const { assistantId, threadId } = assistantThreadIdParamSchema.parse({
           threadId: c.req.param("threadId"),
+          assistantId: c.req.param("assistantId"),
         });
 
         const memory = DynamicAgent.getMemory();
 
-        const threads = await memory.getThreadsByResourceId({
+        const messages = await memory.query({
+          threadId,
           resourceId: assistantId,
         });
 
-        return new Response(JSON.stringify(threads), {
+        return new Response(JSON.stringify(messages.uiMessages), {
           status: 200,
           headers: { "Content-Type": "application/json" },
         });
@@ -396,4 +397,5 @@ export const assistantsRouter = [
   deleteAssistantRouter,
   chatWithAssistant,
   getAssistantThreads,
+  getAssistantUIMessageByThreadId,
 ];

@@ -61,7 +61,7 @@ const ChatConfig = () => {
       </TabsContent>
 
       <TabsContent value="topic" className="flex-1">
-        <ThreadSelect />
+        <ThreadSelect isActive={activeTab === "topic"} />
       </TabsContent>
 
       <TabsContent value="setting">Change your setting here.</TabsContent>

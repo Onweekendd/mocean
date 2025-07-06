@@ -48,7 +48,7 @@ const assistantIdParamSchema = z.object({
   assistantId: z.string().min(1, "助手ID不能为空"),
 });
 
-const threadIdParamSchema = z.object({
+const assistantThreadIdParamSchema = z.object({
   assistantId: z.string().min(1, "助手ID不能为空"),
   threadId: z.string().min(1, "对话ID不能为空"),
 });
@@ -191,5 +191,5 @@ export {
   updateAssistantSchema,
   chatWithAssistantSchema,
   assistantIdParamSchema,
-  threadIdParamSchema,
+  assistantThreadIdParamSchema,
 };

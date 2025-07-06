@@ -4,7 +4,7 @@ import { PrismaClient } from "../../../generated/prisma";
 
 const adapter = new PrismaBetterSQLite3({
   // 这里一定要使用绝对路径
-  url: process.env.DATABASE_URL,
+  url: process.env.PRISMA_DATABASE_URL,
 });
 
 export const prisma = new PrismaClient({ adapter });

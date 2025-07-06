@@ -6,7 +6,8 @@
     "build": {
       "dependsOn": ["^build"],
       "env": [
-        "DATABASE_URL",
+        "PRISMA_DATABASE_URL",
+        "MASTRA_DATABASE_URL",
         "OPENAI_API_KEY",
         "OPENAI_API_BASE_URL",
         "OPENAI_API_MODEL"

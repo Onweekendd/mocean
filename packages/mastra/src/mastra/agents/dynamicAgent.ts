@@ -5,6 +5,7 @@ import { LibSQLStore } from "@mastra/libsql";
 import { Memory } from "@mastra/memory";
 
 import { CommonRunTimeType } from "../runtime/CommonRunTime";
+import { weatherTool } from "../tools/weather-tool";
 
 export const DynamicAgent = new Agent({
   name: "DynamicAgent",
@@ -32,9 +33,11 @@ export const DynamicAgent = new Agent({
     return model;
   },
 
+  tools: { weatherTool },
+
   memory: new Memory({
     storage: new LibSQLStore({
-      url: "file:./mastra.db", // path is relative to the .mastra/output directory
+      url: `file:${process.env.MASTRA_DATABASE_URL}`,
     }),
     options: {
       lastMessages: 10,

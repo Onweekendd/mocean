@@ -1,5 +1,6 @@
 /// <reference lib="dom" />
 import { StorageThreadType } from "@mastra/core";
+import { UIMessage } from "ai";
 import { AssistantModel } from "generated/prisma/models";
 
 import { ApiClientConfig, ApiResponse, BaseApiClient } from "./base-client";
@@ -88,10 +89,29 @@ export class AssistantsApiClient extends BaseApiClient {
     return this.delete<AssistantModel>(`/assistants/${assistantId}`);
   }
 
+  /**
+   * 获取助手历史记录
+   * @description 获取指定助手的所有历史记录
+   * @param assistantId - 助手的唯一标识符
+   */
   async getAssistantThreads(
     assistantId: string,
   ): Promise<ApiResponse<StorageThreadType[]>> {
     return this.get<StorageThreadType[]>(`/assistants/history/${assistantId}`);
+  }
+
+  /**
+   * 获取助手历史记录
+   * @description 获取指定助手的所有历史记录
+   * @param assistantId - 助手的唯一标识符
+   */
+  async getAssistantUIMessageByThreadId(
+    assistantId: string,
+    threadId: string,
+  ): Promise<ApiResponse<UIMessage[]>> {
+    return this.get<UIMessage[]>(
+      `/assistants/messages/${assistantId}/${threadId}`,
+    );
   }
 }
 
@@ -147,6 +167,13 @@ export const assistantsApiMethods = {
    */
   getAssistantThreads: (assistantId: string) =>
     assistantsApi.getAssistantThreads(assistantId),
+
+  /**
+   * 获取助手历史记录
+   * @param threadId - 助手ID
+   */
+  getAssistantUIMessageByThreadId: (assistantId: string, threadId: string) =>
+    assistantsApi.getAssistantUIMessageByThreadId(assistantId, threadId),
 };
 
 /**
@@ -184,5 +211,11 @@ export const useAssistantsApi = () => {
      * 获取助手历史记录
      */
     getAssistantThreads: assistantsApiMethods.getAssistantThreads,
+
+    /**
+     * 获取助手历史记录
+     */
+    getAssistantUIMessageByThreadId:
+      assistantsApiMethods.getAssistantUIMessageByThreadId,
   };
 };

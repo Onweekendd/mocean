@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect } from "react";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import { AssistantModel } from "@mocean/mastra/prismaType";
 
@@ -15,6 +15,7 @@ import ChatConfig from "./components/ChatConfig";
 const DEFAULT_ASSISTANT_ID = "1";
 
 const ChatLayout = ({ children }: { children: React.ReactNode }) => {
+  const router = useRouter();
   const { setAssistantList, setActiveAssistant } = useStore();
   const { assistants, isLoading, error } = useAssistantsSWR();
   const params = useParams();
@@ -65,6 +66,7 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
       error,
     );
     onActiveAssistantById(id || DEFAULT_ASSISTANT_ID, currentAssistants);
+    router.replace(`/${id}`);
   }, [
     assistants,
     isLoading,

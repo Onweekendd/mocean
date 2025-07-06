@@ -99,6 +99,32 @@ export function useAssistantThreadsSWR(assistantId: string | null) {
   };
 }
 
+export function useAssistantUIMessageSWR(
+  assistantId: string | null,
+  threadId: string | null,
+) {
+  const { getAssistantUIMessageByThreadId } = useAssistantsApi();
+
+  const { data, error, isLoading, mutate } = useSWR(
+    threadId ? `assistant-thread-${assistantId}-${threadId}` : null,
+    async () => {
+      if (!assistantId || !threadId) return null;
+      const result = await getAssistantUIMessageByThreadId(
+        assistantId,
+        threadId,
+      );
+      return result?.data || null;
+    },
+  );
+
+  return {
+    messages: data,
+    isLoading,
+    error,
+    refresh: mutate,
+  };
+}
+
 /**
  * 增强的助手 API hooks - 结合 CRUD 操作和 SWR 缓存
  */

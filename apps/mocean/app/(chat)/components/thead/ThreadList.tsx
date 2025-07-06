@@ -112,9 +112,7 @@ const ThreadItem: React.FC<{
   return (
     <Card
       className={`group cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-lg ${
-        isActive
-          ? "border-primary bg-gradient-to-r from-blue-500/5 to-purple-500/5 shadow-md ring-1 ring-primary/20"
-          : ""
+        isActive ? "border-purple-500 shadow-md ring-1 ring-purple-500/20" : ""
       }`}
       onClick={() => onClick(thread)}
     >
@@ -124,7 +122,7 @@ const ThreadItem: React.FC<{
             <div
               className={`flex h-10 w-10 items-center justify-center rounded-lg text-white transition-all duration-200 ${
                 isActive
-                  ? "scale-105 bg-gradient-to-br from-blue-600 to-purple-700"
+                  ? "scale-105 bg-gradient-to-br from-purple-500 to-purple-700"
                   : "bg-gradient-to-br from-green-500 to-teal-600"
               }`}
             >
@@ -134,7 +132,7 @@ const ThreadItem: React.FC<{
               <CardTitle
                 className={`text-base transition-colors ${
                   isActive
-                    ? "font-semibold text-primary"
+                    ? "font-semibold text-purple-600"
                     : "group-hover:text-primary"
                 }`}
               >
@@ -142,7 +140,11 @@ const ThreadItem: React.FC<{
               </CardTitle>
               <Badge
                 variant={isActive ? "default" : "secondary"}
-                className="mt-1 text-xs"
+                className={`mt-1 text-xs ${
+                  isActive
+                    ? "bg-purple-100 text-purple-600 dark:bg-purple-900/30"
+                    : ""
+                }`}
               >
                 {isActive ? "当前对话" : "对话记录"}
               </Badge>
@@ -162,7 +164,7 @@ const ThreadItem: React.FC<{
       <CardContent className="pt-0">
         <div
           className={`rounded-md p-3 ${
-            isActive ? "bg-primary/10" : "bg-muted/50"
+            isActive ? "bg-purple-100 dark:bg-purple-900/30" : "bg-muted/50"
           }`}
         >
           <p className="text-xs text-muted-foreground">
