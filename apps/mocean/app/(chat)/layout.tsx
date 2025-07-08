@@ -6,7 +6,6 @@ import { useParams, useRouter } from "next/navigation";
 
 import { AssistantModel } from "@mocean/mastra/prismaType";
 
-import { MyRuntimeProvider } from "@/app/context/MastraRuntimeProvider";
 import { useStore } from "@/app/store/useStore";
 import { useAssistantsSWR } from "@/hooks/useAssistantsSWR";
 
@@ -77,12 +76,10 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
   ]);
 
   return (
-    <MyRuntimeProvider>
-      <div className="flex h-full pt-2">
-        <ChatConfig />
-        {children}
-      </div>
-    </MyRuntimeProvider>
+    <div className="flex h-full pt-2">
+      <ChatConfig />
+      {children}
+    </div>
   );
 };
 

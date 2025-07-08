@@ -12,7 +12,7 @@ import { useAssistantThreadsSWR } from "@/hooks/useAssistantsSWR";
 
 import { useStore } from "../store/useStore";
 
-export function MyRuntimeProvider({
+export function MastraRuntimeProvider({
   children,
 }: Readonly<{
   children: ReactNode;

@@ -1,7 +1,8 @@
 "use client";
 
 import { useStore } from "@/app/store/useStore";
-import { Thread } from "@/components/thread";
+
+import ChatView from "./components/ChatView";
 
 export default function Chat() {
   const { activeAssistant } = useStore();
@@ -12,7 +13,7 @@ export default function Chat() {
 
   return (
     <div className="h-full flex-1">
-      <Thread />
+      <ChatView />
     </div>
   );
 }

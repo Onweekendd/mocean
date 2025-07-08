@@ -5,7 +5,8 @@ import { useEffect } from "react";
 import { useParams } from "next/navigation";
 
 import { useStore } from "@/app/store/useStore";
-import { Thread } from "@/components/thread";
+
+import ChatView from "../components/ChatView";
 
 export default function Chat() {
   const { threadId } = useParams();
@@ -19,7 +20,7 @@ export default function Chat() {
 
   return (
     <div className="h-full flex-1">
-      <Thread />
+      <ChatView />
     </div>
   );
 }

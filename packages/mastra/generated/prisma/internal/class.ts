@@ -22,7 +22,7 @@ const config: runtime.GetPrismaClientConfig = {
       "value": "prisma-client"
     },
     "output": {
-      "value": "C:\\EaseClip\\packages\\mastra\\generated\\prisma",
+      "value": "D:\\projects\\mocean-desktop-monorepo\\packages\\mastra\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -39,7 +39,7 @@ const config: runtime.GetPrismaClientConfig = {
     "previewFeatures": [
       "driverAdapters"
     ],
-    "sourceFilePath": "C:\\EaseClip\\packages\\mastra\\prisma\\schema.prisma",
+    "sourceFilePath": "D:\\projects\\mocean-desktop-monorepo\\packages\\mastra\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativePath": "../../prisma",
@@ -49,6 +49,7 @@ const config: runtime.GetPrismaClientConfig = {
     "db"
   ],
   "activeProvider": "sqlite",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
