@@ -224,33 +224,41 @@ const ThreadList: React.FC<ThreadListProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      {/* 新建对话按钮 */}
-      <CreateThreadCard onClick={onCreateThreadClick} />
+    <div className="flex h-full flex-col overflow-hidden">
+      <div className="flex-shrink-0 p-4">
+        {/* 新建对话按钮 */}
+        <CreateThreadCard onClick={onCreateThreadClick} />
+      </div>
 
-      {/* 对话历史记录 */}
-      {threads.length > 0 ? (
-        threads.map((thread) => (
-          <ThreadItem
-            key={thread.id}
-            thread={thread}
-            onClick={onThreadItemClick}
-            isActive={activeThread === thread.id}
-          />
-        ))
-      ) : (
-        <Card className="border-2 border-dashed border-muted-foreground/25 bg-muted/10">
-          <CardContent className="flex items-center justify-center p-8">
-            <div className="text-center">
-              <MessageCircle className="mx-auto h-12 w-12 text-muted-foreground/50" />
-              <p className="mt-2 text-sm text-muted-foreground">暂无对话记录</p>
-              <p className="text-xs text-muted-foreground/75">
-                点击上方按钮开始新的对话
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      {/* 对话历史记录 - 可滚动区域 */}
+      <div className="flex-1 overflow-y-auto px-4 pb-4">
+        <div className="flex flex-col gap-4">
+          {threads.length > 0 ? (
+            threads.map((thread) => (
+              <ThreadItem
+                key={thread.id}
+                thread={thread}
+                onClick={onThreadItemClick}
+                isActive={activeThread === thread.id}
+              />
+            ))
+          ) : (
+            <Card className="border-2 border-dashed border-muted-foreground/25 bg-muted/10">
+              <CardContent className="flex items-center justify-center p-8">
+                <div className="text-center">
+                  <MessageCircle className="mx-auto h-12 w-12 text-muted-foreground/50" />
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    暂无对话记录
+                  </p>
+                  <p className="text-xs text-muted-foreground/75">
+                    点击上方按钮开始新的对话
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

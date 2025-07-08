@@ -53,7 +53,7 @@ export type Store = {
    * @description 当前线程
    */
   activeThread: string | null;
-  setActiveThread: (thread: string) => void;
+  setActiveThread: (thread: string | null) => void;
 };
 
 const useStore = create<Store>((set) => ({
@@ -82,7 +82,7 @@ const useStore = create<Store>((set) => ({
     set({ initialMessages: messages }),
 
   activeThread: null as string | null,
-  setActiveThread: (thread: string) => set({ activeThread: thread }),
+  setActiveThread: (thread: string | null) => set({ activeThread: thread }),
 }));
 
 export { useStore };

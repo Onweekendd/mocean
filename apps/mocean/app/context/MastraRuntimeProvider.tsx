@@ -8,10 +8,7 @@ import { AssistantRuntimeProvider } from "@assistant-ui/react";
 import { API_URL } from "@mocean/mastra/apiClient";
 
 import { useMastraRuntime } from "@/hooks/use-mastra-runtime";
-import {
-  useAssistantThreadsSWR,
-  useAssistantUIMessageSWR,
-} from "@/hooks/useAssistantsSWR";
+import { useAssistantThreadsSWR } from "@/hooks/useAssistantsSWR";
 
 import { useStore } from "../store/useStore";
 
@@ -21,11 +18,9 @@ export function MyRuntimeProvider({
   children: ReactNode;
 }>) {
   const router = useRouter();
-  const { activeAssistant, activeThread, setActiveThread } = useStore();
-  const { refresh } = useAssistantThreadsSWR(activeAssistant?.id || null);
-  const { messages: initialMessages } = useAssistantUIMessageSWR(
+  const { activeAssistant, setActiveThread } = useStore();
+  const { refresh: refreshThread } = useAssistantThreadsSWR(
     activeAssistant?.id || null,
-    activeThread || null,
   );
 
   const runtime = useMastraRuntime({
@@ -33,10 +28,10 @@ export function MyRuntimeProvider({
     onCreateThread: (threadId) => {
       setActiveThread(threadId);
       router.replace(`/${activeAssistant?.id}/${threadId}`);
-      refresh();
+      setTimeout(() => {
+        refreshThread();
+      }, 5000);
     },
-    initialMessages: initialMessages || [],
-    threadId: activeThread || undefined,
   });
 
   return (

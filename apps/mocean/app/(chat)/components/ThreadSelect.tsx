@@ -5,7 +5,10 @@ import { useRouter } from "next/navigation";
 import { StorageThreadType } from "@mocean/mastra/apiClient";
 
 import { useStore } from "@/app/store/useStore";
-import { useAssistantThreadsSWR } from "@/hooks/useAssistantsSWR";
+import {
+  useAssistantThreadsSWR,
+  useAssistantUIMessageSWR,
+} from "@/hooks/useAssistantsSWR";
 
 import ThreadList from "./thead/ThreadList";
 
@@ -14,12 +17,17 @@ interface ThreadSelectProps {
 }
 
 const ThreadSelect: React.FC<ThreadSelectProps> = ({ isActive }) => {
-  const { activeAssistant } = useStore();
+  const { activeAssistant, activeThread, setActiveThread } = useStore();
 
   const router = useRouter();
 
   const { threads, refresh } = useAssistantThreadsSWR(
     activeAssistant?.id || null,
+  );
+
+  const { refresh: refreshUIMessage } = useAssistantUIMessageSWR(
+    activeAssistant?.id || null,
+    activeThread || null,
   );
 
   useEffect(() => {
@@ -30,16 +38,16 @@ const ThreadSelect: React.FC<ThreadSelectProps> = ({ isActive }) => {
     if (!activeAssistant) {
       return;
     }
+    setActiveThread(null);
+    refreshUIMessage();
+    router.push(`/${activeAssistant.id}`);
+  }, [activeAssistant, refreshUIMessage, router, setActiveThread]);
 
-    router.replace(`${activeAssistant.id}`);
-  }, [activeAssistant, router]);
-
-  const onThreadClick = useCallback(
-    (thread: StorageThreadType) => {
-      router.push(`${activeAssistant?.id}/${thread.id}`);
-    },
-    [activeAssistant, router],
-  );
+  const onThreadClick = (thread: StorageThreadType) => {
+    setActiveThread(thread.id);
+    refreshUIMessage();
+    router.replace(`/${activeAssistant?.id}/${thread.id}`);
+  };
 
   return (
     <div className="h-full w-full">

@@ -47,7 +47,6 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
   // 根据ID激活对应的助手
   const onActiveAssistantById = useCallback(
     (id: string, assistantList: AssistantModel[]) => {
-      console.log("onActiveAssistantById", id, assistantList);
       if (id && assistantList.length > 0) {
         const assistant = assistantList.find((item) => item.id === id);
         if (assistant) {
@@ -74,6 +73,7 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
     id,
     onAssistantListUpdate,
     onActiveAssistantById,
+    router,
   ]);
 
   return (

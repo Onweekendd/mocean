@@ -1,12 +1,12 @@
 "use client";
 
-import { useRef } from "react";
-
 import { useChat } from "@ai-sdk/react";
 import { useVercelUseChatRuntime } from "@assistant-ui/react-ai-sdk";
-import { Message, UIMessage, generateId } from "ai";
+import { UIMessage, generateId } from "ai";
 
 import { useStore } from "@/app/store/useStore";
+
+import { useAssistantUIMessageSWR } from "./useAssistantsSWR";
 
 // 提取 useVercelUseChatRuntime 的第二个参数类型
 type VercelUseChatAdapter = Parameters<typeof useVercelUseChatRuntime>[1];
@@ -27,30 +27,40 @@ export type PrepareRequestBodyReturnType = {
  * @returns
  */
 export function useMastraRuntime({
-  threadId,
-  initialMessages,
   api,
   adapter,
   onCreateThread,
   body,
 }: {
-  threadId?: string;
-  initialMessages?: Message[];
   api: string;
   body?: object;
   onCreateThread?: (threadId: string) => void;
   adapter?: VercelUseChatAdapter;
 }) {
-  const threadIdRef = useRef(threadId || generateId());
+  const { activeThread, activeAssistant, setActiveThread } = useStore();
+
+  const { messages } = useAssistantUIMessageSWR(
+    activeAssistant?.id || null,
+    activeThread || null,
+  );
+
   const chat = useChat({
     api,
-    initialMessages,
+    initialMessages: messages ?? [],
     body,
+
     onFinish() {
-      if (threadIdRef.current !== threadId) {
-        onCreateThread?.(threadIdRef.current);
+      if (!activeThread) {
+        setActiveThread(generateId());
+
+        if (!activeThread || !onCreateThread) {
+          return;
+        }
+
+        onCreateThread(activeThread);
       }
     },
+
     experimental_prepareRequestBody: ({
       id,
       messages,
@@ -62,7 +72,7 @@ export function useMastraRuntime({
         { id },
         requestBody,
         requestData,
-        { threadId: threadIdRef.current },
+        { threadId: activeThread },
         { messages: [messages[messages.length - 1]] },
         { assistantId },
       );
