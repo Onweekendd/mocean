@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { AgentModel } from "@mocean/mastra/prismaType";
 import { Filter, Search } from "lucide-react";
 
-import { AgentDetailDialog } from "@/components/AgentDetailDialog";
+import { AgentDetailDialog } from "@/app/assistant/components/AgentDetailDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
