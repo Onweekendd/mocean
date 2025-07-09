@@ -49,11 +49,11 @@ const ChatConfig = () => {
           </TabsTrigger>
         ))}
       </TabsList>
-      <TabsContent value="assistant" className="flex-1">
+      <TabsContent value="assistant" className="h-0 flex-1">
         <AssistantSelect onClick={onAssistantSelect} />
       </TabsContent>
 
-      <TabsContent value="topic" className="flex-1">
+      <TabsContent value="topic" className="h-0 flex-1">
         <ThreadSelect isActive={activeTab === "topic"} />
       </TabsContent>
 

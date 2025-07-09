@@ -224,14 +224,14 @@ const ThreadList: React.FC<ThreadListProps> = ({
   };
 
   return (
-    <div className="flex h-full flex-col overflow-hidden">
+    <div className="flex h-full flex-col overflow-y-auto">
       <div className="flex-shrink-0 p-4">
         {/* 新建对话按钮 */}
         <CreateThreadCard onClick={onCreateThreadClick} />
       </div>
 
       {/* 对话历史记录 - 可滚动区域 */}
-      <div className="flex-1 overflow-y-auto px-4 pb-4">
+      <div className="flex-1 px-4 pb-4">
         <div className="flex flex-col gap-4">
           {threads.length > 0 ? (
             threads.map((thread) => (

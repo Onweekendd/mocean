@@ -43,7 +43,10 @@ export const DynamicAgent = new Agent({
       lastMessages: 10,
       semanticRecall: false,
       threads: {
-        generateTitle: true,
+        generateTitle: {
+          model({ runtimeContext }) {},
+          instructions({ runtimeContext }) {},
+        },
       },
     },
   }),

@@ -17,7 +17,7 @@ export default function RootLayout({
         <SidebarProvider>
           <ToasterProvider>
             <AppSidebar />
-            <main className="min-h-svh flex-1">{children}</main>
+            <main className="h-screen flex-1 overflow-hidden">{children}</main>
           </ToasterProvider>
         </SidebarProvider>
       </body>
