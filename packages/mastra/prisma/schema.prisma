@@ -35,6 +35,11 @@ enum ModelType {
   web_search
 }
 
+enum KnowledgeRecognition {
+  off
+  on
+}
+
 // Provider模型
 model Provider {
   id                       String       @id @default(uuid())
@@ -59,16 +64,16 @@ model Provider {
 
 // 助手模型
 model Assistant {
-  id                   String  @id @default(uuid())
+  id                   String                @id @default(uuid())
   name                 String
   prompt               String
-  type                 String  @default("assistant")
+  type                 String                @default("assistant")
   emoji                String?
   description          String?
-  enableWebSearch      Boolean @default(false)
+  enableWebSearch      Boolean               @default(false)
   webSearchProviderId  String?
-  enableGenerateImage  Boolean @default(false)
-  knowledgeRecognition String? // 'off' 或 'on'
+  enableGenerateImage  Boolean               @default(false)
+  knowledgeRecognition KnowledgeRecognition?
 
   // 关系
   model          Model?               @relation("AssistantModel", fields: [modelId], references: [id])
@@ -86,17 +91,17 @@ model Assistant {
 
 // 智能体模型
 model Agent {
-  id                   String  @id @default(uuid())
+  id                   String                @id @default(uuid())
   name                 String
   prompt               String
-  type                 String  @default("agent")
+  type                 String                @default("agent")
   emoji                String?
   description          String?
   groupJson            Json? // 存储String[]
-  enableWebSearch      Boolean @default(false)
+  enableWebSearch      Boolean               @default(false)
   webSearchProviderId  String?
-  enableGenerateImage  Boolean @default(false)
-  knowledgeRecognition String? // 'off' 或 'on'
+  enableGenerateImage  Boolean               @default(false)
+  knowledgeRecognition KnowledgeRecognition?
 
   // 关系
   settings       AssistantSettings?

@@ -162,6 +162,23 @@ export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedDateTimeFilter<$PrismaModel>
 }
 
+export type EnumKnowledgeRecognitionNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.KnowledgeRecognition | Prisma.EnumKnowledgeRecognitionFieldRefInput<$PrismaModel> | null
+  in?: $Enums.KnowledgeRecognition[] | null
+  notIn?: $Enums.KnowledgeRecognition[] | null
+  not?: Prisma.NestedEnumKnowledgeRecognitionNullableFilter<$PrismaModel> | $Enums.KnowledgeRecognition | null
+}
+
+export type EnumKnowledgeRecognitionNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.KnowledgeRecognition | Prisma.EnumKnowledgeRecognitionFieldRefInput<$PrismaModel> | null
+  in?: $Enums.KnowledgeRecognition[] | null
+  notIn?: $Enums.KnowledgeRecognition[] | null
+  not?: Prisma.NestedEnumKnowledgeRecognitionNullableWithAggregatesFilter<$PrismaModel> | $Enums.KnowledgeRecognition | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumKnowledgeRecognitionNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumKnowledgeRecognitionNullableFilter<$PrismaModel>
+}
+
 export type JsonNullableFilter<$PrismaModel = never> =
 | Prisma.PatchUndefined<
     Prisma.Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
@@ -502,6 +519,23 @@ export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedDateTimeFilter<$PrismaModel>
   _max?: Prisma.NestedDateTimeFilter<$PrismaModel>
+}
+
+export type NestedEnumKnowledgeRecognitionNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.KnowledgeRecognition | Prisma.EnumKnowledgeRecognitionFieldRefInput<$PrismaModel> | null
+  in?: $Enums.KnowledgeRecognition[] | null
+  notIn?: $Enums.KnowledgeRecognition[] | null
+  not?: Prisma.NestedEnumKnowledgeRecognitionNullableFilter<$PrismaModel> | $Enums.KnowledgeRecognition | null
+}
+
+export type NestedEnumKnowledgeRecognitionNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.KnowledgeRecognition | Prisma.EnumKnowledgeRecognitionFieldRefInput<$PrismaModel> | null
+  in?: $Enums.KnowledgeRecognition[] | null
+  notIn?: $Enums.KnowledgeRecognition[] | null
+  not?: Prisma.NestedEnumKnowledgeRecognitionNullableWithAggregatesFilter<$PrismaModel> | $Enums.KnowledgeRecognition | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumKnowledgeRecognitionNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumKnowledgeRecognitionNullableFilter<$PrismaModel>
 }
 
 export type NestedJsonNullableFilter<$PrismaModel = never> =

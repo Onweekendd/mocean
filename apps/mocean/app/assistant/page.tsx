@@ -41,7 +41,10 @@ export default function Assistant() {
     setIsCreatingAssistant(true);
     try {
       // 构建创建助手的参数，符合 AssistantInput 类型
-      const assistantData = {
+      const assistantData: Omit<
+        AssistantModel,
+        "id" | "createdAt" | "updatedAt"
+      > = {
         name: agent.name,
         prompt: agent.prompt || "",
         type: agent.type || "default",
@@ -50,9 +53,9 @@ export default function Assistant() {
         enableWebSearch: false,
         webSearchProviderId: null,
         enableGenerateImage: false,
-        knowledgeRecognition: false,
-        modelId: null,
-        defaultModelId: null,
+        knowledgeRecognition: "off",
+        modelId: "gpt-4o",
+        defaultModelId: "gpt-4o",
       };
 
       const assistant = await createAssistant(assistantData);

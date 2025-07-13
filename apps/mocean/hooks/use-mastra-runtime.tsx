@@ -29,12 +29,10 @@ export type PrepareRequestBodyReturnType = {
 export function useMastraRuntime({
   api,
   adapter,
-  onCreateThread,
   body,
 }: {
   api: string;
   body?: object;
-  onCreateThread?: (threadId: string) => void;
   adapter?: VercelUseChatAdapter;
 }) {
   const { activeThread, activeAssistant, setActiveThread } = useStore();
@@ -49,17 +47,7 @@ export function useMastraRuntime({
     initialMessages: messages ?? [],
     body,
 
-    onFinish() {
-      if (!activeThread) {
-        setActiveThread(generateId());
-
-        if (!activeThread || !onCreateThread) {
-          return;
-        }
-
-        onCreateThread(activeThread);
-      }
-    },
+    onFinish() {},
 
     experimental_prepareRequestBody: ({
       id,
@@ -68,11 +56,19 @@ export function useMastraRuntime({
       requestBody,
     }) => {
       const assistantId = useStore.getState().activeAssistant?.id;
+
+      // 确保 activeThread 存在，如果不存在则创建新的并更新状态
+      let threadId = activeThread;
+      if (!threadId) {
+        threadId = generateId();
+        setActiveThread(threadId);
+      }
+
       return Object.assign(
         { id },
         requestBody,
         requestData,
-        { threadId: activeThread },
+        { threadId },
         { messages: [messages[messages.length - 1]] },
         { assistantId },
       );

@@ -15,7 +15,7 @@ const createAgentSchema = z.object({
   enableWebSearch: z.boolean().optional().default(false),
   webSearchProviderId: z.string().nullable().optional(),
   enableGenerateImage: z.boolean().optional().default(false),
-  knowledgeRecognition: z.string().nullable().optional(),
+  knowledgeRecognition: z.enum(["off", "on"]).nullable().optional(),
 });
 
 const updateAgentSchema = z.object({
@@ -28,7 +28,7 @@ const updateAgentSchema = z.object({
   enableWebSearch: z.boolean().optional(),
   webSearchProviderId: z.string().nullable().optional(),
   enableGenerateImage: z.boolean().optional(),
-  knowledgeRecognition: z.string().nullable().optional(),
+  knowledgeRecognition: z.enum(["off", "on"]).nullable().optional(),
 });
 
 const idParamSchema = z.object({

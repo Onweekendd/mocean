@@ -33,7 +33,7 @@ export type AssistantMinAggregateOutputType = {
   enableWebSearch: boolean | null
   webSearchProviderId: string | null
   enableGenerateImage: boolean | null
-  knowledgeRecognition: string | null
+  knowledgeRecognition: $Enums.KnowledgeRecognition | null
   modelId: string | null
   defaultModelId: string | null
   createdAt: Date | null
@@ -50,7 +50,7 @@ export type AssistantMaxAggregateOutputType = {
   enableWebSearch: boolean | null
   webSearchProviderId: string | null
   enableGenerateImage: boolean | null
-  knowledgeRecognition: string | null
+  knowledgeRecognition: $Enums.KnowledgeRecognition | null
   modelId: string | null
   defaultModelId: string | null
   createdAt: Date | null
@@ -210,7 +210,7 @@ export type AssistantGroupByOutputType = {
   enableWebSearch: boolean
   webSearchProviderId: string | null
   enableGenerateImage: boolean
-  knowledgeRecognition: string | null
+  knowledgeRecognition: $Enums.KnowledgeRecognition | null
   modelId: string | null
   defaultModelId: string | null
   createdAt: Date
@@ -248,7 +248,7 @@ export type AssistantWhereInput = {
   enableWebSearch?: Prisma.BoolFilter<"Assistant"> | boolean
   webSearchProviderId?: Prisma.StringNullableFilter<"Assistant"> | string | null
   enableGenerateImage?: Prisma.BoolFilter<"Assistant"> | boolean
-  knowledgeRecognition?: Prisma.StringNullableFilter<"Assistant"> | string | null
+  knowledgeRecognition?: Prisma.EnumKnowledgeRecognitionNullableFilter<"Assistant"> | $Enums.KnowledgeRecognition | null
   modelId?: Prisma.StringNullableFilter<"Assistant"> | string | null
   defaultModelId?: Prisma.StringNullableFilter<"Assistant"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Assistant"> | Date | string
@@ -297,7 +297,7 @@ export type AssistantWhereUniqueInput = Prisma.AtLeast<{
   enableWebSearch?: Prisma.BoolFilter<"Assistant"> | boolean
   webSearchProviderId?: Prisma.StringNullableFilter<"Assistant"> | string | null
   enableGenerateImage?: Prisma.BoolFilter<"Assistant"> | boolean
-  knowledgeRecognition?: Prisma.StringNullableFilter<"Assistant"> | string | null
+  knowledgeRecognition?: Prisma.EnumKnowledgeRecognitionNullableFilter<"Assistant"> | $Enums.KnowledgeRecognition | null
   modelId?: Prisma.StringNullableFilter<"Assistant"> | string | null
   defaultModelId?: Prisma.StringNullableFilter<"Assistant"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Assistant"> | Date | string
@@ -343,7 +343,7 @@ export type AssistantScalarWhereWithAggregatesInput = {
   enableWebSearch?: Prisma.BoolWithAggregatesFilter<"Assistant"> | boolean
   webSearchProviderId?: Prisma.StringNullableWithAggregatesFilter<"Assistant"> | string | null
   enableGenerateImage?: Prisma.BoolWithAggregatesFilter<"Assistant"> | boolean
-  knowledgeRecognition?: Prisma.StringNullableWithAggregatesFilter<"Assistant"> | string | null
+  knowledgeRecognition?: Prisma.EnumKnowledgeRecognitionNullableWithAggregatesFilter<"Assistant"> | $Enums.KnowledgeRecognition | null
   modelId?: Prisma.StringNullableWithAggregatesFilter<"Assistant"> | string | null
   defaultModelId?: Prisma.StringNullableWithAggregatesFilter<"Assistant"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Assistant"> | Date | string
@@ -360,7 +360,7 @@ export type AssistantCreateInput = {
   enableWebSearch?: boolean
   webSearchProviderId?: string | null
   enableGenerateImage?: boolean
-  knowledgeRecognition?: string | null
+  knowledgeRecognition?: $Enums.KnowledgeRecognition | null
   createdAt?: Date | string
   updatedAt?: Date | string
   model?: Prisma.ModelCreateNestedOneWithoutAssistantsInput
@@ -381,7 +381,7 @@ export type AssistantUncheckedCreateInput = {
   enableWebSearch?: boolean
   webSearchProviderId?: string | null
   enableGenerateImage?: boolean
-  knowledgeRecognition?: string | null
+  knowledgeRecognition?: $Enums.KnowledgeRecognition | null
   modelId?: string | null
   defaultModelId?: string | null
   createdAt?: Date | string
@@ -402,7 +402,7 @@ export type AssistantUpdateInput = {
   enableWebSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   webSearchProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enableGenerateImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  knowledgeRecognition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowledgeRecognition?: Prisma.NullableEnumKnowledgeRecognitionFieldUpdateOperationsInput | $Enums.KnowledgeRecognition | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   model?: Prisma.ModelUpdateOneWithoutAssistantsNestedInput
@@ -423,7 +423,7 @@ export type AssistantUncheckedUpdateInput = {
   enableWebSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   webSearchProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enableGenerateImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  knowledgeRecognition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowledgeRecognition?: Prisma.NullableEnumKnowledgeRecognitionFieldUpdateOperationsInput | $Enums.KnowledgeRecognition | null
   modelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -444,7 +444,7 @@ export type AssistantCreateManyInput = {
   enableWebSearch?: boolean
   webSearchProviderId?: string | null
   enableGenerateImage?: boolean
-  knowledgeRecognition?: string | null
+  knowledgeRecognition?: $Enums.KnowledgeRecognition | null
   modelId?: string | null
   defaultModelId?: string | null
   createdAt?: Date | string
@@ -461,7 +461,7 @@ export type AssistantUpdateManyMutationInput = {
   enableWebSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   webSearchProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enableGenerateImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  knowledgeRecognition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowledgeRecognition?: Prisma.NullableEnumKnowledgeRecognitionFieldUpdateOperationsInput | $Enums.KnowledgeRecognition | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -476,7 +476,7 @@ export type AssistantUncheckedUpdateManyInput = {
   enableWebSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   webSearchProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enableGenerateImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  knowledgeRecognition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowledgeRecognition?: Prisma.NullableEnumKnowledgeRecognitionFieldUpdateOperationsInput | $Enums.KnowledgeRecognition | null
   modelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -552,6 +552,10 @@ export type AssistantOrderByRelationAggregateInput = {
 export type AssistantScalarRelationFilter = {
   is?: Prisma.AssistantWhereInput
   isNot?: Prisma.AssistantWhereInput
+}
+
+export type NullableEnumKnowledgeRecognitionFieldUpdateOperationsInput = {
+  set?: $Enums.KnowledgeRecognition | null
 }
 
 export type AssistantCreateNestedOneWithoutTopicsInput = {
@@ -732,7 +736,7 @@ export type AssistantCreateWithoutTopicsInput = {
   enableWebSearch?: boolean
   webSearchProviderId?: string | null
   enableGenerateImage?: boolean
-  knowledgeRecognition?: string | null
+  knowledgeRecognition?: $Enums.KnowledgeRecognition | null
   createdAt?: Date | string
   updatedAt?: Date | string
   model?: Prisma.ModelCreateNestedOneWithoutAssistantsInput
@@ -752,7 +756,7 @@ export type AssistantUncheckedCreateWithoutTopicsInput = {
   enableWebSearch?: boolean
   webSearchProviderId?: string | null
   enableGenerateImage?: boolean
-  knowledgeRecognition?: string | null
+  knowledgeRecognition?: $Enums.KnowledgeRecognition | null
   modelId?: string | null
   defaultModelId?: string | null
   createdAt?: Date | string
@@ -788,7 +792,7 @@ export type AssistantUpdateWithoutTopicsInput = {
   enableWebSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   webSearchProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enableGenerateImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  knowledgeRecognition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowledgeRecognition?: Prisma.NullableEnumKnowledgeRecognitionFieldUpdateOperationsInput | $Enums.KnowledgeRecognition | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   model?: Prisma.ModelUpdateOneWithoutAssistantsNestedInput
@@ -808,7 +812,7 @@ export type AssistantUncheckedUpdateWithoutTopicsInput = {
   enableWebSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   webSearchProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enableGenerateImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  knowledgeRecognition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowledgeRecognition?: Prisma.NullableEnumKnowledgeRecognitionFieldUpdateOperationsInput | $Enums.KnowledgeRecognition | null
   modelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -828,7 +832,7 @@ export type AssistantCreateWithoutModelInput = {
   enableWebSearch?: boolean
   webSearchProviderId?: string | null
   enableGenerateImage?: boolean
-  knowledgeRecognition?: string | null
+  knowledgeRecognition?: $Enums.KnowledgeRecognition | null
   createdAt?: Date | string
   updatedAt?: Date | string
   defaultModel?: Prisma.ModelCreateNestedOneWithoutDefaultForAssistantsInput
@@ -848,7 +852,7 @@ export type AssistantUncheckedCreateWithoutModelInput = {
   enableWebSearch?: boolean
   webSearchProviderId?: string | null
   enableGenerateImage?: boolean
-  knowledgeRecognition?: string | null
+  knowledgeRecognition?: $Enums.KnowledgeRecognition | null
   defaultModelId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -877,7 +881,7 @@ export type AssistantCreateWithoutDefaultModelInput = {
   enableWebSearch?: boolean
   webSearchProviderId?: string | null
   enableGenerateImage?: boolean
-  knowledgeRecognition?: string | null
+  knowledgeRecognition?: $Enums.KnowledgeRecognition | null
   createdAt?: Date | string
   updatedAt?: Date | string
   model?: Prisma.ModelCreateNestedOneWithoutAssistantsInput
@@ -897,7 +901,7 @@ export type AssistantUncheckedCreateWithoutDefaultModelInput = {
   enableWebSearch?: boolean
   webSearchProviderId?: string | null
   enableGenerateImage?: boolean
-  knowledgeRecognition?: string | null
+  knowledgeRecognition?: $Enums.KnowledgeRecognition | null
   modelId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -945,7 +949,7 @@ export type AssistantScalarWhereInput = {
   enableWebSearch?: Prisma.BoolFilter<"Assistant"> | boolean
   webSearchProviderId?: Prisma.StringNullableFilter<"Assistant"> | string | null
   enableGenerateImage?: Prisma.BoolFilter<"Assistant"> | boolean
-  knowledgeRecognition?: Prisma.StringNullableFilter<"Assistant"> | string | null
+  knowledgeRecognition?: Prisma.EnumKnowledgeRecognitionNullableFilter<"Assistant"> | $Enums.KnowledgeRecognition | null
   modelId?: Prisma.StringNullableFilter<"Assistant"> | string | null
   defaultModelId?: Prisma.StringNullableFilter<"Assistant"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Assistant"> | Date | string
@@ -978,7 +982,7 @@ export type AssistantCreateWithoutSettingsInput = {
   enableWebSearch?: boolean
   webSearchProviderId?: string | null
   enableGenerateImage?: boolean
-  knowledgeRecognition?: string | null
+  knowledgeRecognition?: $Enums.KnowledgeRecognition | null
   createdAt?: Date | string
   updatedAt?: Date | string
   model?: Prisma.ModelCreateNestedOneWithoutAssistantsInput
@@ -998,7 +1002,7 @@ export type AssistantUncheckedCreateWithoutSettingsInput = {
   enableWebSearch?: boolean
   webSearchProviderId?: string | null
   enableGenerateImage?: boolean
-  knowledgeRecognition?: string | null
+  knowledgeRecognition?: $Enums.KnowledgeRecognition | null
   modelId?: string | null
   defaultModelId?: string | null
   createdAt?: Date | string
@@ -1034,7 +1038,7 @@ export type AssistantUpdateWithoutSettingsInput = {
   enableWebSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   webSearchProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enableGenerateImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  knowledgeRecognition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowledgeRecognition?: Prisma.NullableEnumKnowledgeRecognitionFieldUpdateOperationsInput | $Enums.KnowledgeRecognition | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   model?: Prisma.ModelUpdateOneWithoutAssistantsNestedInput
@@ -1054,7 +1058,7 @@ export type AssistantUncheckedUpdateWithoutSettingsInput = {
   enableWebSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   webSearchProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enableGenerateImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  knowledgeRecognition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowledgeRecognition?: Prisma.NullableEnumKnowledgeRecognitionFieldUpdateOperationsInput | $Enums.KnowledgeRecognition | null
   modelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1074,7 +1078,7 @@ export type AssistantCreateWithoutKnowledgeBasesInput = {
   enableWebSearch?: boolean
   webSearchProviderId?: string | null
   enableGenerateImage?: boolean
-  knowledgeRecognition?: string | null
+  knowledgeRecognition?: $Enums.KnowledgeRecognition | null
   createdAt?: Date | string
   updatedAt?: Date | string
   model?: Prisma.ModelCreateNestedOneWithoutAssistantsInput
@@ -1094,7 +1098,7 @@ export type AssistantUncheckedCreateWithoutKnowledgeBasesInput = {
   enableWebSearch?: boolean
   webSearchProviderId?: string | null
   enableGenerateImage?: boolean
-  knowledgeRecognition?: string | null
+  knowledgeRecognition?: $Enums.KnowledgeRecognition | null
   modelId?: string | null
   defaultModelId?: string | null
   createdAt?: Date | string
@@ -1135,7 +1139,7 @@ export type AssistantCreateWithoutMcpServersInput = {
   enableWebSearch?: boolean
   webSearchProviderId?: string | null
   enableGenerateImage?: boolean
-  knowledgeRecognition?: string | null
+  knowledgeRecognition?: $Enums.KnowledgeRecognition | null
   createdAt?: Date | string
   updatedAt?: Date | string
   model?: Prisma.ModelCreateNestedOneWithoutAssistantsInput
@@ -1155,7 +1159,7 @@ export type AssistantUncheckedCreateWithoutMcpServersInput = {
   enableWebSearch?: boolean
   webSearchProviderId?: string | null
   enableGenerateImage?: boolean
-  knowledgeRecognition?: string | null
+  knowledgeRecognition?: $Enums.KnowledgeRecognition | null
   modelId?: string | null
   defaultModelId?: string | null
   createdAt?: Date | string
@@ -1191,7 +1195,7 @@ export type AssistantUpdateWithoutMcpServersInput = {
   enableWebSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   webSearchProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enableGenerateImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  knowledgeRecognition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowledgeRecognition?: Prisma.NullableEnumKnowledgeRecognitionFieldUpdateOperationsInput | $Enums.KnowledgeRecognition | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   model?: Prisma.ModelUpdateOneWithoutAssistantsNestedInput
@@ -1211,7 +1215,7 @@ export type AssistantUncheckedUpdateWithoutMcpServersInput = {
   enableWebSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   webSearchProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enableGenerateImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  knowledgeRecognition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowledgeRecognition?: Prisma.NullableEnumKnowledgeRecognitionFieldUpdateOperationsInput | $Enums.KnowledgeRecognition | null
   modelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1231,7 +1235,7 @@ export type AssistantCreateManyModelInput = {
   enableWebSearch?: boolean
   webSearchProviderId?: string | null
   enableGenerateImage?: boolean
-  knowledgeRecognition?: string | null
+  knowledgeRecognition?: $Enums.KnowledgeRecognition | null
   defaultModelId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1247,7 +1251,7 @@ export type AssistantCreateManyDefaultModelInput = {
   enableWebSearch?: boolean
   webSearchProviderId?: string | null
   enableGenerateImage?: boolean
-  knowledgeRecognition?: string | null
+  knowledgeRecognition?: $Enums.KnowledgeRecognition | null
   modelId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1263,7 +1267,7 @@ export type AssistantUpdateWithoutModelInput = {
   enableWebSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   webSearchProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enableGenerateImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  knowledgeRecognition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowledgeRecognition?: Prisma.NullableEnumKnowledgeRecognitionFieldUpdateOperationsInput | $Enums.KnowledgeRecognition | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   defaultModel?: Prisma.ModelUpdateOneWithoutDefaultForAssistantsNestedInput
@@ -1283,7 +1287,7 @@ export type AssistantUncheckedUpdateWithoutModelInput = {
   enableWebSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   webSearchProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enableGenerateImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  knowledgeRecognition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowledgeRecognition?: Prisma.NullableEnumKnowledgeRecognitionFieldUpdateOperationsInput | $Enums.KnowledgeRecognition | null
   defaultModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1303,7 +1307,7 @@ export type AssistantUncheckedUpdateManyWithoutModelInput = {
   enableWebSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   webSearchProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enableGenerateImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  knowledgeRecognition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowledgeRecognition?: Prisma.NullableEnumKnowledgeRecognitionFieldUpdateOperationsInput | $Enums.KnowledgeRecognition | null
   defaultModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1319,7 +1323,7 @@ export type AssistantUpdateWithoutDefaultModelInput = {
   enableWebSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   webSearchProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enableGenerateImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  knowledgeRecognition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowledgeRecognition?: Prisma.NullableEnumKnowledgeRecognitionFieldUpdateOperationsInput | $Enums.KnowledgeRecognition | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   model?: Prisma.ModelUpdateOneWithoutAssistantsNestedInput
@@ -1339,7 +1343,7 @@ export type AssistantUncheckedUpdateWithoutDefaultModelInput = {
   enableWebSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   webSearchProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enableGenerateImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  knowledgeRecognition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowledgeRecognition?: Prisma.NullableEnumKnowledgeRecognitionFieldUpdateOperationsInput | $Enums.KnowledgeRecognition | null
   modelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1359,7 +1363,7 @@ export type AssistantUncheckedUpdateManyWithoutDefaultModelInput = {
   enableWebSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   webSearchProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enableGenerateImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  knowledgeRecognition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowledgeRecognition?: Prisma.NullableEnumKnowledgeRecognitionFieldUpdateOperationsInput | $Enums.KnowledgeRecognition | null
   modelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1375,7 +1379,7 @@ export type AssistantUpdateWithoutKnowledgeBasesInput = {
   enableWebSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   webSearchProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enableGenerateImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  knowledgeRecognition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowledgeRecognition?: Prisma.NullableEnumKnowledgeRecognitionFieldUpdateOperationsInput | $Enums.KnowledgeRecognition | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   model?: Prisma.ModelUpdateOneWithoutAssistantsNestedInput
@@ -1395,7 +1399,7 @@ export type AssistantUncheckedUpdateWithoutKnowledgeBasesInput = {
   enableWebSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   webSearchProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enableGenerateImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  knowledgeRecognition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowledgeRecognition?: Prisma.NullableEnumKnowledgeRecognitionFieldUpdateOperationsInput | $Enums.KnowledgeRecognition | null
   modelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1415,7 +1419,7 @@ export type AssistantUncheckedUpdateManyWithoutKnowledgeBasesInput = {
   enableWebSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   webSearchProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enableGenerateImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  knowledgeRecognition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  knowledgeRecognition?: Prisma.NullableEnumKnowledgeRecognitionFieldUpdateOperationsInput | $Enums.KnowledgeRecognition | null
   modelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1589,7 +1593,7 @@ export type $AssistantPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     enableWebSearch: boolean
     webSearchProviderId: string | null
     enableGenerateImage: boolean
-    knowledgeRecognition: string | null
+    knowledgeRecognition: $Enums.KnowledgeRecognition | null
     modelId: string | null
     defaultModelId: string | null
     createdAt: Date
@@ -2032,7 +2036,7 @@ export interface AssistantFieldRefs {
   readonly enableWebSearch: Prisma.FieldRef<"Assistant", 'Boolean'>
   readonly webSearchProviderId: Prisma.FieldRef<"Assistant", 'String'>
   readonly enableGenerateImage: Prisma.FieldRef<"Assistant", 'Boolean'>
-  readonly knowledgeRecognition: Prisma.FieldRef<"Assistant", 'String'>
+  readonly knowledgeRecognition: Prisma.FieldRef<"Assistant", 'KnowledgeRecognition'>
   readonly modelId: Prisma.FieldRef<"Assistant", 'String'>
   readonly defaultModelId: Prisma.FieldRef<"Assistant", 'String'>
   readonly createdAt: Prisma.FieldRef<"Assistant", 'DateTime'>

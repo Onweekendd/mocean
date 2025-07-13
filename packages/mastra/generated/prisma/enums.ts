@@ -29,3 +29,11 @@ export const ModelType = {
 } as const
 
 export type ModelType = (typeof ModelType)[keyof typeof ModelType]
+
+
+export const KnowledgeRecognition = {
+  off: 'off',
+  on: 'on'
+} as const
+
+export type KnowledgeRecognition = (typeof KnowledgeRecognition)[keyof typeof KnowledgeRecognition]

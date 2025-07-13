@@ -132,3 +132,6 @@ export const ProviderType = $Enums.ProviderType
 
 export type ModelType = $Enums.ModelType
 export const ModelType = $Enums.ModelType
+
+export type KnowledgeRecognition = $Enums.KnowledgeRecognition
+export const KnowledgeRecognition = $Enums.KnowledgeRecognition

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { Suspense, lazy, useCallback } from "react";
 
 import { AgentModel } from "@mocean/mastra/prismaType";
 import { Bot, Eye, Loader2, Tag, X, Zap } from "lucide-react";
@@ -14,6 +14,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+
+// 动态导入 MarkdownRenderer
+const MarkdownRenderer = lazy(() =>
+  import("@/components/markdown-renderer").then((module) => ({
+    default: module.MarkdownRenderer,
+  })),
+);
 
 export interface AgentDetailDialogProps {
   agent: AgentModel | null;
@@ -100,7 +107,7 @@ export const AgentDetailDialog: React.FC<AgentDetailDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[90vw] max-w-4xl">
+      <DialogContent className="max-h-[80vh] max-w-4xl overflow-hidden sm:max-w-lg md:max-w-2xl lg:max-w-4xl">
         <DialogHeader className="pb-4">
           <DialogTitle className="flex items-center space-x-3">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 text-white">
@@ -111,7 +118,7 @@ export const AgentDetailDialog: React.FC<AgentDetailDialogProps> = ({
         </DialogHeader>
 
         {agent && (
-          <div className="space-y-4">
+          <div className="space-y-4 overflow-y-auto pr-2">
             {/* 基本信息卡片 */}
             <Card>
               <CardHeader className="pb-2">
@@ -172,10 +179,13 @@ export const AgentDetailDialog: React.FC<AgentDetailDialogProps> = ({
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="max-h-[35vh] overflow-y-auto rounded-lg bg-muted/50 p-3">
-                    <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground">
-                      {agent.prompt}
-                    </p>
+                  <div className="max-h-[40vh] overflow-y-auto rounded-lg bg-muted/50 p-3">
+                    <Suspense fallback={<div>加载中...</div>}>
+                      <MarkdownRenderer
+                        content={agent.prompt}
+                        className="text-sm leading-relaxed text-foreground"
+                      />
+                    </Suspense>
                   </div>
                 </CardContent>
               </Card>

@@ -2086,6 +2086,13 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
 
 
 /**
+ * Reference to a field of type 'KnowledgeRecognition'
+ */
+export type EnumKnowledgeRecognitionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'KnowledgeRecognition'>
+    
+
+
+/**
  * Reference to a field of type 'Json'
  */
 export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>

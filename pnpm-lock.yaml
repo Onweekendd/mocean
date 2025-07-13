@@ -158,6 +158,9 @@ importers:
       react-konva:
         specifier: ^19.0.1
         version: 19.0.1(@types/react@18.3.1)(konva@9.3.16)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      react-markdown:
+        specifier: ^10.1.0
+        version: 10.1.0(@types/react@18.3.1)(react@19.0.0)
       remark-gfm:
         specifier: ^4.0.1
         version: 4.0.1
@@ -1869,6 +1872,7 @@ packages:
   '@opentelemetry/instrumentation-redis-4@0.49.0':
     resolution: {integrity: sha512-i+Wsl7M2LXEDA2yXouNJ3fttSzzb5AhlehvSBVRIFuinY51XrrKSH66biO0eox+pYQMwAlPxJ778XcMQffN78A==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use "@opentelemetry/instrumentation-redis", which (as of v0.50.0) includes support for instrumenting redis v4.
     peerDependencies:
       '@opentelemetry/api': ^1.3.0
 
@@ -10256,7 +10260,7 @@ snapshots:
 
   '@rollup/pluginutils@5.1.3(rollup@4.44.2)':
     dependencies:
-      '@types/estree': 1.0.7
+      '@types/estree': 1.0.8
       estree-walker: 2.0.2
       picomatch: 4.0.2
     optionalDependencies:
@@ -10798,7 +10802,7 @@ snapshots:
 
   '@types/estree-jsx@1.0.5':
     dependencies:
-      '@types/estree': 1.0.7
+      '@types/estree': 1.0.8
 
   '@types/estree@1.0.7': {}
 
@@ -12238,7 +12242,7 @@ snapshots:
 
   hast-util-to-jsx-runtime@2.3.6:
     dependencies:
-      '@types/estree': 1.0.7
+      '@types/estree': 1.0.8
       '@types/hast': 3.0.4
       '@types/unist': 3.0.3
       comma-separated-tokens: 2.0.3
@@ -12430,7 +12434,7 @@ snapshots:
 
   is-reference@1.2.1:
     dependencies:
-      '@types/estree': 1.0.7
+      '@types/estree': 1.0.8
 
   is-regex@1.1.4:
     dependencies:
