@@ -48,13 +48,17 @@ type UpdateProviderInput = z.infer<typeof updateProviderSchema>;
 
 /**
  * 获取所有提供商
- * @description 从数据库中获取所有提供商的列表
- * @returns 包含所有提供商信息的数组
+ * @description 从数据库中获取所有提供商的列表，包含关联的模型信息
+ * @returns 包含所有提供商信息和关联模型的数组
  */
 const getProviders = async () => {
   const providers = await prisma.provider.findMany({
     include: {
-      models: true,
+      models: {
+        include: {
+          model: true,
+        },
+      },
       _count: {
         select: {
           models: true,
@@ -65,12 +69,20 @@ const getProviders = async () => {
       createdAt: "desc",
     },
   });
-  return providers;
+
+  // 整理模型信息
+  return providers.map((provider) => ({
+    ...provider,
+    modelList: provider.models.map((m) => ({
+      ...m.model,
+      types: JSON.parse(m.model.typeJson as string),
+    })),
+  }));
 };
 
 /**
  * 根据ID获取单个提供商
- * @description 通过提供商ID从数据库中获取特定提供商的详细信息
+ * @description 通过提供商ID从数据库中获取特定提供商的详细信息，包含关联的模型
  * @param id - 提供商的唯一标识符
  * @returns 提供商对象，如果不存在则返回null
  */
@@ -80,7 +92,11 @@ const getProviderById = async (id: string) => {
       id,
     },
     include: {
-      models: true,
+      models: {
+        include: {
+          model: true,
+        },
+      },
       _count: {
         select: {
           models: true,
@@ -88,12 +104,22 @@ const getProviderById = async (id: string) => {
       },
     },
   });
-  return provider;
+
+  if (!provider) return null;
+
+  // 整理模型信息
+  return {
+    ...provider,
+    modelList: provider.models.map((m) => ({
+      ...m.model,
+      types: JSON.parse(m.model.typeJson as string),
+    })),
+  };
 };
 
 /**
  * 根据类型获取提供商
- * @description 通过提供商类型获取对应的提供商列表
+ * @description 通过提供商类型获取对应的提供商列表，包含关联的模型
  * @param type - 提供商类型
  * @returns 符合类型的提供商数组
  */
@@ -103,7 +129,11 @@ const getProvidersByType = async (type: ProviderType) => {
       type,
     },
     include: {
-      models: true,
+      models: {
+        include: {
+          model: true,
+        },
+      },
       _count: {
         select: {
           models: true,
@@ -111,12 +141,20 @@ const getProvidersByType = async (type: ProviderType) => {
       },
     },
   });
-  return providers;
+
+  // 整理模型信息
+  return providers.map((provider) => ({
+    ...provider,
+    modelList: provider.models.map((m) => ({
+      ...m.model,
+      types: JSON.parse(m.model.typeJson as string),
+    })),
+  }));
 };
 
 /**
  * 获取启用的提供商
- * @description 获取所有启用状态的提供商
+ * @description 获取所有启用状态的提供商，包含关联的模型
  * @returns 启用的提供商数组
  */
 const getEnabledProviders = async () => {
@@ -125,7 +163,11 @@ const getEnabledProviders = async () => {
       enabled: true,
     },
     include: {
-      models: true,
+      models: {
+        include: {
+          model: true,
+        },
+      },
       _count: {
         select: {
           models: true,
@@ -133,7 +175,54 @@ const getEnabledProviders = async () => {
       },
     },
   });
-  return providers;
+
+  // 整理模型信息
+  return providers.map((provider) => ({
+    ...provider,
+    modelList: provider.models.map((m) => ({
+      ...m.model,
+      types: JSON.parse(m.model.typeJson as string),
+    })),
+  }));
+};
+
+/**
+ * 获取与指定模型关联的提供商列表
+ * @description 获取与特定模型建立关联的所有提供商
+ * @param modelId - 模型ID
+ * @returns 关联的提供商数组
+ */
+const getProvidersByModel = async (modelId: string) => {
+  const providers = await prisma.provider.findMany({
+    where: {
+      models: {
+        some: {
+          modelId,
+        },
+      },
+    },
+    include: {
+      models: {
+        include: {
+          model: true,
+        },
+      },
+      _count: {
+        select: {
+          models: true,
+        },
+      },
+    },
+  });
+
+  // 整理模型信息
+  return providers.map((provider) => ({
+    ...provider,
+    modelList: provider.models.map((m) => ({
+      ...m.model,
+      types: JSON.parse(m.model.typeJson as string),
+    })),
+  }));
 };
 
 /**
@@ -148,9 +237,13 @@ const createProvider = async (provider: CreateProviderInput) => {
       ...provider,
       createdAt: new Date(),
       updatedAt: new Date(),
-    } as Parameters<typeof prisma.provider.create>[0]["data"],
+    } as any,
     include: {
-      models: true,
+      models: {
+        include: {
+          model: true,
+        },
+      },
       _count: {
         select: {
           models: true,
@@ -158,7 +251,14 @@ const createProvider = async (provider: CreateProviderInput) => {
       },
     },
   });
-  return newProvider;
+
+  return {
+    ...newProvider,
+    modelList: newProvider.models.map((m) => ({
+      ...m.model,
+      types: JSON.parse(m.model.typeJson as string),
+    })),
+  };
 };
 
 /**
@@ -178,7 +278,11 @@ const updateProvider = async (id: string, provider: UpdateProviderInput) => {
       updatedAt: new Date(),
     },
     include: {
-      models: true,
+      models: {
+        include: {
+          model: true,
+        },
+      },
       _count: {
         select: {
           models: true,
@@ -186,7 +290,14 @@ const updateProvider = async (id: string, provider: UpdateProviderInput) => {
       },
     },
   });
-  return updatedProvider;
+
+  return {
+    ...updatedProvider,
+    modelList: updatedProvider.models.map((m) => ({
+      ...m.model,
+      types: JSON.parse(m.model.typeJson as string),
+    })),
+  };
 };
 
 /**
@@ -245,7 +356,11 @@ const toggleProviderEnabled = async (id: string) => {
       updatedAt: new Date(),
     },
     include: {
-      models: true,
+      models: {
+        include: {
+          model: true,
+        },
+      },
       _count: {
         select: {
           models: true,
@@ -254,7 +369,13 @@ const toggleProviderEnabled = async (id: string) => {
     },
   });
 
-  return updatedProvider;
+  return {
+    ...updatedProvider,
+    modelList: updatedProvider.models.map((m) => ({
+      ...m.model,
+      types: JSON.parse(m.model.typeJson as string),
+    })),
+  };
 };
 
 export {
@@ -262,6 +383,7 @@ export {
   getProviderById,
   getProvidersByType,
   getEnabledProviders,
+  getProvidersByModel,
   createProvider,
   updateProvider,
   deleteProvider,

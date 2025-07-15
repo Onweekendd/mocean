@@ -8,23 +8,23 @@ import { prisma } from "./index";
  */
 const createModelSchema = z.object({
   id: z.string().min(1, "模型ID不能为空"),
-  provider: z.string().min(1, "提供商名称不能为空"),
   name: z.string().min(1, "模型名称不能为空"),
   group: z.string().min(1, "模型分组不能为空"),
   owned_by: z.string().nullable().optional(),
   description: z.string().nullable().optional(),
   typeJson: z.array(z.nativeEnum(ModelType)).default([ModelType.text]),
-  providerId: z.string().min(1, "提供商ID不能为空"),
+  providerIds: z
+    .array(z.string().min(1, "提供商ID不能为空"))
+    .min(1, "至少需要一个提供商"),
 });
 
 const updateModelSchema = z.object({
-  provider: z.string().min(1, "提供商名称不能为空").optional(),
   name: z.string().min(1, "模型名称不能为空").optional(),
   group: z.string().min(1, "模型分组不能为空").optional(),
   owned_by: z.string().nullable().optional(),
   description: z.string().nullable().optional(),
   typeJson: z.array(z.nativeEnum(ModelType)).optional(),
-  providerId: z.string().min(1, "提供商ID不能为空").optional(),
+  providerIds: z.array(z.string().min(1, "提供商ID不能为空")).optional(),
 });
 
 const idParamSchema = z.object({
@@ -43,19 +43,29 @@ const groupParamSchema = z.object({
   group: z.string().min(1, "模型分组不能为空"),
 });
 
+const modelProviderRelationSchema = z.object({
+  modelId: z.string().min(1, "模型ID不能为空"),
+  providerId: z.string().min(1, "提供商ID不能为空"),
+});
+
 // zod类型推导
 type CreateModelInput = z.infer<typeof createModelSchema>;
 type UpdateModelInput = z.infer<typeof updateModelSchema>;
+type ModelProviderRelation = z.infer<typeof modelProviderRelationSchema>;
 
 /**
  * 获取所有模型
- * @description 从数据库中获取所有模型的列表
- * @returns 包含所有模型信息的数组
+ * @description 从数据库中获取所有模型的列表，包含关联的提供商信息
+ * @returns 包含所有模型信息和关联提供商的数组
  */
 const getModels = async () => {
   const models = await prisma.model.findMany({
     include: {
-      providerRelation: true,
+      providers: {
+        include: {
+          provider: true,
+        },
+      },
       assistants: true,
       defaultForAssistants: true,
       knowledgeBases: true,
@@ -63,20 +73,21 @@ const getModels = async () => {
       rerankFor: true,
     },
     orderBy: {
-      provider: "asc",
+      name: "asc",
     },
   });
 
-  // 转换typeJson为ModelType[]
+  // 转换typeJson为ModelType[]并整理提供商信息
   return models.map((model) => ({
     ...model,
     types: JSON.parse(model.typeJson as string) as ModelType[],
+    providerList: model.providers.map((p) => p.provider),
   }));
 };
 
 /**
  * 根据ID获取单个模型
- * @description 通过模型ID从数据库中获取特定模型的详细信息
+ * @description 通过模型ID从数据库中获取特定模型的详细信息，包含关联的提供商
  * @param id - 模型的唯一标识符
  * @returns 模型对象，如果不存在则返回null
  */
@@ -86,7 +97,11 @@ const getModelById = async (id: string) => {
       id,
     },
     include: {
-      providerRelation: true,
+      providers: {
+        include: {
+          provider: true,
+        },
+      },
       assistants: true,
       defaultForAssistants: true,
       knowledgeBases: true,
@@ -97,10 +112,11 @@ const getModelById = async (id: string) => {
 
   if (!model) return null;
 
-  // 转换typeJson为ModelType[]
+  // 转换typeJson为ModelType[]并整理提供商信息
   return {
     ...model,
     types: JSON.parse(model.typeJson as string) as ModelType[],
+    providerList: model.providers.map((p) => p.provider),
   };
 };
 
@@ -113,20 +129,29 @@ const getModelById = async (id: string) => {
 const getModelsByProvider = async (providerId: string) => {
   const models = await prisma.model.findMany({
     where: {
-      providerId,
+      providers: {
+        some: {
+          providerId,
+        },
+      },
     },
     include: {
-      providerRelation: true,
+      providers: {
+        include: {
+          provider: true,
+        },
+      },
     },
     orderBy: {
       name: "asc",
     },
   });
 
-  // 转换typeJson为ModelType[]
+  // 转换typeJson为ModelType[]并整理提供商信息
   return models.map((model) => ({
     ...model,
     types: JSON.parse(model.typeJson as string) as ModelType[],
+    providerList: model.providers.map((p) => p.provider),
   }));
 };
 
@@ -144,14 +169,19 @@ const getModelsByType = async (type: ModelType) => {
       },
     },
     include: {
-      providerRelation: true,
+      providers: {
+        include: {
+          provider: true,
+        },
+      },
     },
   });
 
-  // 转换typeJson为ModelType[]
+  // 转换typeJson为ModelType[]并整理提供商信息
   return models.map((model) => ({
     ...model,
     types: JSON.parse(model.typeJson as string) as ModelType[],
+    providerList: model.providers.map((p) => p.provider),
   }));
 };
 
@@ -167,73 +197,98 @@ const getModelsByGroup = async (group: string) => {
       group,
     },
     include: {
-      providerRelation: true,
+      providers: {
+        include: {
+          provider: true,
+        },
+      },
     },
     orderBy: {
       name: "asc",
     },
   });
 
-  // 转换typeJson为ModelType[]
+  // 转换typeJson为ModelType[]并整理提供商信息
   return models.map((model) => ({
     ...model,
     types: JSON.parse(model.typeJson as string) as ModelType[],
+    providerList: model.providers.map((p) => p.provider),
   }));
 };
 
 /**
  * 创建新模型
- * @description 在数据库中创建一个新的模型记录
+ * @description 在数据库中创建一个新的模型记录，并关联指定的提供商
  * @param model - 包含模型信息的对象
  * @returns 新创建的模型对象
  */
 const createModel = async (model: CreateModelInput) => {
   // 验证提供商是否存在
-  const provider = await prisma.provider.findUnique({
-    where: { id: model.providerId },
+  const providers = await prisma.provider.findMany({
+    where: { id: { in: model.providerIds } },
   });
 
-  if (!provider) {
-    throw new Error("指定的提供商不存在");
+  if (providers.length !== model.providerIds.length) {
+    const existingIds = providers.map((p) => p.id);
+    const missingIds = model.providerIds.filter(
+      (id) => !existingIds.includes(id),
+    );
+    throw new Error(`以下提供商不存在: ${missingIds.join(", ")}`);
   }
+
+  const { providerIds, ...modelData } = model;
 
   const newModel = await prisma.model.create({
     data: {
-      ...model,
+      ...modelData,
       typeJson: JSON.stringify(model.typeJson),
-    } as Parameters<typeof prisma.model.create>[0]["data"],
+      providers: {
+        create: providerIds.map((providerId) => ({ providerId })),
+      },
+    } as any,
     include: {
-      providerRelation: true,
+      providers: {
+        include: {
+          provider: true,
+        },
+      },
     },
   });
 
   return {
     ...newModel,
     types: JSON.parse(newModel.typeJson as string) as ModelType[],
+    providerList: newModel.providers.map((p) => p.provider),
   };
 };
 
 /**
  * 更新模型信息
- * @description 根据模型ID更新数据库中的模型信息
+ * @description 根据模型ID更新数据库中的模型信息，包括提供商关联
  * @param id - 要更新的模型的唯一标识符
  * @param model - 包含更新信息的对象
  * @returns 更新后的模型对象
  */
 const updateModel = async (id: string, model: UpdateModelInput) => {
-  // 如果提供了providerId，验证提供商是否存在
-  if (model.providerId) {
-    const provider = await prisma.provider.findUnique({
-      where: { id: model.providerId },
+  // 如果提供了providerIds，验证提供商是否存在
+  if (model.providerIds) {
+    const providers = await prisma.provider.findMany({
+      where: { id: { in: model.providerIds } },
     });
 
-    if (!provider) {
-      throw new Error("指定的提供商不存在");
+    if (providers.length !== model.providerIds.length) {
+      const existingIds = providers.map((p) => p.id);
+      const missingIds = model.providerIds.filter(
+        (id) => !existingIds.includes(id),
+      );
+      throw new Error(`以下提供商不存在: ${missingIds.join(", ")}`);
     }
   }
 
+  const { providerIds, ...modelData } = model;
+
   const updateData: Parameters<typeof prisma.model.update>[0]["data"] = {
-    ...model,
+    ...modelData,
   };
 
   // 如果有typeJson，转换为JSON字符串
@@ -245,15 +300,28 @@ const updateModel = async (id: string, model: UpdateModelInput) => {
     where: {
       id,
     },
-    data: updateData,
+    data: {
+      ...updateData,
+      ...(providerIds && {
+        providers: {
+          deleteMany: {},
+          create: providerIds.map((providerId) => ({ providerId })),
+        },
+      }),
+    },
     include: {
-      providerRelation: true,
+      providers: {
+        include: {
+          provider: true,
+        },
+      },
     },
   });
 
   return {
     ...updatedModel,
     types: JSON.parse(updatedModel.typeJson as string) as ModelType[],
+    providerList: updatedModel.providers.map((p) => p.provider),
   };
 };
 
@@ -314,16 +382,16 @@ const deleteModel = async (id: string) => {
  */
 const createManyModels = async (models: CreateModelInput[]) => {
   // 验证所有提供商是否存在
-  const providerIds = [...new Set(models.map((m) => m.providerId))];
+  const allProviderIds = [...new Set(models.flatMap((m) => m.providerIds))];
   const providers = await prisma.provider.findMany({
     where: {
-      id: { in: providerIds },
+      id: { in: allProviderIds },
     },
     select: { id: true },
   });
 
   const existingProviderIds = new Set(providers.map((p) => p.id));
-  const missingProviders = providerIds.filter(
+  const missingProviders = allProviderIds.filter(
     (id) => !existingProviderIds.has(id),
   );
 
@@ -331,17 +399,123 @@ const createManyModels = async (models: CreateModelInput[]) => {
     throw new Error(`以下提供商不存在: ${missingProviders.join(", ")}`);
   }
 
-  // 转换数据
-  const createData = models.map((model) => ({
-    ...model,
-    typeJson: JSON.stringify(model.typeJson),
-  })) as Parameters<typeof prisma.model.createMany>[0]["data"];
+  // 使用事务创建模型和关联
+  const result = await prisma.$transaction(async (tx) => {
+    const createdModels = [];
 
-  const result = await prisma.model.createMany({
-    data: createData,
+    for (const model of models) {
+      const { providerIds, ...modelData } = model;
+
+      const createdModel = await tx.model.create({
+        data: {
+          ...modelData,
+          typeJson: JSON.stringify(model.typeJson),
+        } as any,
+      });
+
+      // 创建关联关系
+      await tx.modelProvider.createMany({
+        data: providerIds.map((providerId) => ({
+          modelId: createdModel.id,
+          providerId,
+        })),
+      });
+
+      createdModels.push(createdModel);
+    }
+
+    return { count: createdModels.length };
   });
 
   return result;
+};
+
+/**
+ * 添加模型与提供商的关联
+ * @description 为模型添加新的提供商关联
+ * @param relation - 模型ID和提供商ID
+ * @returns 关联关系对象
+ */
+const addModelProviderRelation = async (relation: ModelProviderRelation) => {
+  // 验证模型和提供商是否存在
+  const [model, provider] = await Promise.all([
+    prisma.model.findUnique({ where: { id: relation.modelId } }),
+    prisma.provider.findUnique({ where: { id: relation.providerId } }),
+  ]);
+
+  if (!model) {
+    throw new Error("指定的模型不存在");
+  }
+  if (!provider) {
+    throw new Error("指定的提供商不存在");
+  }
+
+  // 检查关联是否已存在
+  const existingRelation = await prisma.modelProvider.findUnique({
+    where: {
+      modelId_providerId: {
+        modelId: relation.modelId,
+        providerId: relation.providerId,
+      },
+    },
+  });
+
+  if (existingRelation) {
+    throw new Error("该模型与提供商的关联已存在");
+  }
+
+  const newRelation = await prisma.modelProvider.create({
+    data: relation as any,
+    include: {
+      model: true,
+      provider: true,
+    },
+  });
+
+  return newRelation;
+};
+
+/**
+ * 移除模型与提供商的关联
+ * @description 移除模型与提供商之间的关联关系
+ * @param relation - 模型ID和提供商ID
+ * @returns 被删除的关联关系对象
+ */
+const removeModelProviderRelation = async (relation: ModelProviderRelation) => {
+  const deletedRelation = await prisma.modelProvider.delete({
+    where: {
+      modelId_providerId: {
+        modelId: relation.modelId,
+        providerId: relation.providerId,
+      },
+    },
+    include: {
+      model: true,
+      provider: true,
+    },
+  });
+
+  return deletedRelation;
+};
+
+/**
+ * 获取模型与提供商的关联列表
+ * @description 获取指定模型的所有提供商关联
+ * @param modelId - 模型ID
+ * @returns 关联关系数组
+ */
+const getModelProviderRelations = async (modelId: string) => {
+  const relations = await prisma.modelProvider.findMany({
+    where: {
+      modelId,
+    },
+    include: {
+      model: true,
+      provider: true,
+    },
+  });
+
+  return relations;
 };
 
 export {
@@ -354,10 +528,14 @@ export {
   updateModel,
   deleteModel,
   createManyModels,
+  addModelProviderRelation,
+  removeModelProviderRelation,
+  getModelProviderRelations,
   createModelSchema,
   updateModelSchema,
   idParamSchema,
   providerParamSchema,
   typeParamSchema,
   groupParamSchema,
+  modelProviderRelationSchema,
 };

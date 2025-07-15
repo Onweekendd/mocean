@@ -3,18 +3,22 @@ import { z } from "zod";
 
 import { PREFIX } from "../api/base-client";
 import {
+  addModelProviderRelation,
   createManyModels,
   createModel,
   createModelSchema,
   deleteModel,
   getModelById,
+  getModelProviderRelations,
   getModels,
   getModelsByGroup,
   getModelsByProvider,
   getModelsByType,
   groupParamSchema,
   idParamSchema,
+  modelProviderRelationSchema,
   providerParamSchema,
+  removeModelProviderRelation,
   typeParamSchema,
   updateModel,
   updateModelSchema,
@@ -449,6 +453,135 @@ const deleteModelRouter = registerApiRoute(`${PREFIX}/models/:id`, {
   },
 });
 
+/**
+ * 添加模型与提供商关联的路由处理器
+ * @description 为指定模型添加与提供商的关联关系
+ */
+const addModelProviderRelationRouter = registerApiRoute(
+  `${PREFIX}/models/relations`,
+  {
+    method: "POST",
+    handler: async (c) => {
+      try {
+        const body = await c.req.json();
+        const relation = modelProviderRelationSchema.parse(body);
+        const result = await addModelProviderRelation(relation);
+        return new Response(JSON.stringify(result), {
+          status: 201,
+          headers: { "Content-Type": "application/json" },
+        });
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          return new Response(
+            JSON.stringify({
+              error: error.errors,
+              message: "请求参数验证失败",
+            }),
+            {
+              status: 400,
+              headers: { "Content-Type": "application/json" },
+            },
+          );
+        }
+        return new Response(
+          JSON.stringify({ error, message: "添加模型与提供商关联失败" }),
+          {
+            status: 500,
+            headers: { "Content-Type": "application/json" },
+          },
+        );
+      }
+    },
+  },
+);
+
+/**
+ * 移除模型与提供商关联的路由处理器
+ * @description 移除指定模型与提供商的关联关系
+ */
+const removeModelProviderRelationRouter = registerApiRoute(
+  `${PREFIX}/models/relations`,
+  {
+    method: "DELETE",
+    handler: async (c) => {
+      try {
+        const body = await c.req.json();
+        const relation = modelProviderRelationSchema.parse(body);
+        const result = await removeModelProviderRelation(relation);
+        return new Response(JSON.stringify(result), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          return new Response(
+            JSON.stringify({
+              error: error.errors,
+              message: "请求参数验证失败",
+            }),
+            {
+              status: 400,
+              headers: { "Content-Type": "application/json" },
+            },
+          );
+        }
+        return new Response(
+          JSON.stringify({ error, message: "移除模型与提供商关联失败" }),
+          {
+            status: 500,
+            headers: { "Content-Type": "application/json" },
+          },
+        );
+      }
+    },
+  },
+);
+
+/**
+ * 获取模型与提供商关联列表的路由处理器
+ * @description 获取指定模型的所有提供商关联关系
+ */
+const getModelProviderRelationsRouter = registerApiRoute(
+  `${PREFIX}/models/:id/relations`,
+  {
+    method: "GET",
+    handler: async (c) => {
+      try {
+        // 参数校验
+        const { id } = idParamSchema.parse({
+          id: c.req.param("id"),
+        });
+
+        const relations = await getModelProviderRelations(id);
+        return new Response(JSON.stringify(relations), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          return new Response(
+            JSON.stringify({
+              error: error.errors,
+              message: "请求参数验证失败",
+            }),
+            {
+              status: 400,
+              headers: { "Content-Type": "application/json" },
+            },
+          );
+        }
+        return new Response(
+          JSON.stringify({ error, message: "获取模型关联列表失败" }),
+          {
+            status: 500,
+            headers: { "Content-Type": "application/json" },
+          },
+        );
+      }
+    },
+  },
+);
+
 // 导出所有路由
 const modelsRouter = [
   getModelsRouter,
@@ -460,6 +593,9 @@ const modelsRouter = [
   createManyModelsRouter,
   updateModelRouter,
   deleteModelRouter,
+  addModelProviderRelationRouter,
+  removeModelProviderRelationRouter,
+  getModelProviderRelationsRouter,
 ];
 
 export { modelsRouter };

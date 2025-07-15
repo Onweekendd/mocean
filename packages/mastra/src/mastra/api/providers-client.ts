@@ -33,7 +33,7 @@ export class ProvidersApiClient extends BaseApiClient {
 
   /**
    * 获取所有提供商
-   * @description 获取系统中所有可用的提供商列表
+   * @description 获取系统中所有可用的提供商列表，包含关联的模型信息
    */
   async getProviders(): Promise<ApiResponse<ProviderModel[]>> {
     return this.get<ProviderModel[]>("/providers");
@@ -49,16 +49,18 @@ export class ProvidersApiClient extends BaseApiClient {
 
   /**
    * 根据ID获取单个提供商
-   * @description 通过提供商ID获取特定提供商的详细信息
+   * @description 通过提供商ID获取特定提供商的详细信息，包含关联的模型
    * @param id - 提供商的唯一标识符
    */
-  async getProviderById(id: string): Promise<ApiResponse<ProviderModel>> {
-    return this.get<ProviderModel>(`/providers/${id}`);
+  async getProviderById(
+    id: string,
+  ): Promise<ApiResponse<ProviderModel | null>> {
+    return this.get<ProviderModel | null>(`/providers/${id}`);
   }
 
   /**
    * 根据类型获取提供商
-   * @description 通过提供商类型获取对应的提供商列表
+   * @description 获取指定类型的所有提供商，包含关联的模型
    * @param type - 提供商类型
    */
   async getProvidersByType(
@@ -68,32 +70,43 @@ export class ProvidersApiClient extends BaseApiClient {
   }
 
   /**
+   * 根据模型ID获取提供商列表
+   * @description 获取与指定模型关联的所有提供商
+   * @param modelId - 模型的唯一标识符
+   */
+  async getProvidersByModel(
+    modelId: string,
+  ): Promise<ApiResponse<ProviderModel[]>> {
+    return this.get<ProviderModel[]>(`/providers/by-model/${modelId}`);
+  }
+
+  /**
    * 创建新提供商
-   * @description 在系统中创建一个新的提供商
-   * @param providerData - 提供商信息对象
+   * @description 创建一个新的提供商记录
+   * @param provider - 包含提供商信息的对象
    */
   async createProvider(
-    providerData: ProviderInput,
+    provider: ProviderInput,
   ): Promise<ApiResponse<ProviderModel>> {
-    return this.post<ProviderModel>("/providers", providerData);
+    return this.post<ProviderModel>("/providers", provider);
   }
 
   /**
    * 更新提供商信息
    * @description 更新指定提供商的信息
    * @param id - 提供商的唯一标识符
-   * @param providerData - 更新的提供商信息
+   * @param provider - 包含更新信息的对象
    */
   async updateProvider(
     id: string,
-    providerData: Partial<ProviderInput>,
+    provider: Partial<ProviderInput>,
   ): Promise<ApiResponse<ProviderModel>> {
-    return this.put<ProviderModel>(`/providers/${id}`, providerData);
+    return this.put<ProviderModel>(`/providers/${id}`, provider);
   }
 
   /**
    * 删除提供商
-   * @description 删除指定的提供商
+   * @description 删除指定的提供商记录
    * @param id - 提供商的唯一标识符
    */
   async deleteProvider(id: string): Promise<ApiResponse<ProviderModel>> {
@@ -106,9 +119,7 @@ export class ProvidersApiClient extends BaseApiClient {
    * @param id - 提供商的唯一标识符
    */
   async toggleProviderEnabled(id: string): Promise<ApiResponse<ProviderModel>> {
-    return this.request<ProviderModel>(`/providers/${id}/toggle`, {
-      method: "PATCH",
-    });
+    return this.put<ProviderModel>(`/providers/${id}/toggle`, {});
   }
 }
 

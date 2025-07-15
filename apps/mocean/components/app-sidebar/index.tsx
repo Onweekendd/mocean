@@ -2,7 +2,15 @@
 
 import { usePathname } from "next/navigation";
 
-import { Book, Bot, Brain, Folder, LucideIcon, Wrench } from "lucide-react";
+import {
+  Book,
+  Bot,
+  Brain,
+  Folder,
+  LucideIcon,
+  RadioTower,
+  Wrench,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -29,6 +37,11 @@ const items: { title: string; url: string; Icon: LucideIcon }[] = [
     title: "智能体",
     url: "/assistant",
     Icon: Brain,
+  },
+  {
+    title: "模型服务",
+    url: "/provider",
+    Icon: RadioTower,
   },
   {
     title: "MCP工具",

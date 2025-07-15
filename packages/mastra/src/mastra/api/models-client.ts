@@ -9,21 +9,31 @@ import { ApiClientConfig, ApiResponse, BaseApiClient } from "./base-client";
  */
 export type ModelInput = Pick<
   ModelModel,
-  | "id"
-  | "provider"
-  | "name"
-  | "group"
-  | "owned_by"
-  | "description"
-  | "typeJson"
-  | "providerId"
->;
+  "id" | "name" | "group" | "owned_by" | "description" | "typeJson"
+> & {
+  providerIds: string[];
+};
 
 /**
  * 模型创建输入类型（包含类型数组）
  */
 export type ModelCreateInput = Omit<ModelInput, "typeJson"> & {
   types: ModelType[];
+};
+
+/**
+ * 模型更新输入类型
+ */
+export type ModelUpdateInput = Partial<Omit<ModelInput, "id" | "typeJson">> & {
+  types?: ModelType[];
+};
+
+/**
+ * 模型与提供商关联类型
+ */
+export type ModelProviderRelation = {
+  modelId: string;
+  providerId: string;
 };
 
 /**
@@ -44,7 +54,7 @@ export class ModelsApiClient extends BaseApiClient {
 
   /**
    * 获取所有模型
-   * @description 获取系统中所有可用的模型列表
+   * @description 获取系统中所有可用的模型列表，包含关联的提供商信息
    */
   async getModels(): Promise<ApiResponse<ModelModel[]>> {
     return this.get<ModelModel[]>("/models");
@@ -55,14 +65,14 @@ export class ModelsApiClient extends BaseApiClient {
    * @description 通过模型ID获取特定模型的详细信息
    * @param id - 模型的唯一标识符
    */
-  async getModelById(id: string): Promise<ApiResponse<ModelModel>> {
-    return this.get<ModelModel>(`/models/${id}`);
+  async getModelById(id: string): Promise<ApiResponse<ModelModel | null>> {
+    return this.get<ModelModel | null>(`/models/${id}`);
   }
 
   /**
-   * 根据提供商ID获取模型
-   * @description 通过提供商ID获取对应的模型列表
-   * @param providerId - 提供商ID
+   * 根据提供商ID获取模型列表
+   * @description 获取指定提供商下的所有模型
+   * @param providerId - 提供商的唯一标识符
    */
   async getModelsByProvider(
     providerId: string,
@@ -71,8 +81,8 @@ export class ModelsApiClient extends BaseApiClient {
   }
 
   /**
-   * 根据类型获取模型
-   * @description 通过模型类型获取对应的模型列表
+   * 根据类型获取模型列表
+   * @description 获取指定类型的所有模型
    * @param type - 模型类型
    */
   async getModelsByType(type: ModelType): Promise<ApiResponse<ModelModel[]>> {
@@ -80,8 +90,8 @@ export class ModelsApiClient extends BaseApiClient {
   }
 
   /**
-   * 根据分组获取模型
-   * @description 通过模型分组获取对应的模型列表
+   * 根据分组获取模型列表
+   * @description 获取指定分组的所有模型
    * @param group - 模型分组
    */
   async getModelsByGroup(group: string): Promise<ApiResponse<ModelModel[]>> {
@@ -90,63 +100,100 @@ export class ModelsApiClient extends BaseApiClient {
 
   /**
    * 创建新模型
-   * @description 在系统中创建一个新的模型
-   * @param modelData - 模型信息对象
+   * @description 创建一个新的模型记录，并关联指定的提供商
+   * @param model - 包含模型信息的对象
    */
-  async createModel(
-    modelData: ModelCreateInput,
-  ): Promise<ApiResponse<ModelModel>> {
-    // 转换types数组为typeJson
-    const data = {
-      ...modelData,
-      typeJson: modelData.types,
-    };
-    return this.post<ModelModel>("/models", data);
-  }
-
-  /**
-   * 批量创建模型
-   * @description 批量创建多个模型
-   * @param modelsData - 模型信息数组
-   */
-  async createManyModels(
-    modelsData: ModelCreateInput[],
-  ): Promise<ApiResponse<BatchCreateResult>> {
-    // 转换types数组为typeJson
-    const data = modelsData.map((model) => ({
+  async createModel(model: ModelCreateInput): Promise<ApiResponse<ModelModel>> {
+    // 转换types为typeJson格式
+    const payload = {
       ...model,
       typeJson: model.types,
-    }));
-    return this.post<BatchCreateResult>(
-      "/models/batch",
-      data as unknown as Record<string, unknown>,
-    );
+    };
+
+    return this.post<ModelModel>("/models", payload);
   }
 
   /**
    * 更新模型信息
-   * @description 更新指定模型的信息
+   * @description 更新指定模型的信息，包括提供商关联
    * @param id - 模型的唯一标识符
-   * @param modelData - 更新的模型信息
+   * @param model - 包含更新信息的对象
    */
   async updateModel(
     id: string,
-    modelData: Partial<ModelCreateInput>,
+    model: ModelUpdateInput,
   ): Promise<ApiResponse<ModelModel>> {
-    // 如果有types字段，转换为typeJson
-    const data = modelData.types
-      ? { ...modelData, typeJson: modelData.types }
-      : modelData;
-    return this.put<ModelModel>(`/models/${id}`, data);
+    // 转换types为typeJson格式
+    const payload = model.types
+      ? {
+          ...model,
+          typeJson: model.types,
+        }
+      : model;
+
+    return this.put<ModelModel>(`/models/${id}`, payload);
   }
 
   /**
    * 删除模型
-   * @description 删除指定的模型
+   * @description 删除指定的模型记录
    * @param id - 模型的唯一标识符
    */
   async deleteModel(id: string): Promise<ApiResponse<ModelModel>> {
     return this.delete<ModelModel>(`/models/${id}`);
+  }
+
+  /**
+   * 批量创建模型
+   * @description 批量创建多个模型记录
+   * @param models - 模型信息数组
+   */
+  async createManyModels(
+    models: ModelCreateInput[],
+  ): Promise<ApiResponse<BatchCreateResult>> {
+    // 转换types为typeJson格式
+    const payload = models.map((model) => ({
+      ...model,
+      typeJson: model.types,
+    }));
+
+    return this.post<BatchCreateResult>(
+      "/models/batch",
+      payload as Record<string, unknown>,
+    );
+  }
+
+  /**
+   * 添加模型与提供商的关联
+   * @description 为模型添加新的提供商关联
+   * @param relation - 模型ID和提供商ID
+   */
+  async addModelProviderRelation(
+    relation: ModelProviderRelation,
+  ): Promise<ApiResponse<ModelProviderRelation>> {
+    return this.post<ModelProviderRelation>("/models/relations", relation);
+  }
+
+  /**
+   * 移除模型与提供商的关联
+   * @description 移除模型与提供商之间的关联关系
+   * @param relation - 模型ID和提供商ID
+   */
+  async removeModelProviderRelation(
+    relation: ModelProviderRelation,
+  ): Promise<ApiResponse<ModelProviderRelation>> {
+    return this.delete<ModelProviderRelation>("/models/relations", relation);
+  }
+
+  /**
+   * 获取模型与提供商的关联列表
+   * @description 获取指定模型的所有提供商关联
+   * @param modelId - 模型ID
+   */
+  async getModelProviderRelations(
+    modelId: string,
+  ): Promise<ApiResponse<ModelProviderRelation[]>> {
+    return this.get<ModelProviderRelation[]>(`/models/${modelId}/relations`);
   }
 }
 

@@ -9,6 +9,7 @@ import {
   getEnabledProviders,
   getProviderById,
   getProviders,
+  getProvidersByModel,
   getProvidersByType,
   idParamSchema,
   toggleProviderEnabled,
@@ -363,12 +364,50 @@ const toggleProviderEnabledRouter = registerApiRoute(
   },
 );
 
+/**
+ * 根据模型ID获取提供商列表的路由处理器
+ * @description 获取与指定模型关联的所有提供商
+ */
+const getProvidersByModelRouter = registerApiRoute(
+  `${PREFIX}/providers/by-model/:modelId`,
+  {
+    method: "GET",
+    handler: async (c) => {
+      try {
+        // 参数校验
+        const modelId = c.req.param("modelId");
+        if (!modelId) {
+          return new Response(JSON.stringify({ error: "模型ID不能为空" }), {
+            status: 400,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+
+        const providers = await getProvidersByModel(modelId);
+        return new Response(JSON.stringify(providers), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      } catch (error) {
+        return new Response(
+          JSON.stringify({ error, message: "获取关联提供商列表失败" }),
+          {
+            status: 500,
+            headers: { "Content-Type": "application/json" },
+          },
+        );
+      }
+    },
+  },
+);
+
 // 导出所有路由
 const providersRouter = [
   getProvidersRouter,
   getEnabledProvidersRouter,
   getProviderByIdRouter,
   getProvidersByTypeRouter,
+  getProvidersByModelRouter,
   createProviderRouter,
   updateProviderRouter,
   deleteProviderRouter,
