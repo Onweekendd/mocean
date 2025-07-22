@@ -359,8 +359,8 @@ export default function ProviderPage() {
       <div className="flex-1 overflow-auto">
         <ScrollArea className="h-full">
           <div className="space-y-6 p-6">
-            {filteredModelGroups.map((group, index) => (
-              <Collapsible key={group.groupName} defaultOpen={index === 0}>
+            {filteredModelGroups.map((group) => (
+              <Collapsible key={group.groupName} defaultOpen={true}>
                 <div className="space-y-4">
                   <CollapsibleTrigger className="w-full">
                     <div className="flex items-center justify-between rounded-lg p-3 transition-colors hover:bg-muted/50">
