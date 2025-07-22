@@ -4,8 +4,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { Loader2, Settings } from "lucide-react";
 
+import { ItemCard } from "@/components/custom/item-card";
 import { Card, CardContent } from "@/components/ui/card";
-import { ItemCard } from "@/components/ui/item-card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { useProvidersSWR } from "@/hooks/useProvidersSWR";

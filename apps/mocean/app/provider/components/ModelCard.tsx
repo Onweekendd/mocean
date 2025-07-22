@@ -4,8 +4,8 @@ import Image from "next/image";
 
 import { Brain, Database, Eye, Search, Zap } from "lucide-react";
 
+import { ItemCard } from "@/components/custom/item-card";
 import { Badge } from "@/components/ui/badge";
-import { ItemCard } from "@/components/ui/item-card";
 
 import { getModelLogo } from "../constant";
 

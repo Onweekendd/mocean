@@ -1,7 +1,7 @@
 "use client";
 
 import { useStore } from "@/app/store/useStore";
-import { ItemList } from "@/components/ui/item-list";
+import { ItemList } from "@/components/custom/item-list";
 
 import { AgentGroupIcon, iconMap } from "./AgentGroupIcon";
 
