@@ -23,7 +23,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import useCustomRequest from "@/hooks/useCustomRequest";
 import { useModelsWithActions } from "@/hooks/useModelsSWR";
 
 /**
@@ -100,7 +99,6 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = ({
 
   // API hooks
   const { create } = useModelsWithActions();
-  const { request } = useCustomRequest();
 
   /**
    * 重置表单数据
@@ -192,7 +190,7 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = ({
         types: formData.types,
       };
 
-      await request(create(modelData));
+      await create(modelData);
 
       onOpenChange(false);
       resetForm();

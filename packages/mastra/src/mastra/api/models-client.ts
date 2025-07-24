@@ -159,7 +159,7 @@ export class ModelsApiClient extends BaseApiClient {
 
     return this.post<BatchCreateResult>(
       "/models/batch",
-      payload as Record<string, unknown>,
+      payload as unknown as Record<string, unknown>,
     );
   }
 

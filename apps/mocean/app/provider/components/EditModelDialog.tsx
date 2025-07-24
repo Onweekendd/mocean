@@ -23,7 +23,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import useCustomRequest from "@/hooks/useCustomRequest";
 import { useModelsWithActions } from "@/hooks/useModelsSWR";
 
 /**
@@ -116,7 +115,6 @@ export const EditModelDialog: React.FC<EditModelDialogProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { update } = useModelsWithActions();
-  const { request } = useCustomRequest();
 
   /**
    * 当模型数据变化时初始化表单
@@ -225,7 +223,7 @@ export const EditModelDialog: React.FC<EditModelDialogProps> = ({
         description: formData.description.trim() || null,
       };
 
-      await request(update(model.id, updateData));
+      await update(model.id, updateData);
 
       // 成功后回调
       onSuccess?.();

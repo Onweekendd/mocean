@@ -314,9 +314,10 @@ const deleteProviderRouter = registerApiRoute(`${PREFIX}/providers/:id`, {
 const toggleProviderEnabledRouter = registerApiRoute(
   `${PREFIX}/providers/:id/toggle`,
   {
-    method: "POST",
+    method: "PUT",
     handler: async (c) => {
       try {
+        console.log("toggleProviderEnabledRouter");
         // 参数校验
         const { id } = idParamSchema.parse({
           id: c.req.param("id"),

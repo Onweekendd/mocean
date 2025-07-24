@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { ProviderType } from "../../../generated/prisma";
+import { Prisma, ProviderType } from "../../../generated/prisma";
 import { prisma } from "./index";
 
 /**
@@ -237,7 +237,7 @@ const createProvider = async (provider: CreateProviderInput) => {
       ...provider,
       createdAt: new Date(),
       updatedAt: new Date(),
-    } as any,
+    } as Prisma.ProviderCreateInput,
     include: {
       models: {
         include: {

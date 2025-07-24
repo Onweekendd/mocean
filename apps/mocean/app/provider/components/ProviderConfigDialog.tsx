@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { ProviderModel } from "@mocean/mastra/prismaType";
 import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -15,33 +16,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import useCustomRequest from "@/hooks/useCustomRequest";
 import { useProvidersWithActions } from "@/hooks/useProvidersSWR";
-
-/**
- * 提供商接口
- */
-interface Provider {
-  id: string;
-  type: string;
-  name: string;
-  apiKey: string;
-  apiHost: string;
-  apiVersion?: string;
-  enabled: boolean;
-  isSystem: boolean;
-  isAuthed: boolean;
-  rateLimit?: number;
-  isNotSupportArrayContent: boolean;
-  notes?: string;
-}
 
 /**
  * 供应商配置编辑对话框属性
  */
 export interface ProviderConfigDialogProps {
   /** 供应商数据 */
-  provider: Provider;
+  provider: ProviderModel;
   /** 对话框开启状态 */
   open: boolean;
   /** 对话框状态变更回调 */
@@ -89,7 +71,6 @@ export const ProviderConfigDialog: React.FC<ProviderConfigDialogProps> = ({
 
   // API hooks
   const { update } = useProvidersWithActions();
-  const { request } = useCustomRequest();
 
   /**
    * 重置表单数据
@@ -138,7 +119,7 @@ export const ProviderConfigDialog: React.FC<ProviderConfigDialogProps> = ({
         notes: formData.notes.trim() || null,
       };
 
-      await request(update(provider.id, updateData));
+      await update(provider.id, updateData);
 
       onOpenChange(false);
       onSuccess?.();

@@ -4,16 +4,8 @@ import { useMemo, useState } from "react";
 
 import { useSearchParams } from "next/navigation";
 
-import {
-  Database,
-  Edit,
-  Loader2,
-  Plus,
-  Power,
-  PowerOff,
-  Search,
-  Settings,
-} from "lucide-react";
+import { ProviderModel } from "@mocean/mastra/prismaType";
+import { Database, Edit, Loader2, Plus, Search, Settings } from "lucide-react";
 
 import {
   AlertDialog,
@@ -36,7 +28,6 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import useCustomRequest from "@/hooks/useCustomRequest";
 import {
   useModelsByProviderSWR,
   useModelsWithActions,
@@ -95,17 +86,17 @@ export default function ProviderPage() {
   // API hooks
   const { providers, toggleEnabled } = useProvidersWithActions();
   const { remove: removeModel } = useModelsWithActions();
-  const { request } = useCustomRequest();
 
-  const provider = providers.find((p) => p.id === selectedProviderId);
+  const provider = useMemo(() => {
+    return providers.find((p) => p.id === selectedProviderId) as ProviderModel;
+  }, [providers, selectedProviderId]);
+
   const {
     models,
-    isLoading: modelsLoading,
+    isLoading,
     error,
     refresh: refreshModels,
   } = useModelsByProviderSWR(selectedProviderId);
-
-  const isLoading = modelsLoading;
 
   // 按组分组模型
   const modelGroups = useMemo((): ModelGroup[] => {
@@ -213,7 +204,7 @@ export default function ProviderPage() {
     if (!selectedModelForDelete) return;
 
     try {
-      await request(removeModel(selectedModelForDelete.id));
+      await removeModel(selectedModelForDelete.id);
       refreshModels();
       setDeleteAlertOpen(false);
       setSelectedModelForDelete(null);
@@ -229,7 +220,7 @@ export default function ProviderPage() {
     if (!provider) return;
 
     try {
-      await request(toggleEnabled(provider.id));
+      await toggleEnabled(provider.id);
     } catch (error) {
       console.error("切换提供商状态失败:", error);
     }
@@ -309,14 +300,10 @@ export default function ProviderPage() {
                   <h1 className="text-lg font-semibold">{provider?.name}</h1>
                   <div className="flex items-center space-x-1">
                     <Switch
+                      color="green"
                       checked={provider?.enabled}
                       onCheckedChange={onToggleEnabled}
                     />
-                    {provider?.enabled ? (
-                      <Power className="h-4 w-4 text-green-600" />
-                    ) : (
-                      <PowerOff className="h-4 w-4 text-muted-foreground" />
-                    )}
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground">
@@ -394,14 +381,10 @@ export default function ProviderPage() {
                 <h1 className="text-lg font-semibold">{provider?.name}</h1>
                 <div className="flex items-center space-x-1">
                   <Switch
+                    className="data-[state=checked]:bg-purple-500"
                     checked={provider?.enabled}
                     onCheckedChange={onToggleEnabled}
                   />
-                  {provider?.enabled ? (
-                    <Power className="h-4 w-4 text-green-600" />
-                  ) : (
-                    <PowerOff className="h-4 w-4 text-muted-foreground" />
-                  )}
                 </div>
               </div>
               <p className="text-sm text-muted-foreground">
@@ -412,19 +395,6 @@ export default function ProviderPage() {
 
           {/* 操作按钮 */}
           <div className="flex items-center space-x-2">
-            {/* 分组统计 */}
-            <div className="flex items-center space-x-2">
-              {modelGroups.map((group) => (
-                <Badge
-                  key={group.groupName}
-                  variant="outline"
-                  className="text-xs"
-                >
-                  {group.groupName}: {group.count}
-                </Badge>
-              ))}
-            </div>
-
             {/* 分组管理按钮 */}
             <Button
               variant="outline"
