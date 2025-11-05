@@ -10,21 +10,28 @@ export const DynamicAgent = new Agent({
   name: "DynamicAgent",
 
   instructions: async ({ runtimeContext }) => {
-    const fullTypeRuntimeContext =
-      runtimeContext as RuntimeContext<CommonRunTimeType>;
+    const assistant = (runtimeContext as RuntimeContext<CommonRunTimeType>).get(
+      "assistant",
+    );
 
-    const instructions = fullTypeRuntimeContext.get("instructions");
-
-    return instructions;
+    return assistant.prompt;
   },
 
-  model: async () => {
+  model: async ({ runtimeContext }) => {
+    const assistant = (runtimeContext as RuntimeContext<CommonRunTimeType>).get(
+      "assistant",
+    );
+
+    const provider = assistant.provider;
+
+    const providerType = provider.type;
+
     const openaiProvider = createOpenAI({
-      baseURL: process.env.OPENAI_API_BASE_URL,
-      apiKey: process.env.OPENAI_API_KEY,
+      baseURL: provider.apiHost,
+      apiKey: provider.apiKey,
     });
 
-    const model = openaiProvider(process.env.OPENAI_API_MODEL ?? "gpt-4o");
+    const model = openaiProvider(assistant.model.id);
 
     return model;
   },

@@ -1,7 +1,10 @@
 import { StorageThreadType } from "@mastra/core";
+import { RuntimeContext } from "@mastra/core/di";
 import { UIMessage } from "ai";
 import { z } from "zod";
 
+import { DynamicAgent } from "../agents/dynamicAgent";
+import { createCommonRunTime } from "../runtime/CommonRunTime";
 import { prisma } from "./index";
 
 /**
@@ -102,6 +105,29 @@ const getAssistantById = async (id: string) => {
 };
 
 /**
+ * @description 通过助手ID从数据库中获取特定助手的详细信息，包括关联的模型、提供商、设置、主题、知识库、MCP服务器等
+ * @param id - 助手的唯一标识符
+ * @returns 包含完整助手信息的助手对象，如果不存在则返回null
+ */
+const getFullAssistantById = async (id: string) => {
+  const assistant = await prisma.assistant.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      model: true,
+      defaultModel: true,
+      provider: true,
+      settings: true,
+      topics: true,
+      knowledgeBases: true,
+      mcpServers: true,
+    },
+  });
+  return assistant;
+};
+
+/**
  * 创建新助手
  * @description 在数据库中创建一个新的助手记录
  * @param assistant - 包含助手信息的对象，包括名称、描述、提示词等必要字段
@@ -184,6 +210,73 @@ const getAssistantWithModelByAssistantId = async (assistantId: string) => {
 };
 
 /**
+ * 执行与助手的聊天对话
+ * @description 与指定助手进行对话并返回流式响应
+ * @param assistantId - 助手的唯一标识符
+ * @param messages - 对话消息数组
+ * @param threadId - 对话线程ID
+ * @returns 包含流式响应的对象
+ *
+ * @throws {Error} 当助手不存在时抛出错误
+ */
+const executeChatWithAssistant = async (
+  assistantId: string,
+  messages: UIMessage[],
+  threadId: string,
+) => {
+  const assistant = await getFullAssistantById(assistantId);
+
+  if (!assistant) {
+    throw new Error("助手不存在");
+  }
+
+  const stream = await DynamicAgent.stream(messages, {
+    threadId,
+    resourceId: assistantId,
+    runtimeContext: createCommonRunTime({ assistant }) as RuntimeContext,
+  });
+
+  return stream;
+};
+
+/**
+ * 获取助手的对话线程列表
+ * @description 根据助手ID获取该助手的所有对话线程
+ * @param assistantId - 助手的唯一标识符
+ * @returns 包含所有对话线程的数组
+ */
+const getThreadsByAssistantId = async (assistantId: string) => {
+  const memory = await DynamicAgent.getMemory();
+
+  const threads = await memory.getThreadsByResourceId({
+    resourceId: assistantId,
+  });
+
+  return threads;
+};
+
+/**
+ * 获取助手指定线程的消息
+ * @description 根据助手ID和线程ID获取该线程中的所有UI消息
+ * @param assistantId - 助手的唯一标识符
+ * @param threadId - 对话线程的唯一标识符
+ * @returns 包含所有UI消息的数组
+ */
+const getUIMessagesByThreadId = async (
+  assistantId: string,
+  threadId: string,
+) => {
+  const memory = await DynamicAgent.getMemory();
+
+  const messages = await memory.query({
+    threadId,
+    resourceId: assistantId,
+  });
+
+  return messages.uiMessages;
+};
+
+/**
  * Prisma 数据库操作返回类型
  */
 export type AssistantsListResult = Awaited<ReturnType<typeof getAssistants>>;
@@ -199,10 +292,14 @@ export type AssistantUIMessagesResult = UIMessage[];
 export {
   getAssistants,
   getAssistantById,
+  getFullAssistantById,
   createAssistant,
   updateAssistant,
   deleteAssistant,
   getAssistantWithModelByAssistantId,
+  executeChatWithAssistant,
+  getThreadsByAssistantId,
+  getUIMessagesByThreadId,
   createAssistantSchema,
   updateAssistantSchema,
   chatWithAssistantSchema,

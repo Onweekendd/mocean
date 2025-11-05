@@ -1,15 +1,14 @@
 "use client";
 
-import { useChat } from "@ai-sdk/react";
-import { useVercelUseChatRuntime } from "@assistant-ui/react-ai-sdk";
-import { UIMessage, generateId } from "ai";
+import {
+  AssistantChatTransport,
+  useChatRuntime,
+} from "@assistant-ui/react-ai-sdk";
+import { UIMessage } from "ai";
 
 import { useStore } from "@/app/store/useStore";
 
 import { useAssistantThreadsSWR } from "./useAssistantsSWR";
-
-// 提取 useVercelUseChatRuntime 的第二个参数类型
-type VercelUseChatAdapter = Parameters<typeof useVercelUseChatRuntime>[1];
 
 // 提取 experimental_prepareRequestBody 返回值类型
 export type PrepareRequestBodyReturnType = {
@@ -34,49 +33,46 @@ export function useMastraRuntime({
 }: {
   api: string;
   body?: object;
-  adapter?: VercelUseChatAdapter;
   initialMessages?: UIMessage[];
 }) {
   const { activeThread, activeAssistant, setActiveThread } = useStore();
 
   const { refresh } = useAssistantThreadsSWR(activeAssistant?.id || null);
 
-  const chat = useChat({
-    api,
+  const runtime = useChatRuntime({
+    transport: new AssistantChatTransport({
+      api,
+    }),
     initialMessages,
-    body,
-
     onFinish() {
       setTimeout(() => {
         refresh();
       }, 5000);
     },
 
-    experimental_prepareRequestBody: ({
-      id,
-      messages,
-      requestData,
-      requestBody,
-    }) => {
-      const assistantId = useStore.getState().activeAssistant?.id;
+    // experimental_prepareRequestBody: ({
+    //   id,
+    //   messages,
+    //   requestData,
+    //   requestBody,
+    // }) => {
+    //   const assistantId = useStore.getState().activeAssistant?.id;
 
-      // 确保 activeThread 存在，如果不存在则创建新的并更新状态
-      if (!activeThread) {
-        setActiveThread(generateId());
-      }
+    //   // 确保 activeThread 存在，如果不存在则创建新的并更新状态
+    //   if (!activeThread) {
+    //     setActiveThread(generateId());
+    //   }
 
-      return Object.assign(
-        { id },
-        requestBody,
-        requestData,
-        { threadId: activeThread },
-        { messages: [messages[messages.length - 1]] },
-        { assistantId },
-      );
-    },
+    //   return Object.assign(
+    //     { id },
+    //     requestBody,
+    //     requestData,
+    //     { threadId: activeThread },
+    //     { messages: [messages[messages.length - 1]] },
+    //     { assistantId },
+    //   );
+    // },
   });
-
-  const runtime = useVercelUseChatRuntime(chat, adapter);
 
   return runtime;
 }

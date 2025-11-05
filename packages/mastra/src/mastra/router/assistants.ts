@@ -1,10 +1,7 @@
-import { RuntimeContext } from "@mastra/core/di";
 import { registerApiRoute } from "@mastra/core/server";
 import { z } from "zod";
 
-import { DynamicAgent } from "../agents/dynamicAgent";
 import { PREFIX } from "../api/base-client";
-import { createCommonRunTime } from "../runtime/CommonRunTime";
 import {
   assistantIdParamSchema,
   assistantThreadIdParamSchema,
@@ -12,9 +9,11 @@ import {
   createAssistant,
   createAssistantSchema,
   deleteAssistant,
+  executeChatWithAssistant,
   getAssistantById,
-  getAssistantWithModelByAssistantId,
   getAssistants,
+  getThreadsByAssistantId,
+  getUIMessagesByThreadId,
   updateAssistant,
   updateAssistantSchema,
 } from "../server/assistant";
@@ -251,26 +250,13 @@ const chatWithAssistant = registerApiRoute(`${PREFIX}/assistants/chat`, {
       const { assistantId, messages, threadId } =
         chatWithAssistantSchema.parse(rawData);
 
-      const assistant = await getAssistantWithModelByAssistantId(assistantId);
-
-      if (!assistant) {
-        return new Response(JSON.stringify({ error: "助手不存在" }), {
-          status: 404,
-          headers: { "Content-Type": "application/json" },
-        });
-      }
-
-      const stream = await DynamicAgent.stream(messages, {
+      const stream = await executeChatWithAssistant(
+        assistantId,
+        messages,
         threadId,
-        resourceId: assistantId,
-        runtimeContext: createCommonRunTime({
-          name: assistant.name,
-          instructions: assistant.prompt,
-          model: assistant.model.name,
-        }) as RuntimeContext,
-      });
+      );
 
-      return stream.toDataStreamResponse();
+      return stream.toUIMessageStreamResponse();
     } catch (error) {
       console.error(error);
       if (error instanceof z.ZodError) {
@@ -285,6 +271,15 @@ const chatWithAssistant = registerApiRoute(`${PREFIX}/assistants/chat`, {
           },
         );
       }
+
+      // 处理业务逻辑抛出的错误
+      if (error instanceof Error && error.message === "助手不存在") {
+        return new Response(JSON.stringify({ error: error.message }), {
+          status: 404,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+
       return new Response(JSON.stringify({ message: "聊天请求失败", error }), {
         status: 500,
         headers: { "Content-Type": "application/json" },
@@ -303,11 +298,7 @@ const getAssistantThreads = registerApiRoute(
           assistantId: c.req.param("assistantId"),
         });
 
-        const memory = DynamicAgent.getMemory();
-
-        const threads = await memory.getThreadsByResourceId({
-          resourceId: assistantId,
-        });
+        const threads = await getThreadsByAssistantId(assistantId);
 
         return new Response(JSON.stringify(threads), {
           status: 200,
@@ -349,14 +340,9 @@ const getAssistantUIMessageByThreadId = registerApiRoute(
           assistantId: c.req.param("assistantId"),
         });
 
-        const memory = DynamicAgent.getMemory();
+        const messages = await getUIMessagesByThreadId(assistantId, threadId);
 
-        const messages = await memory.query({
-          threadId,
-          resourceId: assistantId,
-        });
-
-        return new Response(JSON.stringify(messages.uiMessages), {
+        return new Response(JSON.stringify(messages), {
           status: 200,
           headers: { "Content-Type": "application/json" },
         });
