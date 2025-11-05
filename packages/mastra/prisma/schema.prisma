@@ -58,8 +58,9 @@ model Provider {
   // 多对多关系
   models ModelProvider[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  Assistant Assistant[]
 }
 
 // 助手模型
@@ -78,6 +79,8 @@ model Assistant {
   // 关系
   model          Model?               @relation("AssistantModel", fields: [modelId], references: [id])
   modelId        String?
+  provider       Provider?            @relation(fields: [providerId], references: [id])
+  providerId     String?
   defaultModel   Model?               @relation("AssistantDefaultModel", fields: [defaultModelId], references: [id])
   defaultModelId String?
   settings       AssistantSettings?
@@ -127,6 +130,11 @@ model Topic {
   agent       Agent?     @relation(fields: [agentId], references: [id])
   agentId     String?
 
+  modelId String? @unique
+  model   Model?  @relation(fields: [modelId], references: [id])
+
+  knowledgeBases TopicKnowledgeBase[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -163,6 +171,7 @@ model Model {
   knowledgeBases       KnowledgeBase[]
   assistantSettings    AssistantSettings[] @relation("SettingsDefaultModel")
   rerankFor            KnowledgeBase[]     @relation("RerankModel")
+  Topic                Topic[]
 }
 
 // 助手设置
@@ -204,11 +213,12 @@ model KnowledgeBase {
   // 关系
   assistants    Assistant[]
   agents        Agent[]
-  model         Model           @relation(fields: [modelId], references: [id])
+  model         Model                @relation(fields: [modelId], references: [id])
   modelId       String
-  rerankModel   Model?          @relation("RerankModel", fields: [rerankModelId], references: [id])
+  rerankModel   Model?               @relation("RerankModel", fields: [rerankModelId], references: [id])
   rerankModelId String?
   items         KnowledgeItem[]
+  topics        TopicKnowledgeBase[]
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -233,6 +243,16 @@ model KnowledgeItem {
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+}
+
+// Topic和KnowledgeBase的多对多关系
+model TopicKnowledgeBase {
+  topic           Topic         @relation(fields: [topicId], references: [id])
+  topicId         String
+  knowledgeBase   KnowledgeBase @relation(fields: [knowledgeBaseId], references: [id])
+  knowledgeBaseId String
+
+  @@id([topicId, knowledgeBaseId])
 }
 
 // MCP服务器

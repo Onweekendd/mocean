@@ -29,6 +29,18 @@ export type AgentInput = Pick<
 >;
 
 /**
+ * Prisma 数据库操作返回类型
+ */
+export type AgentsListResult = Awaited<ReturnType<typeof getAgentsPrisma>>;
+export type AgentDetailResult = Awaited<ReturnType<typeof getAgentByIdPrisma>>;
+export type AgentCreateResult = Awaited<ReturnType<typeof createAgentPrisma>>;
+export type AgentUpdateResult = Awaited<ReturnType<typeof updateAgentPrisma>>;
+export type AgentDeleteResult = Awaited<ReturnType<typeof deleteAgentPrisma>>;
+export type AgentsByGroupResult = Awaited<
+  ReturnType<typeof getAgentByGroupPrisma>
+>;
+
+/**
  * 代理 API 客户端类
  * @description 提供类型安全的代理相关 API 调用方法
  */
@@ -41,10 +53,8 @@ export class AgentsApiClient extends BaseApiClient {
    * 获取所有代理
    * @description 获取系统中所有可用的代理列表
    */
-  async getAgents(): Promise<
-    ApiResponse<Awaited<ReturnType<typeof getAgentsPrisma>>>
-  > {
-    return this.get<Awaited<ReturnType<typeof getAgentsPrisma>>>("/agents");
+  async getAgents(): Promise<ApiResponse<AgentsListResult>> {
+    return this.get<AgentsListResult>("/agents");
   }
 
   /**
@@ -52,12 +62,8 @@ export class AgentsApiClient extends BaseApiClient {
    * @description 通过代理ID获取特定代理的详细信息
    * @param id - 代理的唯一标识符
    */
-  async getAgentById(
-    id: string,
-  ): Promise<ApiResponse<Awaited<ReturnType<typeof getAgentByIdPrisma>>>> {
-    return this.get<Awaited<ReturnType<typeof getAgentByIdPrisma>>>(
-      `/agents/${id}`,
-    );
+  async getAgentById(id: string): Promise<ApiResponse<AgentDetailResult>> {
+    return this.get<AgentDetailResult>(`/agents/${id}`);
   }
 
   /**
@@ -67,11 +73,8 @@ export class AgentsApiClient extends BaseApiClient {
    */
   async createAgent(
     agentData: AgentInput,
-  ): Promise<ApiResponse<Awaited<ReturnType<typeof createAgentPrisma>>>> {
-    return this.post<Awaited<ReturnType<typeof createAgentPrisma>>>(
-      "/agents",
-      agentData,
-    );
+  ): Promise<ApiResponse<AgentCreateResult>> {
+    return this.post<AgentCreateResult>("/agents", agentData);
   }
 
   /**
@@ -83,11 +86,8 @@ export class AgentsApiClient extends BaseApiClient {
   async updateAgent(
     id: string,
     agentData: Partial<AgentInput>,
-  ): Promise<ApiResponse<Awaited<ReturnType<typeof updateAgentPrisma>>>> {
-    return this.put<Awaited<ReturnType<typeof updateAgentPrisma>>>(
-      `/agents/${id}`,
-      agentData,
-    );
+  ): Promise<ApiResponse<AgentUpdateResult>> {
+    return this.put<AgentUpdateResult>(`/agents/${id}`, agentData);
   }
 
   /**
@@ -95,12 +95,8 @@ export class AgentsApiClient extends BaseApiClient {
    * @description 删除指定的代理
    * @param id - 代理的唯一标识符
    */
-  async deleteAgent(
-    id: string,
-  ): Promise<ApiResponse<Awaited<ReturnType<typeof deleteAgentPrisma>>>> {
-    return this.delete<Awaited<ReturnType<typeof deleteAgentPrisma>>>(
-      `/agents/${id}`,
-    );
+  async deleteAgent(id: string): Promise<ApiResponse<AgentDeleteResult>> {
+    return this.delete<AgentDeleteResult>(`/agents/${id}`);
   }
 
   /**
@@ -110,10 +106,8 @@ export class AgentsApiClient extends BaseApiClient {
    */
   async getAgentByGroup(
     group: string,
-  ): Promise<ApiResponse<Awaited<ReturnType<typeof getAgentByGroupPrisma>>>> {
-    return this.get<Awaited<ReturnType<typeof getAgentByGroupPrisma>>>(
-      `/agents/group/${group}`,
-    );
+  ): Promise<ApiResponse<AgentsByGroupResult>> {
+    return this.get<AgentsByGroupResult>(`/agents/group/${group}`);
   }
 }
 

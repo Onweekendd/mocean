@@ -403,6 +403,7 @@ export const ModelName = {
   AssistantSettings: 'AssistantSettings',
   KnowledgeBase: 'KnowledgeBase',
   KnowledgeItem: 'KnowledgeItem',
+  TopicKnowledgeBase: 'TopicKnowledgeBase',
   MCPServer: 'MCPServer',
   MCPAssistantServer: 'MCPAssistantServer',
   MCPAgentServer: 'MCPAgentServer',
@@ -427,7 +428,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "provider" | "assistant" | "agent" | "topic" | "fileType" | "model" | "assistantSettings" | "knowledgeBase" | "knowledgeItem" | "mCPServer" | "mCPAssistantServer" | "mCPAgentServer" | "mCPTool" | "mCPPrompt" | "mCPResource" | "mCPConfigSample" | "quickPhrase" | "modelProvider"
+    modelProps: "provider" | "assistant" | "agent" | "topic" | "fileType" | "model" | "assistantSettings" | "knowledgeBase" | "knowledgeItem" | "topicKnowledgeBase" | "mCPServer" | "mCPAssistantServer" | "mCPAgentServer" | "mCPTool" | "mCPPrompt" | "mCPResource" | "mCPConfigSample" | "quickPhrase" | "modelProvider"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1094,6 +1095,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.KnowledgeItemCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.KnowledgeItemCountAggregateOutputType> | number
+        }
+      }
+    }
+    TopicKnowledgeBase: {
+      payload: Prisma.$TopicKnowledgeBasePayload<ExtArgs>
+      fields: Prisma.TopicKnowledgeBaseFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TopicKnowledgeBaseFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TopicKnowledgeBasePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TopicKnowledgeBaseFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TopicKnowledgeBasePayload>
+        }
+        findFirst: {
+          args: Prisma.TopicKnowledgeBaseFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TopicKnowledgeBasePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TopicKnowledgeBaseFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TopicKnowledgeBasePayload>
+        }
+        findMany: {
+          args: Prisma.TopicKnowledgeBaseFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TopicKnowledgeBasePayload>[]
+        }
+        create: {
+          args: Prisma.TopicKnowledgeBaseCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TopicKnowledgeBasePayload>
+        }
+        createMany: {
+          args: Prisma.TopicKnowledgeBaseCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TopicKnowledgeBaseCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TopicKnowledgeBasePayload>[]
+        }
+        delete: {
+          args: Prisma.TopicKnowledgeBaseDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TopicKnowledgeBasePayload>
+        }
+        update: {
+          args: Prisma.TopicKnowledgeBaseUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TopicKnowledgeBasePayload>
+        }
+        deleteMany: {
+          args: Prisma.TopicKnowledgeBaseDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TopicKnowledgeBaseUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TopicKnowledgeBaseUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TopicKnowledgeBasePayload>[]
+        }
+        upsert: {
+          args: Prisma.TopicKnowledgeBaseUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TopicKnowledgeBasePayload>
+        }
+        aggregate: {
+          args: Prisma.TopicKnowledgeBaseAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTopicKnowledgeBase>
+        }
+        groupBy: {
+          args: Prisma.TopicKnowledgeBaseGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TopicKnowledgeBaseGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TopicKnowledgeBaseCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TopicKnowledgeBaseCountAggregateOutputType> | number
         }
       }
     }
@@ -1831,6 +1906,7 @@ export const AssistantScalarFieldEnum = {
   enableGenerateImage: 'enableGenerateImage',
   knowledgeRecognition: 'knowledgeRecognition',
   modelId: 'modelId',
+  providerId: 'providerId',
   defaultModelId: 'defaultModelId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1866,6 +1942,7 @@ export const TopicScalarFieldEnum = {
   isNameManuallyEdited: 'isNameManuallyEdited',
   assistantId: 'assistantId',
   agentId: 'agentId',
+  modelId: 'modelId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1958,6 +2035,14 @@ export const KnowledgeItemScalarFieldEnum = {
 } as const
 
 export type KnowledgeItemScalarFieldEnum = (typeof KnowledgeItemScalarFieldEnum)[keyof typeof KnowledgeItemScalarFieldEnum]
+
+
+export const TopicKnowledgeBaseScalarFieldEnum = {
+  topicId: 'topicId',
+  knowledgeBaseId: 'knowledgeBaseId'
+} as const
+
+export type TopicKnowledgeBaseScalarFieldEnum = (typeof TopicKnowledgeBaseScalarFieldEnum)[keyof typeof TopicKnowledgeBaseScalarFieldEnum]
 
 
 export const MCPServerScalarFieldEnum = {
@@ -2281,6 +2366,7 @@ export type GlobalOmitConfig = {
   assistantSettings?: Prisma.AssistantSettingsOmit
   knowledgeBase?: Prisma.KnowledgeBaseOmit
   knowledgeItem?: Prisma.KnowledgeItemOmit
+  topicKnowledgeBase?: Prisma.TopicKnowledgeBaseOmit
   mCPServer?: Prisma.MCPServerOmit
   mCPAssistantServer?: Prisma.MCPAssistantServerOmit
   mCPAgentServer?: Prisma.MCPAgentServerOmit

@@ -31,6 +31,7 @@ export type TopicMinAggregateOutputType = {
   isNameManuallyEdited: boolean | null
   assistantId: string | null
   agentId: string | null
+  modelId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -43,6 +44,7 @@ export type TopicMaxAggregateOutputType = {
   isNameManuallyEdited: boolean | null
   assistantId: string | null
   agentId: string | null
+  modelId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -55,6 +57,7 @@ export type TopicCountAggregateOutputType = {
   isNameManuallyEdited: number
   assistantId: number
   agentId: number
+  modelId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -69,6 +72,7 @@ export type TopicMinAggregateInputType = {
   isNameManuallyEdited?: true
   assistantId?: true
   agentId?: true
+  modelId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -81,6 +85,7 @@ export type TopicMaxAggregateInputType = {
   isNameManuallyEdited?: true
   assistantId?: true
   agentId?: true
+  modelId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -93,6 +98,7 @@ export type TopicCountAggregateInputType = {
   isNameManuallyEdited?: true
   assistantId?: true
   agentId?: true
+  modelId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -178,6 +184,7 @@ export type TopicGroupByOutputType = {
   isNameManuallyEdited: boolean
   assistantId: string | null
   agentId: string | null
+  modelId: string | null
   createdAt: Date
   updatedAt: Date
   _count: TopicCountAggregateOutputType | null
@@ -211,10 +218,13 @@ export type TopicWhereInput = {
   isNameManuallyEdited?: Prisma.BoolFilter<"Topic"> | boolean
   assistantId?: Prisma.StringNullableFilter<"Topic"> | string | null
   agentId?: Prisma.StringNullableFilter<"Topic"> | string | null
+  modelId?: Prisma.StringNullableFilter<"Topic"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Topic"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Topic"> | Date | string
   assistant?: Prisma.XOR<Prisma.AssistantNullableScalarRelationFilter, Prisma.AssistantWhereInput> | null
   agent?: Prisma.XOR<Prisma.AgentNullableScalarRelationFilter, Prisma.AgentWhereInput> | null
+  model?: Prisma.XOR<Prisma.ModelNullableScalarRelationFilter, Prisma.ModelWhereInput> | null
+  knowledgeBases?: Prisma.TopicKnowledgeBaseListRelationFilter
 }
 
 export type TopicOrderByWithRelationInput = {
@@ -225,14 +235,18 @@ export type TopicOrderByWithRelationInput = {
   isNameManuallyEdited?: Prisma.SortOrder
   assistantId?: Prisma.SortOrderInput | Prisma.SortOrder
   agentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  modelId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   assistant?: Prisma.AssistantOrderByWithRelationInput
   agent?: Prisma.AgentOrderByWithRelationInput
+  model?: Prisma.ModelOrderByWithRelationInput
+  knowledgeBases?: Prisma.TopicKnowledgeBaseOrderByRelationAggregateInput
 }
 
 export type TopicWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  modelId?: string
   AND?: Prisma.TopicWhereInput | Prisma.TopicWhereInput[]
   OR?: Prisma.TopicWhereInput[]
   NOT?: Prisma.TopicWhereInput | Prisma.TopicWhereInput[]
@@ -246,7 +260,9 @@ export type TopicWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Topic"> | Date | string
   assistant?: Prisma.XOR<Prisma.AssistantNullableScalarRelationFilter, Prisma.AssistantWhereInput> | null
   agent?: Prisma.XOR<Prisma.AgentNullableScalarRelationFilter, Prisma.AgentWhereInput> | null
-}, "id">
+  model?: Prisma.XOR<Prisma.ModelNullableScalarRelationFilter, Prisma.ModelWhereInput> | null
+  knowledgeBases?: Prisma.TopicKnowledgeBaseListRelationFilter
+}, "id" | "modelId">
 
 export type TopicOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -256,6 +272,7 @@ export type TopicOrderByWithAggregationInput = {
   isNameManuallyEdited?: Prisma.SortOrder
   assistantId?: Prisma.SortOrderInput | Prisma.SortOrder
   agentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  modelId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.TopicCountOrderByAggregateInput
@@ -274,6 +291,7 @@ export type TopicScalarWhereWithAggregatesInput = {
   isNameManuallyEdited?: Prisma.BoolWithAggregatesFilter<"Topic"> | boolean
   assistantId?: Prisma.StringNullableWithAggregatesFilter<"Topic"> | string | null
   agentId?: Prisma.StringNullableWithAggregatesFilter<"Topic"> | string | null
+  modelId?: Prisma.StringNullableWithAggregatesFilter<"Topic"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Topic"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Topic"> | Date | string
 }
@@ -288,6 +306,8 @@ export type TopicCreateInput = {
   updatedAt?: Date | string
   assistant?: Prisma.AssistantCreateNestedOneWithoutTopicsInput
   agent?: Prisma.AgentCreateNestedOneWithoutTopicsInput
+  model?: Prisma.ModelCreateNestedOneWithoutTopicInput
+  knowledgeBases?: Prisma.TopicKnowledgeBaseCreateNestedManyWithoutTopicInput
 }
 
 export type TopicUncheckedCreateInput = {
@@ -298,8 +318,10 @@ export type TopicUncheckedCreateInput = {
   isNameManuallyEdited?: boolean
   assistantId?: string | null
   agentId?: string | null
+  modelId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  knowledgeBases?: Prisma.TopicKnowledgeBaseUncheckedCreateNestedManyWithoutTopicInput
 }
 
 export type TopicUpdateInput = {
@@ -312,6 +334,8 @@ export type TopicUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assistant?: Prisma.AssistantUpdateOneWithoutTopicsNestedInput
   agent?: Prisma.AgentUpdateOneWithoutTopicsNestedInput
+  model?: Prisma.ModelUpdateOneWithoutTopicNestedInput
+  knowledgeBases?: Prisma.TopicKnowledgeBaseUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicUncheckedUpdateInput = {
@@ -322,8 +346,10 @@ export type TopicUncheckedUpdateInput = {
   isNameManuallyEdited?: Prisma.BoolFieldUpdateOperationsInput | boolean
   assistantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   agentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  knowledgeBases?: Prisma.TopicKnowledgeBaseUncheckedUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicCreateManyInput = {
@@ -334,6 +360,7 @@ export type TopicCreateManyInput = {
   isNameManuallyEdited?: boolean
   assistantId?: string | null
   agentId?: string | null
+  modelId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -356,6 +383,7 @@ export type TopicUncheckedUpdateManyInput = {
   isNameManuallyEdited?: Prisma.BoolFieldUpdateOperationsInput | boolean
   assistantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   agentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -378,6 +406,7 @@ export type TopicCountOrderByAggregateInput = {
   isNameManuallyEdited?: Prisma.SortOrder
   assistantId?: Prisma.SortOrder
   agentId?: Prisma.SortOrder
+  modelId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -390,6 +419,7 @@ export type TopicMaxOrderByAggregateInput = {
   isNameManuallyEdited?: Prisma.SortOrder
   assistantId?: Prisma.SortOrder
   agentId?: Prisma.SortOrder
+  modelId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -402,8 +432,14 @@ export type TopicMinOrderByAggregateInput = {
   isNameManuallyEdited?: Prisma.SortOrder
   assistantId?: Prisma.SortOrder
   agentId?: Prisma.SortOrder
+  modelId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type TopicScalarRelationFilter = {
+  is?: Prisma.TopicWhereInput
+  isNot?: Prisma.TopicWhereInput
 }
 
 export type TopicCreateNestedManyWithoutAssistantInput = {
@@ -490,6 +526,62 @@ export type TopicUncheckedUpdateManyWithoutAgentNestedInput = {
   deleteMany?: Prisma.TopicScalarWhereInput | Prisma.TopicScalarWhereInput[]
 }
 
+export type TopicCreateNestedManyWithoutModelInput = {
+  create?: Prisma.XOR<Prisma.TopicCreateWithoutModelInput, Prisma.TopicUncheckedCreateWithoutModelInput> | Prisma.TopicCreateWithoutModelInput[] | Prisma.TopicUncheckedCreateWithoutModelInput[]
+  connectOrCreate?: Prisma.TopicCreateOrConnectWithoutModelInput | Prisma.TopicCreateOrConnectWithoutModelInput[]
+  createMany?: Prisma.TopicCreateManyModelInputEnvelope
+  connect?: Prisma.TopicWhereUniqueInput | Prisma.TopicWhereUniqueInput[]
+}
+
+export type TopicUncheckedCreateNestedManyWithoutModelInput = {
+  create?: Prisma.XOR<Prisma.TopicCreateWithoutModelInput, Prisma.TopicUncheckedCreateWithoutModelInput> | Prisma.TopicCreateWithoutModelInput[] | Prisma.TopicUncheckedCreateWithoutModelInput[]
+  connectOrCreate?: Prisma.TopicCreateOrConnectWithoutModelInput | Prisma.TopicCreateOrConnectWithoutModelInput[]
+  createMany?: Prisma.TopicCreateManyModelInputEnvelope
+  connect?: Prisma.TopicWhereUniqueInput | Prisma.TopicWhereUniqueInput[]
+}
+
+export type TopicUpdateManyWithoutModelNestedInput = {
+  create?: Prisma.XOR<Prisma.TopicCreateWithoutModelInput, Prisma.TopicUncheckedCreateWithoutModelInput> | Prisma.TopicCreateWithoutModelInput[] | Prisma.TopicUncheckedCreateWithoutModelInput[]
+  connectOrCreate?: Prisma.TopicCreateOrConnectWithoutModelInput | Prisma.TopicCreateOrConnectWithoutModelInput[]
+  upsert?: Prisma.TopicUpsertWithWhereUniqueWithoutModelInput | Prisma.TopicUpsertWithWhereUniqueWithoutModelInput[]
+  createMany?: Prisma.TopicCreateManyModelInputEnvelope
+  set?: Prisma.TopicWhereUniqueInput | Prisma.TopicWhereUniqueInput[]
+  disconnect?: Prisma.TopicWhereUniqueInput | Prisma.TopicWhereUniqueInput[]
+  delete?: Prisma.TopicWhereUniqueInput | Prisma.TopicWhereUniqueInput[]
+  connect?: Prisma.TopicWhereUniqueInput | Prisma.TopicWhereUniqueInput[]
+  update?: Prisma.TopicUpdateWithWhereUniqueWithoutModelInput | Prisma.TopicUpdateWithWhereUniqueWithoutModelInput[]
+  updateMany?: Prisma.TopicUpdateManyWithWhereWithoutModelInput | Prisma.TopicUpdateManyWithWhereWithoutModelInput[]
+  deleteMany?: Prisma.TopicScalarWhereInput | Prisma.TopicScalarWhereInput[]
+}
+
+export type TopicUncheckedUpdateManyWithoutModelNestedInput = {
+  create?: Prisma.XOR<Prisma.TopicCreateWithoutModelInput, Prisma.TopicUncheckedCreateWithoutModelInput> | Prisma.TopicCreateWithoutModelInput[] | Prisma.TopicUncheckedCreateWithoutModelInput[]
+  connectOrCreate?: Prisma.TopicCreateOrConnectWithoutModelInput | Prisma.TopicCreateOrConnectWithoutModelInput[]
+  upsert?: Prisma.TopicUpsertWithWhereUniqueWithoutModelInput | Prisma.TopicUpsertWithWhereUniqueWithoutModelInput[]
+  createMany?: Prisma.TopicCreateManyModelInputEnvelope
+  set?: Prisma.TopicWhereUniqueInput | Prisma.TopicWhereUniqueInput[]
+  disconnect?: Prisma.TopicWhereUniqueInput | Prisma.TopicWhereUniqueInput[]
+  delete?: Prisma.TopicWhereUniqueInput | Prisma.TopicWhereUniqueInput[]
+  connect?: Prisma.TopicWhereUniqueInput | Prisma.TopicWhereUniqueInput[]
+  update?: Prisma.TopicUpdateWithWhereUniqueWithoutModelInput | Prisma.TopicUpdateWithWhereUniqueWithoutModelInput[]
+  updateMany?: Prisma.TopicUpdateManyWithWhereWithoutModelInput | Prisma.TopicUpdateManyWithWhereWithoutModelInput[]
+  deleteMany?: Prisma.TopicScalarWhereInput | Prisma.TopicScalarWhereInput[]
+}
+
+export type TopicCreateNestedOneWithoutKnowledgeBasesInput = {
+  create?: Prisma.XOR<Prisma.TopicCreateWithoutKnowledgeBasesInput, Prisma.TopicUncheckedCreateWithoutKnowledgeBasesInput>
+  connectOrCreate?: Prisma.TopicCreateOrConnectWithoutKnowledgeBasesInput
+  connect?: Prisma.TopicWhereUniqueInput
+}
+
+export type TopicUpdateOneRequiredWithoutKnowledgeBasesNestedInput = {
+  create?: Prisma.XOR<Prisma.TopicCreateWithoutKnowledgeBasesInput, Prisma.TopicUncheckedCreateWithoutKnowledgeBasesInput>
+  connectOrCreate?: Prisma.TopicCreateOrConnectWithoutKnowledgeBasesInput
+  upsert?: Prisma.TopicUpsertWithoutKnowledgeBasesInput
+  connect?: Prisma.TopicWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TopicUpdateToOneWithWhereWithoutKnowledgeBasesInput, Prisma.TopicUpdateWithoutKnowledgeBasesInput>, Prisma.TopicUncheckedUpdateWithoutKnowledgeBasesInput>
+}
+
 export type TopicCreateWithoutAssistantInput = {
   id?: string
   name: string
@@ -499,6 +591,8 @@ export type TopicCreateWithoutAssistantInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   agent?: Prisma.AgentCreateNestedOneWithoutTopicsInput
+  model?: Prisma.ModelCreateNestedOneWithoutTopicInput
+  knowledgeBases?: Prisma.TopicKnowledgeBaseCreateNestedManyWithoutTopicInput
 }
 
 export type TopicUncheckedCreateWithoutAssistantInput = {
@@ -508,8 +602,10 @@ export type TopicUncheckedCreateWithoutAssistantInput = {
   pinned?: boolean
   isNameManuallyEdited?: boolean
   agentId?: string | null
+  modelId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  knowledgeBases?: Prisma.TopicKnowledgeBaseUncheckedCreateNestedManyWithoutTopicInput
 }
 
 export type TopicCreateOrConnectWithoutAssistantInput = {
@@ -548,6 +644,7 @@ export type TopicScalarWhereInput = {
   isNameManuallyEdited?: Prisma.BoolFilter<"Topic"> | boolean
   assistantId?: Prisma.StringNullableFilter<"Topic"> | string | null
   agentId?: Prisma.StringNullableFilter<"Topic"> | string | null
+  modelId?: Prisma.StringNullableFilter<"Topic"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Topic"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Topic"> | Date | string
 }
@@ -561,6 +658,8 @@ export type TopicCreateWithoutAgentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   assistant?: Prisma.AssistantCreateNestedOneWithoutTopicsInput
+  model?: Prisma.ModelCreateNestedOneWithoutTopicInput
+  knowledgeBases?: Prisma.TopicKnowledgeBaseCreateNestedManyWithoutTopicInput
 }
 
 export type TopicUncheckedCreateWithoutAgentInput = {
@@ -570,8 +669,10 @@ export type TopicUncheckedCreateWithoutAgentInput = {
   pinned?: boolean
   isNameManuallyEdited?: boolean
   assistantId?: string | null
+  modelId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  knowledgeBases?: Prisma.TopicKnowledgeBaseUncheckedCreateNestedManyWithoutTopicInput
 }
 
 export type TopicCreateOrConnectWithoutAgentInput = {
@@ -599,6 +700,125 @@ export type TopicUpdateManyWithWhereWithoutAgentInput = {
   data: Prisma.XOR<Prisma.TopicUpdateManyMutationInput, Prisma.TopicUncheckedUpdateManyWithoutAgentInput>
 }
 
+export type TopicCreateWithoutModelInput = {
+  id?: string
+  name: string
+  prompt?: string | null
+  pinned?: boolean
+  isNameManuallyEdited?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assistant?: Prisma.AssistantCreateNestedOneWithoutTopicsInput
+  agent?: Prisma.AgentCreateNestedOneWithoutTopicsInput
+  knowledgeBases?: Prisma.TopicKnowledgeBaseCreateNestedManyWithoutTopicInput
+}
+
+export type TopicUncheckedCreateWithoutModelInput = {
+  id?: string
+  name: string
+  prompt?: string | null
+  pinned?: boolean
+  isNameManuallyEdited?: boolean
+  assistantId?: string | null
+  agentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  knowledgeBases?: Prisma.TopicKnowledgeBaseUncheckedCreateNestedManyWithoutTopicInput
+}
+
+export type TopicCreateOrConnectWithoutModelInput = {
+  where: Prisma.TopicWhereUniqueInput
+  create: Prisma.XOR<Prisma.TopicCreateWithoutModelInput, Prisma.TopicUncheckedCreateWithoutModelInput>
+}
+
+export type TopicCreateManyModelInputEnvelope = {
+  data: Prisma.TopicCreateManyModelInput | Prisma.TopicCreateManyModelInput[]
+}
+
+export type TopicUpsertWithWhereUniqueWithoutModelInput = {
+  where: Prisma.TopicWhereUniqueInput
+  update: Prisma.XOR<Prisma.TopicUpdateWithoutModelInput, Prisma.TopicUncheckedUpdateWithoutModelInput>
+  create: Prisma.XOR<Prisma.TopicCreateWithoutModelInput, Prisma.TopicUncheckedCreateWithoutModelInput>
+}
+
+export type TopicUpdateWithWhereUniqueWithoutModelInput = {
+  where: Prisma.TopicWhereUniqueInput
+  data: Prisma.XOR<Prisma.TopicUpdateWithoutModelInput, Prisma.TopicUncheckedUpdateWithoutModelInput>
+}
+
+export type TopicUpdateManyWithWhereWithoutModelInput = {
+  where: Prisma.TopicScalarWhereInput
+  data: Prisma.XOR<Prisma.TopicUpdateManyMutationInput, Prisma.TopicUncheckedUpdateManyWithoutModelInput>
+}
+
+export type TopicCreateWithoutKnowledgeBasesInput = {
+  id?: string
+  name: string
+  prompt?: string | null
+  pinned?: boolean
+  isNameManuallyEdited?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assistant?: Prisma.AssistantCreateNestedOneWithoutTopicsInput
+  agent?: Prisma.AgentCreateNestedOneWithoutTopicsInput
+  model?: Prisma.ModelCreateNestedOneWithoutTopicInput
+}
+
+export type TopicUncheckedCreateWithoutKnowledgeBasesInput = {
+  id?: string
+  name: string
+  prompt?: string | null
+  pinned?: boolean
+  isNameManuallyEdited?: boolean
+  assistantId?: string | null
+  agentId?: string | null
+  modelId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TopicCreateOrConnectWithoutKnowledgeBasesInput = {
+  where: Prisma.TopicWhereUniqueInput
+  create: Prisma.XOR<Prisma.TopicCreateWithoutKnowledgeBasesInput, Prisma.TopicUncheckedCreateWithoutKnowledgeBasesInput>
+}
+
+export type TopicUpsertWithoutKnowledgeBasesInput = {
+  update: Prisma.XOR<Prisma.TopicUpdateWithoutKnowledgeBasesInput, Prisma.TopicUncheckedUpdateWithoutKnowledgeBasesInput>
+  create: Prisma.XOR<Prisma.TopicCreateWithoutKnowledgeBasesInput, Prisma.TopicUncheckedCreateWithoutKnowledgeBasesInput>
+  where?: Prisma.TopicWhereInput
+}
+
+export type TopicUpdateToOneWithWhereWithoutKnowledgeBasesInput = {
+  where?: Prisma.TopicWhereInput
+  data: Prisma.XOR<Prisma.TopicUpdateWithoutKnowledgeBasesInput, Prisma.TopicUncheckedUpdateWithoutKnowledgeBasesInput>
+}
+
+export type TopicUpdateWithoutKnowledgeBasesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  prompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isNameManuallyEdited?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assistant?: Prisma.AssistantUpdateOneWithoutTopicsNestedInput
+  agent?: Prisma.AgentUpdateOneWithoutTopicsNestedInput
+  model?: Prisma.ModelUpdateOneWithoutTopicNestedInput
+}
+
+export type TopicUncheckedUpdateWithoutKnowledgeBasesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  prompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isNameManuallyEdited?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  assistantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  agentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type TopicCreateManyAssistantInput = {
   id?: string
   name: string
@@ -606,6 +826,7 @@ export type TopicCreateManyAssistantInput = {
   pinned?: boolean
   isNameManuallyEdited?: boolean
   agentId?: string | null
+  modelId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -619,6 +840,8 @@ export type TopicUpdateWithoutAssistantInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agent?: Prisma.AgentUpdateOneWithoutTopicsNestedInput
+  model?: Prisma.ModelUpdateOneWithoutTopicNestedInput
+  knowledgeBases?: Prisma.TopicKnowledgeBaseUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicUncheckedUpdateWithoutAssistantInput = {
@@ -628,8 +851,10 @@ export type TopicUncheckedUpdateWithoutAssistantInput = {
   pinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isNameManuallyEdited?: Prisma.BoolFieldUpdateOperationsInput | boolean
   agentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  knowledgeBases?: Prisma.TopicKnowledgeBaseUncheckedUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicUncheckedUpdateManyWithoutAssistantInput = {
@@ -639,6 +864,7 @@ export type TopicUncheckedUpdateManyWithoutAssistantInput = {
   pinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isNameManuallyEdited?: Prisma.BoolFieldUpdateOperationsInput | boolean
   agentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -650,6 +876,7 @@ export type TopicCreateManyAgentInput = {
   pinned?: boolean
   isNameManuallyEdited?: boolean
   assistantId?: string | null
+  modelId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -663,6 +890,8 @@ export type TopicUpdateWithoutAgentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assistant?: Prisma.AssistantUpdateOneWithoutTopicsNestedInput
+  model?: Prisma.ModelUpdateOneWithoutTopicNestedInput
+  knowledgeBases?: Prisma.TopicKnowledgeBaseUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicUncheckedUpdateWithoutAgentInput = {
@@ -672,8 +901,10 @@ export type TopicUncheckedUpdateWithoutAgentInput = {
   pinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isNameManuallyEdited?: Prisma.BoolFieldUpdateOperationsInput | boolean
   assistantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  knowledgeBases?: Prisma.TopicKnowledgeBaseUncheckedUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicUncheckedUpdateManyWithoutAgentInput = {
@@ -683,10 +914,90 @@ export type TopicUncheckedUpdateManyWithoutAgentInput = {
   pinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isNameManuallyEdited?: Prisma.BoolFieldUpdateOperationsInput | boolean
   assistantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  modelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type TopicCreateManyModelInput = {
+  id?: string
+  name: string
+  prompt?: string | null
+  pinned?: boolean
+  isNameManuallyEdited?: boolean
+  assistantId?: string | null
+  agentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TopicUpdateWithoutModelInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  prompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isNameManuallyEdited?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assistant?: Prisma.AssistantUpdateOneWithoutTopicsNestedInput
+  agent?: Prisma.AgentUpdateOneWithoutTopicsNestedInput
+  knowledgeBases?: Prisma.TopicKnowledgeBaseUpdateManyWithoutTopicNestedInput
+}
+
+export type TopicUncheckedUpdateWithoutModelInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  prompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isNameManuallyEdited?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  assistantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  agentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  knowledgeBases?: Prisma.TopicKnowledgeBaseUncheckedUpdateManyWithoutTopicNestedInput
+}
+
+export type TopicUncheckedUpdateManyWithoutModelInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  prompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isNameManuallyEdited?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  assistantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  agentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type TopicCountOutputType
+ */
+
+export type TopicCountOutputType = {
+  knowledgeBases: number
+}
+
+export type TopicCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  knowledgeBases?: boolean | TopicCountOutputTypeCountKnowledgeBasesArgs
+}
+
+/**
+ * TopicCountOutputType without action
+ */
+export type TopicCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TopicCountOutputType
+   */
+  select?: Prisma.TopicCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * TopicCountOutputType without action
+ */
+export type TopicCountOutputTypeCountKnowledgeBasesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TopicKnowledgeBaseWhereInput
+}
 
 
 export type TopicSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -697,10 +1008,14 @@ export type TopicSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   isNameManuallyEdited?: boolean
   assistantId?: boolean
   agentId?: boolean
+  modelId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   assistant?: boolean | Prisma.Topic$assistantArgs<ExtArgs>
   agent?: boolean | Prisma.Topic$agentArgs<ExtArgs>
+  model?: boolean | Prisma.Topic$modelArgs<ExtArgs>
+  knowledgeBases?: boolean | Prisma.Topic$knowledgeBasesArgs<ExtArgs>
+  _count?: boolean | Prisma.TopicCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["topic"]>
 
 export type TopicSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -711,10 +1026,12 @@ export type TopicSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   isNameManuallyEdited?: boolean
   assistantId?: boolean
   agentId?: boolean
+  modelId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   assistant?: boolean | Prisma.Topic$assistantArgs<ExtArgs>
   agent?: boolean | Prisma.Topic$agentArgs<ExtArgs>
+  model?: boolean | Prisma.Topic$modelArgs<ExtArgs>
 }, ExtArgs["result"]["topic"]>
 
 export type TopicSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -725,10 +1042,12 @@ export type TopicSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   isNameManuallyEdited?: boolean
   assistantId?: boolean
   agentId?: boolean
+  modelId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   assistant?: boolean | Prisma.Topic$assistantArgs<ExtArgs>
   agent?: boolean | Prisma.Topic$agentArgs<ExtArgs>
+  model?: boolean | Prisma.Topic$modelArgs<ExtArgs>
 }, ExtArgs["result"]["topic"]>
 
 export type TopicSelectScalar = {
@@ -739,22 +1058,28 @@ export type TopicSelectScalar = {
   isNameManuallyEdited?: boolean
   assistantId?: boolean
   agentId?: boolean
+  modelId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TopicOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "prompt" | "pinned" | "isNameManuallyEdited" | "assistantId" | "agentId" | "createdAt" | "updatedAt", ExtArgs["result"]["topic"]>
+export type TopicOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "prompt" | "pinned" | "isNameManuallyEdited" | "assistantId" | "agentId" | "modelId" | "createdAt" | "updatedAt", ExtArgs["result"]["topic"]>
 export type TopicInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assistant?: boolean | Prisma.Topic$assistantArgs<ExtArgs>
   agent?: boolean | Prisma.Topic$agentArgs<ExtArgs>
+  model?: boolean | Prisma.Topic$modelArgs<ExtArgs>
+  knowledgeBases?: boolean | Prisma.Topic$knowledgeBasesArgs<ExtArgs>
+  _count?: boolean | Prisma.TopicCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TopicIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assistant?: boolean | Prisma.Topic$assistantArgs<ExtArgs>
   agent?: boolean | Prisma.Topic$agentArgs<ExtArgs>
+  model?: boolean | Prisma.Topic$modelArgs<ExtArgs>
 }
 export type TopicIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assistant?: boolean | Prisma.Topic$assistantArgs<ExtArgs>
   agent?: boolean | Prisma.Topic$agentArgs<ExtArgs>
+  model?: boolean | Prisma.Topic$modelArgs<ExtArgs>
 }
 
 export type $TopicPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -762,6 +1087,8 @@ export type $TopicPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   objects: {
     assistant: Prisma.$AssistantPayload<ExtArgs> | null
     agent: Prisma.$AgentPayload<ExtArgs> | null
+    model: Prisma.$ModelPayload<ExtArgs> | null
+    knowledgeBases: Prisma.$TopicKnowledgeBasePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -771,6 +1098,7 @@ export type $TopicPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     isNameManuallyEdited: boolean
     assistantId: string | null
     agentId: string | null
+    modelId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["topic"]>
@@ -1169,6 +1497,8 @@ export interface Prisma__TopicClient<T, Null = never, ExtArgs extends runtime.Ty
   readonly [Symbol.toStringTag]: "PrismaPromise"
   assistant<T extends Prisma.Topic$assistantArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Topic$assistantArgs<ExtArgs>>): Prisma.Prisma__AssistantClient<runtime.Types.Result.GetResult<Prisma.$AssistantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   agent<T extends Prisma.Topic$agentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Topic$agentArgs<ExtArgs>>): Prisma.Prisma__AgentClient<runtime.Types.Result.GetResult<Prisma.$AgentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  model<T extends Prisma.Topic$modelArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Topic$modelArgs<ExtArgs>>): Prisma.Prisma__ModelClient<runtime.Types.Result.GetResult<Prisma.$ModelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  knowledgeBases<T extends Prisma.Topic$knowledgeBasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Topic$knowledgeBasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TopicKnowledgeBasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1205,6 +1535,7 @@ export interface TopicFieldRefs {
   readonly isNameManuallyEdited: Prisma.FieldRef<"Topic", 'Boolean'>
   readonly assistantId: Prisma.FieldRef<"Topic", 'String'>
   readonly agentId: Prisma.FieldRef<"Topic", 'String'>
+  readonly modelId: Prisma.FieldRef<"Topic", 'String'>
   readonly createdAt: Prisma.FieldRef<"Topic", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Topic", 'DateTime'>
 }
@@ -1636,6 +1967,49 @@ export type Topic$agentArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    */
   include?: Prisma.AgentInclude<ExtArgs> | null
   where?: Prisma.AgentWhereInput
+}
+
+/**
+ * Topic.model
+ */
+export type Topic$modelArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Model
+   */
+  select?: Prisma.ModelSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Model
+   */
+  omit?: Prisma.ModelOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ModelInclude<ExtArgs> | null
+  where?: Prisma.ModelWhereInput
+}
+
+/**
+ * Topic.knowledgeBases
+ */
+export type Topic$knowledgeBasesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TopicKnowledgeBase
+   */
+  select?: Prisma.TopicKnowledgeBaseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TopicKnowledgeBase
+   */
+  omit?: Prisma.TopicKnowledgeBaseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TopicKnowledgeBaseInclude<ExtArgs> | null
+  where?: Prisma.TopicKnowledgeBaseWhereInput
+  orderBy?: Prisma.TopicKnowledgeBaseOrderByWithRelationInput | Prisma.TopicKnowledgeBaseOrderByWithRelationInput[]
+  cursor?: Prisma.TopicKnowledgeBaseWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TopicKnowledgeBaseScalarFieldEnum | Prisma.TopicKnowledgeBaseScalarFieldEnum[]
 }
 
 /**

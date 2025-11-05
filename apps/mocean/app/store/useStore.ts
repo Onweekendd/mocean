@@ -1,3 +1,4 @@
+import { type AssistantDetailResult } from "@mocean/mastra/apiClient";
 import {
   AgentModel,
   AssistantModel,
@@ -28,8 +29,8 @@ export type Store = {
   /**
    * @description 当前助手
    */
-  activeAssistant: AssistantModel | null;
-  setActiveAssistant: (assistant: AssistantModel) => void;
+  activeAssistant: AssistantDetailResult | null;
+  setActiveAssistant: (assistant: AssistantDetailResult) => void;
 
   /**
    * @description 话题列表
@@ -67,8 +68,8 @@ const useStore = create<Store>((set) => ({
   agentList: [] as AgentModel[],
   setAgentList: (agents: AgentModel[]) => set({ agentList: agents }),
 
-  activeAssistant: null as AssistantModel | null,
-  setActiveAssistant: (assistant: AssistantModel) =>
+  activeAssistant: null as AssistantDetailResult | null,
+  setActiveAssistant: (assistant: AssistantDetailResult) =>
     set({ activeAssistant: assistant }),
 
   topicList: [] as TopicModel[],

@@ -61,17 +61,15 @@ export function useMastraRuntime({
       const assistantId = useStore.getState().activeAssistant?.id;
 
       // 确保 activeThread 存在，如果不存在则创建新的并更新状态
-      let threadId = activeThread;
-      if (!threadId) {
-        threadId = generateId();
-        setActiveThread(threadId);
+      if (!activeThread) {
+        setActiveThread(generateId());
       }
 
       return Object.assign(
         { id },
         requestBody,
         requestData,
-        { threadId },
+        { threadId: activeThread },
         { messages: [messages[messages.length - 1]] },
         { assistantId },
       );

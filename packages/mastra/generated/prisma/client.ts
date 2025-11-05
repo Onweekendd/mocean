@@ -87,6 +87,11 @@ export type KnowledgeBase = Prisma.KnowledgeBaseModel
  */
 export type KnowledgeItem = Prisma.KnowledgeItemModel
 /**
+ * Model TopicKnowledgeBase
+ * 
+ */
+export type TopicKnowledgeBase = Prisma.TopicKnowledgeBaseModel
+/**
  * Model MCPServer
  * 
  */

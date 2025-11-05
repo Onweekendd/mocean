@@ -26,6 +26,12 @@ export {
   agentsApiMethods,
   useAgentsApi,
   type AgentInput,
+  type AgentsListResult,
+  type AgentDetailResult,
+  type AgentCreateResult,
+  type AgentUpdateResult,
+  type AgentDeleteResult,
+  type AgentsByGroupResult,
 } from "./agents-client";
 
 // 助手相关API
@@ -34,7 +40,13 @@ export {
   assistantsApi,
   assistantsApiMethods,
   useAssistantsApi,
-  type AssistantInput,
+  type AssistantsListResult,
+  type AssistantDetailResult,
+  type AssistantCreateResult,
+  type AssistantUpdateResult,
+  type AssistantDeleteResult,
+  type AssistantThreadsResult,
+  type AssistantUIMessagesResult,
 } from "./assistants-client";
 
 // 提供商相关API
@@ -44,6 +56,15 @@ export {
   providersApiMethods,
   useProvidersApi,
   type ProviderInput,
+  type ProvidersListResult,
+  type EnabledProvidersResult,
+  type ProviderDetailResult,
+  type ProvidersByTypeResult,
+  type ProvidersByModelResult,
+  type ProviderCreateResult,
+  type ProviderUpdateResult,
+  type ProviderDeleteResult,
+  type ProviderToggleResult,
 } from "./providers-client";
 
 // 模型相关API
@@ -55,6 +76,18 @@ export {
   type ModelInput,
   type ModelCreateInput,
   type BatchCreateResult,
+  type ModelsListResult,
+  type ModelDetailResult,
+  type ModelsByProviderResult,
+  type ModelsByTypeResult,
+  type ModelsByGroupResult,
+  type ModelCreateResult,
+  type ModelUpdateResult,
+  type ModelDeleteResult,
+  type ModelsBatchCreateResult,
+  type ModelProviderRelationAddResult,
+  type ModelProviderRelationRemoveResult,
+  type ModelProviderRelationsResult,
 } from "./models-client";
 
 /**

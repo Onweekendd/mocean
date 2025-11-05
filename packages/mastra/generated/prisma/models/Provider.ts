@@ -288,6 +288,7 @@ export type ProviderWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
   models?: Prisma.ModelProviderListRelationFilter
+  Assistant?: Prisma.AssistantListRelationFilter
 }
 
 export type ProviderOrderByWithRelationInput = {
@@ -306,6 +307,7 @@ export type ProviderOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   models?: Prisma.ModelProviderOrderByRelationAggregateInput
+  Assistant?: Prisma.AssistantOrderByRelationAggregateInput
 }
 
 export type ProviderWhereUniqueInput = Prisma.AtLeast<{
@@ -327,6 +329,7 @@ export type ProviderWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
   models?: Prisma.ModelProviderListRelationFilter
+  Assistant?: Prisma.AssistantListRelationFilter
 }, "id">
 
 export type ProviderOrderByWithAggregationInput = {
@@ -387,6 +390,7 @@ export type ProviderCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   models?: Prisma.ModelProviderCreateNestedManyWithoutProviderInput
+  Assistant?: Prisma.AssistantCreateNestedManyWithoutProviderInput
 }
 
 export type ProviderUncheckedCreateInput = {
@@ -405,6 +409,7 @@ export type ProviderUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   models?: Prisma.ModelProviderUncheckedCreateNestedManyWithoutProviderInput
+  Assistant?: Prisma.AssistantUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type ProviderUpdateInput = {
@@ -423,6 +428,7 @@ export type ProviderUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   models?: Prisma.ModelProviderUpdateManyWithoutProviderNestedInput
+  Assistant?: Prisma.AssistantUpdateManyWithoutProviderNestedInput
 }
 
 export type ProviderUncheckedUpdateInput = {
@@ -441,6 +447,7 @@ export type ProviderUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   models?: Prisma.ModelProviderUncheckedUpdateManyWithoutProviderNestedInput
+  Assistant?: Prisma.AssistantUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type ProviderCreateManyInput = {
@@ -553,6 +560,11 @@ export type ProviderSumOrderByAggregateInput = {
   rateLimit?: Prisma.SortOrder
 }
 
+export type ProviderNullableScalarRelationFilter = {
+  is?: Prisma.ProviderWhereInput | null
+  isNot?: Prisma.ProviderWhereInput | null
+}
+
 export type ProviderScalarRelationFilter = {
   is?: Prisma.ProviderWhereInput
   isNot?: Prisma.ProviderWhereInput
@@ -586,6 +598,22 @@ export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
 
+export type ProviderCreateNestedOneWithoutAssistantInput = {
+  create?: Prisma.XOR<Prisma.ProviderCreateWithoutAssistantInput, Prisma.ProviderUncheckedCreateWithoutAssistantInput>
+  connectOrCreate?: Prisma.ProviderCreateOrConnectWithoutAssistantInput
+  connect?: Prisma.ProviderWhereUniqueInput
+}
+
+export type ProviderUpdateOneWithoutAssistantNestedInput = {
+  create?: Prisma.XOR<Prisma.ProviderCreateWithoutAssistantInput, Prisma.ProviderUncheckedCreateWithoutAssistantInput>
+  connectOrCreate?: Prisma.ProviderCreateOrConnectWithoutAssistantInput
+  upsert?: Prisma.ProviderUpsertWithoutAssistantInput
+  disconnect?: Prisma.ProviderWhereInput | boolean
+  delete?: Prisma.ProviderWhereInput | boolean
+  connect?: Prisma.ProviderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProviderUpdateToOneWithWhereWithoutAssistantInput, Prisma.ProviderUpdateWithoutAssistantInput>, Prisma.ProviderUncheckedUpdateWithoutAssistantInput>
+}
+
 export type ProviderCreateNestedOneWithoutModelsInput = {
   create?: Prisma.XOR<Prisma.ProviderCreateWithoutModelsInput, Prisma.ProviderUncheckedCreateWithoutModelsInput>
   connectOrCreate?: Prisma.ProviderCreateOrConnectWithoutModelsInput
@@ -598,6 +626,94 @@ export type ProviderUpdateOneRequiredWithoutModelsNestedInput = {
   upsert?: Prisma.ProviderUpsertWithoutModelsInput
   connect?: Prisma.ProviderWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProviderUpdateToOneWithWhereWithoutModelsInput, Prisma.ProviderUpdateWithoutModelsInput>, Prisma.ProviderUncheckedUpdateWithoutModelsInput>
+}
+
+export type ProviderCreateWithoutAssistantInput = {
+  id?: string
+  type: $Enums.ProviderType
+  name: string
+  apiKey: string
+  apiHost: string
+  apiVersion?: string | null
+  enabled?: boolean
+  isSystem?: boolean
+  isAuthed?: boolean
+  rateLimit?: number | null
+  isNotSupportArrayContent?: boolean
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  models?: Prisma.ModelProviderCreateNestedManyWithoutProviderInput
+}
+
+export type ProviderUncheckedCreateWithoutAssistantInput = {
+  id?: string
+  type: $Enums.ProviderType
+  name: string
+  apiKey: string
+  apiHost: string
+  apiVersion?: string | null
+  enabled?: boolean
+  isSystem?: boolean
+  isAuthed?: boolean
+  rateLimit?: number | null
+  isNotSupportArrayContent?: boolean
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  models?: Prisma.ModelProviderUncheckedCreateNestedManyWithoutProviderInput
+}
+
+export type ProviderCreateOrConnectWithoutAssistantInput = {
+  where: Prisma.ProviderWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProviderCreateWithoutAssistantInput, Prisma.ProviderUncheckedCreateWithoutAssistantInput>
+}
+
+export type ProviderUpsertWithoutAssistantInput = {
+  update: Prisma.XOR<Prisma.ProviderUpdateWithoutAssistantInput, Prisma.ProviderUncheckedUpdateWithoutAssistantInput>
+  create: Prisma.XOR<Prisma.ProviderCreateWithoutAssistantInput, Prisma.ProviderUncheckedCreateWithoutAssistantInput>
+  where?: Prisma.ProviderWhereInput
+}
+
+export type ProviderUpdateToOneWithWhereWithoutAssistantInput = {
+  where?: Prisma.ProviderWhereInput
+  data: Prisma.XOR<Prisma.ProviderUpdateWithoutAssistantInput, Prisma.ProviderUncheckedUpdateWithoutAssistantInput>
+}
+
+export type ProviderUpdateWithoutAssistantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumProviderTypeFieldUpdateOperationsInput | $Enums.ProviderType
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  apiHost?: Prisma.StringFieldUpdateOperationsInput | string
+  apiVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAuthed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rateLimit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isNotSupportArrayContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  models?: Prisma.ModelProviderUpdateManyWithoutProviderNestedInput
+}
+
+export type ProviderUncheckedUpdateWithoutAssistantInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumProviderTypeFieldUpdateOperationsInput | $Enums.ProviderType
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  apiHost?: Prisma.StringFieldUpdateOperationsInput | string
+  apiVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAuthed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rateLimit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isNotSupportArrayContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  models?: Prisma.ModelProviderUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 export type ProviderCreateWithoutModelsInput = {
@@ -615,6 +731,7 @@ export type ProviderCreateWithoutModelsInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  Assistant?: Prisma.AssistantCreateNestedManyWithoutProviderInput
 }
 
 export type ProviderUncheckedCreateWithoutModelsInput = {
@@ -632,6 +749,7 @@ export type ProviderUncheckedCreateWithoutModelsInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  Assistant?: Prisma.AssistantUncheckedCreateNestedManyWithoutProviderInput
 }
 
 export type ProviderCreateOrConnectWithoutModelsInput = {
@@ -665,6 +783,7 @@ export type ProviderUpdateWithoutModelsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  Assistant?: Prisma.AssistantUpdateManyWithoutProviderNestedInput
 }
 
 export type ProviderUncheckedUpdateWithoutModelsInput = {
@@ -682,6 +801,7 @@ export type ProviderUncheckedUpdateWithoutModelsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  Assistant?: Prisma.AssistantUncheckedUpdateManyWithoutProviderNestedInput
 }
 
 
@@ -691,10 +811,12 @@ export type ProviderUncheckedUpdateWithoutModelsInput = {
 
 export type ProviderCountOutputType = {
   models: number
+  Assistant: number
 }
 
 export type ProviderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   models?: boolean | ProviderCountOutputTypeCountModelsArgs
+  Assistant?: boolean | ProviderCountOutputTypeCountAssistantArgs
 }
 
 /**
@@ -714,6 +836,13 @@ export type ProviderCountOutputTypeCountModelsArgs<ExtArgs extends runtime.Types
   where?: Prisma.ModelProviderWhereInput
 }
 
+/**
+ * ProviderCountOutputType without action
+ */
+export type ProviderCountOutputTypeCountAssistantArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AssistantWhereInput
+}
+
 
 export type ProviderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -731,6 +860,7 @@ export type ProviderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   createdAt?: boolean
   updatedAt?: boolean
   models?: boolean | Prisma.Provider$modelsArgs<ExtArgs>
+  Assistant?: boolean | Prisma.Provider$AssistantArgs<ExtArgs>
   _count?: boolean | Prisma.ProviderCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["provider"]>
 
@@ -788,6 +918,7 @@ export type ProviderSelectScalar = {
 export type ProviderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "name" | "apiKey" | "apiHost" | "apiVersion" | "enabled" | "isSystem" | "isAuthed" | "rateLimit" | "isNotSupportArrayContent" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["provider"]>
 export type ProviderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   models?: boolean | Prisma.Provider$modelsArgs<ExtArgs>
+  Assistant?: boolean | Prisma.Provider$AssistantArgs<ExtArgs>
   _count?: boolean | Prisma.ProviderCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProviderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -797,6 +928,7 @@ export type $ProviderPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   name: "Provider"
   objects: {
     models: Prisma.$ModelProviderPayload<ExtArgs>[]
+    Assistant: Prisma.$AssistantPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1208,6 +1340,7 @@ readonly fields: ProviderFieldRefs;
 export interface Prisma__ProviderClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   models<T extends Prisma.Provider$modelsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Provider$modelsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ModelProviderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  Assistant<T extends Prisma.Provider$AssistantArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Provider$AssistantArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssistantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1658,6 +1791,30 @@ export type Provider$modelsArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.ModelProviderScalarFieldEnum | Prisma.ModelProviderScalarFieldEnum[]
+}
+
+/**
+ * Provider.Assistant
+ */
+export type Provider$AssistantArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Assistant
+   */
+  select?: Prisma.AssistantSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Assistant
+   */
+  omit?: Prisma.AssistantOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AssistantInclude<ExtArgs> | null
+  where?: Prisma.AssistantWhereInput
+  orderBy?: Prisma.AssistantOrderByWithRelationInput | Prisma.AssistantOrderByWithRelationInput[]
+  cursor?: Prisma.AssistantWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AssistantScalarFieldEnum | Prisma.AssistantScalarFieldEnum[]
 }
 
 /**

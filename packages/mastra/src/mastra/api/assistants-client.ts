@@ -1,9 +1,10 @@
 /// <reference lib="dom" />
 import { StorageThreadType } from "@mastra/core";
 import { UIMessage } from "ai";
-import { AssistantModel } from "generated/prisma/models";
 
 import {
+  CreateAssistantInput,
+  UpdateAssistantInput,
   createAssistant as createAssistantPrisma,
   deleteAssistant as deleteAssistantPrisma,
   getAssistantById as getAssistantByIdPrisma,
@@ -13,22 +14,25 @@ import {
 import { ApiClientConfig, ApiResponse, BaseApiClient } from "./base-client";
 
 /**
- * 助手创建和更新的输入类型
+ * Prisma 数据库操作返回类型
  */
-export type AssistantInput = Pick<
-  AssistantModel,
-  | "name"
-  | "prompt"
-  | "type"
-  | "emoji"
-  | "description"
-  | "enableWebSearch"
-  | "webSearchProviderId"
-  | "enableGenerateImage"
-  | "knowledgeRecognition"
-  | "modelId"
-  | "defaultModelId"
+export type AssistantsListResult = Awaited<
+  ReturnType<typeof getAssistantsPrisma>
 >;
+export type AssistantDetailResult = Awaited<
+  ReturnType<typeof getAssistantByIdPrisma>
+>;
+export type AssistantCreateResult = Awaited<
+  ReturnType<typeof createAssistantPrisma>
+>;
+export type AssistantUpdateResult = Awaited<
+  ReturnType<typeof updateAssistantPrisma>
+>;
+export type AssistantDeleteResult = Awaited<
+  ReturnType<typeof deleteAssistantPrisma>
+>;
+export type AssistantThreadsResult = StorageThreadType[];
+export type AssistantUIMessagesResult = UIMessage[];
 
 /**
  * 助手 API 客户端类
@@ -43,12 +47,8 @@ export class AssistantsApiClient extends BaseApiClient {
    * 获取所有助手
    * @description 获取系统中所有可用的助手列表
    */
-  async getAssistants(): Promise<
-    ApiResponse<Awaited<ReturnType<typeof getAssistantsPrisma>>>
-  > {
-    return this.get<Awaited<ReturnType<typeof getAssistantsPrisma>>>(
-      "/assistants",
-    );
+  async getAssistants(): Promise<ApiResponse<AssistantsListResult>> {
+    return this.get<AssistantsListResult>("/assistants");
   }
 
   /**
@@ -58,10 +58,8 @@ export class AssistantsApiClient extends BaseApiClient {
    */
   async getAssistantById(
     assistantId: string,
-  ): Promise<ApiResponse<Awaited<ReturnType<typeof getAssistantByIdPrisma>>>> {
-    return this.get<Awaited<ReturnType<typeof getAssistantByIdPrisma>>>(
-      `/assistants/${assistantId}`,
-    );
+  ): Promise<ApiResponse<AssistantDetailResult>> {
+    return this.get<AssistantDetailResult>(`/assistants/${assistantId}`);
   }
 
   /**
@@ -70,12 +68,9 @@ export class AssistantsApiClient extends BaseApiClient {
    * @param assistantData - 助手信息对象
    */
   async createAssistant(
-    assistantData: AssistantInput,
-  ): Promise<ApiResponse<Awaited<ReturnType<typeof createAssistantPrisma>>>> {
-    return this.post<Awaited<ReturnType<typeof createAssistantPrisma>>>(
-      "/assistants",
-      assistantData,
-    );
+    assistantData: CreateAssistantInput,
+  ): Promise<ApiResponse<AssistantCreateResult>> {
+    return this.post<AssistantCreateResult>("/assistants", assistantData);
   }
 
   /**
@@ -86,9 +81,9 @@ export class AssistantsApiClient extends BaseApiClient {
    */
   async updateAssistant(
     assistantId: string,
-    assistantData: Partial<AssistantInput>,
-  ): Promise<ApiResponse<Awaited<ReturnType<typeof updateAssistantPrisma>>>> {
-    return this.put<Awaited<ReturnType<typeof updateAssistantPrisma>>>(
+    assistantData: UpdateAssistantInput,
+  ): Promise<ApiResponse<AssistantUpdateResult>> {
+    return this.put<AssistantUpdateResult>(
       `/assistants/${assistantId}`,
       assistantData,
     );
@@ -101,10 +96,8 @@ export class AssistantsApiClient extends BaseApiClient {
    */
   async deleteAssistant(
     assistantId: string,
-  ): Promise<ApiResponse<Awaited<ReturnType<typeof deleteAssistantPrisma>>>> {
-    return this.delete<Awaited<ReturnType<typeof deleteAssistantPrisma>>>(
-      `/assistants/${assistantId}`,
-    );
+  ): Promise<ApiResponse<AssistantDeleteResult>> {
+    return this.delete<AssistantDeleteResult>(`/assistants/${assistantId}`);
   }
 
   /**
@@ -114,8 +107,10 @@ export class AssistantsApiClient extends BaseApiClient {
    */
   async getAssistantThreads(
     assistantId: string,
-  ): Promise<ApiResponse<StorageThreadType[]>> {
-    return this.get<StorageThreadType[]>(`/assistants/history/${assistantId}`);
+  ): Promise<ApiResponse<AssistantThreadsResult>> {
+    return this.get<AssistantThreadsResult>(
+      `/assistants/history/${assistantId}`,
+    );
   }
 
   /**
@@ -126,8 +121,8 @@ export class AssistantsApiClient extends BaseApiClient {
   async getAssistantUIMessageByThreadId(
     assistantId: string,
     threadId: string,
-  ): Promise<ApiResponse<UIMessage[]>> {
-    return this.get<UIMessage[]>(
+  ): Promise<ApiResponse<AssistantUIMessagesResult>> {
+    return this.get<AssistantUIMessagesResult>(
       `/assistants/messages/${assistantId}/${threadId}`,
     );
   }
@@ -159,7 +154,7 @@ export const assistantsApiMethods = {
    * 创建助手
    * @param assistantData - 助手数据
    */
-  createAssistant: (assistantData: AssistantInput) =>
+  createAssistant: (assistantData: CreateAssistantInput) =>
     assistantsApi.createAssistant(assistantData),
 
   /**
@@ -167,10 +162,8 @@ export const assistantsApiMethods = {
    * @param assistantId - 助手ID
    * @param assistantData - 更新数据
    */
-  updateAssistant: (
-    assistantId: string,
-    assistantData: Partial<AssistantInput>,
-  ) => assistantsApi.updateAssistant(assistantId, assistantData),
+  updateAssistant: (assistantId: string, assistantData: UpdateAssistantInput) =>
+    assistantsApi.updateAssistant(assistantId, assistantData),
 
   /**
    * 删除助手

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import Image from "next/image";
 
@@ -20,6 +20,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+
+/**
+ * 模型分组接口
+ */
+interface ModelGroup {
+  groupName: string;
+  models: ModelModel[];
+  count: number;
+}
 
 /**
  * 选择项接口
@@ -61,6 +70,39 @@ interface ModelSelectorProps {
  * />
  * ```
  */
+/**
+ * 按组分组模型
+ *
+ * @description 将模型列表按 group 字段分组并排序
+ * @param models - 模型列表
+ * @returns 分组后的模型数组
+ */
+const transformModelGroups = (models: ModelModel[]): ModelGroup[] => {
+  if (!models || models.length === 0) return [];
+
+  const groups: Record<string, ModelModel[]> = {};
+
+  models.forEach((model) => {
+    const groupName = model.group || "未分组";
+    if (!groups[groupName]) {
+      groups[groupName] = [];
+    }
+    groups[groupName].push(model);
+  });
+
+  return Object.entries(groups)
+    .map(([groupName, models]) => ({
+      groupName,
+      models: models.sort((a, b) => a.name.localeCompare(b.name)),
+      count: models.length,
+    }))
+    .sort((a, b) => {
+      if (a.groupName === "未分组") return 1;
+      if (b.groupName === "未分组") return -1;
+      return a.groupName.localeCompare(b.groupName);
+    });
+};
+
 export function ModelSelector({
   providers,
   value,
@@ -68,6 +110,18 @@ export function ModelSelector({
   className,
 }: ModelSelectorProps) {
   const [open, setOpen] = useState(false);
+
+  /**
+   * 缓存所有供应商的分组模型
+   *
+   * @description 使用 useMemo 避免每次渲染都重新计算分组
+   */
+  const providersWithGroups = useMemo(() => {
+    return providers.map((provider) => ({
+      ...provider,
+      modelGroups: transformModelGroups(provider.modelList || []),
+    }));
+  }, [providers]);
 
   /**
    * 处理模型选择
@@ -121,9 +175,9 @@ export function ModelSelector({
         className="overflow-y-auto"
         align="start"
         side="top"
-        sideOffset={-8}
+        sideOffset={-4}
       >
-        {providers.map((provider) => (
+        {providersWithGroups.map((provider) => (
           <DropdownMenuSub key={provider.id}>
             <DropdownMenuSubTrigger className="gap-2">
               <div className="h-5 w-5 shrink-0">
@@ -138,33 +192,50 @@ export function ModelSelector({
 
             <DropdownMenuSubContent className="p-0">
               <ScrollArea className="h-52">
-                <div className="p-1">
-                  {provider.modelList && provider.modelList.length > 0 ? (
-                    provider.modelList.map((model) => (
-                      <DropdownMenuItem
-                        key={model.id}
+                <div className="p-2">
+                  {provider.modelGroups.length > 0 ? (
+                    provider.modelGroups.map((group, groupIndex) => (
+                      <div
+                        key={group.groupName}
                         className={cn(
-                          "cursor-pointer gap-2",
-                          value?.modelId === model.id &&
-                            "bg-brand-primary/10 font-medium text-brand-primary",
+                          "relative rounded-md border border-border/50 bg-muted/20 p-2 pb-1",
+                          groupIndex > 0 && "mt-3",
                         )}
-                        onSelect={() => onSelectModel(provider, model)}
                       >
-                        <div className="h-4 w-4 shrink-0">
-                          <Image
-                            src={
-                              getModelLogo(
-                                model.id as keyof typeof getModelLogo,
-                              ) ?? ""
-                            }
-                            alt={model.name}
-                            width={14}
-                            height={14}
-                            className="h-full w-full object-contain"
-                          />
+                        <div className="space-y-0.5">
+                          {group.models.map((model) => (
+                            <DropdownMenuItem
+                              key={model.id}
+                              className={cn(
+                                "cursor-pointer gap-2 rounded-sm",
+                                value?.modelId === model.id &&
+                                  "bg-brand-primary/10 font-medium text-brand-primary",
+                              )}
+                              onSelect={() => onSelectModel(provider, model)}
+                            >
+                              <div className="h-4 w-4 shrink-0">
+                                <Image
+                                  src={
+                                    getModelLogo(
+                                      model.id as keyof typeof getModelLogo,
+                                    ) ?? ""
+                                  }
+                                  alt={model.name}
+                                  width={14}
+                                  height={14}
+                                  className="h-full w-full object-contain"
+                                />
+                              </div>
+                              <span className="truncate text-sm">
+                                {model.name}
+                              </span>
+                            </DropdownMenuItem>
+                          ))}
                         </div>
-                        <span className="truncate text-sm">{model.name}</span>
-                      </DropdownMenuItem>
+                        <span className="absolute -bottom-1 right-1 text-[10px] leading-none text-brand-primary/60">
+                          {group.groupName}
+                        </span>
+                      </div>
                     ))
                   ) : (
                     <div className="px-2 py-6 text-center text-sm text-muted-foreground">
@@ -177,7 +248,7 @@ export function ModelSelector({
           </DropdownMenuSub>
         ))}
 
-        {providers.length === 0 && (
+        {providersWithGroups.length === 0 && (
           <div className="px-2 py-6 text-center text-sm text-muted-foreground">
             暂无可用供应商
           </div>

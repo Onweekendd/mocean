@@ -1,7 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { Info } from "lucide-react";
+import toast from "react-hot-toast";
 
+import { useStore } from "@/app/store/useStore";
+import {
+  useAssistantSWR,
+  useAssistantsWithActions,
+} from "@/hooks/useAssistantsSWR";
 import { useEnabledProvidersSWR } from "@/hooks/useProvidersSWR";
 
 import { ModelSelector } from "./model-selector";
@@ -14,35 +20,62 @@ import { ModelSelector } from "./model-selector";
  */
 export function Toolbar() {
   const { providers } = useEnabledProvidersSWR();
-  const [selectedModel, setSelectedModel] = useState<{
-    providerId: string;
-    providerName: string;
-    modelId: string;
-    modelName: string;
-  }>();
+  const { update: updateAssistant } = useAssistantsWithActions();
+  const { activeAssistant, setActiveAssistant } = useStore();
+  const { assistant, refresh } = useAssistantSWR(activeAssistant?.id ?? "");
 
   /**
    * 处理模型选择变更
    *
    * @param selection - 选择的模型信息
    */
-  const onModelChange = (selection: {
+  const onModelChange = async (selection: {
     providerId: string;
     providerName: string;
     modelId: string;
     modelName: string;
   }) => {
-    setSelectedModel(selection);
-    // TODO: 处理模型选择逻辑
+    if (!activeAssistant) {
+      toast.error("请选择一个助手");
+      return;
+    }
+
+    try {
+      await updateAssistant(activeAssistant.id, {
+        modelId: selection.modelId,
+        providerId: selection.providerId,
+      });
+
+      const assistant = await refresh();
+
+      if (assistant) {
+        setActiveAssistant(assistant);
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "更新助手失败");
+      console.error("更新助手失败:", error);
+    }
   };
 
+  if (!activeAssistant) {
+    return (
+      <div className="flex items-center justify-center gap-2 rounded-md border border-dashed border-muted-foreground/25 bg-muted/20 px-4 py-2 text-sm text-muted-foreground">
+        <Info className="h-4 w-4 opacity-60" />
+        <span>请先选择一个助手</span>
+      </div>
+    );
+  }
+
   return (
-    <>
-      <ModelSelector
-        providers={providers}
-        value={selectedModel}
-        onChange={onModelChange}
-      />
-    </>
+    <ModelSelector
+      providers={providers}
+      value={{
+        providerId: assistant?.provider?.id ?? "",
+        providerName: assistant?.provider?.name ?? "",
+        modelId: assistant?.model?.id ?? "",
+        modelName: assistant?.model?.name ?? "",
+      }}
+      onChange={onModelChange}
+    />
   );
 }

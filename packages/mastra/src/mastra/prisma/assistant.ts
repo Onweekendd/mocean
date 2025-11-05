@@ -30,6 +30,7 @@ const updateAssistantSchema = z.object({
   webSearchProviderId: z.string().nullable().optional(),
   enableGenerateImage: z.boolean().optional(),
   knowledgeRecognition: z.enum(["off", "on"]).nullable().optional(),
+  providerId: z.string().nullable().optional(),
   modelId: z.string().nullable().optional(),
   defaultModelId: z.string().nullable().optional(),
 });
@@ -56,8 +57,8 @@ const assistantThreadIdParamSchema = z.object({
 const chatWithAssistantSchema = z.custom<PrepareRequestBodyReturnType>();
 
 // zod类型推导
-type CreateAssistantInput = z.infer<typeof createAssistantSchema>;
-type UpdateAssistantInput = z.infer<typeof updateAssistantSchema>;
+export type CreateAssistantInput = z.infer<typeof createAssistantSchema>;
+export type UpdateAssistantInput = z.infer<typeof updateAssistantSchema>;
 
 /**
  * 获取所有助手
@@ -89,6 +90,7 @@ const getAssistantById = async (id: string) => {
     include: {
       model: true,
       defaultModel: true,
+      provider: true,
       settings: true,
       topics: true,
       knowledgeBases: true,
