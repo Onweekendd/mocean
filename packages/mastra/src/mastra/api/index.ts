@@ -25,14 +25,19 @@ export {
   agentsApi,
   agentsApiMethods,
   useAgentsApi,
-  type AgentInput,
+} from "./agents-client";
+
+// 代理类型
+export {
+  type CreateAgentInput,
+  type UpdateAgentInput,
   type AgentsListResult,
   type AgentDetailResult,
   type AgentCreateResult,
   type AgentUpdateResult,
   type AgentDeleteResult,
   type AgentsByGroupResult,
-} from "./agents-client";
+} from "../server/agent";
 
 // 助手相关API
 export {
@@ -40,6 +45,12 @@ export {
   assistantsApi,
   assistantsApiMethods,
   useAssistantsApi,
+} from "./assistants-client";
+
+// 助手类型
+export {
+  type CreateAssistantInput,
+  type UpdateAssistantInput,
   type AssistantsListResult,
   type AssistantDetailResult,
   type AssistantCreateResult,
@@ -47,7 +58,7 @@ export {
   type AssistantDeleteResult,
   type AssistantThreadsResult,
   type AssistantUIMessagesResult,
-} from "./assistants-client";
+} from "../server/assistant";
 
 // 提供商相关API
 export {
@@ -55,7 +66,12 @@ export {
   providersApi,
   providersApiMethods,
   useProvidersApi,
-  type ProviderInput,
+} from "./providers-client";
+
+// 提供商类型
+export {
+  type CreateProviderInput,
+  type UpdateProviderInput,
   type ProvidersListResult,
   type EnabledProvidersResult,
   type ProviderDetailResult,
@@ -65,7 +81,7 @@ export {
   type ProviderUpdateResult,
   type ProviderDeleteResult,
   type ProviderToggleResult,
-} from "./providers-client";
+} from "../server/provider";
 
 // 模型相关API
 export {
@@ -73,9 +89,14 @@ export {
   modelsApi,
   modelsApiMethods,
   useModelsApi,
-  type ModelInput,
-  type ModelCreateInput,
-  type BatchCreateResult,
+  type ModelCreateInputWithTypes,
+  type ModelUpdateInputWithTypes,
+} from "./models-client";
+
+// 模型类型
+export {
+  type CreateModelInput,
+  type UpdateModelInput,
   type ModelsListResult,
   type ModelDetailResult,
   type ModelsByProviderResult,
@@ -85,10 +106,11 @@ export {
   type ModelUpdateResult,
   type ModelDeleteResult,
   type ModelsBatchCreateResult,
+  type ModelProviderRelation,
   type ModelProviderRelationAddResult,
   type ModelProviderRelationRemoveResult,
   type ModelProviderRelationsResult,
-} from "./models-client";
+} from "../server/model";
 
 /**
  * 所有API方法的统一导出

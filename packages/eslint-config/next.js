@@ -16,11 +16,14 @@ export const nextJsConfig = [
   ...baseConfig,
   js.configs.recommended,
   eslintConfigPrettier,
-  ...tseslint.configs.recommended,
+  ...tseslint.configs.recommendedTypeChecked,
   {
     ...pluginReact.configs.flat.recommended,
     languageOptions: {
       ...pluginReact.configs.flat.recommended.languageOptions,
+      parserOptions: {
+        projectService: true,
+      },
       globals: {
         ...globals.serviceworker,
       },

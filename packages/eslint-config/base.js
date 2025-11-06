@@ -13,9 +13,12 @@ import globals from "globals";
 export const config = [
   js.configs.recommended,
   eslintConfigPrettier,
-  ...tseslint.configs.recommended,
+  ...tseslint.configs.recommendedTypeChecked,
   {
     languageOptions: {
+      parserOptions: {
+        projectService: true,
+      },
       globals: {
         ...globals.node,
         ...globals.browser,

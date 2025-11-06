@@ -4,7 +4,7 @@ import {
   AssistantChatTransport,
   useChatRuntime,
 } from "@assistant-ui/react-ai-sdk";
-import { UIMessage } from "ai";
+import { UIMessage, generateId } from "ai";
 
 import { useStore } from "@/app/store/useStore";
 
@@ -27,23 +27,43 @@ export type PrepareRequestBodyReturnType = {
  */
 export function useMastraRuntime({
   api,
-  adapter,
   body,
   initialMessages = [],
 }: {
   api: string;
-  body?: object;
+  body?: Record<string, unknown>;
   initialMessages?: UIMessage[];
 }) {
-  const { activeThread, activeAssistant, setActiveThread } = useStore();
+  const { activeThread, activeAssistant } = useStore();
 
   const { refresh } = useAssistantThreadsSWR(activeAssistant?.id || null);
 
   const runtime = useChatRuntime({
     transport: new AssistantChatTransport({
       api,
+      body,
+      prepareSendMessagesRequest: (requestParams) => {
+        const { body, ...rest } = requestParams;
+        if (!activeThread) {
+          return {
+            ...rest,
+            body: {
+              ...(body || {}),
+              threadId: generateId(),
+            },
+          };
+        }
+
+        return {
+          ...rest,
+          body: {
+            ...(body || {}),
+            threadId: activeThread,
+          },
+        };
+      },
     }),
-    initialMessages,
+    messages: initialMessages,
     onFinish() {
       setTimeout(() => {
         refresh();
