@@ -244,19 +244,12 @@ const chatWithAssistant = registerApiRoute(`${PREFIX}/assistants/chat`, {
   method: "POST",
   handler: async (c) => {
     try {
-      const rawData = await c.req.json();
-
       // 参数校验
-      const { assistantId, messages, threadId } =
-        chatWithAssistantSchema.parse(rawData);
-
-      const stream = await executeChatWithAssistant(
-        assistantId,
-        messages,
-        threadId,
+      const { assistantId, messages, threadId } = chatWithAssistantSchema.parse(
+        await c.req.json(),
       );
 
-      return stream.toUIMessageStreamResponse();
+      return await executeChatWithAssistant(assistantId, messages, threadId);
     } catch (error) {
       console.error(error);
       if (error instanceof z.ZodError) {

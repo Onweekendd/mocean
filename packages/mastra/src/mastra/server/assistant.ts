@@ -1,4 +1,5 @@
 import { StorageThreadType } from "@mastra/core";
+import { convertMessages } from "@mastra/core/agent";
 import { RuntimeContext } from "@mastra/core/di";
 import { UIMessage } from "ai";
 import { z } from "zod";
@@ -231,12 +232,20 @@ const executeChatWithAssistant = async (
   }
 
   const stream = await DynamicAgent.stream(messages, {
-    threadId,
-    resourceId: assistantId,
+    format: "aisdk",
+    memory: {
+      thread: threadId,
+      resource: assistantId,
+    },
+    providerOptions: {
+      openai: {
+        store: false,
+      },
+    },
     runtimeContext: createCommonRunTime({ assistant }) as RuntimeContext,
   });
 
-  return stream;
+  return stream.toUIMessageStreamResponse();
 };
 
 /**
@@ -265,15 +274,25 @@ const getThreadsByAssistantId = async (assistantId: string) => {
 const getUIMessagesByThreadId = async (
   assistantId: string,
   threadId: string,
-) => {
-  const memory = await DynamicAgent.getMemory();
+): Promise<UIMessage[]> => {
+  const assistant = await getFullAssistantById(assistantId);
 
-  const messages = await memory.query({
+  if (!assistant) {
+    throw new Error("助手不存在");
+  }
+
+  const memory = await DynamicAgent.getMemory({
+    runtimeContext: createCommonRunTime({ assistant }) as RuntimeContext,
+  });
+
+  const result = await memory.query({
     threadId,
     resourceId: assistantId,
   });
 
-  return messages.uiMessages;
+  const messages = convertMessages(result.uiMessages).to("AIV5.UI");
+
+  return messages;
 };
 
 /**

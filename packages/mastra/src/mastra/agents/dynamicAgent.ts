@@ -9,7 +9,7 @@ import { CommonRunTimeType } from "../runtime/CommonRunTime";
 export const DynamicAgent = new Agent({
   name: "DynamicAgent",
 
-  instructions: async ({ runtimeContext }) => {
+  instructions: ({ runtimeContext }) => {
     const assistant = (runtimeContext as RuntimeContext<CommonRunTimeType>).get(
       "assistant",
     );
@@ -17,7 +17,7 @@ export const DynamicAgent = new Agent({
     return assistant.prompt;
   },
 
-  model: async ({ runtimeContext }) => {
+  model: ({ runtimeContext }) => {
     const assistant = (runtimeContext as RuntimeContext<CommonRunTimeType>).get(
       "assistant",
     );
@@ -26,12 +26,13 @@ export const DynamicAgent = new Agent({
 
     const providerType = provider.type;
 
+    console.log(provider.apiHost, provider.apiKey);
     const openaiProvider = createOpenAI({
       baseURL: provider.apiHost,
       apiKey: provider.apiKey,
     });
 
-    const model = openaiProvider(assistant.model.id);
+    const model = openaiProvider.chat(assistant.model.id);
 
     return model;
   },
