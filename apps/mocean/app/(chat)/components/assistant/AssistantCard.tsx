@@ -36,7 +36,9 @@ const AssistantCard: React.FC<AssistantCardProps> = ({
   return (
     <Card
       className={`group cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-lg ${
-        isActive ? "border-purple-500 shadow-md ring-1 ring-purple-500/20" : ""
+        isActive
+          ? "border-brand-primary shadow-md ring-1 ring-brand-primary/20"
+          : ""
       }`}
       onClick={() => onClick(assistant)}
     >
@@ -44,10 +46,10 @@ const AssistantCard: React.FC<AssistantCardProps> = ({
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-3">
             <div
-              className={`flex h-10 w-10 items-center justify-center rounded-lg text-lg font-semibold text-white transition-all duration-200 ${
+              className={`flex h-10 w-10 items-center justify-center rounded-lg text-lg font-semibold text-brand-primary-500 transition-all duration-200 ${
                 isActive
                   ? "scale-105 bg-gradient-brand-active"
-                  : "bg-gradient-brand"
+                  : "text-brand-main bg-gradient-brand"
               }`}
             >
               {assistant.emoji || <Bot className="h-5 w-5" />}
@@ -66,7 +68,7 @@ const AssistantCard: React.FC<AssistantCardProps> = ({
                 variant={isActive ? "default" : "secondary"}
                 className={`mt-1 text-xs capitalize ${
                   isActive
-                    ? "bg-purple-100 text-brand-primary dark:bg-purple-900/30"
+                    ? "bg-brand-primary-100 text-brand-primary hover:bg-brand-primary-200"
                     : ""
                 }`}
               >
@@ -107,7 +109,9 @@ const AssistantCard: React.FC<AssistantCardProps> = ({
       <CardContent className="pt-0">
         <div
           className={`rounded-md p-3 ${
-            isActive ? "bg-purple-100 dark:bg-purple-900/30" : "bg-muted/50"
+            isActive
+              ? "bg-brand-primary-100 dark:bg-brand-primary-900/30"
+              : "bg-muted/50"
           }`}
         >
           <p

@@ -35,7 +35,7 @@ const CreateThreadCard: React.FC<{ onClick: () => void }> = ({ onClick }) => {
       <CardContent className="flex items-center p-6">
         <div className="flex w-full items-center space-x-4">
           <div className="relative">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-brand text-white transition-transform duration-200 group-hover:scale-110">
+            <div className="text-brand-main flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-brand transition-transform duration-200 group-hover:scale-110">
               <Plus className="h-6 w-6" />
             </div>
 
@@ -112,7 +112,9 @@ const ThreadItem: React.FC<{
   return (
     <Card
       className={`group cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-lg ${
-        isActive ? "border-purple-500 shadow-md ring-1 ring-purple-500/20" : ""
+        isActive
+          ? "border-brand-primary shadow-md ring-1 ring-brand-primary/20"
+          : ""
       }`}
       onClick={() => onClick(thread)}
     >
@@ -120,10 +122,10 @@ const ThreadItem: React.FC<{
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-3">
             <div
-              className={`flex h-10 w-10 items-center justify-center rounded-lg text-white transition-all duration-200 ${
+              className={`flex h-10 w-10 items-center justify-center rounded-lg transition-all duration-200 ${
                 isActive
-                  ? "scale-105 bg-gradient-brand-active"
-                  : "bg-gradient-success"
+                  ? "scale-105 bg-gradient-brand-active text-brand-primary-700"
+                  : "bg-brand-primary-100 text-brand-primary-600 dark:bg-brand-primary-950 dark:text-brand-primary-400"
               }`}
             >
               <MessageCircle className="h-5 w-5" />
@@ -142,7 +144,7 @@ const ThreadItem: React.FC<{
                 variant={isActive ? "default" : "secondary"}
                 className={`mt-1 text-xs ${
                   isActive
-                    ? "bg-purple-100 text-brand-primary dark:bg-purple-900/30"
+                    ? "bg-brand-primary-100 text-brand-primary-700 dark:bg-brand-primary-950 dark:text-brand-primary-300"
                     : ""
                 }`}
               >
@@ -164,7 +166,9 @@ const ThreadItem: React.FC<{
       <CardContent className="pt-0">
         <div
           className={`rounded-md p-3 ${
-            isActive ? "bg-purple-100 dark:bg-purple-900/30" : "bg-muted/50"
+            isActive
+              ? "bg-brand-primary-100 dark:bg-brand-primary-950"
+              : "bg-muted/50"
           }`}
         >
           <p className="text-xs text-muted-foreground">
