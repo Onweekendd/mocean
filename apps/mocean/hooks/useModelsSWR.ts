@@ -1,5 +1,6 @@
 import { useModelsApi } from "@mocean/mastra/apiClient";
-import useSWR from "swr";
+import { type ModelModel } from "@mocean/mastra/prismaType";
+import useSWR, { type KeyedMutator } from "swr";
 
 /**
  * 使用 SWR 的模型数据获取 hooks
@@ -12,7 +13,10 @@ import useSWR from "swr";
 export function useModelsSWR() {
   const { getModels } = useModelsApi();
 
-  const { data, error, isLoading, mutate } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR<
+    ModelModel[],
+    Error | undefined
+  >(
     "models",
     async () => {
       const result = await getModels();
@@ -43,7 +47,10 @@ export function useModelsSWR() {
 export function useModelSWR(id: string | null) {
   const { getModelById } = useModelsApi();
 
-  const { data, error, isLoading, mutate } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR<
+    ModelModel | null,
+    Error | undefined
+  >(
     id ? `model-${id}` : null,
     async () => {
       if (!id) return null;
@@ -74,7 +81,10 @@ export function useModelSWR(id: string | null) {
 export function useModelsByProviderSWR(providerId: string | null) {
   const { getModelsByProvider } = useModelsApi();
 
-  const { data, error, isLoading, mutate } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR<
+    ModelModel[],
+    Error | undefined
+  >(
     providerId ? `models-provider-${providerId}` : null,
     async () => {
       if (!providerId) return [];
@@ -107,7 +117,10 @@ export function useModelsByProviderSWR(providerId: string | null) {
 export function useModelsByGroupSWR(group: string | null) {
   const { getModelsByGroup } = useModelsApi();
 
-  const { data, error, isLoading, mutate } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR<
+    ModelModel[],
+    Error | undefined
+  >(
     group ? `models-group-${group}` : null,
     async () => {
       if (!group) return [];
@@ -135,7 +148,20 @@ export function useModelsByGroupSWR(group: string | null) {
 /**
  * 增强的模型 API hooks - 结合 CRUD 操作和 SWR 缓存
  */
-export function useModelsWithActions() {
+export function useModelsWithActions(): {
+  models: ModelModel[];
+  isLoading: boolean;
+  error: Error | undefined;
+  create: (
+    data: Parameters<ReturnType<typeof useModelsApi>["createModel"]>[0],
+  ) => Promise<unknown>;
+  update: (
+    id: string,
+    data: Parameters<ReturnType<typeof useModelsApi>["updateModel"]>[1],
+  ) => Promise<unknown>;
+  remove: (id: string) => Promise<unknown>;
+  refresh: KeyedMutator<ModelModel[]>;
+} {
   const { models, isLoading, error, refresh } = useModelsSWR();
   const { createModel, updateModel, deleteModel } = useModelsApi();
 
@@ -151,7 +177,7 @@ export function useModelsWithActions() {
         const result = await createModel(data);
         if (result) {
           // 创建成功后，刷新缓存
-          refresh();
+          await refresh();
         }
         return result;
       } catch (error) {
@@ -165,7 +191,7 @@ export function useModelsWithActions() {
         const result = await updateModel(id, data);
         if (result) {
           // 更新成功后，刷新缓存
-          refresh();
+          await refresh();
         }
         return result;
       } catch (error) {
@@ -179,7 +205,7 @@ export function useModelsWithActions() {
         const result = await deleteModel(id);
         if (result) {
           // 删除成功后，刷新缓存
-          refresh();
+          await refresh();
         }
         return result;
       } catch (error) {

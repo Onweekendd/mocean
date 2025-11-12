@@ -31,7 +31,7 @@ const ThreadSelect: React.FC<ThreadSelectProps> = ({ isActive }) => {
   );
 
   useEffect(() => {
-    refresh();
+    void refresh();
   }, [refresh, activeAssistant?.id, isActive]);
 
   const onCreateThread = useCallback(() => {
@@ -39,13 +39,13 @@ const ThreadSelect: React.FC<ThreadSelectProps> = ({ isActive }) => {
       return;
     }
     setActiveThread(null);
-    refreshUIMessage();
+    void refreshUIMessage();
     router.push(`/${activeAssistant.id}`);
   }, [activeAssistant, refreshUIMessage, router, setActiveThread]);
 
   const onThreadClick = (thread: StorageThreadType) => {
     setActiveThread(thread.id);
-    refreshUIMessage();
+    void refreshUIMessage();
     router.replace(`/${activeAssistant?.id}/${thread.id}`);
   };
 

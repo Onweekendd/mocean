@@ -46,9 +46,9 @@ const AssistantCard: React.FC<AssistantCardProps> = ({
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-3">
             <div
-              className={`flex h-10 w-10 items-center justify-center rounded-lg text-lg font-semibold text-brand-primary-500 transition-all duration-200 ${
+              className={`flex h-10 w-10 items-center justify-center rounded-lg text-lg font-semibold transition-all duration-200 ${
                 isActive
-                  ? "scale-105 bg-gradient-brand-active"
+                  ? "scale-105 bg-gradient-brand-active text-brand-primary-500"
                   : "text-brand-main bg-gradient-brand"
               }`}
             >

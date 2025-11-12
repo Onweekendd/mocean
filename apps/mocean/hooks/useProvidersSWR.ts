@@ -1,5 +1,6 @@
 import { useProvidersApi } from "@mocean/mastra/apiClient";
-import useSWR from "swr";
+import { type ProviderModel } from "@mocean/mastra/prismaType";
+import useSWR, { type KeyedMutator } from "swr";
 
 /**
  * 使用 SWR 的提供商数据获取 hooks
@@ -12,7 +13,10 @@ import useSWR from "swr";
 export function useProvidersSWR() {
   const { getProviders } = useProvidersApi();
 
-  const { data, error, isLoading, mutate } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR<
+    ProviderModel[],
+    Error | undefined
+  >(
     "providers",
     async () => {
       const result = await getProviders();
@@ -43,7 +47,10 @@ export function useProvidersSWR() {
 export function useEnabledProvidersSWR() {
   const { getEnabledProviders } = useProvidersApi();
 
-  const { data, error, isLoading, mutate } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR<
+    ProviderModel[],
+    Error | undefined
+  >(
     "providers-enabled",
     async () => {
       const result = await getEnabledProviders();
@@ -73,7 +80,10 @@ export function useEnabledProvidersSWR() {
 export function useProviderSWR(id: string | null) {
   const { getProviderById } = useProvidersApi();
 
-  const { data, error, isLoading, mutate } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR<
+    ProviderModel | null,
+    Error | undefined
+  >(
     id ? `provider-${id}` : null,
     async () => {
       if (!id) return null;
@@ -104,7 +114,10 @@ export function useProviderSWR(id: string | null) {
 export function useProvidersByTypeSWR(type: string | null) {
   const { getProvidersByType } = useProvidersApi();
 
-  const { data, error, isLoading, mutate } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR<
+    ProviderModel[],
+    Error | undefined
+  >(
     type ? `providers-type-${type}` : null,
     async () => {
       if (!type) return [];
@@ -132,7 +145,21 @@ export function useProvidersByTypeSWR(type: string | null) {
 /**
  * 增强的提供商 API hooks - 结合 CRUD 操作和 SWR 缓存
  */
-export function useProvidersWithActions() {
+export function useProvidersWithActions(): {
+  providers: ProviderModel[];
+  isLoading: boolean;
+  error: Error | undefined;
+  create: (
+    data: Parameters<ReturnType<typeof useProvidersApi>["createProvider"]>[0],
+  ) => Promise<unknown>;
+  update: (
+    id: string,
+    data: Parameters<ReturnType<typeof useProvidersApi>["updateProvider"]>[1],
+  ) => Promise<unknown>;
+  remove: (id: string) => Promise<unknown>;
+  toggleEnabled: (id: string) => Promise<unknown>;
+  refresh: KeyedMutator<ProviderModel[]>;
+} {
   const { providers, isLoading, error, refresh } = useProvidersSWR();
   const {
     createProvider,
@@ -153,7 +180,7 @@ export function useProvidersWithActions() {
         const result = await createProvider(data);
         if (result) {
           // 创建成功后，刷新缓存
-          refresh();
+          await refresh();
         }
         return result;
       } catch (error) {
@@ -167,7 +194,7 @@ export function useProvidersWithActions() {
         const result = await updateProvider(id, data);
         if (result) {
           // 更新成功后，刷新缓存
-          refresh();
+          await refresh();
         }
         return result;
       } catch (error) {
@@ -181,7 +208,7 @@ export function useProvidersWithActions() {
         const result = await deleteProvider(id);
         if (result) {
           // 删除成功后，刷新缓存
-          refresh();
+          await refresh();
         }
         return result;
       } catch (error) {
@@ -195,7 +222,7 @@ export function useProvidersWithActions() {
         const result = await toggleProviderEnabled(id);
         if (result) {
           // 操作成功后，刷新缓存
-          refresh();
+          await refresh();
         }
         return result;
       } catch (error) {

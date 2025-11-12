@@ -21,9 +21,52 @@ enum ProviderType {
   openai
   openai_compatible
   anthropic
+  google
   gemini
   qwenlm
   azure_openai
+  deepseek
+  groq
+  mistral
+  xai
+  alibaba
+  alibaba_cn
+  baseten
+  cerebras
+  chutes
+  cortecs
+  deepinfra
+  fastrouter
+  fireworks_ai
+  github_models
+  huggingface
+  inception
+  inference
+  llama
+  lmstudio
+  lucidquery
+  modelscope
+  moonshotai
+  moonshotai_cn
+  morph
+  nebius
+  nvidia
+  opencode
+  perplexity
+  requesty
+  scaleway
+  submodel
+  synthetic
+  togetherai
+  upstage
+  venice
+  vultr
+  wandb
+  zai
+  zai_coding_plan
+  zenmux
+  zhipuai
+  zhipuai_coding_plan
 }
 
 enum ModelType {
@@ -162,6 +205,16 @@ model Model {
   owned_by    String?
   description String?
   typeJson    Json // 存储ModelType[]
+
+  // 模型能力字段
+  contextLength           Int?   // 上下文长度 (如 128K 转换为数字)
+  supportsTools          Boolean @default(false) // 是否支持工具
+  supportsReasoning      Boolean @default(false) // 是否支持推理
+  supportsImage          Boolean @default(false) // 是否支持图像
+  supportsAudio          Boolean @default(false) // 是否支持音频
+  supportsVideo          Boolean @default(false) // 是否支持视频
+  inputPricePerMillion   Float?  // 输入价格（每百万token）
+  outputPricePerMillion  Float?  // 输出价格（每百万token）
 
   // 多对多关系
   providers ModelProvider[]

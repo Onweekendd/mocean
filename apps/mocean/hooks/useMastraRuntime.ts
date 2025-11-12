@@ -78,6 +78,7 @@ export function useMastraRuntime({
     messages: initialMessages,
     onFinish() {
       setTimeout(() => {
+        console.log("finish");
         void refresh();
       }, 5000);
     },

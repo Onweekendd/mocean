@@ -1,5 +1,6 @@
 import { AgentInput, useAgentsApi } from "@mocean/mastra/apiClient";
-import useSWR from "swr";
+import { type AgentModel } from "@mocean/mastra/prismaType";
+import useSWR, { type KeyedMutator } from "swr";
 
 /**
  * 使用 SWR 的代理数据获取 hooks
@@ -18,7 +19,10 @@ import useSWR from "swr";
 export function useAgentsSWR() {
   const { getAgents } = useAgentsApi();
 
-  const { data, error, isLoading, mutate } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR<
+    AgentModel[],
+    Error | undefined
+  >(
     "agents",
     async () => {
       const result = await getAgents();
@@ -56,7 +60,10 @@ export function useAgentsSWR() {
 export function useAgentSWR(id: string | null) {
   const { getAgentById } = useAgentsApi();
 
-  const { data, error, isLoading, mutate } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR<
+    AgentModel | null,
+    Error | undefined
+  >(
     id ? `agent-${id}` : null,
     async () => {
       if (!id) return null;
@@ -92,7 +99,10 @@ export function useAgentSWR(id: string | null) {
 export function useAgentsByGroupSWR(group: string | null) {
   const { getAgentByGroup } = useAgentsApi();
 
-  const { data, error, isLoading, mutate } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR<
+    AgentModel[],
+    Error | undefined
+  >(
     group ? `agents-group-${group}` : null,
     async () => {
       if (!group) return [];
@@ -134,7 +144,15 @@ export function useAgentsByGroupSWR(group: string | null) {
  * // 删除代理
  * await remove("agent-id");
  */
-export function useAgentsWithActions() {
+export function useAgentsWithActions(): {
+  agents: AgentModel[];
+  isLoading: boolean;
+  error: Error | undefined;
+  create: (data: AgentInput) => Promise<unknown>;
+  update: (id: string, data: Partial<AgentInput>) => Promise<unknown>;
+  remove: (id: string) => Promise<unknown>;
+  refresh: KeyedMutator<AgentModel[]>;
+} {
   const { agents, isLoading, error, refresh } = useAgentsSWR();
   const { createAgent, updateAgent, deleteAgent } = useAgentsApi();
 

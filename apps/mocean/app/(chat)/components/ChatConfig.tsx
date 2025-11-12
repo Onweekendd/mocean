@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { AssistantModel } from "@mocean/mastra/prismaType";
 
 import { useStore } from "@/app/store/useStore";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAssistantThreadsSWR } from "@/hooks/useAssistantsSWR";
 
 import ThreadSelect from "./ThreadSelect";
 import AssistantSelect from "./assistant/Assistant";
@@ -26,15 +27,26 @@ const ChatConfig = () => {
     },
   ];
 
-  const { setActiveAssistant } = useStore();
+  const { activeAssistant, setActiveAssistant } = useStore();
+  const { getAssistantById } = useAssistantThreadsSWR(
+    activeAssistant?.id || null,
+  );
 
   const [activeTab, setActiveTab] = useState<string>(
     tabsConfig[0]?.value || "assistant",
   );
 
-  const onAssistantSelect = (assistant: AssistantModel) => {
+  const selectedAssistantId = useRef<string | null>(null);
+
+  const onAssistantSelect = async (assistant: AssistantModel) => {
     setActiveTab(tabsConfig[1]?.value || "topic");
-    setActiveAssistant(assistant);
+    selectedAssistantId.current = assistant.id;
+
+    // 使用新添加的方法获取助手详情
+    const assistantDetail = await getAssistantById(assistant.id);
+    if (assistantDetail) {
+      setActiveAssistant(assistantDetail);
+    }
   };
   return (
     <Tabs
@@ -51,7 +63,9 @@ const ChatConfig = () => {
       </TabsList>
 
       <TabsContent value="assistant" className="h-0 flex-1">
-        <AssistantSelect onClick={onAssistantSelect} />
+        <AssistantSelect
+          onClick={(assistant) => void onAssistantSelect(assistant)}
+        />
       </TabsContent>
 
       <TabsContent value="topic" className="h-0 flex-1">

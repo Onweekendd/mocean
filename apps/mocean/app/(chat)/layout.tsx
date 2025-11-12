@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import { useParams, useRouter } from "next/navigation";
 
@@ -15,10 +15,10 @@ const DEFAULT_ASSISTANT_ID = "1";
 
 const ChatLayout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
-  const { setAssistantList, setActiveAssistant } = useStore();
+  const { setAssistantList, activeAssistant } = useStore();
   const { assistants, isLoading, error } = useAssistantsSWR();
   const params = useParams();
-  const id = params.id as string;
+  const hasInitialized = useRef(false);
 
   // 处理助手列表数据更新
   const onAssistantListUpdate = useCallback(
@@ -43,20 +43,7 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
     [setAssistantList],
   );
 
-  // 根据ID激活对应的助手
-  const onActiveAssistantById = useCallback(
-    (id: string, assistantList: AssistantModel[]) => {
-      if (id && assistantList.length > 0) {
-        const assistant = assistantList.find((item) => item.id === id);
-        if (assistant) {
-          setActiveAssistant(assistant);
-        }
-      }
-    },
-    [setActiveAssistant],
-  );
-
-  // 统一处理助手数据和激活状态
+  // 统一处理助手数据和初始化路由
   useEffect(() => {
     const currentAssistants = onAssistantListUpdate(
       assistants,
@@ -64,16 +51,25 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
       error,
     );
 
-    onActiveAssistantById(DEFAULT_ASSISTANT_ID, currentAssistants);
-    router.replace(`/${DEFAULT_ASSISTANT_ID}`);
+    // 只在首次加载且没有路由参数时才跳转到默认助手
+    // activeAssistant 由具体的页面组件负责设置
+    if (
+      !hasInitialized.current &&
+      !activeAssistant &&
+      !isLoading &&
+      currentAssistants.length > 0
+    ) {
+      router.replace(`/${DEFAULT_ASSISTANT_ID}`);
+      hasInitialized.current = true;
+    }
   }, [
     assistants,
     isLoading,
     error,
-    id,
+    params.assistantId,
     onAssistantListUpdate,
-    onActiveAssistantById,
     router,
+    activeAssistant,
   ]);
 
   return (
