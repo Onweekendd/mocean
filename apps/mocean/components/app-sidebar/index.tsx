@@ -103,7 +103,7 @@ export default function AppSidebar() {
                         className={cn(
                           "flex items-center justify-center rounded-lg transition-all duration-200",
                           isActive
-                            ? "bg-purple-100 hover:bg-purple-200 dark:bg-purple-900/30 dark:hover:bg-purple-900/40"
+                            ? "bg-brand-primary-100 hover:bg-brand-primary-200 dark:bg-brand-primary-900/30 dark:hover:bg-brand-primary-900/40"
                             : "bg-transparent hover:bg-muted/50",
                         )}
                       >

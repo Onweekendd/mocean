@@ -102,7 +102,7 @@ export const ItemCard: React.FC<ItemCardProps> = ({
     <Card
       className={cn(
         "group cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-lg",
-        selected && "border-purple-500 bg-purple-500/10",
+        selected && "border-brand-primary bg-brand-primary/10",
         !selected && "hover:bg-muted/20",
         className,
       )}

@@ -214,7 +214,7 @@ export function useProviderPage(selectedProviderId: string | null) {
 
     try {
       await removeModel(selectedModelForDelete.id);
-      refreshModels();
+      await refreshModels();
       setDeleteAlertOpen(false);
       setSelectedModelForDelete(null);
     } catch (error) {
