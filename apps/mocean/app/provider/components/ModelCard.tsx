@@ -2,7 +2,7 @@ import React from "react";
 
 import Image from "next/image";
 
-import { ModelModel as Model } from "@mocean/mastra/prismaType";
+import { Model } from "@mocean/mastra/prismaType";
 import { Brain, Database, Edit, Eye, Search, Trash2, Zap } from "lucide-react";
 
 import { ItemCard } from "@/components/custom/item-card";

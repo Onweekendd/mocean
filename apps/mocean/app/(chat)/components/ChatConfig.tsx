@@ -2,11 +2,11 @@
 
 import { useRef, useState } from "react";
 
-import { AssistantModel } from "@mocean/mastra/prismaType";
+import { Assistant } from "@mocean/mastra/prismaType";
 
 import { useStore } from "@/app/store/useStore";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useAssistantThreadsSWR } from "@/hooks/useAssistantsSWR";
+import { useAssistantSWR } from "@/hooks/useAssistantsSWR";
 
 import ThreadSelect from "./ThreadSelect";
 import AssistantSelect from "./assistant/Assistant";
@@ -28,9 +28,7 @@ const ChatConfig = () => {
   ];
 
   const { activeAssistant, setActiveAssistant } = useStore();
-  const { getAssistantById } = useAssistantThreadsSWR(
-    activeAssistant?.id || null,
-  );
+  const { getAssistantById } = useAssistantSWR(activeAssistant?.id || null);
 
   const [activeTab, setActiveTab] = useState<string>(
     tabsConfig[0]?.value || "assistant",
@@ -38,7 +36,7 @@ const ChatConfig = () => {
 
   const selectedAssistantId = useRef<string | null>(null);
 
-  const onAssistantSelect = async (assistant: AssistantModel) => {
+  const onAssistantSelect = async (assistant: Assistant) => {
     setActiveTab(tabsConfig[1]?.value || "topic");
     selectedAssistantId.current = assistant.id;
 

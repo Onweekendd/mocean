@@ -1,3 +1,7 @@
+import { StaticImageData } from "next/image";
+
+import { ProviderType } from "@mocean/mastra/prismaType";
+
 import Ai360ModelLogo from "@/assets/images/models/360.png";
 import Ai360ModelLogoDark from "@/assets/images/models/360_dark.png";
 import AdeptModelLogo from "@/assets/images/models/adept.png";
@@ -177,7 +181,7 @@ const MinicpmModelLogoDark = MinicpmModelLogo;
 const NousResearchModelLogoDark = NousResearchModelLogo;
 const PerplexityModelLogoDark = PerplexityModelLogo;
 
-export const PROVIDER_LOGO_MAP = {
+export const PROVIDER_LOGO_MAP: Record<ProviderType, StaticImageData> = {
   openai: OpenAiProviderLogo,
   silicon: SiliconFlowProviderLogo,
   deepseek: DeepSeekProviderLogo,

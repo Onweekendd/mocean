@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 
-import { ModelModel, ProviderModel } from "@mocean/mastra/prismaType";
+import { Model, Provider } from "@mocean/mastra/prismaType";
 
 import {
   useModelsByProviderSWR,
@@ -13,7 +13,7 @@ import { useProvidersWithActions } from "@/hooks/useProvidersSWR";
  */
 interface ModelGroup {
   groupName: string;
-  models: ModelModel[];
+  models: Model[];
   count: number;
 }
 
@@ -46,9 +46,9 @@ export function useProviderPage(selectedProviderId: string | null) {
   const [deleteAlertOpen, setDeleteAlertOpen] = useState(false);
   const [selectedGroupForAdd, setSelectedGroupForAdd] = useState<string>("");
   const [selectedModelForEdit, setSelectedModelForEdit] =
-    useState<ModelModel | null>(null);
+    useState<Model | null>(null);
   const [selectedModelForDelete, setSelectedModelForDelete] =
-    useState<ModelModel | null>(null);
+    useState<Model | null>(null);
   const [groupManageDialogOpen, setGroupManageDialogOpen] = useState(false);
 
   // API hooks
@@ -59,7 +59,7 @@ export function useProviderPage(selectedProviderId: string | null) {
    * 获取当前选中的供应商
    */
   const provider = useMemo(() => {
-    return providers.find((p) => p.id === selectedProviderId) as ProviderModel;
+    return providers.find((p) => p.id === selectedProviderId) as Provider;
   }, [providers, selectedProviderId]);
 
   /**
@@ -81,7 +81,7 @@ export function useProviderPage(selectedProviderId: string | null) {
   const modelGroups = useMemo((): ModelGroup[] => {
     if (!models || models.length === 0) return [];
 
-    const groups: Record<string, ModelModel[]> = {};
+    const groups: Record<string, Model[]> = {};
 
     models.forEach((model) => {
       const groupName = model.group || "未分组";
@@ -139,7 +139,7 @@ export function useProviderPage(selectedProviderId: string | null) {
   const filteredModelGroups = useMemo((): ModelGroup[] => {
     if (!filteredModels || filteredModels.length === 0) return [];
 
-    const groups: Record<string, ModelModel[]> = {};
+    const groups: Record<string, Model[]> = {};
 
     filteredModels.forEach((model) => {
       const groupName = model.group || "未分组";
@@ -179,7 +179,7 @@ export function useProviderPage(selectedProviderId: string | null) {
    *
    * @param model - 被点击的模型
    */
-  const onModelClick = (model: ModelModel) => {
+  const onModelClick = (model: Model) => {
     console.log("选中模型:", model.name);
     // 这里可以添加模型选择逻辑
   };
@@ -189,7 +189,7 @@ export function useProviderPage(selectedProviderId: string | null) {
    *
    * @param model - 要编辑的模型
    */
-  const onModelEdit = (model: ModelModel) => {
+  const onModelEdit = (model: Model) => {
     setSelectedModelForEdit(model);
     setEditModelDialogOpen(true);
   };
@@ -199,7 +199,7 @@ export function useProviderPage(selectedProviderId: string | null) {
    *
    * @param model - 要删除的模型
    */
-  const onModelDelete = (model: ModelModel) => {
+  const onModelDelete = (model: Model) => {
     setSelectedModelForDelete(model);
     setDeleteAlertOpen(true);
   };

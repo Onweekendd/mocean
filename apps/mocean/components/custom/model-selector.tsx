@@ -1,10 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import Image from "next/image";
 
-import { ModelModel, ProviderModel } from "@mocean/mastra/prismaType";
+import { Model, Provider } from "@mocean/mastra/prismaType";
 
 import { renderProviderAvatar as RenderProviderAvatar } from "@/app/provider/components/CustomerIcon";
 import { getModelLogo } from "@/app/provider/constant";
@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
  */
 interface ModelGroup {
   groupName: string;
-  models: ModelModel[];
+  models: Model[];
   count: number;
 }
 
@@ -45,7 +45,7 @@ interface ModelSelection {
  */
 interface ModelSelectorProps {
   /** 供应商列表 */
-  providers: Array<ProviderModel & { modelList: ModelModel[] }>;
+  providers: Array<Provider & { modelList: Model[] }>;
   /** 当前选中的模型 */
   value?: ModelSelection;
   /** 选择变更回调 */
@@ -77,10 +77,10 @@ interface ModelSelectorProps {
  * @param models - 模型列表
  * @returns 分组后的模型数组
  */
-const transformModelGroups = (models: ModelModel[]): ModelGroup[] => {
+const transformModelGroups = (models: Model[]): ModelGroup[] => {
   if (!models || models.length === 0) return [];
 
-  const groups: Record<string, ModelModel[]> = {};
+  const groups: Record<string, Model[]> = {};
 
   models.forEach((model) => {
     const groupName = model.group || "未分组";
@@ -129,7 +129,7 @@ export function ModelSelector({
    * @param provider - 供应商信息
    * @param model - 模型信息
    */
-  const onSelectModel = (provider: ProviderModel, model: ModelModel) => {
+  const onSelectModel = (provider: Provider, model: Model) => {
     onChange({
       providerId: provider.id,
       providerName: provider.name,
@@ -139,6 +139,15 @@ export function ModelSelector({
     setOpen(false);
   };
 
+  const getProvider = useCallback(() => {
+    if (!value) {
+      return undefined;
+    }
+
+    const provider = providers.find((p) => p.id === value.providerId);
+    return provider;
+  }, [providers, value]);
+
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
@@ -147,7 +156,7 @@ export function ModelSelector({
           role="combobox"
           aria-expanded={open}
           className={cn(
-            "h-10 justify-between gap-2 border-brand-primary/20 py-0 !no-underline hover:border-brand-primary/40 hover:from-brand-primary/10 hover:to-brand-secondary/10 focus-visible:outline-none focus-visible:ring-0",
+            "hover:to-brand-secondary/10 h-10 justify-between gap-2 border-brand-primary/20 py-0 !no-underline hover:border-brand-primary/40 hover:from-brand-primary/10 focus-visible:outline-none focus-visible:ring-0",
             className,
           )}
           onClick={() => setOpen(!open)}
@@ -156,7 +165,7 @@ export function ModelSelector({
             <div className="flex items-center gap-2">
               <div className="h-4 w-4 shrink-0">
                 <RenderProviderAvatar
-                  providerName={value.providerName}
+                  provider={getProvider()}
                   width={16}
                   height={16}
                 />

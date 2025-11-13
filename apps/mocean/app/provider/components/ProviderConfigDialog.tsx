@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { ProviderModel } from "@mocean/mastra/prismaType";
+import { Provider } from "@mocean/mastra/prismaType";
 import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -23,7 +23,7 @@ import { useProvidersWithActions } from "@/hooks/useProvidersSWR";
  */
 export interface ProviderConfigDialogProps {
   /** 供应商数据 */
-  provider: ProviderModel;
+  provider: Provider;
   /** 对话框开启状态 */
   open: boolean;
   /** 对话框状态变更回调 */

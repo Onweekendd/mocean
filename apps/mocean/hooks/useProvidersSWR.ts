@@ -1,5 +1,5 @@
 import { useProvidersApi } from "@mocean/mastra/apiClient";
-import { type ProviderModel } from "@mocean/mastra/prismaType";
+import { type Provider } from "@mocean/mastra/prismaType";
 import useSWR, { type KeyedMutator } from "swr";
 
 /**
@@ -14,7 +14,7 @@ export function useProvidersSWR() {
   const { getProviders } = useProvidersApi();
 
   const { data, error, isLoading, mutate } = useSWR<
-    ProviderModel[],
+    Provider[],
     Error | undefined
   >(
     "providers",
@@ -48,7 +48,7 @@ export function useEnabledProvidersSWR() {
   const { getEnabledProviders } = useProvidersApi();
 
   const { data, error, isLoading, mutate } = useSWR<
-    ProviderModel[],
+    Provider[],
     Error | undefined
   >(
     "providers-enabled",
@@ -81,7 +81,7 @@ export function useProviderSWR(id: string | null) {
   const { getProviderById } = useProvidersApi();
 
   const { data, error, isLoading, mutate } = useSWR<
-    ProviderModel | null,
+    Provider | null,
     Error | undefined
   >(
     id ? `provider-${id}` : null,
@@ -115,7 +115,7 @@ export function useProvidersByTypeSWR(type: string | null) {
   const { getProvidersByType } = useProvidersApi();
 
   const { data, error, isLoading, mutate } = useSWR<
-    ProviderModel[],
+    Provider[],
     Error | undefined
   >(
     type ? `providers-type-${type}` : null,
@@ -146,7 +146,7 @@ export function useProvidersByTypeSWR(type: string | null) {
  * 增强的提供商 API hooks - 结合 CRUD 操作和 SWR 缓存
  */
 export function useProvidersWithActions(): {
-  providers: ProviderModel[];
+  providers: Provider[];
   isLoading: boolean;
   error: Error | undefined;
   create: (
@@ -158,7 +158,7 @@ export function useProvidersWithActions(): {
   ) => Promise<unknown>;
   remove: (id: string) => Promise<unknown>;
   toggleEnabled: (id: string) => Promise<unknown>;
-  refresh: KeyedMutator<ProviderModel[]>;
+  refresh: KeyedMutator<Provider[]>;
 } {
   const { providers, isLoading, error, refresh } = useProvidersSWR();
   const {

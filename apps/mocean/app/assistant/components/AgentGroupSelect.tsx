@@ -29,7 +29,7 @@ export const AgentGroupSelect: React.FC<AgentGroupSelectProps> = ({
     onGroupSelect?.(group);
   };
 
-  const groupList = Object.keys(iconMap) as Array<keyof typeof iconMap>;
+  const groupList = Object.keys(iconMap);
 
   /**
    * 渲染单个分组项
@@ -43,7 +43,7 @@ export const AgentGroupSelect: React.FC<AgentGroupSelectProps> = ({
         key={group}
         className={`cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${
           isSelected
-            ? "bg-gradient-brand text-white shadow-lg"
+            ? "border border-transparent bg-gradient-brand text-white shadow-lg"
             : "border border-border bg-card hover:border-primary/50 hover:bg-muted/80"
         } group rounded-lg p-3`}
         onClick={() => onGroupClick(group)}
@@ -53,7 +53,7 @@ export const AgentGroupSelect: React.FC<AgentGroupSelectProps> = ({
             className={`flex h-8 w-8 items-center justify-center rounded-lg transition-transform duration-200 group-hover:scale-110 ${
               isSelected
                 ? "bg-white/20 text-white"
-                : "bg-gradient-to-br from-blue-500/10 to-purple-600/10 text-info"
+                : "to-brand-secondary/10 bg-gradient-to-br from-brand-primary/10 text-info"
             } `}
           >
             <AgentGroupIcon groupName={group} size={16} strokeWidth={1.5} />
@@ -105,12 +105,9 @@ export const AgentGroupSelect: React.FC<AgentGroupSelectProps> = ({
       </div>
 
       {currentGroup && (
-        <div className="mt-4 flex flex-shrink-0 items-center space-x-2 pt-4">
+        <div className="mt-4 flex flex-shrink-0 items-center space-x-2 pl-2">
           <div className="flex h-4 w-4 items-center justify-center rounded-full bg-gradient-brand text-white">
-            <AgentGroupIcon
-              groupName={currentGroup as keyof typeof iconMap}
-              size={12}
-            />
+            <AgentGroupIcon groupName={currentGroup} size={12} />
           </div>
           <span className="text-xs text-muted-foreground">
             当前:{" "}

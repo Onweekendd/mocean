@@ -126,8 +126,7 @@ export default function ProviderPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="flex h-10 w-10 items-center justify-center">
-                {provider?.name &&
-                  renderProviderAvatar({ providerName: provider.name })}
+                {provider?.name && renderProviderAvatar({ provider })}
               </div>
               <div>
                 <div className="flex items-center space-x-2">
@@ -208,8 +207,7 @@ export default function ProviderPage() {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="flex h-10 w-10 items-center justify-center">
-              {provider?.name &&
-                renderProviderAvatar({ providerName: provider.name })}
+              {provider?.name && renderProviderAvatar({ provider })}
             </div>
             <div>
               <div className="flex items-center space-x-2">

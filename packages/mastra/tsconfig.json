@@ -16,8 +16,11 @@
     "useDefineForClassFields": true,
     "baseUrl": ".",
     "types": ["node"],
-    "lib": ["ES2023", "DOM"]
+    "lib": ["ES2023", "DOM"],
+    "paths": {
+      "@generatedPrisma/*": ["./generated/prisma/*"]
+    }
   },
-  "include": ["src/**/*", "scripts/**/*"],
+  "include": ["src/**/*", "scripts/**/*", "generated/**/*"],
   "exclude": ["node_modules", "generated", "prisma"]
 }

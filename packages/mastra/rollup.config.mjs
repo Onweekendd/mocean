@@ -58,23 +58,13 @@ const basePlugins = [
  * import { agentsApi } from '@mocean/mastra/apiClient'
  */
 export default [
-  // 1. prismaType 导出 - 代码打包
-  {
-    input: "generated/prisma/models.ts",
-    output: {
-      file: "dist/prismaType.js",
-      format: "esm",
-      sourcemap: true,
-    },
-    external,
-    plugins: basePlugins,
-  },
   // 2. prismaType 导出 - 类型声明
   {
-    input: "generated/prisma/models.ts",
+    input: "generated/prisma/client.ts",
     output: {
       file: "dist/prismaType.d.ts",
       format: "esm",
+      sourcemap: false,
     },
     external,
     plugins: [dts()],

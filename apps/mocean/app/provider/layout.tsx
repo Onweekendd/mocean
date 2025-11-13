@@ -2,15 +2,12 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { Loader2, Settings } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
-import { ItemCard } from "@/components/custom/item-card";
 import { Card, CardContent } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
 import { useProvidersSWR } from "@/hooks/useProvidersSWR";
 
-import { renderProviderAvatar } from "./components/CustomerIcon";
+import { ProviderSelect } from "./components/ProviderSelect";
 
 interface ProviderLayoutProps {
   children: React.ReactNode;
@@ -56,7 +53,9 @@ export default function ProviderLayout({ children }: ProviderLayoutProps) {
         <Card className="w-96">
           <CardContent className="py-8">
             <div className="text-center">
-              <p className="mb-2 text-sm text-red-500">加载提供商数据失败</p>
+              <p className="mb-2 text-sm text-destructive">
+                加载提供商数据失败
+              </p>
               <p className="text-xs text-muted-foreground">{error.message}</p>
             </div>
           </CardContent>
@@ -66,35 +65,18 @@ export default function ProviderLayout({ children }: ProviderLayoutProps) {
   }
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-screen gap-2 overflow-hidden bg-background">
       {/* 左侧提供商列表 */}
-      <div className="flex w-80 flex-col border-r border-border bg-card">
-        <div className="p-4">
-          <div className="mb-4 flex items-center space-x-2">
-            <Settings className="h-5 w-5 text-muted-foreground" />
-            <h2 className="text-lg font-semibold">提供商配置</h2>
-          </div>
-          <Separator />
-        </div>
-
-        <ScrollArea className="h-0 flex-1">
-          <div className="space-y-2 p-4">
-            {providers.map((provider) => (
-              <ItemCard
-                key={provider.id}
-                title={provider.name}
-                avatar={renderProviderAvatar({ providerName: provider.name })}
-                selected={selectedProviderId === provider.id}
-                onClick={() => onProviderChange(provider.id)}
-                className="h-auto min-h-0"
-              />
-            ))}
-          </div>
-        </ScrollArea>
+      <div className="h-full w-80 flex-shrink-0">
+        <ProviderSelect
+          providers={providers}
+          selectedProviderId={selectedProviderId}
+          onProviderChange={onProviderChange}
+        />
       </div>
 
       {/* 右侧内容区域 */}
-      <div className="flex-1 bg-background">{children}</div>
+      <div className="h-full min-w-0 flex-1 overflow-y-auto">{children}</div>
     </div>
   );
 }

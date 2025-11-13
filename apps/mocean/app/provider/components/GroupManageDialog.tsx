@@ -122,7 +122,7 @@ export const GroupManageDialog: React.FC<GroupManageDialogProps> = ({
   /**
    * 确认添加分组
    */
-  const onConfirmAdd = async () => {
+  const onConfirmAdd = () => {
     if (!groupName.trim() || !providerId) return;
 
     setIsSubmitting(true);

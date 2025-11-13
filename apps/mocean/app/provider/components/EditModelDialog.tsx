@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+import { Model } from "@mocean/mastra/prismaType";
 import { Loader2, Pencil, X } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -36,18 +37,6 @@ const MODEL_TYPES = [
   { value: "function_calling", label: "函数调用" },
   { value: "web_search", label: "网络搜索" },
 ];
-
-/**
- * 模型数据接口
- */
-interface Model {
-  id: string;
-  name: string;
-  group?: string;
-  typeJson: string[];
-  description?: string;
-  owned_by?: string;
-}
 
 /**
  * 编辑模型对话框属性

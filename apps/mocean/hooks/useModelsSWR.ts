@@ -1,5 +1,5 @@
 import { useModelsApi } from "@mocean/mastra/apiClient";
-import { type ModelModel } from "@mocean/mastra/prismaType";
+import { type Model } from "@mocean/mastra/prismaType";
 import useSWR, { type KeyedMutator } from "swr";
 
 /**
@@ -13,10 +13,7 @@ import useSWR, { type KeyedMutator } from "swr";
 export function useModelsSWR() {
   const { getModels } = useModelsApi();
 
-  const { data, error, isLoading, mutate } = useSWR<
-    ModelModel[],
-    Error | undefined
-  >(
+  const { data, error, isLoading, mutate } = useSWR<Model[], Error | undefined>(
     "models",
     async () => {
       const result = await getModels();
@@ -48,7 +45,7 @@ export function useModelSWR(id: string | null) {
   const { getModelById } = useModelsApi();
 
   const { data, error, isLoading, mutate } = useSWR<
-    ModelModel | null,
+    Model | null,
     Error | undefined
   >(
     id ? `model-${id}` : null,
@@ -81,10 +78,7 @@ export function useModelSWR(id: string | null) {
 export function useModelsByProviderSWR(providerId: string | null) {
   const { getModelsByProvider } = useModelsApi();
 
-  const { data, error, isLoading, mutate } = useSWR<
-    ModelModel[],
-    Error | undefined
-  >(
+  const { data, error, isLoading, mutate } = useSWR<Model[], Error | undefined>(
     providerId ? `models-provider-${providerId}` : null,
     async () => {
       if (!providerId) return [];
@@ -117,10 +111,7 @@ export function useModelsByProviderSWR(providerId: string | null) {
 export function useModelsByGroupSWR(group: string | null) {
   const { getModelsByGroup } = useModelsApi();
 
-  const { data, error, isLoading, mutate } = useSWR<
-    ModelModel[],
-    Error | undefined
-  >(
+  const { data, error, isLoading, mutate } = useSWR<Model[], Error | undefined>(
     group ? `models-group-${group}` : null,
     async () => {
       if (!group) return [];
@@ -149,7 +140,7 @@ export function useModelsByGroupSWR(group: string | null) {
  * 增强的模型 API hooks - 结合 CRUD 操作和 SWR 缓存
  */
 export function useModelsWithActions(): {
-  models: ModelModel[];
+  models: Model[];
   isLoading: boolean;
   error: Error | undefined;
   create: (
@@ -160,7 +151,7 @@ export function useModelsWithActions(): {
     data: Parameters<ReturnType<typeof useModelsApi>["updateModel"]>[1],
   ) => Promise<unknown>;
   remove: (id: string) => Promise<unknown>;
-  refresh: KeyedMutator<ModelModel[]>;
+  refresh: KeyedMutator<Model[]>;
 } {
   const { models, isLoading, error, refresh } = useModelsSWR();
   const { createModel, updateModel, deleteModel } = useModelsApi();
