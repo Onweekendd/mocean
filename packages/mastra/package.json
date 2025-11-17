@@ -14,7 +14,8 @@
     "import-providers-models": "tsx scripts/import-providers-models.ts",
     "import-assistants": "tsx scripts/import-assistants.ts",
     "check-types": "tsc --noEmit",
-    "fetch-models-from-api": "tsx scripts/fetch-models-from-api.ts"
+    "fetch-models-from-api": "tsx scripts/fetch-models-from-api.ts",
+    "updata-provider-type": "tsx scripts/updateProviderTypeFromApi.ts"
   },
   "exports": {
     "./prismaType": {

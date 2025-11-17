@@ -5,10 +5,9 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider        = "prisma-client"
-  output          = "../generated/prisma"
-  previewFeatures = ["driverAdapters"]
-  moduleFormat    = "esm"
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "esm"
 }
 
 datasource db {
@@ -18,41 +17,61 @@ datasource db {
 
 // 枚举类型定义
 enum ProviderType {
+  // 主流供应商
   openai
   openai_compatible
   anthropic
   google
   gemini
-  qwenlm
-  azure_openai
   deepseek
   groq
   mistral
-  xai_cn
-  xai
+  // 网关供应商
+  netlify
+  openrouter
+  vercel
+  // 中国供应商
+  qwenlm
   alibaba
   alibaba_cn
+  zhipuai
+  moonshotai
+  moonshotai_cn
+  modelscope
+  // Azure 和其他
+  azure_openai
+  xai
+  xai_cn
+  // 其他供应商
+  aihubmix
+  amazon_bedrock
+  azure
+  azure_cognitive_services
   baseten
   cerebras
   chutes
+  cloudflare_workers_ai
   cortecs
   deepinfra
   fastrouter
   fireworks_ai
+  github_copilot
   github_models
+  google_vertex
+  google_vertex_anthropic
   huggingface
+  iflowcn
   inception
   inference
   llama
   lmstudio
   lucidquery
-  modelscope
-  moonshotai
-  moonshotai_cn
+  minimax
   morph
   nebius
   nvidia
   opencode
+  ovhcloud
   perplexity
   requesty
   scaleway
@@ -60,18 +79,14 @@ enum ProviderType {
   synthetic
   togetherai
   upstage
+  v0
   venice
   vultr
   wandb
   zai
   zai_coding_plan
   zenmux
-  zhipuai
   zhipuai_coding_plan
-  // 新增：网关供应商
-  netlify
-  openrouter
-  vercel
 }
 
 enum ModelType {

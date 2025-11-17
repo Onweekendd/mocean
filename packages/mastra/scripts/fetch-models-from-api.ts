@@ -760,81 +760,21 @@ function determineModelTypes(model: ModelCapability): string[] {
 }
 
 /**
+ * 将短横线连接的字符串转换为下划线连接
+ * @param value - 需要转换的字符串（例如 aa-bb）
+ * @returns 转换后的字符串（例如 aa_bb）
+ */
+function convertKebabToSnake(value: string): string {
+  return value.replace(/-/g, "_");
+}
+
+/**
  * 将供应商ID映射到ProviderType枚举值
  * @param providerId - 供应商ID（如 "fireworks-ai"）
  * @returns ProviderType枚举值（如 "fireworks_ai"）
  */
 function mapProviderIdToType(providerId: string): ProviderType {
-  // 完整的映射表
-  const mapping: Record<string, ProviderType> = {
-    // 主流供应商
-    openai: "openai",
-    anthropic: "anthropic",
-    google: "google",
-    gemini: "gemini",
-    deepseek: "deepseek",
-    groq: "groq",
-    mistral: "mistral",
-
-    // 网关供应商
-    netlify: "netlify",
-    openrouter: "openrouter",
-    vercel: "vercel",
-
-    // 其他供应商（命名转换）
-    "fireworks-ai": "fireworks_ai",
-    fireworks: "fireworks_ai",
-    "github-models": "github_models",
-    github: "github_models",
-    "azure-openai": "azure_openai",
-    xai: "xai",
-    "xai-cn": "xai_cn",
-    grok: "xai",
-
-    // Together AI
-    together: "togetherai",
-    togetherai: "togetherai",
-
-    // 中国供应商
-    zhipu: "zhipuai",
-    zhipuai: "zhipuai",
-    moonshot: "moonshotai",
-    moonshotai: "moonshotai",
-    "moonshotai-cn": "moonshotai_cn",
-    modelscope: "modelscope",
-    dashscope: "alibaba",
-    alibaba: "alibaba",
-    "alibaba-cn": "alibaba_cn",
-
-    // 其他已知供应商
-    huggingface: "huggingface",
-    perplexity: "perplexity",
-    nvidia: "nvidia",
-    lmstudio: "lmstudio",
-    ollama: "lmstudio", // Ollama 映射到 LMStudio
-
-    // Inference 供应商
-    baseten: "baseten",
-    cerebras: "cerebras",
-    deepinfra: "deepinfra",
-    fastrouter: "fastrouter",
-    inference: "inference",
-    nebius: "nebius",
-    upstage: "upstage",
-    venice: "venice",
-    vultr: "vultr",
-  };
-
-  // 如果在映射表中找到，返回映射值
-  if (mapping[providerId]) {
-    return mapping[providerId];
-  }
-
-  // 默认返回 openai_compatible
-  console.warn(
-    `⚠️  供应商 "${providerId}" 未在映射表中找到，使用 openai_compatible 类型`,
-  );
-  return "openai_compatible";
+  return convertKebabToSnake(providerId) as ProviderType;
 }
 
 /**
@@ -1026,7 +966,7 @@ async function insertProvidersAndModels(data: ScrapedData) {
               await tx.provider.create({
                 data: {
                   id: relation.providerId,
-                  type: providerType as never,
+                  type: providerType,
                   name: formatProviderName(relation.providerId),
                   apiKey: "",
                   apiHost: config?.api?.url,
@@ -1045,7 +985,7 @@ async function insertProvidersAndModels(data: ScrapedData) {
               );
             } catch (error) {
               console.warn(
-                `   ⚠️  无法创建供应商 ${relation.providerId}，跳过关联`,
+                `${error instanceof Error ? error.message : ""}   ⚠️  无法创建供应商 ${relation.providerId}，跳过关联`,
               );
               continue;
             }
