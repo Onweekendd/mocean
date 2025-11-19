@@ -12,7 +12,6 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:../db/prisma.db"
 }
 
 // 枚举类型定义

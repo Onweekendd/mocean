@@ -1,5 +1,3 @@
-import { promises as fs } from "fs";
-import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { z } from "zod";
 
@@ -7,44 +5,9 @@ import { PrismaClient, ProviderType } from "../generated/prisma/index.js";
 
 // ES Module compatibility
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 // 初始化 Prisma Client
 const prisma = new PrismaClient();
-
-// 定义 provider 配置数据的类型
-type ProviderConfigData = Record<
-  string,
-  {
-    api?: {
-      url?: string;
-    };
-    websites?: {
-      official?: string;
-      apiKey?: string;
-      docs?: string;
-      models?: string;
-    };
-  }
->;
-
-// 动态加载 provider 配置数据
-let providerConfigData: ProviderConfigData = {};
-
-/**
- * 加载 provider 配置数据
- * @returns Promise<ProviderConfigData> - 加载后的配置数据
- */
-async function loadProviderConfig(): Promise<ProviderConfigData> {
-  try {
-    const configPath = join(__dirname, "..", "data", "provider.json");
-    const configContent = await fs.readFile(configPath, "utf-8");
-    return JSON.parse(configContent) as ProviderConfigData;
-  } catch (error) {
-    console.warn("⚠️  无法加载 provider 配置文件，将使用默认空配置:", error);
-    return {};
-  }
-}
 
 // 使用爬虫脚本中的模型数据结构
 interface ModelCapability {
@@ -72,22 +35,10 @@ interface ProviderInfo {
   isPopular?: boolean; // 新增：标识是否为热门供应商
 }
 
-interface GatewayInfo {
-  id: string;
-  name: string;
-  type: string;
-  url?: string;
-  supportedProviders: string[]; // 支持的供应商列表
-  modelsByProvider: Record<string, ModelCapability[]>; // 按供应商分组的模型
-  totalModels: number; // 模型总数
-  modelCountByProvider: Record<string, number>; // 各供应商的模型数统计
-}
-
 interface ScrapedData {
   providers: ProviderInfo[];
   models: ModelCapability[];
   skippedProviders: ProviderInfo[];
-  gateways: GatewayInfo[]; // 新增：单独列出网关
   metadata: {
     scrapedAt: string;
     totalProviders: number;
@@ -228,27 +179,6 @@ async function fetchApiData(): Promise<ModelsDevResponse> {
   }
 }
 
-/**
- * 解析网关模型ID，提取供应商和实际模型ID
- * @param modelId - 完整的模型ID，格式为 "供应商/模型ID"
- * @returns 包含供应商和模型ID的对象，如果格式无效则返回null
- * @example
- * parseGatewayModelId("anthropic/claude-3.5-haiku")
- * // returns { provider: "anthropic", modelId: "claude-3.5-haiku" }
- */
-function parseGatewayModelId(
-  modelId: string,
-): { provider: string; modelId: string } | null {
-  const separatorIndex = modelId.indexOf("/");
-  if (separatorIndex === -1) {
-    return null;
-  }
-
-  return {
-    provider: modelId.substring(0, separatorIndex),
-    modelId: modelId.substring(separatorIndex + 1),
-  };
-}
 
 /**
  * 从解析的模型数据创建ModelCapability对象
@@ -280,77 +210,9 @@ function createModelCapability(
   };
 }
 
-/**
- * 处理网关供应商的数据
- * @param providerId - 网关供应商ID
- * @param providerName - 网关供应商名称
- * @param modelEntries - 模型条目数组
- * @returns 网关信息对象
- */
-function processGatewayProvider(
-  providerId: string,
-  providerName: string,
-  modelEntries: [string, unknown][],
-): GatewayInfo {
-  const modelsByProvider: Record<string, ModelCapability[]> = {};
-  const modelCountByProvider: Record<string, number> = {};
-  const supportedProviders: Set<string> = new Set();
-  let totalModels = 0;
-
-  // 处理网关中的每个模型
-  for (const [modelId, modelData] of modelEntries) {
-    const parsedModel = ModelsDevModelSchema.parse(modelData);
-
-    // 解析模型ID格式：供应商前缀/模型ID
-    const parsedId = parseGatewayModelId(modelId);
-    if (!parsedId) {
-      console.warn(
-        `⚠️  ${providerName}: 模型 ${modelId} 格式不符合 "供应商/模型ID" 格式，跳过`,
-      );
-      continue;
-    }
-
-    const { provider: modelProvider, modelId: actualModelId } = parsedId;
-
-    // 记录支持的供应商
-    supportedProviders.add(modelProvider);
-
-    // 创建模型对象
-    const model = createModelCapability(
-      parsedModel,
-      actualModelId,
-      modelProvider,
-      formatProviderName(modelProvider),
-    );
-
-    // 按供应商分组
-    if (!modelsByProvider[modelProvider]) {
-      modelsByProvider[modelProvider] = [];
-      modelCountByProvider[modelProvider] = 0;
-    }
-    modelsByProvider[modelProvider].push(model);
-    modelCountByProvider[modelProvider]++;
-    totalModels++;
-  }
-
-  console.log(
-    `✅ ${providerName} (网关): 找到 ${totalModels} 个模型，支持 ${supportedProviders.size} 个供应商`,
-  );
-
-  return {
-    id: providerId,
-    name: providerName,
-    type: providerId,
-    url: `https://mastra.ai/models/gateways/${providerId}`,
-    supportedProviders: Array.from(supportedProviders).sort(),
-    modelsByProvider,
-    totalModels,
-    modelCountByProvider,
-  };
-}
 
 /**
- * 处理普通供应商的数据
+ * 处理供应商的数据（包括网关）
  * @param providerId - 供应商ID
  * @param providerName - 供应商名称
  * @param isPopular - 是否为热门供应商
@@ -425,7 +287,6 @@ async function fetchModelsDevData(): Promise<ScrapedData> {
     const providers: ProviderInfo[] = [];
     const models: ModelCapability[] = [];
     const skippedProviders: ProviderInfo[] = [];
-    const gateways: GatewayInfo[] = [];
 
     // 遍历所有供应商
     for (const [providerId, providerData] of Object.entries(parsedData)) {
@@ -471,43 +332,30 @@ async function fetchModelsDevData(): Promise<ScrapedData> {
         continue;
       }
 
-      // 网关和普通供应商分开处理
-      if (isGateway) {
-        const gatewayInfo = processGatewayProvider(
-          providerId,
-          providerName,
-          modelEntries,
-        );
-        gateways.push(gatewayInfo);
-      } else {
-        const providerInfo = processRegularProvider(
-          providerId,
-          providerName,
-          isPopular,
-          modelEntries,
-          models,
-        );
-        providers.push(providerInfo);
-      }
+      const providerInfo = processProvider(
+        providerId,
+        providerName,
+        isPopular,
+        modelEntries,
+        models,
+      );
+      providers.push(providerInfo);
     }
 
     // 排序所有数据
     providers.sort((a, b) => a.name.localeCompare(b.name));
     models.sort((a, b) => a.id.localeCompare(b.id));
-    gateways.sort((a, b) => a.name.localeCompare(b.name));
 
     // 创建最终结果
     const scrapedData: ScrapedData = {
       providers,
       models,
       skippedProviders,
-      gateways,
       metadata: {
         scrapedAt: new Date().toISOString(),
         totalProviders: providers.length,
         totalModels: models.length,
         skippedCount: skippedProviders.length,
-        gatewayCount: gateways.length,
       },
     };
 
@@ -526,118 +374,11 @@ async function fetchModelsDevData(): Promise<ScrapedData> {
 }
 
 /**
- * 保存数据到 JSON 文件（与爬虫脚本相同的格式）
- */
-async function saveData(data: ScrapedData) {
-  const outputDir = join(__dirname, "..", "data");
-
-  // 确保输出目录存在
-  try {
-    await fs.access(outputDir);
-  } catch {
-    await fs.mkdir(outputDir, { recursive: true });
-  }
-
-  // 保存完整数据
-  await fs.writeFile(
-    join(outputDir, "scraped-mastra-data.json"),
-    JSON.stringify(data, null, 2),
-  );
-
-  // 生成 provider.json 格式
-  const providerData: Record<string, ProviderInfo> = {};
-  data.providers.forEach((provider) => {
-    providerData[provider.id] = {
-      id: provider.id,
-      name: provider.name,
-      type: provider.type,
-      modelCount: provider.modelCount,
-      url: `https://mastra.ai/models/providers/${provider.id}`,
-      isGateway: provider.isGateway || false,
-      isPopular: provider.isPopular || false,
-    };
-  });
-
-  await fs.writeFile(
-    join(outputDir, "new-provider.json"),
-    JSON.stringify(providerData, null, 2),
-  );
-
-  // 生成 model.json 格式（按供应商分组）
-  const modelData: Record<string, ModelCapability[]> = {};
-  data.models.forEach((model) => {
-    if (!modelData[model.provider]) {
-      modelData[model.provider] = [];
-    }
-    modelData[model.provider].push(model);
-  });
-
-  await fs.writeFile(
-    join(outputDir, "new-model.json"),
-    JSON.stringify(modelData, null, 2),
-  );
-
-  // 保存网关数据（包含完整的支持供应商和模型信息）
-  const gatewayData: Record<string, GatewayInfo> = {};
-  data.gateways.forEach((gateway) => {
-    gatewayData[gateway.id] = {
-      id: gateway.id,
-      name: gateway.name,
-      type: gateway.type,
-      url: gateway.url,
-      supportedProviders: gateway.supportedProviders,
-      modelsByProvider: gateway.modelsByProvider,
-      totalModels: gateway.totalModels,
-      modelCountByProvider: gateway.modelCountByProvider,
-    };
-  });
-
-  await fs.writeFile(
-    join(outputDir, "gateways.json"),
-    JSON.stringify(gatewayData, null, 2),
-  );
-
-  // 保存跳过的供应商数据
-  const skippedData: Record<
-    string,
-    ProviderInfo & { reason: string; skippedAt: string; modelCount: number }
-  > = {};
-  data.skippedProviders.forEach((provider) => {
-    skippedData[provider.id] = {
-      id: provider.id,
-      name: provider.name,
-      type: provider.type,
-      modelCount: provider.modelCount,
-      url: `https://mastra.ai/models/providers/${provider.id}`,
-      reason: "无模型数据或模型列表为空",
-      skippedAt: data.metadata.scrapedAt,
-    };
-  });
-
-  await fs.writeFile(
-    join(outputDir, "skipped-providers.json"),
-    JSON.stringify(skippedData, null, 2),
-  );
-
-  console.log(`\n💾 数据已保存到 ${outputDir}`);
-  console.log(`   - 完整数据: scraped-mastra-data.json`);
-  console.log(`   - 供应商数据: new-provider.json`);
-  console.log(`   - 模型数据: new-model.json`);
-  console.log(`   - 网关数据: gateways.json`);
-  console.log(
-    `   - 跳过的供应商: skipped-providers.json (${data.skippedProviders.length} 个)`,
-  );
-}
-
-/**
  * 主执行函数
  */
 async function main() {
   try {
     console.log("🚀 开始从 models.dev API 获取 Mastra 模型数据...\n");
-
-    // 0. 加载 provider 配置数据
-    providerConfigData = await loadProviderConfig();
 
     // 1. 从API获取数据
     const data = await fetchModelsDevData();
@@ -683,28 +424,6 @@ function deduplicateModels(data: ScrapedData): {
     }
   }
 
-  // 2. 处理网关中的模型
-  for (const gateway of data.gateways) {
-    // 遍历网关支持的每个供应商的模型
-    for (const [providerPrefix, models] of Object.entries(
-      gateway.modelsByProvider,
-    )) {
-      for (const model of models) {
-        if (modelMap.has(model.id)) {
-          // 模型已存在，添加网关作为供应商
-          modelMap.get(model.id).providers.add(gateway.id);
-          // 同时也可以关联原始供应商（可选）
-          modelMap.get(model.id).providers.add(model.provider);
-        } else {
-          // 新模型，创建记录
-          modelMap.set(model.id, {
-            ...model,
-            providers: new Set([gateway.id, model.provider]),
-          });
-        }
-      }
-    }
-  }
 
   // 3. 转换为数组格式
   const uniqueModels: ModelCapability[] = [];
@@ -844,54 +563,6 @@ async function insertProvidersAndModels(data: ScrapedData) {
               },
             });
             providersCreated++;
-          }
-        }
-
-        // 4. 插入网关
-        console.log("\n🌐 插入网关数据...");
-        for (const gateway of data.gateways) {
-          const config = providerConfigData[gateway.id];
-          const providerType = mapProviderIdToType(gateway.id);
-
-          // 检查是否已存在
-          const existing = await tx.provider.findUnique({
-            where: { id: gateway.id },
-          });
-
-          const gatewayData = {
-            type: providerType,
-            name: gateway.name,
-            apiHost: config?.api?.url,
-            apiVersion: null,
-            enabled: false,
-            isSystem: false,
-            isAuthed: false,
-            isGateway: true,
-            isPopular: false,
-            modelCount: gateway.totalModels,
-            officialWebsite: config?.websites?.official,
-            apiKeyUrl: config?.websites?.apiKey,
-            docsUrl: config?.websites?.docs,
-            modelsUrl: config?.websites?.models,
-          };
-
-          if (existing) {
-            // 更新现有网关
-            await tx.provider.update({
-              where: { id: gateway.id },
-              data: gatewayData,
-            });
-            gatewaysUpdated++;
-          } else {
-            // 创建新网关
-            await tx.provider.create({
-              data: {
-                id: gateway.id,
-                apiKey: "",
-                ...gatewayData,
-              },
-            });
-            gatewaysCreated++;
           }
         }
 
@@ -1051,4 +722,4 @@ async function insertProvidersAndModels(data: ScrapedData) {
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 main();
 
-export { fetchModelsDevData, saveData, mapProviderIdToType };
+export { fetchModelsDevData, mapProviderIdToType };
