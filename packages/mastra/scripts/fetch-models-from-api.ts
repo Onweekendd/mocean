@@ -1,13 +1,7 @@
-import { fileURLToPath } from "url";
 import { z } from "zod";
 
-import { PrismaClient, ProviderType } from "../generated/prisma/index.js";
-
-// ES Module compatibility
-const __filename = fileURLToPath(import.meta.url);
-
-// 初始化 Prisma Client
-const prisma = new PrismaClient();
+import { ProviderType } from "../generated/prisma/index.js";
+import { prisma } from "../src/mastra/server/index.js";
 
 // 使用爬虫脚本中的模型数据结构
 interface ModelCapability {
@@ -44,7 +38,6 @@ interface ScrapedData {
     totalProviders: number;
     totalModels: number;
     skippedCount: number;
-    gatewayCount: number;
   };
 }
 
@@ -179,7 +172,6 @@ async function fetchApiData(): Promise<ModelsDevResponse> {
   }
 }
 
-
 /**
  * 从解析的模型数据创建ModelCapability对象
  * @param parsedModel - Zod解析后的模型数据
@@ -210,23 +202,22 @@ function createModelCapability(
   };
 }
 
-
 /**
  * 处理供应商的数据（包括网关）
  * @param providerId - 供应商ID
  * @param providerName - 供应商名称
  * @param isPopular - 是否为热门供应商
  * @param modelEntries - 模型条目数组
- * @param models - 模型数组（用于添加处理后的模型）
- * @returns 供应商信息对象
+ * @returns 供应商信息对象和处理后的模型数组
  */
 function processRegularProvider(
   providerId: string,
   providerName: string,
   isPopular: boolean,
   modelEntries: [string, unknown][],
-  models: ModelCapability[],
-): ProviderInfo {
+): { providerInfo: ProviderInfo; models: ModelCapability[] } {
+  const models: ModelCapability[] = [];
+
   // 处理每个模型
   for (const [modelId, modelData] of modelEntries) {
     const parsedModel = ModelsDevModelSchema.parse(modelData);
@@ -242,11 +233,14 @@ function processRegularProvider(
   console.log(`✅ ${providerName}: 找到 ${modelEntries.length} 个模型`);
 
   return {
-    id: providerId,
-    name: providerName,
-    type: providerId,
-    modelCount: modelEntries.length,
-    isPopular,
+    providerInfo: {
+      id: providerId,
+      name: providerName,
+      type: providerId,
+      modelCount: modelEntries.length,
+      isPopular,
+    },
+    models,
   };
 }
 
@@ -332,14 +326,14 @@ async function fetchModelsDevData(): Promise<ScrapedData> {
         continue;
       }
 
-      const providerInfo = processProvider(
+      const result = processRegularProvider(
         providerId,
         providerName,
         isPopular,
         modelEntries,
-        models,
       );
-      providers.push(providerInfo);
+      providers.push(result.providerInfo);
+      models.push(...result.models);
     }
 
     // 排序所有数据
@@ -362,7 +356,6 @@ async function fetchModelsDevData(): Promise<ScrapedData> {
     // 输出统计信息
     console.log(`\n🎯 数据获取完成:`);
     console.log(`   - 总供应商数: ${providers.length}`);
-    console.log(`   - 网关数: ${gateways.length}`);
     console.log(`   - 总模型数: ${models.length}`);
     console.log(`   - 跳过供应商: ${skippedProviders.length}`);
 
@@ -423,7 +416,6 @@ function deduplicateModels(data: ScrapedData): {
       });
     }
   }
-
 
   // 3. 转换为数组格式
   const uniqueModels: ModelCapability[] = [];
@@ -512,8 +504,6 @@ async function insertProvidersAndModels(data: ScrapedData) {
       async (tx) => {
         let providersCreated = 0;
         let providersUpdated = 0;
-        let gatewaysCreated = 0;
-        let gatewaysUpdated = 0;
         let modelsCreated = 0;
         let modelsUpdated = 0;
         let relationsCreated = 0;
@@ -521,7 +511,6 @@ async function insertProvidersAndModels(data: ScrapedData) {
         // 3. 插入普通供应商
         console.log("\n📦 插入供应商数据...");
         for (const provider of data.providers) {
-          const config = providerConfigData[provider.id];
           const providerType = mapProviderIdToType(provider.id);
 
           // 检查是否已存在
@@ -532,7 +521,7 @@ async function insertProvidersAndModels(data: ScrapedData) {
           const providerData = {
             type: providerType,
             name: provider.name,
-            apiHost: config?.api?.url,
+            apiHost: null,
             apiVersion: null,
             enabled: false,
             isSystem: false,
@@ -540,10 +529,10 @@ async function insertProvidersAndModels(data: ScrapedData) {
             isGateway: false,
             isPopular: provider.isPopular || false,
             modelCount: provider.modelCount,
-            officialWebsite: config?.websites?.official,
-            apiKeyUrl: config?.websites?.apiKey,
-            docsUrl: config?.websites?.docs,
-            modelsUrl: config?.websites?.models,
+            officialWebsite: null,
+            apiKeyUrl: null,
+            docsUrl: null,
+            modelsUrl: null,
           };
 
           if (existing) {
@@ -631,7 +620,6 @@ async function insertProvidersAndModels(data: ScrapedData) {
           if (!providerExists) {
             // 如果供应商不存在，尝试创建它
             const providerType = mapProviderIdToType(relation.providerId);
-            const config = providerConfigData[relation.providerId];
 
             try {
               await tx.provider.create({
@@ -640,15 +628,15 @@ async function insertProvidersAndModels(data: ScrapedData) {
                   type: providerType,
                   name: formatProviderName(relation.providerId),
                   apiKey: "",
-                  apiHost: config?.api?.url,
+                  apiHost: null,
                   enabled: false,
                   isSystem: false,
                   isGateway: false,
                   isPopular: false,
-                  officialWebsite: config?.websites?.official,
-                  apiKeyUrl: config?.websites?.apiKey,
-                  docsUrl: config?.websites?.docs,
-                  modelsUrl: config?.websites?.models,
+                  officialWebsite: null,
+                  apiKeyUrl: null,
+                  docsUrl: null,
+                  modelsUrl: null,
                 },
               });
               console.log(
@@ -682,8 +670,6 @@ async function insertProvidersAndModels(data: ScrapedData) {
         return {
           providersCreated,
           providersUpdated,
-          gatewaysCreated,
-          gatewaysUpdated,
           modelsCreated,
           modelsUpdated,
           relationsCreated,
@@ -701,9 +687,6 @@ async function insertProvidersAndModels(data: ScrapedData) {
     console.log(`   供应商:`);
     console.log(`     - 新建: ${result.providersCreated}`);
     console.log(`     - 更新: ${result.providersUpdated}`);
-    console.log(`   网关:`);
-    console.log(`     - 新建: ${result.gatewaysCreated}`);
-    console.log(`     - 更新: ${result.gatewaysUpdated}`);
     console.log(`   模型:`);
     console.log(`     - 新建: ${result.modelsCreated}`);
     console.log(`     - 更新: ${result.modelsUpdated}`);

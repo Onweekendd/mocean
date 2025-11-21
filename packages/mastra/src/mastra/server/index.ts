@@ -1,8 +1,10 @@
-import { PrismaBetterSQLite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 
 import { PrismaClient } from "../../../generated/prisma";
 
-const adapter = new PrismaBetterSQLite3({
+console.log(process.env.PRISMA_DATABASE_URL);
+
+const adapter = new PrismaBetterSqlite3({
   // 这里一定要使用绝对路径
   url: process.env.PRISMA_DATABASE_URL,
 });

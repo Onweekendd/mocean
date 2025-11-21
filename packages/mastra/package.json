@@ -14,7 +14,7 @@
     "import-providers-models": "tsx scripts/import-providers-models.ts",
     "import-assistants": "tsx scripts/import-assistants.ts",
     "check-types": "tsc --noEmit",
-    "fetch-models-from-api": "tsx scripts/fetch-models-from-api.ts",
+    "fetch-models-from-api": "dotenvx run -- tsx scripts/fetch-models-from-api.ts",
     "updata-provider-type": "tsx scripts/updateProviderTypeFromApi.ts"
   },
   "exports": {
@@ -50,14 +50,14 @@
   "devDependencies": {
     "@mocean/eslint-config": "workspace:*",
     "@mocean/typescript-config": "workspace:*",
-    "@prisma/adapter-better-sqlite3": "^6.8.2",
+    "@prisma/adapter-better-sqlite3": "^7.0.0",
     "@prisma/client": "7.0.0",
     "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-typescript": "^12.3.0",
     "@trivago/prettier-plugin-sort-imports": "^4.2.0",
     "@types/node": "^20.17.6",
-    "better-sqlite3": "^11.10.0",
+    "better-sqlite3": "^12.4.1",
     "eslint": "^9.15.0",
     "install": "^0.13.0",
     "playwright": "^1.41.0",
