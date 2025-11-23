@@ -2,7 +2,7 @@
 
 import { Suspense, lazy, useCallback } from "react";
 
-import { AgentModel } from "@mocean/mastra/prismaType";
+import { Agent } from "@mocean/mastra/prismaType";
 import { Bot, Eye, Loader2, Tag, X, Zap } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -23,10 +23,10 @@ const MarkdownRenderer = lazy(() =>
 );
 
 export interface AgentDetailDialogProps {
-  agent: AgentModel | null;
+  agent: Agent | null;
   isOpen: boolean;
   onClose: () => void;
-  onCreateAssistant?: (agent: AgentModel) => Promise<boolean>;
+  onCreateAssistant?: (agent: Agent) => Promise<boolean>;
   isCreatingAssistant?: boolean;
 }
 
@@ -75,7 +75,7 @@ export const AgentDetailDialog: React.FC<AgentDetailDialogProps> = ({
    * @param agent - 智能体对象
    * @returns 分组数组
    */
-  const getAgentGroups = (agent: AgentModel): string[] => {
+  const getAgentGroups = (agent: Agent): string[] => {
     if (!agent.groupJson) return [];
 
     try {
@@ -204,7 +204,7 @@ export const AgentDetailDialog: React.FC<AgentDetailDialogProps> = ({
               </Button>
               {onCreateAssistant && (
                 <Button
-                  onClick={onSelectAgent}
+                  onClick={void onSelectAgent}
                   disabled={isCreatingAssistant}
                   className="flex items-center space-x-2 bg-gradient-brand hover:bg-gradient-brand-active disabled:opacity-50"
                 >

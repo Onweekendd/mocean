@@ -4,6 +4,7 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
 import { PrismaClient } from "../generated/prisma/index.js";
+import { prisma } from "../src/mastra/server/index.js";
 
 const __filename: string = fileURLToPath(import.meta.url);
 const __dirname: string = dirname(__filename);
@@ -32,7 +33,7 @@ class AgentsImporter {
   private prisma: PrismaClient;
 
   constructor() {
-    this.prisma = new PrismaClient();
+    this.prisma = prisma;
   }
 
   // 读取agents.json文件

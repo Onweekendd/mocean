@@ -70,7 +70,7 @@ const config = {
             800: "hsl(var(--brand-primary-800))",
             900: "hsl(var(--brand-primary-900))",
             950: "hsl(var(--brand-primary-950))",
-            DEFAULT: "hsl(var(--brand-primary))",
+            DEFAULT: "hsl(var(--brand-primary-500))",
           },
           secondary: {
             50: "hsl(var(--brand-secondary-50))",
@@ -86,8 +86,8 @@ const config = {
             950: "hsl(var(--brand-secondary-950))",
           },
           gradient: {
-            from: "hsl(var(--brand-gradient-from))",
-            to: "hsl(var(--brand-gradient-to))",
+            from: "hsl(var(--brand-primary-600))",
+            to: "hsl(var(--brand-primary-500))",
           },
         },
         // 状态颜色
@@ -110,10 +110,13 @@ const config = {
         sm: "calc(var(--radius) - 4px)",
       },
       backgroundImage: {
+        // 品牌默认渐变 - 对应 bg-gradient-to-br from-blue-500 to-purple-600
         "gradient-brand":
-          "linear-gradient(to bottom right, hsl(var(--brand-gradient-from)), hsl(var(--brand-gradient-to)))",
+          "linear-gradient(to bottom right, hsl(var(--brand-primary-600)), hsl(var(--brand-primary-500)))",
+        // 品牌激活状态渐变 - 对应 bg-gradient-to-br from-purple-500 to-purple-700
         "gradient-brand-active":
-          "linear-gradient(to bottom right, hsl(var(--brand-primary)), hsl(var(--brand-secondary)))",
+          "linear-gradient(to bottom right, hsl(var(--brand-primary-500)), hsl(var(--brand-primary-700)))",
+        // 成功状态渐变 - 对应 bg-gradient-to-br from-green-500 to-teal-600
         "gradient-success":
           "linear-gradient(to bottom right, hsl(var(--success)), hsl(var(--info)))",
       },

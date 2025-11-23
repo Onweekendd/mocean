@@ -1,6 +1,6 @@
 "use client";
 
-import { AgentModel } from "@mocean/mastra/prismaType";
+import { Agent } from "@mocean/mastra/prismaType";
 import { Image, MessageSquare, Search, Settings } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export interface AgentCardProps {
-  agent: AgentModel;
-  onSelect?: (agent: AgentModel) => void;
+  agent: Agent;
+  onSelect?: (agent: Agent) => void;
   className?: string;
 }
 
@@ -212,12 +212,12 @@ export const AgentCard: React.FC<AgentCardProps> = ({
                 console.log("配置智能体:", agent.name);
               }}
             >
-              <Settings size={14} />
+              <Settings size={14} className="text-brand-primary-500" />
             </Button>
 
             <Button
               size="sm"
-              className="h-8 px-3 opacity-0 transition-opacity group-hover:opacity-100"
+              className="h-8 bg-brand-primary-500 px-3 opacity-0 transition-opacity hover:bg-brand-primary-300 group-hover:opacity-100"
               onClick={(e) => {
                 e.stopPropagation();
                 onSelect?.(agent);

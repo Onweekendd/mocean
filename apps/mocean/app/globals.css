@@ -73,9 +73,6 @@
     --brand-secondary-900: 222 47% 11%;
     --brand-secondary-950: 229 84% 5%;
 
-    --brand-primary: 199 89% 48%;
-    --brand-gradient-from: 199 98% 39%;
-    --brand-gradient-to: 199 89% 48%;
 
     /* 状态颜色 */
     --success: 142 76% 36%;
@@ -149,9 +146,6 @@
     --brand-secondary-900: 210 40% 96%;
     --brand-secondary-950: 210 40% 98%;
 
-    --brand-primary: 258 90% 66%;
-    --brand-gradient-from: 262 83% 58%;
-    --brand-gradient-to: 258 90% 66%;
 
     /* 状态颜色 - 暗黑模式 */
     --success: 142 70% 45%;
