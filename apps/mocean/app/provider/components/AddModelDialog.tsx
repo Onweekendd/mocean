@@ -183,11 +183,13 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = ({
         group: finalGroup || "未分组",
         description: formData.description.trim() || null,
         owned_by: formData.ownedBy.trim() || null,
-        typeJson: JSON.stringify(formData.types),
         providerIds: [providerId],
         isSystem: false,
-        isAuthed: false,
-        types: formData.types,
+        // 根据类型设置能力标志
+        supportsTools: formData.types.includes("function_calling"),
+        supportsReasoning: formData.types.includes("reasoning"),
+        supportsImage: formData.types.includes("vision"),
+        supportsEmbedding: formData.types.includes("embedding"),
       };
 
       await create(modelData);

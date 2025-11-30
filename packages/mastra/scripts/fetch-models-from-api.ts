@@ -283,6 +283,51 @@ async function main() {
 }
 
 /**
+ * 选择模型的主要供应商
+ * @description 用于确定模型的 owned_by 和 group 字段，选择最"官方"的供应商
+ * @param modelId - 模型ID
+ * @param providerIds - 提供该模型的所有供应商ID数组
+ * @returns 主要供应商的ID
+ */
+function selectPrimaryProvider(modelId: string, providerIds: string[]): string {
+  // 1. 如果只有一个供应商，直接返回
+  if (providerIds.length === 1) {
+    return providerIds[0];
+  }
+
+  // 2. 按优先级排序供应商：非网关 > 网关
+  const nonGatewayProviders = providerIds.filter(
+    (id) => !GATEWAY_PROVIDERS.includes(id),
+  );
+  const gatewayProviders = providerIds.filter((id) =>
+    GATEWAY_PROVIDERS.includes(id),
+  );
+
+  // 3. 优先从非网关供应商中查找匹配
+  const candidateProviders =
+    nonGatewayProviders.length > 0 ? nonGatewayProviders : gatewayProviders;
+
+  // 4. 查找模型ID前缀匹配的供应商（如 gpt-4 → openai）
+  const prefixMatch = candidateProviders.find((providerId) =>
+    modelId.startsWith(providerId),
+  );
+  if (prefixMatch) {
+    return prefixMatch;
+  }
+
+  // 5. 查找模型ID包含供应商名称的情况（如 claude-3 → anthropic）
+  const containsMatch = candidateProviders.find((providerId) =>
+    modelId.includes(providerId),
+  );
+  if (containsMatch) {
+    return containsMatch;
+  }
+
+  // 6. 返回第一个非网关供应商，如果没有则返回第一个供应商
+  return candidateProviders[0] || providerIds[0];
+}
+
+/**
  * 模型去重和关联关系提取
  * @param data - 从API获取的完整数据
  * @returns 去重后的模型列表和模型-供应商关联关系
@@ -316,9 +361,25 @@ function deduplicateModels(data: ScrapedData): {
     [];
 
   for (const [modelId, modelData] of modelMap.entries()) {
-    // 添加去重后的模型（不包含providers字段）
-    const { providers, providerIds, ...modelWithoutProviders } = modelData;
-    uniqueModels.push(modelWithoutProviders);
+    // 添加去重后的模型（移除临时的 providerId 和 providers 字段）
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { providers, providerId, ...modelWithoutProviders } = modelData;
+
+    // 选择主要供应商：用于确定 owned_by 和 group
+    const providerArray = Array.from(providers);
+    const primaryProviderId = selectPrimaryProvider(modelId, providerArray);
+
+    // 从 data.providers 中获取主要供应商的名称
+    const primaryProviderInfo = data.providers.find(
+      (p) => p.id === primaryProviderId,
+    );
+    const primaryProviderName = primaryProviderInfo?.name || primaryProviderId;
+
+    uniqueModels.push({
+      ...modelWithoutProviders,
+      owned_by: primaryProviderId, // 使用选定的主要供应商
+      group: primaryProviderName, // 使用主要供应商的名称作为分组
+    });
 
     // 为每个供应商创建关联关系
     for (const providerId of providers) {

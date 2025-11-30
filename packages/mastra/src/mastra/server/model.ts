@@ -163,7 +163,9 @@ const getModelsByProvider = async (providerId: string) => {
   // 整理提供商信息
   return models.map((model) => ({
     ...model,
-    providerList: model.providers.map((p) => p.provider),
+    providerList: model.providers
+      .map((p) => p.provider)
+      .filter((p) => p.id === providerId),
   }));
 };
 

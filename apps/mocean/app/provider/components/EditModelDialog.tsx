@@ -110,9 +110,14 @@ export const EditModelDialog: React.FC<EditModelDialogProps> = ({
    */
   useEffect(() => {
     if (model && open) {
-      const types = Array.isArray(model.typeJson)
-        ? model.typeJson
-        : JSON.parse(model.typeJson || "[]");
+      // 从模型能力字段推导出类型数组
+      const types: string[] = [];
+      if (model.supportsTools) types.push("function_calling");
+      if (model.supportsReasoning) types.push("reasoning");
+      if (model.supportsImage) types.push("vision");
+      if (model.supportsEmbedding) types.push("embedding");
+      // 默认文本能力
+      if (types.length === 0) types.push("text");
 
       setFormData({
         name: model.name || "",
@@ -206,10 +211,14 @@ export const EditModelDialog: React.FC<EditModelDialogProps> = ({
 
       const updateData = {
         name: formData.name.trim(),
-        group: finalGroup === "未分组" ? null : finalGroup,
-        typeJson: formData.types,
+        group: finalGroup === "未分组" ? undefined : finalGroup,
         owned_by: formData.ownedBy.trim() || null,
         description: formData.description.trim() || null,
+        // 根据类型设置能力标志
+        supportsTools: formData.types.includes("function_calling"),
+        supportsReasoning: formData.types.includes("reasoning"),
+        supportsImage: formData.types.includes("vision"),
+        supportsEmbedding: formData.types.includes("embedding"),
       };
 
       await update(model.id, updateData);

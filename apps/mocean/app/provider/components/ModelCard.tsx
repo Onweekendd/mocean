@@ -94,9 +94,15 @@ export const ModelCard: React.FC<ModelCardProps> = ({
   className = "",
 }) => {
   const modelLogo = getModelLogo(model.id as keyof typeof getModelLogo);
-  const modelTypes = (
-    Array.isArray(model.typeJson) ? model.typeJson : []
-  ) as string[];
+
+  // 从模型能力字段推导类型数组
+  const modelTypes: string[] = [];
+  if (model.supportsTools) modelTypes.push("function_calling");
+  if (model.supportsReasoning) modelTypes.push("reasoning");
+  if (model.supportsImage) modelTypes.push("vision");
+  if (model.supportsEmbedding) modelTypes.push("embedding");
+  // 默认支持文本
+  if (modelTypes.length === 0) modelTypes.push("text");
 
   /**
    * 渲染模型头像

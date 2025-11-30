@@ -118,16 +118,30 @@ export function useProviderPage(selectedProviderId: string | null) {
     if (!models || !searchTerm.trim()) return models;
 
     const term = searchTerm.toLowerCase();
-    return models.filter(
-      (model) =>
+    return models.filter((model) => {
+      // 基本字段搜索
+      const matchesBasicFields =
         model.name.toLowerCase().includes(term) ||
         model.id.toLowerCase().includes(term) ||
         model.description?.toLowerCase().includes(term) ||
-        model.owned_by?.toLowerCase().includes(term) ||
-        JSON.parse(model.typeJson as string).some((type: string) =>
-          type.toLowerCase().includes(term),
-        ),
-    );
+        model.owned_by?.toLowerCase().includes(term);
+
+      // 根据能力字段构建类型数组进行搜索
+      const modelTypes: string[] = [];
+      if (model.supportsTools)
+        modelTypes.push("function_calling", "工具", "函数调用");
+      if (model.supportsReasoning) modelTypes.push("reasoning", "推理");
+      if (model.supportsImage) modelTypes.push("vision", "视觉", "图像");
+      if (model.supportsEmbedding) modelTypes.push("embedding", "向量", "嵌入");
+      if (model.supportsAudio) modelTypes.push("audio", "音频");
+      if (model.supportsVideo) modelTypes.push("video", "视频");
+
+      const matchesTypes = modelTypes.some((type) =>
+        type.toLowerCase().includes(term),
+      );
+
+      return matchesBasicFields || matchesTypes;
+    });
   }, [models, searchTerm]);
 
   /**

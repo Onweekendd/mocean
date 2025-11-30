@@ -221,8 +221,14 @@ class ProvidersModelsImporter {
             continue;
           }
 
-          // 映射ModelType
+          // 映射ModelType 为能力字段
           const modelTypes = this.mapModelTypes(model.type);
+          const capabilities = {
+            supportsTools: modelTypes.includes(ModelType.function_calling),
+            supportsReasoning: modelTypes.includes(ModelType.reasoning),
+            supportsImage: modelTypes.includes(ModelType.vision),
+            supportsEmbedding: modelTypes.includes(ModelType.embedding),
+          };
 
           // 1. upsert model（不再包含 provider 字段）
           await this.prisma.model.upsert({
@@ -232,7 +238,7 @@ class ProvidersModelsImporter {
               group: model.group,
               owned_by: model.owned_by || null,
               description: model.description || null,
-              typeJson: JSON.stringify(modelTypes),
+              ...capabilities,
             },
             create: {
               id: model.id,
@@ -240,7 +246,7 @@ class ProvidersModelsImporter {
               group: model.group,
               owned_by: model.owned_by || null,
               description: model.description || null,
-              typeJson: JSON.stringify(modelTypes),
+              ...capabilities,
             },
           });
 
