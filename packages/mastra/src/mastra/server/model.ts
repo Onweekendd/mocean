@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-import { ModelType } from "../../../generated/prisma";
 import { prisma } from "./index";
 
 /**
@@ -12,7 +11,17 @@ const createModelSchema = z.object({
   group: z.string().min(1, "模型分组不能为空"),
   owned_by: z.string().nullable().optional(),
   description: z.string().nullable().optional(),
-  typeJson: z.array(z.nativeEnum(ModelType)).default([ModelType.text]),
+  isSystem: z.boolean().optional().default(false),
+  contextLength: z.number().int().nonnegative().nullable().optional(),
+  supportsAttachments: z.boolean().optional().default(false),
+  supportsTools: z.boolean().optional().default(false),
+  supportsReasoning: z.boolean().optional().default(false),
+  supportsImage: z.boolean().optional().default(false),
+  supportsAudio: z.boolean().optional().default(false),
+  supportsVideo: z.boolean().optional().default(false),
+  supportsEmbedding: z.boolean().optional().default(false),
+  inputPricePerMillion: z.number().nonnegative().nullable().optional(),
+  outputPricePerMillion: z.number().nonnegative().nullable().optional(),
   providerIds: z
     .array(z.string().min(1, "提供商ID不能为空"))
     .min(1, "至少需要一个提供商"),
@@ -23,7 +32,17 @@ const updateModelSchema = z.object({
   group: z.string().min(1, "模型分组不能为空").optional(),
   owned_by: z.string().nullable().optional(),
   description: z.string().nullable().optional(),
-  typeJson: z.array(z.nativeEnum(ModelType)).optional(),
+  isSystem: z.boolean().optional(),
+  contextLength: z.number().int().positive().nullable().optional(),
+  supportsAttachments: z.boolean().optional(),
+  supportsTools: z.boolean().optional(),
+  supportsReasoning: z.boolean().optional(),
+  supportsImage: z.boolean().optional(),
+  supportsAudio: z.boolean().optional(),
+  supportsVideo: z.boolean().optional(),
+  supportsEmbedding: z.boolean().optional(),
+  inputPricePerMillion: z.number().nonnegative().nullable().optional(),
+  outputPricePerMillion: z.number().nonnegative().nullable().optional(),
   providerIds: z.array(z.string().min(1, "提供商ID不能为空")).optional(),
 });
 
@@ -33,10 +52,6 @@ const idParamSchema = z.object({
 
 const providerParamSchema = z.object({
   providerId: z.string().min(1, "提供商ID不能为空"),
-});
-
-const typeParamSchema = z.object({
-  type: z.nativeEnum(ModelType, { message: "无效的模型类型" }),
 });
 
 const groupParamSchema = z.object({
@@ -77,10 +92,9 @@ const getModels = async () => {
     },
   });
 
-  // 转换typeJson为ModelType[]并整理提供商信息
+  // 整理提供商信息
   return models.map((model) => ({
     ...model,
-    types: JSON.parse(model.typeJson as string) as ModelType[],
     providerList: model.providers.map((p) => p.provider),
   }));
 };
@@ -112,10 +126,9 @@ const getModelById = async (id: string) => {
 
   if (!model) return null;
 
-  // 转换typeJson为ModelType[]并整理提供商信息
+  // 整理提供商信息
   return {
     ...model,
-    types: JSON.parse(model.typeJson as string) as ModelType[],
     providerList: model.providers.map((p) => p.provider),
   };
 };
@@ -147,40 +160,9 @@ const getModelsByProvider = async (providerId: string) => {
     },
   });
 
-  // 转换typeJson为ModelType[]并整理提供商信息
+  // 整理提供商信息
   return models.map((model) => ({
     ...model,
-    types: JSON.parse(model.typeJson as string) as ModelType[],
-    providerList: model.providers.map((p) => p.provider),
-  }));
-};
-
-/**
- * 根据模型类型获取模型
- * @description 通过模型类型获取对应的模型列表
- * @param type - 模型类型
- * @returns 符合类型的模型数组
- */
-const getModelsByType = async (type: ModelType) => {
-  const models = await prisma.model.findMany({
-    where: {
-      typeJson: {
-        string_contains: type,
-      },
-    },
-    include: {
-      providers: {
-        include: {
-          provider: true,
-        },
-      },
-    },
-  });
-
-  // 转换typeJson为ModelType[]并整理提供商信息
-  return models.map((model) => ({
-    ...model,
-    types: JSON.parse(model.typeJson as string) as ModelType[],
     providerList: model.providers.map((p) => p.provider),
   }));
 };
@@ -208,10 +190,9 @@ const getModelsByGroup = async (group: string) => {
     },
   });
 
-  // 转换typeJson为ModelType[]并整理提供商信息
+  // 整理提供商信息
   return models.map((model) => ({
     ...model,
-    types: JSON.parse(model.typeJson as string) as ModelType[],
     providerList: model.providers.map((p) => p.provider),
   }));
 };
@@ -241,11 +222,10 @@ const createModel = async (model: CreateModelInput) => {
   const newModel = await prisma.model.create({
     data: {
       ...modelData,
-      typeJson: JSON.stringify(model.typeJson),
       providers: {
         create: providerIds.map((providerId) => ({ providerId })),
       },
-    } as any,
+    },
     include: {
       providers: {
         include: {
@@ -257,7 +237,6 @@ const createModel = async (model: CreateModelInput) => {
 
   return {
     ...newModel,
-    types: JSON.parse(newModel.typeJson as string) as ModelType[],
     providerList: newModel.providers.map((p) => p.provider),
   };
 };
@@ -287,21 +266,12 @@ const updateModel = async (id: string, model: UpdateModelInput) => {
 
   const { providerIds, ...modelData } = model;
 
-  const updateData: Parameters<typeof prisma.model.update>[0]["data"] = {
-    ...modelData,
-  };
-
-  // 如果有typeJson，转换为JSON字符串
-  if (model.typeJson) {
-    updateData.typeJson = JSON.stringify(model.typeJson);
-  }
-
   const updatedModel = await prisma.model.update({
     where: {
       id,
     },
     data: {
-      ...updateData,
+      ...modelData,
       ...(providerIds && {
         providers: {
           deleteMany: {},
@@ -320,7 +290,6 @@ const updateModel = async (id: string, model: UpdateModelInput) => {
 
   return {
     ...updatedModel,
-    types: JSON.parse(updatedModel.typeJson as string) as ModelType[],
     providerList: updatedModel.providers.map((p) => p.provider),
   };
 };
@@ -368,10 +337,7 @@ const deleteModel = async (id: string) => {
     },
   });
 
-  return {
-    ...deletedModel,
-    types: JSON.parse(deletedModel.typeJson as string) as ModelType[],
-  };
+  return deletedModel;
 };
 
 /**
@@ -409,8 +375,7 @@ const createManyModels = async (models: CreateModelInput[]) => {
       const createdModel = await tx.model.create({
         data: {
           ...modelData,
-          typeJson: JSON.stringify(model.typeJson),
-        } as any,
+        },
       });
 
       // 创建关联关系
@@ -465,7 +430,7 @@ const addModelProviderRelation = async (relation: ModelProviderRelation) => {
   }
 
   const newRelation = await prisma.modelProvider.create({
-    data: relation as any,
+    data: relation,
     include: {
       model: true,
       provider: true,
@@ -526,7 +491,6 @@ export type ModelDetailResult = Awaited<ReturnType<typeof getModelById>>;
 export type ModelsByProviderResult = Awaited<
   ReturnType<typeof getModelsByProvider>
 >;
-export type ModelsByTypeResult = Awaited<ReturnType<typeof getModelsByType>>;
 export type ModelsByGroupResult = Awaited<ReturnType<typeof getModelsByGroup>>;
 export type ModelCreateResult = Awaited<ReturnType<typeof createModel>>;
 export type ModelUpdateResult = Awaited<ReturnType<typeof updateModel>>;
@@ -548,7 +512,6 @@ export {
   getModels,
   getModelById,
   getModelsByProvider,
-  getModelsByType,
   getModelsByGroup,
   createModel,
   updateModel,
@@ -561,7 +524,6 @@ export {
   updateModelSchema,
   idParamSchema,
   providerParamSchema,
-  typeParamSchema,
   groupParamSchema,
   modelProviderRelationSchema,
 };

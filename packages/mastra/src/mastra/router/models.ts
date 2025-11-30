@@ -13,13 +13,11 @@ import {
   getModels,
   getModelsByGroup,
   getModelsByProvider,
-  getModelsByType,
   groupParamSchema,
   idParamSchema,
   modelProviderRelationSchema,
   providerParamSchema,
   removeModelProviderRelation,
-  typeParamSchema,
   updateModel,
   updateModelSchema,
 } from "../server/model";
@@ -142,46 +140,6 @@ const getModelsByProviderRouter = registerApiRoute(
     },
   },
 );
-
-/**
- * 根据类型获取模型的路由处理器
- * @description 通过模型类型获取对应的模型列表
- * @param c - Mastra上下文对象，包含请求信息
- */
-const getModelsByTypeRouter = registerApiRoute(`${PREFIX}/models/type/:type`, {
-  method: "GET",
-  handler: async (c) => {
-    try {
-      // 参数校验
-      const { type } = typeParamSchema.parse({
-        type: c.req.param("type"),
-      });
-
-      const models = await getModelsByType(type);
-      return new Response(JSON.stringify(models), {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      });
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return new Response(
-          JSON.stringify({
-            error: "参数校验失败",
-            details: error.errors,
-          }),
-          {
-            status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
-        );
-      }
-      return new Response(JSON.stringify({ error, message: "获取模型失败" }), {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-  },
-});
 
 /**
  * 根据分组获取模型的路由处理器
@@ -587,7 +545,6 @@ const modelsRouter = [
   getModelsRouter,
   getModelByIdRouter,
   getModelsByProviderRouter,
-  getModelsByTypeRouter,
   getModelsByGroupRouter,
   createModelRouter,
   createManyModelsRouter,

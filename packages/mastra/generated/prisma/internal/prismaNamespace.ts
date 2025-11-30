@@ -1874,16 +1874,11 @@ export const ProviderScalarFieldEnum = {
   enabled: 'enabled',
   isSystem: 'isSystem',
   isAuthed: 'isAuthed',
-  rateLimit: 'rateLimit',
   isNotSupportArrayContent: 'isNotSupportArrayContent',
   notes: 'notes',
   isGateway: 'isGateway',
-  isPopular: 'isPopular',
   modelCount: 'modelCount',
-  officialWebsite: 'officialWebsite',
-  apiKeyUrl: 'apiKeyUrl',
   docsUrl: 'docsUrl',
-  modelsUrl: 'modelsUrl',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1969,13 +1964,15 @@ export const ModelScalarFieldEnum = {
   group: 'group',
   owned_by: 'owned_by',
   description: 'description',
-  typeJson: 'typeJson',
+  isSystem: 'isSystem',
   contextLength: 'contextLength',
+  supportsAttachments: 'supportsAttachments',
   supportsTools: 'supportsTools',
   supportsReasoning: 'supportsReasoning',
   supportsImage: 'supportsImage',
   supportsAudio: 'supportsAudio',
   supportsVideo: 'supportsVideo',
+  supportsEmbedding: 'supportsEmbedding',
   inputPricePerMillion: 'inputPricePerMillion',
   outputPricePerMillion: 'outputPricePerMillion'
 } as const

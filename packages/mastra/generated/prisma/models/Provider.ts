@@ -27,12 +27,10 @@ export type AggregateProvider = {
 }
 
 export type ProviderAvgAggregateOutputType = {
-  rateLimit: number | null
   modelCount: number | null
 }
 
 export type ProviderSumAggregateOutputType = {
-  rateLimit: number | null
   modelCount: number | null
 }
 
@@ -46,16 +44,11 @@ export type ProviderMinAggregateOutputType = {
   enabled: boolean | null
   isSystem: boolean | null
   isAuthed: boolean | null
-  rateLimit: number | null
   isNotSupportArrayContent: boolean | null
   notes: string | null
   isGateway: boolean | null
-  isPopular: boolean | null
   modelCount: number | null
-  officialWebsite: string | null
-  apiKeyUrl: string | null
   docsUrl: string | null
-  modelsUrl: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -70,16 +63,11 @@ export type ProviderMaxAggregateOutputType = {
   enabled: boolean | null
   isSystem: boolean | null
   isAuthed: boolean | null
-  rateLimit: number | null
   isNotSupportArrayContent: boolean | null
   notes: string | null
   isGateway: boolean | null
-  isPopular: boolean | null
   modelCount: number | null
-  officialWebsite: string | null
-  apiKeyUrl: string | null
   docsUrl: string | null
-  modelsUrl: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -94,16 +82,11 @@ export type ProviderCountAggregateOutputType = {
   enabled: number
   isSystem: number
   isAuthed: number
-  rateLimit: number
   isNotSupportArrayContent: number
   notes: number
   isGateway: number
-  isPopular: number
   modelCount: number
-  officialWebsite: number
-  apiKeyUrl: number
   docsUrl: number
-  modelsUrl: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -111,12 +94,10 @@ export type ProviderCountAggregateOutputType = {
 
 
 export type ProviderAvgAggregateInputType = {
-  rateLimit?: true
   modelCount?: true
 }
 
 export type ProviderSumAggregateInputType = {
-  rateLimit?: true
   modelCount?: true
 }
 
@@ -130,16 +111,11 @@ export type ProviderMinAggregateInputType = {
   enabled?: true
   isSystem?: true
   isAuthed?: true
-  rateLimit?: true
   isNotSupportArrayContent?: true
   notes?: true
   isGateway?: true
-  isPopular?: true
   modelCount?: true
-  officialWebsite?: true
-  apiKeyUrl?: true
   docsUrl?: true
-  modelsUrl?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -154,16 +130,11 @@ export type ProviderMaxAggregateInputType = {
   enabled?: true
   isSystem?: true
   isAuthed?: true
-  rateLimit?: true
   isNotSupportArrayContent?: true
   notes?: true
   isGateway?: true
-  isPopular?: true
   modelCount?: true
-  officialWebsite?: true
-  apiKeyUrl?: true
   docsUrl?: true
-  modelsUrl?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -178,16 +149,11 @@ export type ProviderCountAggregateInputType = {
   enabled?: true
   isSystem?: true
   isAuthed?: true
-  rateLimit?: true
   isNotSupportArrayContent?: true
   notes?: true
   isGateway?: true
-  isPopular?: true
   modelCount?: true
-  officialWebsite?: true
-  apiKeyUrl?: true
   docsUrl?: true
-  modelsUrl?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -289,16 +255,11 @@ export type ProviderGroupByOutputType = {
   enabled: boolean
   isSystem: boolean
   isAuthed: boolean
-  rateLimit: number | null
   isNotSupportArrayContent: boolean
   notes: string | null
   isGateway: boolean
-  isPopular: boolean
   modelCount: number | null
-  officialWebsite: string | null
-  apiKeyUrl: string | null
   docsUrl: string | null
-  modelsUrl: string | null
   createdAt: Date
   updatedAt: Date
   _count: ProviderCountAggregateOutputType | null
@@ -336,16 +297,11 @@ export type ProviderWhereInput = {
   enabled?: Prisma.BoolFilter<"Provider"> | boolean
   isSystem?: Prisma.BoolFilter<"Provider"> | boolean
   isAuthed?: Prisma.BoolFilter<"Provider"> | boolean
-  rateLimit?: Prisma.IntNullableFilter<"Provider"> | number | null
   isNotSupportArrayContent?: Prisma.BoolFilter<"Provider"> | boolean
   notes?: Prisma.StringNullableFilter<"Provider"> | string | null
   isGateway?: Prisma.BoolFilter<"Provider"> | boolean
-  isPopular?: Prisma.BoolFilter<"Provider"> | boolean
   modelCount?: Prisma.IntNullableFilter<"Provider"> | number | null
-  officialWebsite?: Prisma.StringNullableFilter<"Provider"> | string | null
-  apiKeyUrl?: Prisma.StringNullableFilter<"Provider"> | string | null
   docsUrl?: Prisma.StringNullableFilter<"Provider"> | string | null
-  modelsUrl?: Prisma.StringNullableFilter<"Provider"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
   models?: Prisma.ModelProviderListRelationFilter
@@ -362,16 +318,11 @@ export type ProviderOrderByWithRelationInput = {
   enabled?: Prisma.SortOrder
   isSystem?: Prisma.SortOrder
   isAuthed?: Prisma.SortOrder
-  rateLimit?: Prisma.SortOrderInput | Prisma.SortOrder
   isNotSupportArrayContent?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   isGateway?: Prisma.SortOrder
-  isPopular?: Prisma.SortOrder
   modelCount?: Prisma.SortOrderInput | Prisma.SortOrder
-  officialWebsite?: Prisma.SortOrderInput | Prisma.SortOrder
-  apiKeyUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   docsUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  modelsUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   models?: Prisma.ModelProviderOrderByRelationAggregateInput
@@ -391,16 +342,11 @@ export type ProviderWhereUniqueInput = Prisma.AtLeast<{
   enabled?: Prisma.BoolFilter<"Provider"> | boolean
   isSystem?: Prisma.BoolFilter<"Provider"> | boolean
   isAuthed?: Prisma.BoolFilter<"Provider"> | boolean
-  rateLimit?: Prisma.IntNullableFilter<"Provider"> | number | null
   isNotSupportArrayContent?: Prisma.BoolFilter<"Provider"> | boolean
   notes?: Prisma.StringNullableFilter<"Provider"> | string | null
   isGateway?: Prisma.BoolFilter<"Provider"> | boolean
-  isPopular?: Prisma.BoolFilter<"Provider"> | boolean
   modelCount?: Prisma.IntNullableFilter<"Provider"> | number | null
-  officialWebsite?: Prisma.StringNullableFilter<"Provider"> | string | null
-  apiKeyUrl?: Prisma.StringNullableFilter<"Provider"> | string | null
   docsUrl?: Prisma.StringNullableFilter<"Provider"> | string | null
-  modelsUrl?: Prisma.StringNullableFilter<"Provider"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Provider"> | Date | string
   models?: Prisma.ModelProviderListRelationFilter
@@ -417,16 +363,11 @@ export type ProviderOrderByWithAggregationInput = {
   enabled?: Prisma.SortOrder
   isSystem?: Prisma.SortOrder
   isAuthed?: Prisma.SortOrder
-  rateLimit?: Prisma.SortOrderInput | Prisma.SortOrder
   isNotSupportArrayContent?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   isGateway?: Prisma.SortOrder
-  isPopular?: Prisma.SortOrder
   modelCount?: Prisma.SortOrderInput | Prisma.SortOrder
-  officialWebsite?: Prisma.SortOrderInput | Prisma.SortOrder
-  apiKeyUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   docsUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  modelsUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ProviderCountOrderByAggregateInput
@@ -449,16 +390,11 @@ export type ProviderScalarWhereWithAggregatesInput = {
   enabled?: Prisma.BoolWithAggregatesFilter<"Provider"> | boolean
   isSystem?: Prisma.BoolWithAggregatesFilter<"Provider"> | boolean
   isAuthed?: Prisma.BoolWithAggregatesFilter<"Provider"> | boolean
-  rateLimit?: Prisma.IntNullableWithAggregatesFilter<"Provider"> | number | null
   isNotSupportArrayContent?: Prisma.BoolWithAggregatesFilter<"Provider"> | boolean
   notes?: Prisma.StringNullableWithAggregatesFilter<"Provider"> | string | null
   isGateway?: Prisma.BoolWithAggregatesFilter<"Provider"> | boolean
-  isPopular?: Prisma.BoolWithAggregatesFilter<"Provider"> | boolean
   modelCount?: Prisma.IntNullableWithAggregatesFilter<"Provider"> | number | null
-  officialWebsite?: Prisma.StringNullableWithAggregatesFilter<"Provider"> | string | null
-  apiKeyUrl?: Prisma.StringNullableWithAggregatesFilter<"Provider"> | string | null
   docsUrl?: Prisma.StringNullableWithAggregatesFilter<"Provider"> | string | null
-  modelsUrl?: Prisma.StringNullableWithAggregatesFilter<"Provider"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Provider"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Provider"> | Date | string
 }
@@ -473,16 +409,11 @@ export type ProviderCreateInput = {
   enabled?: boolean
   isSystem?: boolean
   isAuthed?: boolean
-  rateLimit?: number | null
   isNotSupportArrayContent?: boolean
   notes?: string | null
   isGateway?: boolean
-  isPopular?: boolean
   modelCount?: number | null
-  officialWebsite?: string | null
-  apiKeyUrl?: string | null
   docsUrl?: string | null
-  modelsUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   models?: Prisma.ModelProviderCreateNestedManyWithoutProviderInput
@@ -499,16 +430,11 @@ export type ProviderUncheckedCreateInput = {
   enabled?: boolean
   isSystem?: boolean
   isAuthed?: boolean
-  rateLimit?: number | null
   isNotSupportArrayContent?: boolean
   notes?: string | null
   isGateway?: boolean
-  isPopular?: boolean
   modelCount?: number | null
-  officialWebsite?: string | null
-  apiKeyUrl?: string | null
   docsUrl?: string | null
-  modelsUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   models?: Prisma.ModelProviderUncheckedCreateNestedManyWithoutProviderInput
@@ -525,16 +451,11 @@ export type ProviderUpdateInput = {
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAuthed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  rateLimit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isNotSupportArrayContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGateway?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPopular?: Prisma.BoolFieldUpdateOperationsInput | boolean
   modelCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  officialWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKeyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   docsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  modelsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   models?: Prisma.ModelProviderUpdateManyWithoutProviderNestedInput
@@ -551,16 +472,11 @@ export type ProviderUncheckedUpdateInput = {
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAuthed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  rateLimit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isNotSupportArrayContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGateway?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPopular?: Prisma.BoolFieldUpdateOperationsInput | boolean
   modelCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  officialWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKeyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   docsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  modelsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   models?: Prisma.ModelProviderUncheckedUpdateManyWithoutProviderNestedInput
@@ -577,16 +493,11 @@ export type ProviderCreateManyInput = {
   enabled?: boolean
   isSystem?: boolean
   isAuthed?: boolean
-  rateLimit?: number | null
   isNotSupportArrayContent?: boolean
   notes?: string | null
   isGateway?: boolean
-  isPopular?: boolean
   modelCount?: number | null
-  officialWebsite?: string | null
-  apiKeyUrl?: string | null
   docsUrl?: string | null
-  modelsUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -601,16 +512,11 @@ export type ProviderUpdateManyMutationInput = {
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAuthed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  rateLimit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isNotSupportArrayContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGateway?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPopular?: Prisma.BoolFieldUpdateOperationsInput | boolean
   modelCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  officialWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKeyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   docsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  modelsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -625,16 +531,11 @@ export type ProviderUncheckedUpdateManyInput = {
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAuthed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  rateLimit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isNotSupportArrayContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGateway?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPopular?: Prisma.BoolFieldUpdateOperationsInput | boolean
   modelCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  officialWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKeyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   docsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  modelsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -649,22 +550,16 @@ export type ProviderCountOrderByAggregateInput = {
   enabled?: Prisma.SortOrder
   isSystem?: Prisma.SortOrder
   isAuthed?: Prisma.SortOrder
-  rateLimit?: Prisma.SortOrder
   isNotSupportArrayContent?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   isGateway?: Prisma.SortOrder
-  isPopular?: Prisma.SortOrder
   modelCount?: Prisma.SortOrder
-  officialWebsite?: Prisma.SortOrder
-  apiKeyUrl?: Prisma.SortOrder
   docsUrl?: Prisma.SortOrder
-  modelsUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type ProviderAvgOrderByAggregateInput = {
-  rateLimit?: Prisma.SortOrder
   modelCount?: Prisma.SortOrder
 }
 
@@ -678,16 +573,11 @@ export type ProviderMaxOrderByAggregateInput = {
   enabled?: Prisma.SortOrder
   isSystem?: Prisma.SortOrder
   isAuthed?: Prisma.SortOrder
-  rateLimit?: Prisma.SortOrder
   isNotSupportArrayContent?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   isGateway?: Prisma.SortOrder
-  isPopular?: Prisma.SortOrder
   modelCount?: Prisma.SortOrder
-  officialWebsite?: Prisma.SortOrder
-  apiKeyUrl?: Prisma.SortOrder
   docsUrl?: Prisma.SortOrder
-  modelsUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -702,22 +592,16 @@ export type ProviderMinOrderByAggregateInput = {
   enabled?: Prisma.SortOrder
   isSystem?: Prisma.SortOrder
   isAuthed?: Prisma.SortOrder
-  rateLimit?: Prisma.SortOrder
   isNotSupportArrayContent?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   isGateway?: Prisma.SortOrder
-  isPopular?: Prisma.SortOrder
   modelCount?: Prisma.SortOrder
-  officialWebsite?: Prisma.SortOrder
-  apiKeyUrl?: Prisma.SortOrder
   docsUrl?: Prisma.SortOrder
-  modelsUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type ProviderSumOrderByAggregateInput = {
-  rateLimit?: Prisma.SortOrder
   modelCount?: Prisma.SortOrder
 }
 
@@ -799,16 +683,11 @@ export type ProviderCreateWithoutAssistantInput = {
   enabled?: boolean
   isSystem?: boolean
   isAuthed?: boolean
-  rateLimit?: number | null
   isNotSupportArrayContent?: boolean
   notes?: string | null
   isGateway?: boolean
-  isPopular?: boolean
   modelCount?: number | null
-  officialWebsite?: string | null
-  apiKeyUrl?: string | null
   docsUrl?: string | null
-  modelsUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   models?: Prisma.ModelProviderCreateNestedManyWithoutProviderInput
@@ -824,16 +703,11 @@ export type ProviderUncheckedCreateWithoutAssistantInput = {
   enabled?: boolean
   isSystem?: boolean
   isAuthed?: boolean
-  rateLimit?: number | null
   isNotSupportArrayContent?: boolean
   notes?: string | null
   isGateway?: boolean
-  isPopular?: boolean
   modelCount?: number | null
-  officialWebsite?: string | null
-  apiKeyUrl?: string | null
   docsUrl?: string | null
-  modelsUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   models?: Prisma.ModelProviderUncheckedCreateNestedManyWithoutProviderInput
@@ -865,16 +739,11 @@ export type ProviderUpdateWithoutAssistantInput = {
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAuthed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  rateLimit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isNotSupportArrayContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGateway?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPopular?: Prisma.BoolFieldUpdateOperationsInput | boolean
   modelCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  officialWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKeyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   docsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  modelsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   models?: Prisma.ModelProviderUpdateManyWithoutProviderNestedInput
@@ -890,16 +759,11 @@ export type ProviderUncheckedUpdateWithoutAssistantInput = {
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAuthed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  rateLimit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isNotSupportArrayContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGateway?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPopular?: Prisma.BoolFieldUpdateOperationsInput | boolean
   modelCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  officialWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKeyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   docsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  modelsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   models?: Prisma.ModelProviderUncheckedUpdateManyWithoutProviderNestedInput
@@ -915,16 +779,11 @@ export type ProviderCreateWithoutModelsInput = {
   enabled?: boolean
   isSystem?: boolean
   isAuthed?: boolean
-  rateLimit?: number | null
   isNotSupportArrayContent?: boolean
   notes?: string | null
   isGateway?: boolean
-  isPopular?: boolean
   modelCount?: number | null
-  officialWebsite?: string | null
-  apiKeyUrl?: string | null
   docsUrl?: string | null
-  modelsUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   Assistant?: Prisma.AssistantCreateNestedManyWithoutProviderInput
@@ -940,16 +799,11 @@ export type ProviderUncheckedCreateWithoutModelsInput = {
   enabled?: boolean
   isSystem?: boolean
   isAuthed?: boolean
-  rateLimit?: number | null
   isNotSupportArrayContent?: boolean
   notes?: string | null
   isGateway?: boolean
-  isPopular?: boolean
   modelCount?: number | null
-  officialWebsite?: string | null
-  apiKeyUrl?: string | null
   docsUrl?: string | null
-  modelsUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   Assistant?: Prisma.AssistantUncheckedCreateNestedManyWithoutProviderInput
@@ -981,16 +835,11 @@ export type ProviderUpdateWithoutModelsInput = {
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAuthed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  rateLimit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isNotSupportArrayContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGateway?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPopular?: Prisma.BoolFieldUpdateOperationsInput | boolean
   modelCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  officialWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKeyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   docsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  modelsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   Assistant?: Prisma.AssistantUpdateManyWithoutProviderNestedInput
@@ -1006,16 +855,11 @@ export type ProviderUncheckedUpdateWithoutModelsInput = {
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isAuthed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  rateLimit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isNotSupportArrayContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGateway?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPopular?: Prisma.BoolFieldUpdateOperationsInput | boolean
   modelCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  officialWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apiKeyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   docsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  modelsUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   Assistant?: Prisma.AssistantUncheckedUpdateManyWithoutProviderNestedInput
@@ -1071,16 +915,11 @@ export type ProviderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   enabled?: boolean
   isSystem?: boolean
   isAuthed?: boolean
-  rateLimit?: boolean
   isNotSupportArrayContent?: boolean
   notes?: boolean
   isGateway?: boolean
-  isPopular?: boolean
   modelCount?: boolean
-  officialWebsite?: boolean
-  apiKeyUrl?: boolean
   docsUrl?: boolean
-  modelsUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   models?: boolean | Prisma.Provider$modelsArgs<ExtArgs>
@@ -1098,16 +937,11 @@ export type ProviderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   enabled?: boolean
   isSystem?: boolean
   isAuthed?: boolean
-  rateLimit?: boolean
   isNotSupportArrayContent?: boolean
   notes?: boolean
   isGateway?: boolean
-  isPopular?: boolean
   modelCount?: boolean
-  officialWebsite?: boolean
-  apiKeyUrl?: boolean
   docsUrl?: boolean
-  modelsUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["provider"]>
@@ -1122,16 +956,11 @@ export type ProviderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   enabled?: boolean
   isSystem?: boolean
   isAuthed?: boolean
-  rateLimit?: boolean
   isNotSupportArrayContent?: boolean
   notes?: boolean
   isGateway?: boolean
-  isPopular?: boolean
   modelCount?: boolean
-  officialWebsite?: boolean
-  apiKeyUrl?: boolean
   docsUrl?: boolean
-  modelsUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["provider"]>
@@ -1146,21 +975,16 @@ export type ProviderSelectScalar = {
   enabled?: boolean
   isSystem?: boolean
   isAuthed?: boolean
-  rateLimit?: boolean
   isNotSupportArrayContent?: boolean
   notes?: boolean
   isGateway?: boolean
-  isPopular?: boolean
   modelCount?: boolean
-  officialWebsite?: boolean
-  apiKeyUrl?: boolean
   docsUrl?: boolean
-  modelsUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ProviderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "name" | "apiKey" | "apiHost" | "apiVersion" | "enabled" | "isSystem" | "isAuthed" | "rateLimit" | "isNotSupportArrayContent" | "notes" | "isGateway" | "isPopular" | "modelCount" | "officialWebsite" | "apiKeyUrl" | "docsUrl" | "modelsUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["provider"]>
+export type ProviderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "name" | "apiKey" | "apiHost" | "apiVersion" | "enabled" | "isSystem" | "isAuthed" | "isNotSupportArrayContent" | "notes" | "isGateway" | "modelCount" | "docsUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["provider"]>
 export type ProviderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   models?: boolean | Prisma.Provider$modelsArgs<ExtArgs>
   Assistant?: boolean | Prisma.Provider$AssistantArgs<ExtArgs>
@@ -1185,16 +1009,11 @@ export type $ProviderPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     enabled: boolean
     isSystem: boolean
     isAuthed: boolean
-    rateLimit: number | null
     isNotSupportArrayContent: boolean
     notes: string | null
     isGateway: boolean
-    isPopular: boolean
     modelCount: number | null
-    officialWebsite: string | null
-    apiKeyUrl: string | null
     docsUrl: string | null
-    modelsUrl: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["provider"]>
@@ -1631,16 +1450,11 @@ export interface ProviderFieldRefs {
   readonly enabled: Prisma.FieldRef<"Provider", 'Boolean'>
   readonly isSystem: Prisma.FieldRef<"Provider", 'Boolean'>
   readonly isAuthed: Prisma.FieldRef<"Provider", 'Boolean'>
-  readonly rateLimit: Prisma.FieldRef<"Provider", 'Int'>
   readonly isNotSupportArrayContent: Prisma.FieldRef<"Provider", 'Boolean'>
   readonly notes: Prisma.FieldRef<"Provider", 'String'>
   readonly isGateway: Prisma.FieldRef<"Provider", 'Boolean'>
-  readonly isPopular: Prisma.FieldRef<"Provider", 'Boolean'>
   readonly modelCount: Prisma.FieldRef<"Provider", 'Int'>
-  readonly officialWebsite: Prisma.FieldRef<"Provider", 'String'>
-  readonly apiKeyUrl: Prisma.FieldRef<"Provider", 'String'>
   readonly docsUrl: Prisma.FieldRef<"Provider", 'String'>
-  readonly modelsUrl: Prisma.FieldRef<"Provider", 'String'>
   readonly createdAt: Prisma.FieldRef<"Provider", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Provider", 'DateTime'>
 }

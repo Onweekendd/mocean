@@ -42,10 +42,12 @@ enum ProviderType {
   xai
   xai_cn
   // 其他供应商
+  agentrouter
   aihubmix
   amazon_bedrock
   azure
   azure_cognitive_services
+  bailing
   baseten
   cerebras
   chutes
@@ -63,10 +65,12 @@ enum ProviderType {
   iflowcn
   inception
   inference
+  io_net
   llama
   lmstudio
   lucidquery
   minimax
+  minimax_cn
   morph
   nebius
   nvidia
@@ -77,6 +81,7 @@ enum ProviderType {
   poe
   requesty
   scaleway
+  siliconflow
   submodel
   synthetic
   togetherai
@@ -89,15 +94,6 @@ enum ProviderType {
   zai_coding_plan
   zenmux
   zhipuai_coding_plan
-}
-
-enum ModelType {
-  text
-  vision
-  embedding
-  reasoning
-  function_calling
-  web_search
 }
 
 enum KnowledgeRecognition {
@@ -116,20 +112,11 @@ model Provider {
   enabled                  Boolean      @default(true)
   isSystem                 Boolean      @default(false)
   isAuthed                 Boolean      @default(false)
-  rateLimit                Int?
   isNotSupportArrayContent Boolean      @default(false)
   notes                    String?
-
-  // 新增字段：API数据相关
-  isGateway  Boolean @default(false) // 是否为网关
-  isPopular  Boolean @default(false) // 是否为热门供应商
-  modelCount Int?    @default(0) // 模型数量统计
-
-  // 新增字段：provider.json配置数据
-  officialWebsite String? // 官方网站
-  apiKeyUrl       String? // API密钥获取URL
-  docsUrl         String? // 文档URL
-  modelsUrl       String? // 模型列表URL
+  isGateway                Boolean      @default(false) // 是否为网关
+  modelCount               Int?         @default(0) // 模型数量统计
+  docsUrl                  String? // 文档URL
 
   // 多对多关系
   models ModelProvider[]
@@ -237,15 +224,17 @@ model Model {
   group       String
   owned_by    String?
   description String?
-  typeJson    Json // 存储ModelType[]
+  isSystem    Boolean @default(false)
 
   // 模型能力字段
   contextLength         Int? // 上下文长度 (如 128K 转换为数字)
+  supportsAttachments   Boolean @default(false) // 是否支持附件
   supportsTools         Boolean @default(false) // 是否支持工具
   supportsReasoning     Boolean @default(false) // 是否支持推理
   supportsImage         Boolean @default(false) // 是否支持图像
   supportsAudio         Boolean @default(false) // 是否支持音频
   supportsVideo         Boolean @default(false) // 是否支持视频
+  supportsEmbedding     Boolean @default(false) // 是否支持嵌入
   inputPricePerMillion  Float? // 输入价格（每百万token）
   outputPricePerMillion Float? // 输出价格（每百万token）
 

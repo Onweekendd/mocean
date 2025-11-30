@@ -31,10 +31,12 @@ export const ProviderType = {
   azure_openai: 'azure_openai',
   xai: 'xai',
   xai_cn: 'xai_cn',
+  agentrouter: 'agentrouter',
   aihubmix: 'aihubmix',
   amazon_bedrock: 'amazon_bedrock',
   azure: 'azure',
   azure_cognitive_services: 'azure_cognitive_services',
+  bailing: 'bailing',
   baseten: 'baseten',
   cerebras: 'cerebras',
   chutes: 'chutes',
@@ -52,10 +54,12 @@ export const ProviderType = {
   iflowcn: 'iflowcn',
   inception: 'inception',
   inference: 'inference',
+  io_net: 'io_net',
   llama: 'llama',
   lmstudio: 'lmstudio',
   lucidquery: 'lucidquery',
   minimax: 'minimax',
+  minimax_cn: 'minimax_cn',
   morph: 'morph',
   nebius: 'nebius',
   nvidia: 'nvidia',
@@ -66,6 +70,7 @@ export const ProviderType = {
   poe: 'poe',
   requesty: 'requesty',
   scaleway: 'scaleway',
+  siliconflow: 'siliconflow',
   submodel: 'submodel',
   synthetic: 'synthetic',
   togetherai: 'togetherai',
@@ -81,18 +86,6 @@ export const ProviderType = {
 } as const
 
 export type ProviderType = (typeof ProviderType)[keyof typeof ProviderType]
-
-
-export const ModelType = {
-  text: 'text',
-  vision: 'vision',
-  embedding: 'embedding',
-  reasoning: 'reasoning',
-  function_calling: 'function_calling',
-  web_search: 'web_search'
-} as const
-
-export type ModelType = (typeof ModelType)[keyof typeof ModelType]
 
 
 export const KnowledgeRecognition = {

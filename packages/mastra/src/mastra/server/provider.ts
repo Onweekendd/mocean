@@ -7,7 +7,7 @@ import { prisma } from "./index";
  * 提供商相关的zod校验schemas
  */
 const createProviderSchema = z.object({
-  type: z.nativeEnum(ProviderType, { message: "无效的提供商类型" }),
+  type: z.enum(ProviderType, { message: "无效的提供商类型" }),
   name: z.string().min(1, "提供商名称不能为空"),
   apiKey: z.string().min(1, "API密钥不能为空"),
   apiHost: z.string().url("API地址格式不正确"),
@@ -73,10 +73,7 @@ const getProviders = async () => {
   // 整理模型信息
   return providers.map((provider) => ({
     ...provider,
-    modelList: provider.models.map((m) => ({
-      ...m.model,
-      types: JSON.parse(m.model.typeJson as string),
-    })),
+    modelList: provider.models.map((m) => m.model),
   }));
 };
 
@@ -111,8 +108,7 @@ const getProviderById = async (id: string) => {
   return {
     ...provider,
     modelList: provider.models.map((m) => ({
-      ...m.model,
-      types: JSON.parse(m.model.typeJson as string),
+      ...m.model
     })),
   };
 };
@@ -145,10 +141,7 @@ const getProvidersByType = async (type: ProviderType) => {
   // 整理模型信息
   return providers.map((provider) => ({
     ...provider,
-    modelList: provider.models.map((m) => ({
-      ...m.model,
-      types: JSON.parse(m.model.typeJson as string),
-    })),
+    modelList: provider.models.map((m) => m.model),
   }));
 };
 
@@ -179,10 +172,7 @@ const getEnabledProviders = async () => {
   // 整理模型信息
   return providers.map((provider) => ({
     ...provider,
-    modelList: provider.models.map((m) => ({
-      ...m.model,
-      types: JSON.parse(m.model.typeJson as string),
-    })),
+    modelList: provider.models.map((m) => m.model),
   }));
 };
 
@@ -218,10 +208,7 @@ const getProvidersByModel = async (modelId: string) => {
   // 整理模型信息
   return providers.map((provider) => ({
     ...provider,
-    modelList: provider.models.map((m) => ({
-      ...m.model,
-      types: JSON.parse(m.model.typeJson as string),
-    })),
+    modelList: provider.models.map((m) => m.model),
   }));
 };
 
@@ -254,10 +241,7 @@ const createProvider = async (provider: CreateProviderInput) => {
 
   return {
     ...newProvider,
-    modelList: newProvider.models.map((m) => ({
-      ...m.model,
-      types: JSON.parse(m.model.typeJson as string),
-    })),
+    modelList: newProvider.models.map((m) => m.model),
   };
 };
 
@@ -294,8 +278,7 @@ const updateProvider = async (id: string, provider: UpdateProviderInput) => {
   return {
     ...updatedProvider,
     modelList: updatedProvider.models.map((m) => ({
-      ...m.model,
-      types: JSON.parse(m.model.typeJson as string),
+      ...m.model
     })),
   };
 };
@@ -373,7 +356,6 @@ const toggleProviderEnabled = async (id: string) => {
     ...updatedProvider,
     modelList: updatedProvider.models.map((m) => ({
       ...m.model,
-      types: JSON.parse(m.model.typeJson as string),
     })),
   };
 };

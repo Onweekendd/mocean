@@ -1,6 +1,4 @@
 /// <reference lib="dom" />
-import { ModelType } from "generated/prisma/enums";
-
 import {
   CreateModelInput,
   ModelCreateResult,
@@ -14,27 +12,10 @@ import {
   ModelsBatchCreateResult,
   ModelsByGroupResult,
   ModelsByProviderResult,
-  ModelsByTypeResult,
   ModelsListResult,
   UpdateModelInput,
 } from "../server/model";
 import { ApiClientConfig, ApiResponse, BaseApiClient } from "./base-client";
-
-/**
- * 模型创建输入类型（包含类型数组）
- */
-export type ModelCreateInputWithTypes = Omit<CreateModelInput, "typeJson"> & {
-  types: ModelType[];
-};
-
-/**
- * 模型更新输入类型
- */
-export type ModelUpdateInputWithTypes = Partial<
-  Omit<UpdateModelInput, "typeJson">
-> & {
-  types?: ModelType[];
-};
 
 /**
  * 模型 API 客户端类
@@ -74,17 +55,6 @@ export class ModelsApiClient extends BaseApiClient {
   }
 
   /**
-   * 根据类型获取模型列表
-   * @description 获取指定类型的所有模型
-   * @param type - 模型类型
-   */
-  async getModelsByType(
-    type: ModelType,
-  ): Promise<ApiResponse<ModelsByTypeResult>> {
-    return this.get<ModelsByTypeResult>(`/models/type/${type}`);
-  }
-
-  /**
    * 根据分组获取模型列表
    * @description 获取指定分组的所有模型
    * @param group - 模型分组
@@ -101,15 +71,9 @@ export class ModelsApiClient extends BaseApiClient {
    * @param model - 包含模型信息的对象
    */
   async createModel(
-    model: ModelCreateInputWithTypes,
+    model: CreateModelInput,
   ): Promise<ApiResponse<ModelCreateResult>> {
-    // 转换types为typeJson格式
-    const payload = {
-      ...model,
-      typeJson: model.types,
-    };
-
-    return this.post<ModelCreateResult>("/models", payload);
+    return this.post<ModelCreateResult>("/models", model);
   }
 
   /**
@@ -120,17 +84,9 @@ export class ModelsApiClient extends BaseApiClient {
    */
   async updateModel(
     id: string,
-    model: ModelUpdateInputWithTypes,
+    model: UpdateModelInput,
   ): Promise<ApiResponse<ModelUpdateResult>> {
-    // 转换types为typeJson格式
-    const payload = model.types
-      ? {
-          ...model,
-          typeJson: model.types,
-        }
-      : model;
-
-    return this.put<ModelUpdateResult>(`/models/${id}`, payload);
+    return this.put<ModelUpdateResult>(`/models/${id}`, model);
   }
 
   /**
@@ -148,17 +104,11 @@ export class ModelsApiClient extends BaseApiClient {
    * @param models - 模型信息数组
    */
   async createManyModels(
-    models: ModelCreateInputWithTypes[],
+    models: CreateModelInput[],
   ): Promise<ApiResponse<ModelsBatchCreateResult>> {
-    // 转换types为typeJson格式
-    const payload = models.map((model) => ({
-      ...model,
-      typeJson: model.types,
-    }));
-
     return this.post<ModelsBatchCreateResult>(
       "/models/batch",
-      payload as unknown as Record<string, unknown>,
+      models as unknown as Record<string, unknown>,
     );
   }
 
@@ -233,12 +183,6 @@ export const modelsApiMethods = {
     modelsApi.getModelsByProvider(providerId),
 
   /**
-   * 根据类型获取模型
-   * @param type - 模型类型
-   */
-  getModelsByType: (type: ModelType) => modelsApi.getModelsByType(type),
-
-  /**
    * 根据分组获取模型
    * @param group - 模型分组
    */
@@ -248,14 +192,14 @@ export const modelsApiMethods = {
    * 创建模型
    * @param modelData - 模型数据
    */
-  createModel: (modelData: ModelCreateInputWithTypes) =>
+  createModel: (modelData: CreateModelInput) =>
     modelsApi.createModel(modelData),
 
   /**
    * 批量创建模型
    * @param modelsData - 模型数据数组
    */
-  createManyModels: (modelsData: ModelCreateInputWithTypes[]) =>
+  createManyModels: (modelsData: CreateModelInput[]) =>
     modelsApi.createManyModels(modelsData),
 
   /**
@@ -263,7 +207,7 @@ export const modelsApiMethods = {
    * @param id - 模型ID
    * @param modelData - 更新数据
    */
-  updateModel: (id: string, modelData: ModelUpdateInputWithTypes) =>
+  updateModel: (id: string, modelData: UpdateModelInput) =>
     modelsApi.updateModel(id, modelData),
 
   /**
@@ -282,7 +226,6 @@ export type UseModelsApiReturn = Pick<
   | "getModels"
   | "getModelById"
   | "getModelsByProvider"
-  | "getModelsByType"
   | "getModelsByGroup"
   | "createModel"
   | "createManyModels"
@@ -305,7 +248,6 @@ export const useModelsApi = (): UseModelsApiReturn => {
     getModels: modelsApi.getModels.bind(modelsApi),
     getModelById: modelsApi.getModelById.bind(modelsApi),
     getModelsByProvider: modelsApi.getModelsByProvider.bind(modelsApi),
-    getModelsByType: modelsApi.getModelsByType.bind(modelsApi),
     getModelsByGroup: modelsApi.getModelsByGroup.bind(modelsApi),
     createModel: modelsApi.createModel.bind(modelsApi),
     createManyModels: modelsApi.createManyModels.bind(modelsApi),
