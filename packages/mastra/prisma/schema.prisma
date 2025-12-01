@@ -103,20 +103,19 @@ enum KnowledgeRecognition {
 
 // Provider模型
 model Provider {
-  id                       String       @id @default(uuid())
-  type                     ProviderType
-  name                     String
-  apiKey                   String? // 改为可选，默认为空
-  apiHost                  String? // 改为可选，从provider.json中获取
-  apiVersion               String?
-  enabled                  Boolean      @default(true)
-  isSystem                 Boolean      @default(false)
-  isAuthed                 Boolean      @default(false)
-  isNotSupportArrayContent Boolean      @default(false)
-  notes                    String?
-  isGateway                Boolean      @default(false) // 是否为网关
-  modelCount               Int?         @default(0) // 模型数量统计
-  docsUrl                  String? // 文档URL
+  id         String       @id @default(uuid())
+  type       ProviderType
+  name       String
+  apiKey     String? // 改为可选，默认为空
+  apiHost    String? // 改为可选，从provider.json中获取
+  apiVersion String?
+  enabled    Boolean      @default(true)
+  isSystem   Boolean      @default(false)
+  isAuthed   Boolean      @default(false)
+  notes      String?
+  isGateway  Boolean      @default(false) // 是否为网关
+  modelCount Int?         @default(0) // 模型数量统计
+  docsUrl    String? // 文档URL
 
   // 多对多关系
   models ModelProvider[]

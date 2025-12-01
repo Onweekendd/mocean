@@ -222,20 +222,35 @@ const updateProviderRouter = registerApiRoute(`${PREFIX}/providers/:id`, {
         id: c.req.param("id"),
       });
 
-      const rawData = await c.req.json();
+      const rawData: unknown = await c.req.json();
+      // eslint-disable-next-line no-console
+      console.log("📥 收到更新请求:", { id, data: rawData as object });
+
       const providerData = updateProviderSchema.parse(rawData);
+      // eslint-disable-next-line no-console
+      console.log("✅ 数据验证通过:", providerData);
 
       const updatedProvider = await updateProvider(id, providerData);
+      // eslint-disable-next-line no-console
+      console.log("✅ 提供商更新成功");
+
       return new Response(JSON.stringify(updatedProvider), {
         status: 200,
         headers: { "Content-Type": "application/json" },
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
+        // eslint-disable-next-line no-console
+        console.error("❌ 参数校验失败:", error.issues);
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.errors,
+            message: "提交的数据格式不正确",
+            details: error.issues.map((err) => ({
+              field: err.path.join("."),
+              message: err.message,
+              code: err.code,
+            })),
           }),
           {
             status: 400,
@@ -243,10 +258,39 @@ const updateProviderRouter = registerApiRoute(`${PREFIX}/providers/:id`, {
           },
         );
       }
-      return new Response(JSON.stringify({ error: "更新提供商失败" }), {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      });
+
+      // 数据库错误
+      if (error && typeof error === "object" && "code" in error) {
+        // eslint-disable-next-line no-console
+        console.error("❌ 数据库错误:", error);
+        const dbError = error as { message?: string; code?: string };
+        return new Response(
+          JSON.stringify({
+            error: "数据库操作失败",
+            message: dbError.message || "未知的数据库错误",
+            code: dbError.code,
+          }),
+          {
+            status: 500,
+            headers: { "Content-Type": "application/json" },
+          },
+        );
+      }
+
+      // 通用错误
+      // eslint-disable-next-line no-console
+      console.error("❌ 更新提供商失败:", error);
+      return new Response(
+        JSON.stringify({
+          error: "更新提供商失败",
+          message: error instanceof Error ? error.message : "未知错误",
+          stack: error instanceof Error ? error.stack : undefined,
+        }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json" },
+        },
+      );
     }
   },
 });

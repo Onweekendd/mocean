@@ -203,16 +203,6 @@ export const ModelCard: React.FC<ModelCardProps> = ({
           </div>
           {renderActions()}
         </div>
-
-        {/* 拥有者信息 */}
-        {model.owned_by && (
-          <div className="flex items-center space-x-2">
-            <span className="text-xs text-muted-foreground">拥有者:</span>
-            <Badge variant="outline" className="text-xs">
-              {model.owned_by}
-            </Badge>
-          </div>
-        )}
       </div>
     );
   };

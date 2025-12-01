@@ -6,16 +6,29 @@ import { prisma } from "./index";
 /**
  * 提供商相关的zod校验schemas
  */
+/**
+ * URL 验证辅助函数
+ */
+const isValidUrl = (url: string): boolean => {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 const createProviderSchema = z.object({
   type: z.enum(ProviderType, { message: "无效的提供商类型" }),
   name: z.string().min(1, "提供商名称不能为空"),
   apiKey: z.string().min(1, "API密钥不能为空"),
-  apiHost: z.string().url("API地址格式不正确"),
+  apiHost: z.string().refine((val) => isValidUrl(val), {
+    message: "API地址格式不正确",
+  }),
   apiVersion: z.string().nullable().optional(),
   enabled: z.boolean().optional().default(true),
   isSystem: z.boolean().optional().default(false),
   isAuthed: z.boolean().optional().default(false),
-  rateLimit: z.number().positive().nullable().optional(),
   isNotSupportArrayContent: z.boolean().optional().default(false),
   notes: z.string().nullable().optional(),
 });
@@ -23,13 +36,25 @@ const createProviderSchema = z.object({
 const updateProviderSchema = z.object({
   type: z.nativeEnum(ProviderType, { message: "无效的提供商类型" }).optional(),
   name: z.string().min(1, "提供商名称不能为空").optional(),
-  apiKey: z.string().min(1, "API密钥不能为空").optional(),
-  apiHost: z.string().url("API地址格式不正确").optional(),
+  apiKey: z
+    .string()
+    .transform((val) => (val.trim() === "" ? undefined : val))
+    .pipe(z.string().min(1, "API密钥不能为空").optional()),
+  apiHost: z
+    .string()
+    .transform((val) => (val.trim() === "" ? undefined : val))
+    .pipe(
+      z
+        .string()
+        .refine((val) => isValidUrl(val), {
+          message: "API地址格式不正确",
+        })
+        .optional(),
+    ),
   apiVersion: z.string().nullable().optional(),
   enabled: z.boolean().optional(),
   isSystem: z.boolean().optional(),
   isAuthed: z.boolean().optional(),
-  rateLimit: z.number().positive().nullable().optional(),
   isNotSupportArrayContent: z.boolean().optional(),
   notes: z.string().nullable().optional(),
 });

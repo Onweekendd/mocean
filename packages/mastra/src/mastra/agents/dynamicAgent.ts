@@ -24,17 +24,19 @@ export const DynamicAgent = new Agent({
 
     const provider = assistant.provider;
 
-    const providerType = provider.type;
+    const model = assistant.model;
 
-    console.log(provider.apiHost, provider.apiKey);
-    const openaiProvider = createOpenAI({
-      baseURL: provider.apiHost,
+    if (!provider || !provider.apiHost || !provider.apiKey) {
+      throw new Error(
+        "Provider API host and key are required to create the model.",
+      );
+    }
+
+    return {
+      url: provider.apiHost,
       apiKey: provider.apiKey,
-    });
-
-    const model = openaiProvider.chat(assistant.model.id);
-
-    return model;
+      id: `${provider.id}/${model.id}`,
+    };
   },
 
   memory: new Memory({

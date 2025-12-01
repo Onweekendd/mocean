@@ -63,7 +63,6 @@ export const ProviderConfigDialog: React.FC<ProviderConfigDialogProps> = ({
     apiHost: provider.apiHost,
     apiVersion: provider.apiVersion || "",
     enabled: provider.enabled,
-    rateLimit: provider.rateLimit?.toString() || "",
     isNotSupportArrayContent: provider.isNotSupportArrayContent,
     notes: provider.notes || "",
   });
@@ -82,7 +81,6 @@ export const ProviderConfigDialog: React.FC<ProviderConfigDialogProps> = ({
       apiHost: provider.apiHost,
       apiVersion: provider.apiVersion || "",
       enabled: provider.enabled,
-      rateLimit: provider.rateLimit?.toString() || "",
       isNotSupportArrayContent: provider.isNotSupportArrayContent,
       notes: provider.notes || "",
     });
@@ -114,7 +112,6 @@ export const ProviderConfigDialog: React.FC<ProviderConfigDialogProps> = ({
         apiHost: formData.apiHost.trim(),
         apiVersion: formData.apiVersion.trim() || null,
         enabled: formData.enabled,
-        rateLimit: formData.rateLimit ? parseInt(formData.rateLimit) : null,
         isNotSupportArrayContent: formData.isNotSupportArrayContent,
         notes: formData.notes.trim() || null,
       };
@@ -200,20 +197,6 @@ export const ProviderConfigDialog: React.FC<ProviderConfigDialogProps> = ({
                 value={formData.apiVersion}
                 onChange={(e) => onFormDataChange("apiVersion", e.target.value)}
                 placeholder="v1, v2 等"
-                className="focus-visible:ring-brand-primary-500"
-              />
-            </div>
-
-            {/* 速率限制 */}
-            <div className="space-y-2">
-              <Label htmlFor="rateLimit">速率限制 (请求/分钟)</Label>
-              <Input
-                id="rateLimit"
-                type="number"
-                value={formData.rateLimit}
-                onChange={(e) => onFormDataChange("rateLimit", e.target.value)}
-                placeholder="如：60"
-                min="1"
                 className="focus-visible:ring-brand-primary-500"
               />
             </div>

@@ -138,7 +138,7 @@ const createAssistant = async (assistant: CreateAssistantInput) => {
   const newAssistant = await prisma.assistant.create({
     data: {
       ...assistant,
-      modelId: 'deepseek-chat',
+      modelId: "deepseek-chat",
       providerId: "deepseek",
       createdAt: new Date(),
       updatedAt: new Date(),
