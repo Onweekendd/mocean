@@ -26,6 +26,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
+import { cn } from "@/lib/utils";
 
 import { AddModelDialog } from "./components/AddModelDialog";
 import { renderProviderAvatar } from "./components/CustomerIcon";
@@ -190,8 +191,6 @@ export default function ProviderPage() {
 
         <AddModelDialog
           providerId={selectedProviderId}
-          initialGroup={selectedGroupForAdd}
-          availableGroups={availableGroups}
           open={addModelDialogOpen}
           onOpenChange={setAddModelDialogOpen}
           onSuccess={refreshModels}
@@ -313,7 +312,11 @@ export default function ProviderPage() {
                     </div>
                   </div>
 
-                  <CollapsibleContent>
+                  <CollapsibleContent
+                    className={cn(
+                      `text-popover-foreground outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2`,
+                    )}
+                  >
                     <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
                       {group.models.map((model) => (
                         <ModelCard
@@ -350,8 +353,6 @@ export default function ProviderPage() {
 
       <AddModelDialog
         providerId={selectedProviderId}
-        initialGroup={selectedGroupForAdd}
-        availableGroups={availableGroups}
         open={addModelDialogOpen}
         onOpenChange={setAddModelDialogOpen}
         onSuccess={refreshModels}
@@ -359,7 +360,7 @@ export default function ProviderPage() {
 
       <EditModelDialog
         model={selectedModelForEdit}
-        availableGroups={availableGroups}
+        providerId={selectedProviderId}
         open={editModelDialogOpen}
         onOpenChange={setEditModelDialogOpen}
         onSuccess={refreshModels}
@@ -389,7 +390,6 @@ export default function ProviderPage() {
 
       <GroupManageDialog
         providerId={selectedProviderId}
-        groups={availableGroups}
         open={groupManageDialogOpen}
         onOpenChange={setGroupManageDialogOpen}
         onSuccess={refreshModels}

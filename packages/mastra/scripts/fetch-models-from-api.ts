@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { tr } from "zod/v4/locales";
 
 import { Model, Provider, ProviderType } from "../generated/prisma/index.js";
 import { prisma } from "../src/mastra/server/index.js";
@@ -69,7 +68,7 @@ interface ScrapedData {
   /** 成功获取的供应商列表 */
   providers: Partial<Provider>[];
   /** 所有供应商提供的模型列表 */
-  models: Array<Model & { providerId: string; groupName: string }>;
+  models: Array<Model & { providerId: string }>;
   /** 爬取操作的元数据信息 */
   metadata: {
     /** 爬取操作的时间戳（ISO 8601 格式） */
@@ -115,19 +114,16 @@ async function fetchApiData(): Promise<ModelsDevResponse> {
 function createPrismaModel({
   parsedModel,
   providerId,
-  providerName,
 }: {
   parsedModel: ApiModelInfo;
   providerId: string;
-  providerName: string;
-}): Model & { providerId: string; groupName: string } {
+}): Model & { providerId: string } {
   return {
     id: parsedModel.id,
     providerId: providerId,
     owned_by: providerId,
     description: "",
     name: parsedModel.name,
-    groupName: providerName,
     isSystem: true,
     contextLength: parsedModel.limit?.context || null,
     supportsAttachments: parsedModel.attachment || false,
@@ -160,9 +156,9 @@ function processRegularProvider({
   apiModelInfos: Array<[string, ApiModelInfo]>;
 }): {
   providerInfo: Partial<Provider>;
-  models: Array<Model & { providerId: string; groupName: string }>;
+  models: Array<Model & { providerId: string }>;
 } {
-  const models: Array<Model & { providerId: string; groupName: string }> = [];
+  const models: Array<Model & { providerId: string }> = [];
 
   // 处理每个模型
   for (const [modelId, modelData] of apiModelInfos) {
@@ -170,7 +166,6 @@ function processRegularProvider({
     const model = createPrismaModel({
       parsedModel,
       providerId: provider.id,
-      providerName: provider.name,
     });
     models.push(model);
   }
@@ -204,7 +199,7 @@ async function fetchModelsDevData(): Promise<ScrapedData> {
     const parsedData = await fetchApiData();
 
     const providers: ApiProviderInfo[] = [];
-    const models: (Model & { providerId: string; groupName: string })[] = [];
+    const models: (Model & { providerId: string })[] = [];
     const skippedProviders: ApiProviderInfo[] = [];
 
     // 遍历所有供应商
@@ -292,29 +287,26 @@ function prepareModelsAndRelations(data: ScrapedData): {
   modelProviderRelations: Array<{
     modelId: string;
     providerId: string;
-    group: string;
   }>;
 } {
   const models: Array<Model> = [];
   const modelProviderRelations: Array<{
     modelId: string;
     providerId: string;
-    group: string;
   }> = [];
 
   // 处理每个模型，保留所有模型实例
   for (const modelData of data.models) {
-    // 移除临时的 providerId 和 groupName 字段
+    // 移除临时的 providerId 字段
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { providerId, groupName, ...modelWithoutProviderId } = modelData;
+    const { providerId, ...modelWithoutProviderId } = modelData;
 
     models.push(modelWithoutProviderId);
 
-    // 创建模型-供应商关联关系，包含分组信息
+    // 创建模型-供应商关联关系
     modelProviderRelations.push({
       modelId: modelData.id,
       providerId: modelData.providerId,
-      group: modelData.groupName,
     });
   }
 
@@ -473,13 +465,10 @@ async function insertProvidersAndModels(data: ScrapedData) {
                 providerId: relation.providerId,
               },
             },
-            update: {
-              group: relation.group,
-            },
+            update: {},
             create: {
               modelId: relation.modelId,
               providerId: relation.providerId,
-              group: relation.group,
             },
           });
           relationsCreated++;

@@ -55,6 +55,7 @@ export const ProviderType = {
   inception: 'inception',
   inference: 'inference',
   io_net: 'io_net',
+  kimi_for_coding: 'kimi_for_coding',
   llama: 'llama',
   lmstudio: 'lmstudio',
   lucidquery: 'lucidquery',

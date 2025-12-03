@@ -155,7 +155,7 @@ const getModelById = async (id: string) => {
 const getModelsByProvider = async (providerId: string) => {
   const models = await prisma.model.findMany({
     where: {
-      modelGroups: {
+      providers: {
         some: {
           providerId,
         },

@@ -66,6 +66,7 @@ enum ProviderType {
   inception
   inference
   io_net
+  kimi_for_coding
   llama
   lmstudio
   lucidquery

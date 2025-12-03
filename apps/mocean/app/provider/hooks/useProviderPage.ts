@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 
 import { Model, Provider } from "@mocean/mastra/prismaType";
 
+import { useGroupsByProviderSWR } from "@/hooks/useGroupsSWR";
 import {
   useModelsByProviderSWR,
   useModelsWithActions,
@@ -14,7 +15,6 @@ import { useProvidersWithActions } from "@/hooks/useProvidersSWR";
 interface ModelProviderRelation {
   modelId: string;
   providerId: string;
-  group: string;
   provider?: Provider;
 }
 
@@ -32,7 +32,11 @@ interface ModelGroup {
   groupName: string;
   models: ModelWithProviders[];
   count: number;
+  groupId?: string;
 }
+
+const UN_GROUP_NAME = "未分组";
+const UN_GROUP_ID = "0";
 
 /**
  * Provider 页面状态管理 Hook
@@ -40,19 +44,6 @@ interface ModelGroup {
  * @description 封装 provider 页面的业务逻辑，包括模型分组、搜索过滤、状态管理等
  * @param selectedProviderId - 选中的供应商 ID
  * @returns Provider 页面所需的状态和操作方法
- *
- * @example
- * ```tsx
- * const {
- *   provider,
- *   models,
- *   modelGroups,
- *   filteredModelGroups,
- *   onModelClick,
- *   onModelEdit,
- *   ...
- * } = useProviderPage(providerId);
- * ```
  */
 export function useProviderPage(selectedProviderId: string | null) {
   // 状态管理
@@ -79,6 +70,8 @@ export function useProviderPage(selectedProviderId: string | null) {
     return providers.find((p) => p.id === selectedProviderId) as Provider;
   }, [providers, selectedProviderId]);
 
+  const { groups } = useGroupsByProviderSWR(provider?.id);
+
   /**
    * 获取当前供应商的模型列表
    */
@@ -92,63 +85,76 @@ export function useProviderPage(selectedProviderId: string | null) {
   /**
    * 按组分组模型
    *
-   * @description 将模型列表按模型-供应商分组分组，并排序
+   * @description 根据 API 返回的分组信息，将模型列表分组，并排序
    * @returns 分组后的模型数组
    */
   const modelGroups = useMemo((): ModelGroup[] => {
-    if (!models || models.length === 0) return [];
+    if (!models || models.length === 0 || !groups) return [];
 
-    const groups: Record<string, ModelWithProviders[]> = {};
+    // 创建分组映射: groupId -> ModelGroup
+    const groupMap = new Map<string, ModelGroup>();
 
+    // 初始化所有分组
+    groups.forEach((group) => {
+      groupMap.set(group.id, {
+        groupName: group.name,
+        groupId: group.id,
+        models: [],
+        count: 0,
+      });
+    });
+
+    // 将模型分配到对应的分组
     models.forEach((model) => {
-      const modelWithProviders = model as ModelWithProviders;
-      // 根据当前供应商获取分组
-      let groupName = "未分组";
+      // 模型对应的组
+      const currentGroup = model.modelGroups.find(
+        (group) => group.providerId === selectedProviderId,
+      );
 
-      if (selectedProviderId && modelWithProviders.providers) {
-        const providerRelation = modelWithProviders.providers.find(
-          (p) => p.providerId === selectedProviderId,
-        );
-        if (providerRelation && providerRelation.group) {
-          groupName = providerRelation.group;
+      // 当前模型在该供应商中未进行分组
+      if (!currentGroup) {
+        if (!groupMap.has(UN_GROUP_ID)) {
+          groupMap.set(UN_GROUP_ID, {
+            groupName: UN_GROUP_NAME,
+            groupId: UN_GROUP_ID,
+            models: [model],
+            count: 1,
+          });
+        } else {
+          const group = groupMap.get(UN_GROUP_ID);
+          if (group) {
+            group.models.push(model);
+            group.count++;
+          }
         }
-      } else if (
-        modelWithProviders.providers &&
-        modelWithProviders.providers.length > 0
-      ) {
-        // 默认使用第一个供应商的分组
-        const firstProvider = modelWithProviders.providers[0];
-        if (firstProvider) {
-          groupName = firstProvider.group || "未分组";
-        }
+        return;
       }
 
-      // 初始化分组如果不存在
-      if (!(groupName in groups)) {
-        groups[groupName] = [];
-      }
-      const groupArray = groups[groupName];
-      if (groupArray) {
-        groupArray.push(modelWithProviders);
+      // 当前模型在该供应商中已进行分组
+      if (!groupMap.has(currentGroup.groupId)) {
+        groupMap.set(currentGroup.groupId, {
+          groupName: currentGroup.group.name,
+          groupId: currentGroup.groupId,
+          models: [model],
+          count: 1,
+        });
+      } else {
+        const group = groupMap.get(currentGroup.groupId);
+        if (group) {
+          group.models.push(model);
+          group.count++;
+        }
       }
     });
 
     // 转换为数组并排序
-    const sortedGroups = Object.entries(groups)
-      .map(([groupName, groupModels]) => ({
-        groupName,
-        models: groupModels.sort((a, b) => a.name.localeCompare(b.name)),
-        count: groupModels.length,
-      }))
-      .sort((a, b) => {
-        // 未分组放最后
-        if (a.groupName === "未分组") return 1;
-        if (b.groupName === "未分组") return -1;
-        return a.groupName.localeCompare(b.groupName);
-      });
+    const sortedGroups = Array.from(groupMap.values()).map((group) => ({
+      ...group,
+      models: group.models.sort((a, b) => a.name.localeCompare(b.name)),
+    }));
 
     return sortedGroups;
-  }, [models, selectedProviderId]);
+  }, [models, groups, selectedProviderId]);
 
   /**
    * 搜索过滤模型
@@ -187,73 +193,36 @@ export function useProviderPage(selectedProviderId: string | null) {
   }, [models, searchTerm]);
 
   /**
-   * 根据搜索结果重新分组
+   * 根据搜索结果过滤分组
    *
-   * @description 将过滤后的模型列表按组重新分组
-   * @returns 过滤并分组后的模型数组
+   * @description 基于 modelGroups，过滤出包含搜索结果的分组
+   * @returns 过滤后的分组数组
    */
   const filteredModelGroups = useMemo((): ModelGroup[] => {
     if (!filteredModels || filteredModels.length === 0) return [];
 
-    const groups: Record<string, ModelWithProviders[]> = {};
+    // 构建过滤后的模型ID集合，用于快速查找
+    const filteredModelIds = new Set(filteredModels.map((m) => m.id));
 
-    filteredModels.forEach((model) => {
-      const modelWithProviders = model as ModelWithProviders;
-      // 根据当前供应商获取分组
-      let groupName = "未分组";
-
-      if (selectedProviderId && modelWithProviders.providers) {
-        const providerRelation = modelWithProviders.providers.find(
-          (p) => p.providerId === selectedProviderId,
-        );
-        if (providerRelation && providerRelation.group) {
-          groupName = providerRelation.group;
-        }
-      } else if (
-        modelWithProviders.providers &&
-        modelWithProviders.providers.length > 0
-      ) {
-        // 默认使用第一个供应商的分组
-        const firstProvider = modelWithProviders.providers[0];
-        if (firstProvider) {
-          groupName = firstProvider.group || "未分组";
-        }
-      }
-
-      // 初始化分组如果不存在
-      if (!(groupName in groups)) {
-        groups[groupName] = [];
-      }
-      const groupArray = groups[groupName];
-      if (groupArray) {
-        groupArray.push(modelWithProviders);
-      }
-    });
-
-    return Object.entries(groups)
-      .map(([groupName, groupModels]) => ({
-        groupName,
-        models: groupModels.sort((a, b) => a.name.localeCompare(b.name)),
-        count: groupModels.length,
-      }))
-      .sort((a, b) => {
-        if (a.groupName === "未分组") return 1;
-        if (b.groupName === "未分组") return -1;
-        return a.groupName.localeCompare(b.groupName);
-      });
-  }, [filteredModels, selectedProviderId]);
+    // 基于 modelGroups，过滤每个分组中的模型
+    return modelGroups.map((group) => ({
+      ...group,
+      models: group.models.filter((model) => filteredModelIds.has(model.id)),
+      count: group.models.filter((model) => filteredModelIds.has(model.id))
+        .length,
+    }));
+  }, [modelGroups, filteredModels]);
 
   /**
    * 获取可用的分组列表
    *
-   * @description 获取所有分组名称（排除"未分组"）
+   * @description 获取所有分组名称（从 API 返回的 groups 数据）
    * @returns 分组名称数组
    */
   const availableGroups = useMemo(() => {
-    return modelGroups
-      .map((g) => g.groupName)
-      .filter((name) => name !== "未分组");
-  }, [modelGroups]);
+    if (!groups) return [];
+    return groups.map((g) => g.name);
+  }, [groups]);
 
   /**
    * 处理模型点击事件

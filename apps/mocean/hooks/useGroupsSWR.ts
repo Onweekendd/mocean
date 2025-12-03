@@ -1,8 +1,8 @@
-import { useGroupsApi } from "@mocean/mastra/apiClient";
-import type {
+import {
   GroupDetailResult,
   GroupsByProviderResult,
-} from "@mocean/mastra/server/group";
+  useGroupsApi,
+} from "@mocean/mastra/apiClient";
 import useSWR, { type KeyedMutator } from "swr";
 
 /**

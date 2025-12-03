@@ -1,9 +1,10 @@
-import js from "@eslint/js";
-import eslintConfigPrettier from "eslint-config-prettier";
-import turboPlugin from "eslint-plugin-turbo";
-import tseslint from "typescript-eslint";
-import prettierPlugin from "eslint-plugin-prettier";
-import globals from "globals";
+import js from '@eslint/js';
+import eslintConfigPrettier from 'eslint-config-prettier';
+import prettierConfig from 'eslint-config-prettier';
+import prettierPlugin from 'eslint-plugin-prettier';
+import turboPlugin from 'eslint-plugin-turbo';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 /**
  * A shared ESLint configuration for the repository.
@@ -30,7 +31,7 @@ export const config = [
       turbo: turboPlugin,
     },
     rules: {
-      "turbo/no-undeclared-env-vars": "error",
+      'turbo/no-undeclared-env-vars': 'error',
     },
   },
   {
@@ -38,35 +39,41 @@ export const config = [
       prettier: prettierPlugin,
     },
     rules: {
-      "prettier/prettier": [
-        "error",
+      'prettier/prettier': [
+        'error',
         {
-          endOfLine: "auto",
           printWidth: 80,
           tabWidth: 2,
           useTabs: false,
           semi: true,
           singleQuote: false,
-          quoteProps: "as-needed",
+          trailingComma: 'es5',
+          bracketSpacing: true,
+          arrowParens: 'always',
+          endOfLine: 'auto',
+          quoteProps: 'as-needed',
+          proseWrap: 'always',
         },
       ],
     },
   },
   {
     rules: {
-      "no-console": "warn",
-      "no-debugger": "error",
-      "no-alert": "error",
-      "no-unused-vars": "error",
-      "no-undef": "error",
-      "no-duplicate-imports": "error",
-      "no-unreachable": "error",
-      "@typescript-eslint/no-unused-vars": "error",
-      "@typescript-eslint/no-explicit-any": "error",
-      "@typescript-eslint/no-non-null-assertion": "error",
+      'no-console': 'warn',
+      'no-debugger': 'error',
+      'no-alert': 'error',
+      'no-unused-vars': 'error',
+      'no-undef': 'error',
+      'no-duplicate-imports': 'error',
+      'no-unreachable': 'error',
+      '@typescript-eslint/no-unused-vars': 'error',
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-non-null-assertion': 'error',
     },
   },
   {
-    ignores: ["dist/**"],
+    ignores: ['dist/**'],
   },
+
+  prettierConfig,
 ];
