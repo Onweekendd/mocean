@@ -134,7 +134,7 @@ export default function ProviderPage() {
                   <h1 className="text-lg font-semibold">{provider?.name}</h1>
                   <div className="flex items-center space-x-1">
                     <Switch
-                      color="green"
+                      className="data-[state=checked]:bg-brand-primary"
                       checked={provider?.enabled}
                       onCheckedChange={onToggleEnabled}
                     />
@@ -334,8 +334,8 @@ export default function ProviderPage() {
                 {/* 分组间分隔线 */}
                 {group !==
                   filteredModelGroups[filteredModelGroups.length - 1] && (
-                  <Separator className="my-6" />
-                )}
+                    <Separator className="my-6" />
+                  )}
               </Collapsible>
             ))}
           </div>

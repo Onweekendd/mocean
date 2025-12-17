@@ -19,7 +19,7 @@ const isValidUrl = (url: string): boolean => {
 };
 
 const createProviderSchema = z.object({
-  type: z.nativeEnum(ProviderType, { message: "无效的提供商类型" }),
+  type: z.enum(ProviderType, { message: "无效的提供商类型" }),
   name: z.string().min(1, "提供商名称不能为空"),
   apiKey: z.string().min(1, "API密钥不能为空"),
   apiHost: z.string().refine((val) => isValidUrl(val), {

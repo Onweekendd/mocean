@@ -119,7 +119,8 @@ function createPrismaModel({
   providerId: string;
 }): Model & { providerId: string } {
   return {
-    id: parsedModel.id,
+    // 放置出现重复ID
+    id: `${providerId}&${parsedModel.name}`,
     providerId: providerId,
     owned_by: providerId,
     description: "",
@@ -160,6 +161,9 @@ function processRegularProvider({
 } {
   const models: Array<Model & { providerId: string }> = [];
 
+  if (provider.id === "deepseek") {
+    console.log(apiModelInfos);
+  }
   // 处理每个模型
   for (const [modelId, modelData] of apiModelInfos) {
     const parsedModel = ModelsDevModelSchema.parse(modelData);
@@ -216,8 +220,14 @@ async function fetchModelsDevData(): Promise<ScrapedData> {
       }
 
       const provider = ModelsDevProviderSchema.parse(providerData);
+      if (provider.id === "deepseek") {
+        console.log(provider);
+      }
       const apiModelInfos = Object.entries(provider.models);
 
+      if (provider.id === "deepseek") {
+        console.log(apiModelInfos);
+      }
       const result = processRegularProvider({
         provider,
         apiModelInfos,

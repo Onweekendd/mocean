@@ -51,6 +51,7 @@ enum ProviderType {
   baseten
   cerebras
   chutes
+  cloudflare_ai_gateway
   cloudflare_workers_ai
   cohere
   cortecs
@@ -61,6 +62,7 @@ enum ProviderType {
   github_models
   google_vertex
   google_vertex_anthropic
+  helicone
   huggingface
   iflowcn
   inception
@@ -81,6 +83,7 @@ enum ProviderType {
   perplexity
   poe
   requesty
+  sap_ai_core
   scaleway
   siliconflow
   submodel

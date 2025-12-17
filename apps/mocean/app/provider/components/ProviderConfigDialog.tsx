@@ -205,6 +205,7 @@ export const ProviderConfigDialog: React.FC<ProviderConfigDialogProps> = ({
                 <Label htmlFor="enabled">启用供应商</Label>
                 <Switch
                   id="enabled"
+                  className="data-[state=checked]:bg-brand-primary"
                   checked={formData.enabled}
                   onCheckedChange={(checked) =>
                     onFormDataChange("enabled", checked)

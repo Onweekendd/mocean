@@ -282,6 +282,8 @@ export function useProviderPage(selectedProviderId: string | null) {
 
     try {
       await toggleEnabled(provider.id);
+
+      // 刷新供应商列表
     } catch (error) {
       console.error("切换提供商状态失败:", error);
     }

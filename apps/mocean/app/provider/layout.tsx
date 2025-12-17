@@ -39,7 +39,9 @@ export default function ProviderLayout({ children }: ProviderLayoutProps) {
       <div className="flex h-full items-center justify-center">
         <div className="flex items-center space-x-2">
           <Loader2 className="h-6 w-6 animate-spin" />
-          <span className="text-sm text-muted-foreground">加载提供商数据中...</span>
+          <span className="text-sm text-muted-foreground">
+            加载提供商数据中...
+          </span>
         </div>
       </div>
     );
@@ -51,7 +53,9 @@ export default function ProviderLayout({ children }: ProviderLayoutProps) {
         <Card className="w-96">
           <CardContent className="py-8">
             <div className="text-center">
-              <p className="mb-2 text-sm text-destructive">加载提供商数据失败</p>
+              <p className="mb-2 text-sm text-destructive">
+                加载提供商数据失败
+              </p>
               <p className="text-xs text-muted-foreground">{error.message}</p>
             </div>
           </CardContent>

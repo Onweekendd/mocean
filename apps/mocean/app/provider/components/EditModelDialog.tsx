@@ -93,7 +93,8 @@ export const EditModelDialog: React.FC<EditModelDialogProps> = ({
   onOpenChange,
   onSuccess,
 }) => {
-  const { groups, isLoading: groupsLoading } = useGroupsByProviderSWR(providerId);
+  const { groups, isLoading: groupsLoading } =
+    useGroupsByProviderSWR(providerId);
   const { update } = useModelsWithActions();
 
   const [formData, setFormData] = useState<FormData>({
@@ -207,11 +208,11 @@ export const EditModelDialog: React.FC<EditModelDialogProps> = ({
     try {
       // 从 modelGroups 获取供应商信息
       const providers =
-        ((model as any).modelGroups && (model as any).modelGroups.length > 0)
+        (model as any).modelGroups && (model as any).modelGroups.length > 0
           ? (model as any).modelGroups.map((mg: any) => ({
-              providerId: mg.providerId,
-              groupId: formData.groupId,
-            }))
+            providerId: mg.providerId,
+            groupId: formData.groupId,
+          }))
           : [];
 
       const updateData = {

@@ -3,7 +3,7 @@ import {
   useProvidersApi,
 } from "@mocean/mastra/apiClient";
 import { type Provider } from "@mocean/mastra/prismaType";
-import useSWR, { type KeyedMutator } from "swr";
+import useSWR from "swr";
 
 /**
  * 使用 SWR 的提供商数据获取 hooks
@@ -148,21 +148,7 @@ export function useProvidersByTypeSWR(type: string | null) {
 /**
  * 增强的提供商 API hooks - 结合 CRUD 操作和 SWR 缓存
  */
-export function useProvidersWithActions(): {
-  providers: Provider[];
-  isLoading: boolean;
-  error: Error | undefined;
-  create: (
-    data: Parameters<ReturnType<typeof useProvidersApi>["createProvider"]>[0],
-  ) => Promise<unknown>;
-  update: (
-    id: string,
-    data: Parameters<ReturnType<typeof useProvidersApi>["updateProvider"]>[1],
-  ) => Promise<unknown>;
-  remove: (id: string) => Promise<unknown>;
-  toggleEnabled: (id: string) => Promise<unknown>;
-  refresh: KeyedMutator<Provider[]>;
-} {
+export function useProvidersWithActions() {
   const { providers, isLoading, error, refresh } = useProvidersSWR();
   const {
     createProvider,
@@ -171,70 +157,74 @@ export function useProvidersWithActions(): {
     toggleProviderEnabled,
   } = useProvidersApi();
 
+  const create = async (data: Parameters<typeof createProvider>[0]) => {
+    try {
+      const result = await createProvider(data);
+      if (result) {
+        await refresh();
+      }
+      return result;
+    } catch (err) {
+      console.error("创建提供商失败:", err);
+      throw err;
+    }
+  };
+
+  const update = async (
+    id: string,
+    data: Parameters<typeof updateProvider>[1],
+  ) => {
+    try {
+      const result = await updateProvider(id, data);
+      if (result) {
+        await refresh();
+      }
+      return result;
+    } catch (err) {
+      console.error("更新提供商失败:", err);
+      throw err;
+    }
+  };
+
+  const remove = async (id: string) => {
+    try {
+      const result = await deleteProvider(id);
+      if (result) {
+        await refresh();
+      }
+      return result;
+    } catch (err) {
+      console.error("删除提供商失败:", err);
+      throw err;
+    }
+  };
+
+  const toggleEnabled = async (id: string) => {
+    try {
+      const result = await toggleProviderEnabled(id);
+      if (result) {
+        await refresh();
+      }
+      return result;
+    } catch (err) {
+      console.error("切换提供商状态失败:", err);
+      throw err;
+    }
+  };
+
   return {
     // SWR 数据
     providers,
     isLoading,
     error,
 
-    // CRUD 操作（带缓存更新）
-    async create(data: Parameters<typeof createProvider>[0]) {
-      try {
-        const result = await createProvider(data);
-        if (result) {
-          // 创建成功后，刷新缓存
-          await refresh();
-        }
-        return result;
-      } catch (error) {
-        console.error("创建提供商失败:", error);
-        throw error;
-      }
-    },
-
-    async update(id: string, data: Parameters<typeof updateProvider>[1]) {
-      try {
-        const result = await updateProvider(id, data);
-        if (result) {
-          // 更新成功后，刷新缓存
-          await refresh();
-        }
-        return result;
-      } catch (error) {
-        console.error("更新提供商失败:", error);
-        throw error;
-      }
-    },
-
-    async remove(id: string) {
-      try {
-        const result = await deleteProvider(id);
-        if (result) {
-          // 删除成功后，刷新缓存
-          await refresh();
-        }
-        return result;
-      } catch (error) {
-        console.error("删除提供商失败:", error);
-        throw error;
-      }
-    },
-
-    async toggleEnabled(id: string) {
-      try {
-        const result = await toggleProviderEnabled(id);
-        if (result) {
-          // 操作成功后，刷新缓存
-          await refresh();
-        }
-        return result;
-      } catch (error) {
-        console.error("切换提供商状态失败:", error);
-        throw error;
-      }
-    },
-
     // 手动刷新
     refresh,
+
+    // CRUD 操作
+    create,
+    update,
+    remove,
+    toggleEnabled,
   };
 }
