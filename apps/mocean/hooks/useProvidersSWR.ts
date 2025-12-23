@@ -33,7 +33,7 @@ export function useProvidersSWR() {
       dedupingInterval: 60000, // 60秒内的重复请求会被去重
       errorRetryCount: 3, // 错误重试次数
       errorRetryInterval: 5000, // 重试间隔
-    },
+    }
   );
 
   return {
@@ -66,7 +66,7 @@ export function useEnabledProvidersSWR() {
       dedupingInterval: 60000,
       errorRetryCount: 3,
       errorRetryInterval: 5000,
-    },
+    }
   );
 
   return {
@@ -98,7 +98,7 @@ export function useProviderSWR(id: string | null) {
       revalidateOnFocus: false,
       revalidateOnReconnect: true,
       dedupingInterval: 60000,
-    },
+    }
   );
 
   return {
@@ -134,7 +134,7 @@ export function useProvidersByTypeSWR(type: string | null) {
       dedupingInterval: 30000, // 30秒内的重复请求会被去重
       errorRetryCount: 3,
       errorRetryInterval: 3000,
-    },
+    }
   );
 
   return {
@@ -172,7 +172,7 @@ export function useProvidersWithActions() {
 
   const update = async (
     id: string,
-    data: Parameters<typeof updateProvider>[1],
+    data: Parameters<typeof updateProvider>[1]
   ) => {
     try {
       const result = await updateProvider(id, data);

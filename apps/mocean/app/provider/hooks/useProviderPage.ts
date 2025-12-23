@@ -108,7 +108,7 @@ export function useProviderPage(selectedProviderId: string | null) {
     models.forEach((model) => {
       // 模型对应的组
       const currentGroup = model.modelGroups.find(
-        (group) => group.providerId === selectedProviderId,
+        (group) => group.providerId === selectedProviderId
       );
 
       // 当前模型在该供应商中未进行分组
@@ -185,7 +185,7 @@ export function useProviderPage(selectedProviderId: string | null) {
       if (model.supportsVideo) modelTypes.push("video", "视频");
 
       const matchesTypes = modelTypes.some((type) =>
-        type.toLowerCase().includes(term),
+        type.toLowerCase().includes(term)
       );
 
       return matchesBasicFields || matchesTypes;

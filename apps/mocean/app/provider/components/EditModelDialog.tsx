@@ -210,9 +210,9 @@ export const EditModelDialog: React.FC<EditModelDialogProps> = ({
       const providers =
         (model as any).modelGroups && (model as any).modelGroups.length > 0
           ? (model as any).modelGroups.map((mg: any) => ({
-            providerId: mg.providerId,
-            groupId: formData.groupId,
-          }))
+              providerId: mg.providerId,
+              groupId: formData.groupId,
+            }))
           : [];
 
       const updateData = {
@@ -326,7 +326,7 @@ export const EditModelDialog: React.FC<EditModelDialogProps> = ({
                   <div className="flex flex-wrap gap-2">
                     {formData.types.map((type) => {
                       const typeInfo = MODEL_TYPES.find(
-                        (t) => t.value === type,
+                        (t) => t.value === type
                       );
                       return (
                         <Badge

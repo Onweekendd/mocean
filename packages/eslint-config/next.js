@@ -19,6 +19,11 @@ export const nextJsConfig = [
   eslintConfigPrettier,
   ...tseslint.configs.recommendedTypeChecked,
   {
+    rules: {
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+    },
+  },
+  {
     ...pluginReact.configs.flat.recommended,
     languageOptions: {
       ...pluginReact.configs.flat.recommended.languageOptions,

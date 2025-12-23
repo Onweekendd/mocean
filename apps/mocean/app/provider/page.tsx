@@ -50,7 +50,6 @@ export default function ProviderPage() {
     modelGroups,
     filteredModels,
     filteredModelGroups,
-    availableGroups,
     isLoading,
     error,
     searchTerm,
@@ -65,7 +64,6 @@ export default function ProviderPage() {
     setDeleteAlertOpen,
     groupManageDialogOpen,
     setGroupManageDialogOpen,
-    selectedGroupForAdd,
     selectedModelForEdit,
     selectedModelForDelete,
     onModelClick,
@@ -314,7 +312,7 @@ export default function ProviderPage() {
 
                   <CollapsibleContent
                     className={cn(
-                      `text-popover-foreground outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2`,
+                      `text-popover-foreground outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2`
                     )}
                   >
                     <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
@@ -334,8 +332,8 @@ export default function ProviderPage() {
                 {/* 分组间分隔线 */}
                 {group !==
                   filteredModelGroups[filteredModelGroups.length - 1] && (
-                    <Separator className="my-6" />
-                  )}
+                  <Separator className="my-6" />
+                )}
               </Collapsible>
             ))}
           </div>

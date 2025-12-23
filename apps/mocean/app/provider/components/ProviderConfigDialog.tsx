@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 
-import { Provider } from "@mocean/mastra/prismaType";
 import { Loader2 } from "lucide-react";
+import { Controller } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,128 +16,30 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { useProvidersWithActions } from "@/hooks/useProvidersSWR";
 
-/**
- * 供应商配置编辑对话框属性
- */
-export interface ProviderConfigDialogProps {
-  /** 供应商数据 */
-  provider: Provider;
-  /** 对话框开启状态 */
-  open: boolean;
-  /** 对话框状态变更回调 */
-  onOpenChange: (open: boolean) => void;
-  /** 成功回调 */
-  onSuccess?: () => void;
-}
+import {
+  ProviderConfigDialogProps,
+  useProviderConfig,
+} from "./useProviderConfigDialog";
 
-/**
- * 供应商配置编辑对话框组件
- * @description 用于编辑供应商的基本信息和配置
- *
- * @param provider - 供应商数据
- * @param open - 对话框开启状态
- * @param onOpenChange - 对话框状态变更回调
- * @param [onSuccess] - 成功回调函数
- *
- * @example
- * // 编辑供应商配置
- * <ProviderConfigDialog
- *   provider={provider}
- *   open={configDialogOpen}
- *   onOpenChange={setConfigDialogOpen}
- *   onSuccess={() => console.log("配置已更新")}
- * />
- */
-export const ProviderConfigDialog: React.FC<ProviderConfigDialogProps> = ({
-  provider,
-  open,
-  onOpenChange,
-  onSuccess,
-}) => {
-  // 状态管理
-  const [formData, setFormData] = useState({
-    name: provider.name,
-    apiKey: provider.apiKey,
-    apiHost: provider.apiHost,
-    apiVersion: provider.apiVersion || "",
-    enabled: provider.enabled,
-    notes: provider.notes || "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // API hooks
-  const { update } = useProvidersWithActions();
-
-  /**
-   * 重置表单数据
-   */
-  const resetForm = () => {
-    setFormData({
-      name: provider.name,
-      apiKey: provider.apiKey,
-      apiHost: provider.apiHost,
-      apiVersion: provider.apiVersion || "",
-      enabled: provider.enabled,
-      notes: provider.notes || "",
-    });
-  };
-
-  /**
-   * 处理表单字段变更
-   */
-  const onFormDataChange = (field: string, value: string | boolean) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  /**
-   * 处理表单提交
-   */
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (isSubmitting) return;
-    setIsSubmitting(true);
-
-    try {
-      const updateData = {
-        name: formData.name.trim(),
-        apiKey: formData.apiKey.trim(),
-        apiHost: formData.apiHost.trim(),
-        apiVersion: formData.apiVersion.trim() || null,
-        enabled: formData.enabled,
-        notes: formData.notes.trim() || null,
-      };
-
-      await update(provider.id, updateData);
-
-      onOpenChange(false);
-      onSuccess?.();
-    } catch (error) {
-      console.error("更新供应商配置失败:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  /**
-   * 处理对话框打开状态变更
-   */
-  const onDialogOpenChange = (newOpen: boolean) => {
-    if (!newOpen && !isSubmitting) {
-      resetForm();
-    }
-    onOpenChange(newOpen);
-  };
+export const ProviderConfigDialog: React.FC<ProviderConfigDialogProps> = (
+  props
+) => {
+  const {
+    isSubmitting,
+    provider,
+    open,
+    control,
+    onDialogOpenChange,
+    register,
+    handleSubmit,
+    onSubmit,
+  } = useProviderConfig(props);
 
   return (
     <Dialog open={open} onOpenChange={onDialogOpenChange}>
       <DialogContent className="max-w-md">
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>供应商配置</DialogTitle>
             <DialogDescription>
@@ -151,25 +53,22 @@ export const ProviderConfigDialog: React.FC<ProviderConfigDialogProps> = ({
               <Label htmlFor="name">供应商名称 *</Label>
               <Input
                 id="name"
-                value={formData.name}
-                onChange={(e) => onFormDataChange("name", e.target.value)}
                 placeholder="请输入供应商名称"
                 required
                 className="focus-visible:ring-brand-primary-500"
+                {...register("name", { required: true })}
               />
             </div>
 
             {/* API Key */}
             <div className="space-y-2">
-              <Label htmlFor="apiKey">API Key *</Label>
+              <Label htmlFor="apiKey">API Key</Label>
               <Input
                 id="apiKey"
                 type="password"
-                value={formData.apiKey}
-                onChange={(e) => onFormDataChange("apiKey", e.target.value)}
                 placeholder="请输入API密钥"
-                required
                 className="focus-visible:ring-brand-primary-500"
+                {...register("apiKey")}
               />
             </div>
 
@@ -178,23 +77,10 @@ export const ProviderConfigDialog: React.FC<ProviderConfigDialogProps> = ({
               <Label htmlFor="apiHost">API 接口地址 *</Label>
               <Input
                 id="apiHost"
-                value={formData.apiHost}
-                onChange={(e) => onFormDataChange("apiHost", e.target.value)}
                 placeholder="https://api.example.com"
                 required
                 className="focus-visible:ring-brand-primary-500"
-              />
-            </div>
-
-            {/* API 版本 */}
-            <div className="space-y-2">
-              <Label htmlFor="apiVersion">API 版本</Label>
-              <Input
-                id="apiVersion"
-                value={formData.apiVersion}
-                onChange={(e) => onFormDataChange("apiVersion", e.target.value)}
-                placeholder="v1, v2 等"
-                className="focus-visible:ring-brand-primary-500"
+                {...register("apiHost", { required: true })}
               />
             </div>
 
@@ -203,13 +89,17 @@ export const ProviderConfigDialog: React.FC<ProviderConfigDialogProps> = ({
               {/* 启用状态 */}
               <div className="flex items-center justify-between">
                 <Label htmlFor="enabled">启用供应商</Label>
-                <Switch
-                  id="enabled"
-                  className="data-[state=checked]:bg-brand-primary"
-                  checked={formData.enabled}
-                  onCheckedChange={(checked) =>
-                    onFormDataChange("enabled", checked)
-                  }
+                <Controller
+                  name="enabled"
+                  control={control}
+                  render={({ field }) => (
+                    <Switch
+                      id="enabled"
+                      className="data-[state=checked]:bg-brand-primary"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  )}
                 />
               </div>
             </div>
@@ -219,11 +109,10 @@ export const ProviderConfigDialog: React.FC<ProviderConfigDialogProps> = ({
               <Label htmlFor="notes">备注</Label>
               <Textarea
                 id="notes"
-                value={formData.notes}
-                onChange={(e) => onFormDataChange("notes", e.target.value)}
                 placeholder="供应商相关备注信息..."
                 rows={3}
                 className="focus-visible:ring-brand-primary-500"
+                {...register("notes")}
               />
             </div>
           </div>

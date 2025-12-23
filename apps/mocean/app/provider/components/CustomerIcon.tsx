@@ -20,7 +20,7 @@ export const getProviderIcon = (providerName: string): StaticImageData => {
 };
 
 const convertProviderTypeToProviderIcon = (
-  providerType: ProviderType,
+  providerType: ProviderType
 ): ModelProvider | undefined => {
   const providerMap: Partial<Record<ProviderType, ModelProvider>> = {
     openai: ModelProvider.OpenAI,
@@ -58,8 +58,6 @@ const convertProviderTypeToProviderIcon = (
     vercel: ModelProvider.Vercel,
   };
 
-  console.log(providerMap[providerType]);
-
   return providerMap[providerType];
 };
 
@@ -81,7 +79,7 @@ export const renderProviderAvatar: FC<RenderProviderAvatarProps> = ({
       <div
         className={cn(
           "flex h-4 w-4 items-center justify-center rounded-lg bg-gradient-brand text-sm text-white",
-          className,
+          className
         )}
       />
     );
