@@ -10,7 +10,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
+  AlertDialogTitle
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -68,7 +68,7 @@ export const GroupManageDialog: React.FC<GroupManageDialogProps> = ({
   providerId,
   open,
   onOpenChange,
-  onSuccess,
+  onSuccess
 }) => {
   // API hooks
   const { groups, isLoading, create, update, remove } =
@@ -132,7 +132,7 @@ export const GroupManageDialog: React.FC<GroupManageDialogProps> = ({
     try {
       await create({
         name: groupName.trim(),
-        providerId,
+        providerId
       });
 
       onCancel();
@@ -163,7 +163,7 @@ export const GroupManageDialog: React.FC<GroupManageDialogProps> = ({
     setIsSubmitting(true);
     try {
       await update(editingGroupId, {
-        name: groupName.trim(),
+        name: groupName.trim()
       });
 
       onCancel();

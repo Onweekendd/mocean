@@ -1,9 +1,9 @@
 import {
   type AssistantDetailResult,
   type StorageThreadType,
-  useAssistantsApi,
+  useAssistantsApi
 } from "@mocean/mastra/apiClient";
-import { type AssistantModel } from "@mocean/mastra/prismaType";
+import { type Assistant } from "@mocean/mastra/prismaType";
 import { type UIMessage } from "ai";
 import useSWR, { type KeyedMutator } from "swr";
 
@@ -16,10 +16,10 @@ import useSWR, { type KeyedMutator } from "swr";
  * 获取所有助手列表 - 使用 SWR
  */
 export function useAssistantsSWR(): {
-  assistants: AssistantModel[];
+  assistants: Assistant[];
   isLoading: boolean;
   error: Error | undefined;
-  refresh: KeyedMutator<AssistantModel[]>;
+  refresh: KeyedMutator<Assistant[]>;
 } {
   const { getAssistants } = useAssistantsApi();
 
@@ -36,15 +36,15 @@ export function useAssistantsSWR(): {
       revalidateOnReconnect: true, // 重连时重新验证
       dedupingInterval: 60000, // 60秒内的重复请求会被去重
       errorRetryCount: 3, // 错误重试次数
-      errorRetryInterval: 5000, // 重试间隔
-    },
+      errorRetryInterval: 5000 // 重试间隔
+    }
   );
 
   return {
     assistants: data || [],
     isLoading,
     error,
-    refresh: mutate,
+    refresh: mutate
   };
 }
 
@@ -68,8 +68,8 @@ export function useAssistantSWR(id: string | null) {
       refreshInterval: 0,
       revalidateOnFocus: false,
       revalidateOnReconnect: true,
-      dedupingInterval: 60000,
-    },
+      dedupingInterval: 60000
+    }
   );
 
   /**
@@ -88,7 +88,7 @@ export function useAssistantSWR(id: string | null) {
     isLoading,
     error,
     refresh: mutate,
-    getAssistantById: fetchAssistantById,
+    getAssistantById: fetchAssistantById
   };
 }
 
@@ -118,21 +118,21 @@ export function useAssistantThreadsSWR(assistantId: string | null): {
       revalidateOnReconnect: true,
       dedupingInterval: 30000, // 30秒内的重复请求会被去重（线程数据更新频率较高）
       errorRetryCount: 3,
-      errorRetryInterval: 3000,
-    },
+      errorRetryInterval: 3000
+    }
   );
 
   return {
     threads: data || [],
     isLoading,
     error,
-    refresh: mutate,
+    refresh: mutate
   };
 }
 
 export function useAssistantUIMessageSWR(
   assistantId: string | null,
-  threadId: string | null,
+  threadId: string | null
 ): {
   messages: UIMessage[] | null | undefined;
   isLoading: boolean;
@@ -147,17 +147,17 @@ export function useAssistantUIMessageSWR(
       if (!assistantId || !threadId) return null;
       const result = await getAssistantUIMessageByThreadId(
         assistantId,
-        threadId,
+        threadId
       );
       return result?.data || null;
-    },
+    }
   );
 
   return {
     messages: data,
     isLoading,
     error,
-    refresh: mutate,
+    refresh: mutate
   };
 }
 
@@ -165,18 +165,18 @@ export function useAssistantUIMessageSWR(
  * 增强的助手 API hooks - 结合 CRUD 操作和 SWR 缓存
  */
 export function useAssistantsWithActions(): {
-  assistants: AssistantModel[];
+  assistants: Assistant[];
   isLoading: boolean;
   error: Error | undefined;
   create: (
-    data: Parameters<ReturnType<typeof useAssistantsApi>["createAssistant"]>[0],
+    data: Parameters<ReturnType<typeof useAssistantsApi>["createAssistant"]>[0]
   ) => Promise<unknown>;
   update: (
     id: string,
-    data: Parameters<ReturnType<typeof useAssistantsApi>["updateAssistant"]>[1],
+    data: Parameters<ReturnType<typeof useAssistantsApi>["updateAssistant"]>[1]
   ) => Promise<unknown>;
   remove: (id: string) => Promise<unknown>;
-  refresh: KeyedMutator<AssistantModel[]>;
+  refresh: KeyedMutator<Assistant[]>;
 } {
   const { assistants, isLoading, error, refresh } = useAssistantsSWR();
   const { createAssistant, updateAssistant, deleteAssistant } =
@@ -233,6 +233,6 @@ export function useAssistantsWithActions(): {
     },
 
     // 手动刷新
-    refresh,
+    refresh
   };
 }

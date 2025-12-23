@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
-import { Provider } from "@mocean/mastra/prismaType";
+import type { Provider } from "@mocean/mastra/prismaType";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
 import { useProvidersWithActions } from "@/hooks/useProvidersSWR";
@@ -36,7 +36,7 @@ export type ProviderConfigFormData = {
 export const useProviderConfig = ({
   provider,
   open,
-  onOpenChange,
+  onOpenChange
 }: ProviderConfigDialogProps) => {
   const { update } = useProvidersWithActions();
 
@@ -46,15 +46,15 @@ export const useProviderConfig = ({
     reset,
     control,
     formState: { isSubmitting },
-    watch,
+    watch
   } = useForm<ProviderConfigFormData>({
     defaultValues: {
       name: provider.name,
       apiKey: provider.apiKey,
       apiHost: provider.apiHost,
       enabled: provider.enabled,
-      notes: provider.notes || "",
-    },
+      notes: provider.notes || ""
+    }
   });
 
   const updateFormDataWithProvider = useCallback(() => {
@@ -63,7 +63,7 @@ export const useProviderConfig = ({
       apiKey: provider.apiKey,
       apiHost: provider.apiHost,
       enabled: provider.enabled,
-      notes: provider.notes || "",
+      notes: provider.notes || ""
     });
   }, [provider, reset]);
 
@@ -92,7 +92,7 @@ export const useProviderConfig = ({
           apiKey: data.apiKey.trim(),
           apiHost: data.apiHost.trim(),
           enabled: data.enabled,
-          notes: data.notes.trim() || null,
+          notes: data.notes.trim() || null
         };
 
         await update(provider.id, updateData);
@@ -116,6 +116,6 @@ export const useProviderConfig = ({
     reset,
     watch,
     onSubmit,
-    onDialogOpenChange,
+    onDialogOpenChange
   };
 };

@@ -2,11 +2,10 @@ import React from "react";
 
 import Image from "next/image";
 
-import { Model } from "@mocean/mastra/prismaType";
+import type { Model } from "@mocean/mastra/prismaType";
 import { Brain, Database, Edit, Eye, Search, Trash2, Zap } from "lucide-react";
 
 import { ItemCard } from "@/components/custom/item-card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 import { getModelLogo } from "../constant";

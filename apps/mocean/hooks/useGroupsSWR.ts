@@ -1,8 +1,8 @@
-import {
+import type {
   GroupDetailResult,
-  GroupsByProviderResult,
-  useGroupsApi,
+  GroupsByProviderResult
 } from "@mocean/mastra/apiClient";
+import { useGroupsApi } from "@mocean/mastra/apiClient";
 import useSWR, { type KeyedMutator } from "swr";
 
 /**
@@ -33,15 +33,15 @@ export function useGroupsByProviderSWR(providerId: string | null) {
       revalidateOnReconnect: true,
       dedupingInterval: 60000,
       errorRetryCount: 3,
-      errorRetryInterval: 5000,
-    },
+      errorRetryInterval: 5000
+    }
   );
 
   return {
     groups: data || [],
     isLoading,
     error,
-    refresh: mutate,
+    refresh: mutate
   };
 }
 
@@ -66,15 +66,15 @@ export function useGroupSWR(id: string | null) {
       refreshInterval: 0,
       revalidateOnFocus: false,
       revalidateOnReconnect: true,
-      dedupingInterval: 60000,
-    },
+      dedupingInterval: 60000
+    }
   );
 
   return {
     group: data,
     isLoading,
     error,
-    refresh: mutate,
+    refresh: mutate
   };
 }
 
@@ -87,11 +87,11 @@ export function useGroupsWithActions(providerId: string | null): {
   isLoading: boolean;
   error: Error | undefined;
   create: (
-    data: Parameters<ReturnType<typeof useGroupsApi>["createGroup"]>[0],
+    data: Parameters<ReturnType<typeof useGroupsApi>["createGroup"]>[0]
   ) => Promise<unknown>;
   update: (
     id: string,
-    data: Parameters<ReturnType<typeof useGroupsApi>["updateGroup"]>[1],
+    data: Parameters<ReturnType<typeof useGroupsApi>["updateGroup"]>[1]
   ) => Promise<unknown>;
   remove: (id: string) => Promise<unknown>;
   refresh: KeyedMutator<GroupsByProviderResult>;
@@ -150,6 +150,6 @@ export function useGroupsWithActions(providerId: string | null): {
     },
 
     // 手动刷新
-    refresh,
+    refresh
   };
 }

@@ -1,5 +1,4 @@
 import js from '@eslint/js';
-import eslintConfigPrettier from 'eslint-config-prettier';
 import prettierConfig from 'eslint-config-prettier';
 import prettierPlugin from 'eslint-plugin-prettier';
 import turboPlugin from 'eslint-plugin-turbo';
@@ -13,8 +12,14 @@ import tseslint from 'typescript-eslint';
  * */
 export const config = [
   js.configs.recommended,
-  eslintConfigPrettier,
+  prettierConfig,
   ...tseslint.configs.recommendedTypeChecked,
+  {
+    rules: {
+      '@typescript-eslint/consistent-type-imports': 'error',
+      'no-duplicate-imports': ['error', { allowSeparateTypeImports: true }],
+    },
+  },
   {
     languageOptions: {
       parserOptions: {
@@ -38,6 +43,9 @@ export const config = [
     plugins: {
       prettier: prettierPlugin,
     },
+    rules: {
+      'prettier/prettier': 'error',
+    },
   },
   {
     rules: {
@@ -56,6 +64,4 @@ export const config = [
   {
     ignores: ['dist/**'],
   },
-
-  prettierConfig,
 ];

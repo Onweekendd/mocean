@@ -61,6 +61,7 @@
     "eslint": "^9.15.0",
     "install": "^0.13.0",
     "playwright": "^1.41.0",
+    "prettier": "^3.6.2",
     "prisma": "^7.0.0",
     "rollup": "^4.52.5",
     "rollup-plugin-dts": "^6.2.3",
