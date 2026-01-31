@@ -6,7 +6,7 @@
         "/c",
         "node",
         "C:\\Figma-Context-MCP\\dist\\bin.js",
-        "--figma-api-key=figd_221ddZ6ZOxmBNBxIIreR6J-aMZNW_2uaEetxbnAr",
+        "--figma-api-key=",
         "--json=true",
         "--stdio"
       ],
