@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react";
 
-import { Model, Provider } from "@mocean/mastra/prismaType";
+import type { Model, Provider } from "@mocean/mastra/prismaType";
 
 import { useGroupsByProviderSWR } from "@/hooks/useGroupsSWR";
 import {
   useModelsByProviderSWR,
-  useModelsWithActions,
+  useModelsWithActions
 } from "@/hooks/useModelsSWR";
 import { useProvidersWithActions } from "@/hooks/useProvidersSWR";
 
@@ -79,7 +79,7 @@ export function useProviderPage(selectedProviderId: string | null) {
     models,
     isLoading,
     error,
-    refresh: refreshModels,
+    refresh: refreshModels
   } = useModelsByProviderSWR(selectedProviderId);
 
   /**
@@ -100,7 +100,7 @@ export function useProviderPage(selectedProviderId: string | null) {
         groupName: group.name,
         groupId: group.id,
         models: [],
-        count: 0,
+        count: 0
       });
     });
 
@@ -118,7 +118,7 @@ export function useProviderPage(selectedProviderId: string | null) {
             groupName: UN_GROUP_NAME,
             groupId: UN_GROUP_ID,
             models: [model],
-            count: 1,
+            count: 1
           });
         } else {
           const group = groupMap.get(UN_GROUP_ID);
@@ -136,7 +136,7 @@ export function useProviderPage(selectedProviderId: string | null) {
           groupName: currentGroup.group.name,
           groupId: currentGroup.groupId,
           models: [model],
-          count: 1,
+          count: 1
         });
       } else {
         const group = groupMap.get(currentGroup.groupId);
@@ -150,7 +150,7 @@ export function useProviderPage(selectedProviderId: string | null) {
     // 转换为数组并排序
     const sortedGroups = Array.from(groupMap.values()).map((group) => ({
       ...group,
-      models: group.models.sort((a, b) => a.name.localeCompare(b.name)),
+      models: group.models.sort((a, b) => a.name.localeCompare(b.name))
     }));
 
     return sortedGroups;
@@ -209,7 +209,7 @@ export function useProviderPage(selectedProviderId: string | null) {
       ...group,
       models: group.models.filter((model) => filteredModelIds.has(model.id)),
       count: group.models.filter((model) => filteredModelIds.has(model.id))
-        .length,
+        .length
     }));
   }, [modelGroups, filteredModels]);
 
@@ -338,6 +338,6 @@ export function useProviderPage(selectedProviderId: string | null) {
     confirmDeleteModel,
     onToggleEnabled,
     onOpenAddModel,
-    refreshModels,
+    refreshModels
   };
 }

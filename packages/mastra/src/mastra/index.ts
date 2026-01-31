@@ -7,7 +7,7 @@ import { apiRoutes } from "./router";
 
 export const mastra = new Mastra({
   agents: {
-    DynamicAgent,
+    DynamicAgent
   },
 
   server: { timeout: 30000, apiRoutes },
@@ -15,12 +15,13 @@ export const mastra = new Mastra({
   storage: new LibSQLStore({
     // stores telemetry, evals, ... into memory storage, if it needs to persist, change to file:../mastra.db
 
-    url: ":memory:",
+    url: ":memory:"
   }),
 
   logger: new PinoLogger({
     name: "Mastra",
 
-    level: "info",
-  }),
+    level: "info"
+  })
 });
+

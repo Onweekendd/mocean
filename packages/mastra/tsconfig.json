@@ -21,6 +21,13 @@
       "@generatedPrisma/*": ["./generated/prisma/*"]
     }
   },
-  "include": ["src/**/*", "scripts/**/*", "generated/**/*"],
-  "exclude": ["node_modules", "generated", "prisma"]
+  "include": [
+    "src/**/*",
+    "scripts/**/*",
+    "generated/**/*",
+    "./eslint.config.js",
+    "./prettier.config.js",
+    "./prisma.config.ts"
+  ],
+  "exclude": ["node_modules", "generated"]
 }

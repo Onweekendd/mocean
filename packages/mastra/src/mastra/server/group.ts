@@ -7,19 +7,19 @@ import { prisma } from "./index";
  */
 const createGroupSchema = z.object({
   name: z.string().min(1, "分组名称不能为空"),
-  providerId: z.string().min(1, "提供商ID不能为空"),
+  providerId: z.string().min(1, "提供商ID不能为空")
 });
 
 const updateGroupSchema = z.object({
-  name: z.string().min(1, "分组名称不能为空"),
+  name: z.string().min(1, "分组名称不能为空")
 });
 
 const idParamSchema = z.object({
-  id: z.string().min(1, "分组ID不能为空"),
+  id: z.string().min(1, "分组ID不能为空")
 });
 
 const providerParamSchema = z.object({
-  providerId: z.string().min(1, "提供商ID不能为空"),
+  providerId: z.string().min(1, "提供商ID不能为空")
 });
 
 // zod类型推导
@@ -35,19 +35,19 @@ export type UpdateGroupInput = z.infer<typeof updateGroupSchema>;
 const getGroupsByProvider = async (providerId: string) => {
   const groups = await prisma.group.findMany({
     where: {
-      providerId,
+      providerId
     },
     include: {
       _count: {
         select: {
-          models: true,
-        },
-      },
+          models: true
+        }
+      }
     },
     orderBy: [
       { isDefault: "desc" }, // 默认分组排在前面
-      { name: "asc" },
-    ],
+      { name: "asc" }
+    ]
   });
 
   return groups;
@@ -62,20 +62,20 @@ const getGroupsByProvider = async (providerId: string) => {
 const getGroupById = async (id: string) => {
   const group = await prisma.group.findUnique({
     where: {
-      id,
+      id
     },
     include: {
       models: {
         include: {
-          model: true,
-        },
+          model: true
+        }
       },
       _count: {
         select: {
-          models: true,
-        },
-      },
-    },
+          models: true
+        }
+      }
+    }
   });
 
   return group;
@@ -94,9 +94,9 @@ const createGroup = async (group: CreateGroupInput) => {
     where: {
       providerId_name: {
         providerId: group.providerId,
-        name: group.name,
-      },
-    },
+        name: group.name
+      }
+    }
   });
 
   if (existingGroup) {
@@ -108,15 +108,15 @@ const createGroup = async (group: CreateGroupInput) => {
       ...group,
       isDefault: false, // 新建的分组不是默认分组
       createdAt: new Date(),
-      updatedAt: new Date(),
+      updatedAt: new Date()
     },
     include: {
       _count: {
         select: {
-          models: true,
-        },
-      },
-    },
+          models: true
+        }
+      }
+    }
   });
 
   return newGroup;
@@ -133,7 +133,7 @@ const createGroup = async (group: CreateGroupInput) => {
 const updateGroup = async (id: string, group: UpdateGroupInput) => {
   // 检查是否为默认分组
   const existing = await prisma.group.findUnique({
-    where: { id },
+    where: { id }
   });
 
   if (!existing) {
@@ -149,9 +149,9 @@ const updateGroup = async (id: string, group: UpdateGroupInput) => {
     where: {
       providerId_name: {
         providerId: existing.providerId,
-        name: group.name,
-      },
-    },
+        name: group.name
+      }
+    }
   });
 
   if (duplicateGroup && duplicateGroup.id !== id) {
@@ -160,19 +160,19 @@ const updateGroup = async (id: string, group: UpdateGroupInput) => {
 
   const updatedGroup = await prisma.group.update({
     where: {
-      id,
+      id
     },
     data: {
       ...group,
-      updatedAt: new Date(),
+      updatedAt: new Date()
     },
     include: {
       _count: {
         select: {
-          models: true,
-        },
-      },
-    },
+          models: true
+        }
+      }
+    }
   });
 
   return updatedGroup;
@@ -192,10 +192,10 @@ const deleteGroup = async (id: string) => {
     include: {
       _count: {
         select: {
-          models: true,
-        },
-      },
-    },
+          models: true
+        }
+      }
+    }
   });
 
   if (!group) {
@@ -210,8 +210,8 @@ const deleteGroup = async (id: string) => {
   const defaultGroup = await prisma.group.findFirst({
     where: {
       providerId: group.providerId,
-      isDefault: true,
-    },
+      isDefault: true
+    }
   });
 
   if (!defaultGroup) {
@@ -221,19 +221,19 @@ const deleteGroup = async (id: string) => {
   // 将该分组下的所有模型移至默认分组
   await prisma.modelGroup.updateMany({
     where: {
-      groupId: id,
+      groupId: id
     },
     data: {
       groupId: defaultGroup.id,
-      updatedAt: new Date(),
-    },
+      updatedAt: new Date()
+    }
   });
 
   // 删除分组
   const deletedGroup = await prisma.group.delete({
     where: {
-      id,
-    },
+      id
+    }
   });
 
   return deletedGroup;
@@ -259,5 +259,5 @@ export {
   createGroupSchema,
   updateGroupSchema,
   idParamSchema,
-  providerParamSchema,
+  providerParamSchema
 };

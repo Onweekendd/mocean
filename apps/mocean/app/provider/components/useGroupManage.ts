@@ -79,7 +79,7 @@ function dialogReducer(state: DialogState, action: DialogAction): DialogState {
  * 分组管理对话框 Hook
  * @description 使用 useReducer 管理复杂状态转换
  */
-export const useGroupManageDialog = ({
+export const useGroupManage = ({
   providerId,
   onSuccess
 }: GroupManageDialogProps) => {

@@ -17,8 +17,8 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 
-import type { ProviderConfigDialogProps } from "./useProviderConfigDialog";
-import { useProviderConfig } from "./useProviderConfigDialog";
+import type { ProviderConfigDialogProps } from "./useProviderConfig";
+import { useProviderConfig } from "./useProviderConfig";
 
 export const ProviderConfigDialog: React.FC<ProviderConfigDialogProps> = (
   props

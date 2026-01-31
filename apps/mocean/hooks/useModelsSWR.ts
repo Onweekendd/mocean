@@ -1,4 +1,5 @@
-import { ModelsByProviderResult, useModelsApi } from "@mocean/mastra/apiClient";
+import type { ModelsByProviderResult } from "@mocean/mastra/apiClient";
+import { useModelsApi } from "@mocean/mastra/apiClient";
 import { type Model } from "@mocean/mastra/prismaType";
 import useSWR, { type KeyedMutator } from "swr";
 
@@ -26,15 +27,15 @@ export function useModelsSWR() {
       revalidateOnReconnect: true, // 重连时重新验证
       dedupingInterval: 60000, // 60秒内的重复请求会被去重
       errorRetryCount: 3, // 错误重试次数
-      errorRetryInterval: 5000, // 重试间隔
-    },
+      errorRetryInterval: 5000 // 重试间隔
+    }
   );
 
   return {
     models: data || [],
     isLoading,
     error,
-    refresh: mutate,
+    refresh: mutate
   };
 }
 
@@ -58,15 +59,15 @@ export function useModelSWR(id: string | null) {
       refreshInterval: 0,
       revalidateOnFocus: false,
       revalidateOnReconnect: true,
-      dedupingInterval: 60000,
-    },
+      dedupingInterval: 60000
+    }
   );
 
   return {
     model: data,
     isLoading,
     error,
-    refresh: mutate,
+    refresh: mutate
   };
 }
 
@@ -94,15 +95,15 @@ export function useModelsByProviderSWR(providerId: string | null) {
       revalidateOnReconnect: true,
       dedupingInterval: 30000, // 30秒内的重复请求会被去重
       errorRetryCount: 3,
-      errorRetryInterval: 3000,
-    },
+      errorRetryInterval: 3000
+    }
   );
 
   return {
     models: data || [],
     isLoading,
     error,
-    refresh: mutate,
+    refresh: mutate
   };
 }
 
@@ -127,15 +128,15 @@ export function useModelsByGroupSWR(group: string | null) {
       revalidateOnReconnect: true,
       dedupingInterval: 30000,
       errorRetryCount: 3,
-      errorRetryInterval: 3000,
-    },
+      errorRetryInterval: 3000
+    }
   );
 
   return {
     models: data || [],
     isLoading,
     error,
-    refresh: mutate,
+    refresh: mutate
   };
 }
 
@@ -147,11 +148,11 @@ export function useModelsWithActions(): {
   isLoading: boolean;
   error: Error | undefined;
   create: (
-    data: Parameters<ReturnType<typeof useModelsApi>["createModel"]>[0],
+    data: Parameters<ReturnType<typeof useModelsApi>["createModel"]>[0]
   ) => Promise<unknown>;
   update: (
     id: string,
-    data: Parameters<ReturnType<typeof useModelsApi>["updateModel"]>[1],
+    data: Parameters<ReturnType<typeof useModelsApi>["updateModel"]>[1]
   ) => Promise<unknown>;
   remove: (id: string) => Promise<unknown>;
   refresh: KeyedMutator<Model[]>;
@@ -209,6 +210,6 @@ export function useModelsWithActions(): {
     },
 
     // 手动刷新
-    refresh,
+    refresh
   };
 }

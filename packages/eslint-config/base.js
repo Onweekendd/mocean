@@ -1,9 +1,9 @@
-import js from '@eslint/js';
-import prettierConfig from 'eslint-config-prettier';
-import prettierPlugin from 'eslint-plugin-prettier';
-import turboPlugin from 'eslint-plugin-turbo';
-import globals from 'globals';
-import tseslint from 'typescript-eslint';
+import js from "@eslint/js";
+import prettierConfig from "eslint-config-prettier";
+import prettierPlugin from "eslint-plugin-prettier";
+import turboPlugin from "eslint-plugin-turbo";
+import globals from "globals";
+import tseslint from "typescript-eslint";
 
 /**
  * A shared ESLint configuration for the repository.
@@ -16,8 +16,8 @@ export const config = [
   ...tseslint.configs.recommendedTypeChecked,
   {
     rules: {
-      '@typescript-eslint/consistent-type-imports': 'error',
-      'no-duplicate-imports': ['error', { allowSeparateTypeImports: true }],
+      "@typescript-eslint/consistent-type-imports": "error",
+      "no-duplicate-imports": ["error", { allowSeparateTypeImports: true }],
     },
   },
   {
@@ -36,7 +36,7 @@ export const config = [
       turbo: turboPlugin,
     },
     rules: {
-      'turbo/no-undeclared-env-vars': 'error',
+      "turbo/no-undeclared-env-vars": "error",
     },
   },
   {
@@ -44,24 +44,24 @@ export const config = [
       prettier: prettierPlugin,
     },
     rules: {
-      'prettier/prettier': 'error',
+      "prettier/prettier": "error",
     },
   },
   {
     rules: {
-      'no-console': 'warn',
-      'no-debugger': 'error',
-      'no-alert': 'error',
-      'no-unused-vars': 'error',
-      'no-undef': 'error',
-      'no-duplicate-imports': 'error',
-      'no-unreachable': 'error',
-      '@typescript-eslint/no-unused-vars': 'error',
-      '@typescript-eslint/no-explicit-any': 'error',
-      '@typescript-eslint/no-non-null-assertion': 'error',
+      "no-console": "warn",
+      "no-debugger": "error",
+      "no-alert": "error",
+      "no-unused-vars": "error",
+      "no-undef": "error",
+      "no-duplicate-imports": "error",
+      "no-unreachable": "error",
+      "@typescript-eslint/no-unused-vars": "error",
+      "@typescript-eslint/no-explicit-any": "error",
+      "@typescript-eslint/no-non-null-assertion": "error",
     },
   },
   {
-    ignores: ['dist/**'],
+    ignores: ["dist/**"],
   },
 ];

@@ -2,9 +2,14 @@ import { config } from "@mocean/eslint-config/base";
 
 /** @type {import("eslint").Linter.Config} */
 export default [
-  ...config,
   {
     ignores: [
+      // ESLint 配置文件本身
+      "eslint.config.js",
+      "prettier.config.js",
+      "rollup.config.mjs",
+
+
       // 依赖目录
       "node_modules/",
 
@@ -32,4 +37,5 @@ export default [
       "*.log",
     ],
   },
+  ...config,
 ];

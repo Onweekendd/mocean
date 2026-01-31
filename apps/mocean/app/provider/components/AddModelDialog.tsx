@@ -11,7 +11,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,82 +20,132 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useGroupsByProviderSWR } from "@/hooks/useGroupsSWR";
 import { useModelsWithActions } from "@/hooks/useModelsSWR";
 
 /**
+
  * 模型类型选项
+
  */
+
 const MODEL_TYPES = [
   { value: "text", label: "文本" },
+
   { value: "vision", label: "视觉" },
+
   { value: "embedding", label: "向量" },
+
   { value: "reasoning", label: "推理" },
+
   { value: "function_calling", label: "函数调用" },
-  { value: "web_search", label: "网络搜索" },
+
+  { value: "web_search", label: "网络搜索" }
 ];
 
 /**
+
  * 添加模型对话框属性
+
  */
+
 export interface AddModelDialogProps {
   /** 供应商ID */
+
   providerId: string | null;
+
   /** 对话框开启状态 */
+
   open: boolean;
+
   /** 对话框状态变更回调 */
+
   onOpenChange: (open: boolean) => void;
+
   /** 成功回调 */
+
   onSuccess?: () => void;
 }
 
 /**
+
  * 添加模型对话框组件
+
  * @description 用于向指定供应商添加新模型
+
  *
+
  * @param providerId - 供应商ID
+
  * @param open - 对话框开启状态
+
  * @param onOpenChange - 对话框状态变更回调
+
  * @param [onSuccess] - 成功回调函数
+
  *
+
  * @example
+
  * // 添加模型
+
  * <AddModelDialog
+
  *   providerId="provider-123"
+
  *   open={addDialogOpen}
+
  *   onOpenChange={setAddDialogOpen}
+
  *   onSuccess={refreshModels}
+
  * />
+
  */
+
 export const AddModelDialog: React.FC<AddModelDialogProps> = ({
   providerId,
+
   open,
+
   onOpenChange,
-  onSuccess,
+
+  onSuccess
 }) => {
   // API hooks
+
   const { groups, isLoading: groupsLoading } =
     useGroupsByProviderSWR(providerId);
+
   const { create } = useModelsWithActions();
 
   // 获取默认分组
+
   const defaultGroup = groups.find((g) => g.isDefault);
 
   // 状态管理
+
   const [formData, setFormData] = useState({
     name: "",
+
     id: "",
+
     groupId: defaultGroup?.id || "",
+
     description: "",
+
     ownedBy: "",
-    types: [] as string[],
+
+    types: [] as string[]
   });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // 当默认分组加载完成时更新表单
+
   React.useEffect(() => {
     if (defaultGroup && !formData.groupId) {
       setFormData((prev) => ({ ...prev, groupId: defaultGroup.id }));
@@ -103,98 +153,143 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = ({
   }, [defaultGroup, formData.groupId]);
 
   /**
+
    * 重置表单数据
+
    */
+
   const resetForm = () => {
     setFormData({
       name: "",
+
       id: "",
+
       groupId: defaultGroup?.id || "",
+
       description: "",
+
       ownedBy: "",
-      types: [],
+
+      types: []
     });
   };
 
   /**
+
    * 处理表单字段变更
+
    */
+
   const onFormDataChange = (field: string, value: string | string[]) => {
     setFormData((prev) => ({
       ...prev,
-      [field]: value,
+
+      [field]: value
     }));
   };
 
   /**
+
    * 处理模型类型变更
+
    */
+
   const onTypeToggle = (type: string) => {
     setFormData((prev) => ({
       ...prev,
+
       types: prev.types.includes(type)
         ? prev.types.filter((t) => t !== type)
-        : [...prev.types, type],
+        : [...prev.types, type]
     }));
   };
 
   /**
+
    * 移除选中的模型类型
+
    */
+
   const onRemoveType = (type: string) => {
     setFormData((prev) => ({
       ...prev,
-      types: prev.types.filter((t) => t !== type),
+
+      types: prev.types.filter((t) => t !== type)
     }));
   };
 
   /**
+
    * 根据模型名称自动生成ID
+
    */
+
   const onGenerateId = () => {
     if (formData.name.trim()) {
       const generatedId = formData.name
+
         .toLowerCase()
+
         .replace(/[^a-z0-9\s-]/g, "")
+
         .replace(/\s+/g, "-")
+
         .trim();
+
       onFormDataChange("id", generatedId);
     }
   };
 
   /**
+
    * 处理表单提交
+
    */
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (isSubmitting || !providerId || !formData.groupId) return;
+
     setIsSubmitting(true);
 
     try {
       const modelData = {
         name: formData.name.trim(),
+
         id: formData.id.trim(),
+
         description: formData.description.trim() || null,
+
         owned_by: formData.ownedBy.trim() || null,
+
         providers: [
           {
             providerId,
-            groupId: formData.groupId,
-          },
+
+            groupId: formData.groupId
+          }
         ],
+
         isSystem: false,
+
         // 根据类型设置能力标志
+
         supportsTools: formData.types.includes("function_calling"),
+
         supportsReasoning: formData.types.includes("reasoning"),
+
         supportsImage: formData.types.includes("vision"),
-        supportsEmbedding: formData.types.includes("embedding"),
+
+        supportsEmbedding: formData.types.includes("embedding")
       };
 
       await create(modelData);
 
       onOpenChange(false);
+
       resetForm();
+
       onSuccess?.();
     } catch (error) {
       console.error("添加模型失败:", error);
@@ -204,12 +299,16 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = ({
   };
 
   /**
+
    * 处理对话框打开状态变更
+
    */
+
   const onDialogOpenChange = (newOpen: boolean) => {
     if (!newOpen && !isSubmitting) {
       resetForm();
     }
+
     onOpenChange(newOpen);
   };
 
@@ -219,6 +318,7 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = ({
         <form onSubmit={onSubmit}>
           <DialogHeader>
             <DialogTitle>添加模型</DialogTitle>
+
             <DialogDescription>
               为当前供应商添加一个新的AI模型
             </DialogDescription>
@@ -226,8 +326,10 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = ({
 
           <div className="space-y-4 py-4">
             {/* 模型名称 */}
+
             <div className="space-y-2">
               <Label htmlFor="name">模型名称 *</Label>
+
               <Input
                 id="name"
                 value={formData.name}
@@ -239,9 +341,11 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = ({
             </div>
 
             {/* 模型ID */}
+
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="modelId">模型ID *</Label>
+
                 <Button
                   type="button"
                   variant="ghost"
@@ -252,6 +356,7 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = ({
                   基于名称生成
                 </Button>
               </div>
+
               <Input
                 id="modelId"
                 value={formData.id}
@@ -263,8 +368,10 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = ({
             </div>
 
             {/* 模型分组 */}
+
             <div className="space-y-2">
               <Label htmlFor="group">模型分组 *</Label>
+
               {groupsLoading ? (
                 <div className="flex h-10 items-center justify-center rounded-md border">
                   <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
@@ -277,32 +384,39 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = ({
                   <SelectTrigger className="focus:ring-brand-primary-500">
                     <SelectValue placeholder="选择分组" />
                   </SelectTrigger>
+
                   <SelectContent>
                     {groups.map((group) => (
                       <SelectItem key={group.id} value={group.id}>
                         {group.name}
+
                         {group.isDefault && " (默认)"}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               )}
+
               <p className="text-xs text-muted-foreground">
                 可在分组管理中创建新分组
               </p>
             </div>
 
             {/* 模型类型 */}
+
             <div className="space-y-2">
               <Label>模型类型 *</Label>
+
               <div className="space-y-2">
                 {/* 选中的类型 */}
+
                 {formData.types.length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {formData.types.map((type) => {
                       const typeInfo = MODEL_TYPES.find(
-                        (t) => t.value === type,
+                        (t) => t.value === type
                       );
+
                       return (
                         <Badge
                           key={type}
@@ -310,6 +424,7 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = ({
                           className="text-xs"
                         >
                           {typeInfo?.label || type}
+
                           <X
                             className="ml-1 h-3 w-3 cursor-pointer"
                             onClick={() => onRemoveType(type)}
@@ -321,6 +436,7 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = ({
                 )}
 
                 {/* 类型选择 */}
+
                 <div className="grid grid-cols-2 gap-2">
                   {MODEL_TYPES.map((type) => (
                     <div
@@ -333,6 +449,7 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = ({
                         onCheckedChange={() => onTypeToggle(type.value)}
                         className="data-[state=checked]:border-brand-primary-500 data-[state=checked]:bg-brand-primary-500"
                       />
+
                       <Label
                         htmlFor={`type-${type.value}`}
                         className="text-sm font-normal"
@@ -352,8 +469,10 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = ({
             </div>
 
             {/* 拥有者 */}
+
             <div className="space-y-2">
               <Label htmlFor="ownedBy">模型拥有者</Label>
+
               <Input
                 id="ownedBy"
                 value={formData.ownedBy}
@@ -364,8 +483,10 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = ({
             </div>
 
             {/* 模型描述 */}
+
             <div className="space-y-2">
               <Label htmlFor="description">模型描述</Label>
+
               <Textarea
                 id="description"
                 value={formData.description}
@@ -388,6 +509,7 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = ({
             >
               取消
             </Button>
+
             <Button
               type="submit"
               disabled={

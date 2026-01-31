@@ -1,14 +1,15 @@
 /// <reference lib="dom" />
-import {
+import type {
   CreateGroupInput,
   GroupCreateResult,
   GroupDeleteResult,
   GroupDetailResult,
   GroupUpdateResult,
   GroupsByProviderResult,
-  UpdateGroupInput,
+  UpdateGroupInput
 } from "../server/group";
-import { ApiClientConfig, ApiResponse, BaseApiClient } from "./base-client";
+import type { ApiClientConfig, ApiResponse } from "./base-client";
+import { BaseApiClient } from "./base-client";
 
 /**
  * 分组 API 客户端类
@@ -25,7 +26,7 @@ export class GroupsApiClient extends BaseApiClient {
    * @param providerId - 提供商的唯一标识符
    */
   async getGroupsByProvider(
-    providerId: string,
+    providerId: string
   ): Promise<ApiResponse<GroupsByProviderResult>> {
     return this.get<GroupsByProviderResult>(`/groups/provider/${providerId}`);
   }
@@ -45,7 +46,7 @@ export class GroupsApiClient extends BaseApiClient {
    * @param group - 包含分组信息的对象
    */
   async createGroup(
-    group: CreateGroupInput,
+    group: CreateGroupInput
   ): Promise<ApiResponse<GroupCreateResult>> {
     return this.post<GroupCreateResult>("/groups", group);
   }
@@ -58,7 +59,7 @@ export class GroupsApiClient extends BaseApiClient {
    */
   async updateGroup(
     id: string,
-    group: UpdateGroupInput,
+    group: UpdateGroupInput
   ): Promise<ApiResponse<GroupUpdateResult>> {
     return this.put<GroupUpdateResult>(`/groups/${id}`, group);
   }
@@ -115,7 +116,7 @@ export const groupsApiMethods = {
    * 删除分组
    * @param id - 分组ID
    */
-  deleteGroup: (id: string) => groupsApi.deleteGroup(id),
+  deleteGroup: (id: string) => groupsApi.deleteGroup(id)
 };
 
 /**
@@ -142,18 +143,18 @@ export type UseGroupsApiReturn = {
  */
 export const useGroupsApi = (): UseGroupsApiReturn => ({
   getGroupsByProvider: groupsApi.getGroupsByProvider.bind(
-    groupsApi,
+    groupsApi
   ) as GroupsApiClient["getGroupsByProvider"],
   getGroupById: groupsApi.getGroupById.bind(
-    groupsApi,
+    groupsApi
   ) as GroupsApiClient["getGroupById"],
   createGroup: groupsApi.createGroup.bind(
-    groupsApi,
+    groupsApi
   ) as GroupsApiClient["createGroup"],
   updateGroup: groupsApi.updateGroup.bind(
-    groupsApi,
+    groupsApi
   ) as GroupsApiClient["updateGroup"],
   deleteGroup: groupsApi.deleteGroup.bind(
-    groupsApi,
-  ) as GroupsApiClient["deleteGroup"],
+    groupsApi
+  ) as GroupsApiClient["deleteGroup"]
 });

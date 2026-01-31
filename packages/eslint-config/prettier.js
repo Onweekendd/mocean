@@ -22,5 +22,5 @@ export const prettierConfig = {
   /** 箭头函数的参数无论有几个，都要括号包裹 */
   arrowParens: "always",
   /** 换行符的使用 */
-  endOfLine: "crlf",
+  endOfLine: "auto",
 };
