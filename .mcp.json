@@ -1,19 +1,5 @@
 {
   "mcpServers": {
-    "Framelink MCP for Figma (Local)": {
-      "command": "cmd",
-      "args": [
-        "/c",
-        "node",
-        "C:\\Figma-Context-MCP\\dist\\bin.js",
-        "--figma-api-key=",
-        "--json=true",
-        "--stdio"
-      ],
-      "env": {
-        "NODE_ENV": "development"
-      }
-    },
     "mastra": {
       "command": "cmd",
       "args": ["/c", "npx", "-y", "@mastra/mcp-docs-server"],
