@@ -103,7 +103,7 @@ const getProviderByIdRouter = registerApiRoute(`${PREFIX}/providers/:id`, {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.errors,
+            details: error.issues,
           }),
           {
             status: 400,
@@ -148,7 +148,7 @@ const getProvidersByTypeRouter = registerApiRoute(
           return new Response(
             JSON.stringify({
               error: "参数校验失败",
-              details: error.errors,
+              details: error.issues,
             }),
             {
               status: 400,
@@ -192,7 +192,7 @@ const createProviderRouter = registerApiRoute(`${PREFIX}/providers`, {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.errors,
+            details: error.issues,
           }),
           {
             status: 400,
@@ -319,7 +319,7 @@ const deleteProviderRouter = registerApiRoute(`${PREFIX}/providers/:id`, {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.errors,
+            details: error.issues,
           }),
           {
             status: 400,
@@ -377,7 +377,7 @@ const toggleProviderEnabledRouter = registerApiRoute(
           return new Response(
             JSON.stringify({
               error: "参数校验失败",
-              details: error.errors,
+              details: error.issues,
             }),
             {
               status: 400,

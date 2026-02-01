@@ -1,15 +1,15 @@
-import { RuntimeContext } from "@mastra/core/di";
+import { RequestContext } from "@mastra/core/request-context";
 
-import { AssistantDetailResult } from "../server/assistant";
+import type { AssistantDetailResult } from "../server/assistant";
 
 export type CommonRunTimeType = {
   assistant: AssistantDetailResult;
 };
 
-export const createCommonRunTime = ({ assistant }: CommonRunTimeType) => {
-  const context = new RuntimeContext<CommonRunTimeType>();
+export const createCommonRunTime = ({ assistant }: CommonRunTimeType): RequestContext => {
+  const context = new RequestContext();
 
-  context.set("assistant", assistant);
+  (context as any).set("assistant", assistant);
 
   return context;
 };

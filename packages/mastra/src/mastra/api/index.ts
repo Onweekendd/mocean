@@ -6,7 +6,7 @@ import { providersApiMethods, useProvidersApi } from "./providers-client";
 
 export { API_URL } from "./base-client";
 
-export { StorageThreadType } from "@mastra/core";
+export { type StorageThreadType } from "@mastra/core/memory";
 
 /**
  * API 客户端统一导出

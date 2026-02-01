@@ -1,7 +1,8 @@
-import { StorageThreadType } from "@mastra/core";
 import { convertMessages } from "@mastra/core/agent";
-import { RuntimeContext } from "@mastra/core/di";
-import { UIMessage } from "ai";
+import type { StorageThreadType } from "@mastra/core/memory";
+import { RequestContext } from "@mastra/core/request-context";
+import { createUIMessageStreamResponse, UIMessage } from "ai";
+import { toAISdkStream } from "@mastra/ai-sdk";
 import { z } from "zod";
 
 import { DynamicAgent } from "../agents/dynamicAgent";
@@ -234,7 +235,6 @@ const executeChatWithAssistant = async (
   }
 
   const stream = await DynamicAgent.stream(messages, {
-    format: "aisdk",
     memory: {
       thread: threadId,
       resource: assistantId,
@@ -244,10 +244,11 @@ const executeChatWithAssistant = async (
         store: false,
       },
     },
-    runtimeContext: createCommonRunTime({ assistant }) as RuntimeContext,
+    requestContext: createCommonRunTime({ assistant }),
   });
 
-  return stream.toUIMessageStreamResponse();
+  const aiSdkStream = toAISdkStream(stream, { from: "agent" });
+  return createUIMessageStreamResponse({ stream: aiSdkStream as any });
 };
 
 /**
@@ -258,12 +259,14 @@ const executeChatWithAssistant = async (
  */
 const getThreadsByAssistantId = async (assistantId: string) => {
   const memory = await DynamicAgent.getMemory();
+  const storage = await memory.storage.getStore("memory");
 
-  const threads = await memory.getThreadsByResourceId({
-    resourceId: assistantId,
+  const result = await storage?.listThreads({
+    filter: { resourceId: assistantId },
+    perPage: false,
   });
 
-  return threads;
+  return result?.threads ?? [];
 };
 
 /**
@@ -284,15 +287,15 @@ const getUIMessagesByThreadId = async (
   }
 
   const memory = await DynamicAgent.getMemory({
-    runtimeContext: createCommonRunTime({ assistant }) as RuntimeContext,
+    requestContext: createCommonRunTime({ assistant }),
   });
 
-  const result = await memory.query({
+  const result = await memory.recall({
     threadId,
     resourceId: assistantId,
   });
 
-  const messages = convertMessages(result.uiMessages).to("AIV5.UI");
+  const messages = convertMessages(result.messages).to("AIV5.UI");
 
   return messages;
 };

@@ -72,7 +72,7 @@ const getAgentByIdRouter = registerApiRoute(`${PREFIX}/agents/:id`, {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.errors,
+            details: error.issues,
           }),
           {
             status: 400,
@@ -115,7 +115,7 @@ const createAgentRouter = registerApiRoute(`${PREFIX}/agents`, {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.errors,
+            details: error.issues,
           }),
           {
             status: 400,
@@ -158,7 +158,7 @@ const updateAgentRouter = registerApiRoute(`${PREFIX}/agents/:id`, {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.errors,
+            details: error.issues,
           }),
           {
             status: 400,
@@ -198,7 +198,7 @@ const deleteAgentRouter = registerApiRoute(`${PREFIX}/agents/:id`, {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.errors,
+            details: error.issues,
           }),
           {
             status: 400,

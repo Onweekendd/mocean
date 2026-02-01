@@ -112,8 +112,7 @@ export const useModelEdit = ({
         const updateData = {
           name: data.name.trim(),
           groupId: data.groupId,
-          description: data.description.trim(),
-          ...data.types
+          description: data.description.trim()
         };
 
         await update(model?.id, updateData);

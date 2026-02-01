@@ -14,7 +14,9 @@
       "Bash(pnpm install:*)",
       "Bash(pnpm test:run)",
       "mcp__mastra__mastraMigration",
-      "Bash(npx @mastra/codemod@latest v1:*)"
+      "Bash(npx @mastra/codemod@latest v1:*)",
+      "Bash(pnpm run check-types:*)",
+      "mcp__mastra__getMastraExports"
     ],
     "deny": [],
     "ask": []

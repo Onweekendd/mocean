@@ -79,7 +79,7 @@ const getModelByIdRouter = registerApiRoute(`${PREFIX}/models/:id`, {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.errors,
+            details: error.issues,
           }),
           {
             status: 400,
@@ -121,7 +121,7 @@ const getModelsByProviderRouter = registerApiRoute(
           return new Response(
             JSON.stringify({
               error: "参数校验失败",
-              details: error.errors,
+              details: error.issues,
             }),
             {
               status: 400,
@@ -167,7 +167,7 @@ const getModelsByGroupRouter = registerApiRoute(
           return new Response(
             JSON.stringify({
               error: "参数校验失败",
-              details: error.errors,
+              details: error.issues,
             }),
             {
               status: 400,
@@ -211,7 +211,7 @@ const createModelRouter = registerApiRoute(`${PREFIX}/models`, {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.errors,
+            details: error.issues,
           }),
           {
             status: 400,
@@ -267,7 +267,7 @@ const createManyModelsRouter = registerApiRoute(`${PREFIX}/models/batch`, {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.errors,
+            details: error.issues,
           }),
           {
             status: 400,
@@ -325,7 +325,7 @@ const updateModelRouter = registerApiRoute(`${PREFIX}/models/:id`, {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.errors,
+            details: error.issues,
           }),
           {
             status: 400,
@@ -380,7 +380,7 @@ const deleteModelRouter = registerApiRoute(`${PREFIX}/models/:id`, {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.errors,
+            details: error.issues,
           }),
           {
             status: 400,
@@ -432,7 +432,7 @@ const addModelProviderRelationRouter = registerApiRoute(
         if (error instanceof z.ZodError) {
           return new Response(
             JSON.stringify({
-              error: error.errors,
+              error: error.issues,
               message: "请求参数验证失败",
             }),
             {
@@ -474,7 +474,7 @@ const removeModelProviderRelationRouter = registerApiRoute(
         if (error instanceof z.ZodError) {
           return new Response(
             JSON.stringify({
-              error: error.errors,
+              error: error.issues,
               message: "请求参数验证失败",
             }),
             {
@@ -519,7 +519,7 @@ const getModelProviderRelationsRouter = registerApiRoute(
         if (error instanceof z.ZodError) {
           return new Response(
             JSON.stringify({
-              error: error.errors,
+              error: error.issues,
               message: "请求参数验证失败",
             }),
             {

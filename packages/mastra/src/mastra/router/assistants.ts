@@ -77,7 +77,7 @@ const getAssistantByIdRouter = registerApiRoute(
           return new Response(
             JSON.stringify({
               error: "参数校验失败",
-              details: error.errors,
+              details: error.issues,
             }),
             {
               status: 400,
@@ -121,7 +121,7 @@ const createAssistantRouter = registerApiRoute(`${PREFIX}/assistants`, {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.errors,
+            details: error.issues,
           }),
           {
             status: 400,
@@ -169,7 +169,7 @@ const updateAssistantRouter = registerApiRoute(
           return new Response(
             JSON.stringify({
               error: "参数校验失败",
-              details: error.errors,
+              details: error.issues,
             }),
             {
               status: 400,
@@ -215,7 +215,7 @@ const deleteAssistantRouter = registerApiRoute(
           return new Response(
             JSON.stringify({
               error: "参数校验失败",
-              details: error.errors,
+              details: error.issues,
             }),
             {
               status: 400,
@@ -256,7 +256,7 @@ const chatWithAssistant = registerApiRoute(`${PREFIX}/assistants/chat`, {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.errors,
+            details: error.issues,
           }),
           {
             status: 400,
@@ -302,7 +302,7 @@ const getAssistantThreads = registerApiRoute(
           return new Response(
             JSON.stringify({
               error: "参数校验失败",
-              details: error.errors,
+              details: error.issues,
             }),
             {
               status: 400,
@@ -344,7 +344,7 @@ const getAssistantUIMessageByThreadId = registerApiRoute(
           return new Response(
             JSON.stringify({
               error: "参数校验失败",
-              details: error.errors,
+              details: error.issues,
             }),
             {
               status: 400,

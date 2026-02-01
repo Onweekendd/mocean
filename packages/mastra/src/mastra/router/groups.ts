@@ -40,7 +40,7 @@ const getGroupsByProviderRouter = registerApiRoute(
           return new Response(
             JSON.stringify({
               error: "参数校验失败",
-              details: error.errors,
+              details: error.issues,
             }),
             {
               status: 400,
@@ -92,7 +92,7 @@ const getGroupByIdRouter = registerApiRoute(`${PREFIX}/groups/:id`, {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.errors,
+            details: error.issues,
           }),
           {
             status: 400,
@@ -130,7 +130,7 @@ const createGroupRouter = registerApiRoute(`${PREFIX}/groups`, {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.errors,
+            details: error.issues,
           }),
           {
             status: 400,
@@ -187,7 +187,7 @@ const updateGroupRouter = registerApiRoute(`${PREFIX}/groups/:id`, {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.errors,
+            details: error.issues,
           }),
           {
             status: 400,
@@ -242,7 +242,7 @@ const deleteGroupRouter = registerApiRoute(`${PREFIX}/groups/:id`, {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.errors,
+            details: error.issues,
           }),
           {
             status: 400,

@@ -1,26 +1,24 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import { Agent } from "@mastra/core/agent";
-import { RuntimeContext } from "@mastra/core/di";
 import { LibSQLStore } from "@mastra/libsql";
 import { Memory } from "@mastra/memory";
 
-import { CommonRunTimeType } from "../runtime/CommonRunTime";
+import type { CommonRunTimeType } from "../runtime/CommonRunTime";
 
 export const DynamicAgent = new Agent({
+  id: "dynamic-agent",
   name: "DynamicAgent",
 
-  instructions: ({ runtimeContext }) => {
-    const assistant = (runtimeContext as RuntimeContext<CommonRunTimeType>).get(
-      "assistant"
-    );
+  instructions: ({ requestContext }) => {
+    const ctx = requestContext as any;
+    const assistant = ctx.get("assistant") as CommonRunTimeType["assistant"];
 
     return assistant.prompt;
   },
 
-  model: ({ runtimeContext }) => {
-    const assistant = (runtimeContext as RuntimeContext<CommonRunTimeType>).get(
-      "assistant"
-    );
+  model: ({ requestContext }) => {
+    const ctx = requestContext as any;
+    const assistant = ctx.get("assistant") as CommonRunTimeType["assistant"];
 
     const provider = assistant.provider;
 
@@ -41,27 +39,27 @@ export const DynamicAgent = new Agent({
 
   memory: new Memory({
     storage: new LibSQLStore({
+      id: "dynamic-agent-memory-storage",
       url: `file:${process.env.MASTRA_DATABASE_URL}`
     }),
     options: {
       lastMessages: 10,
       semanticRecall: false,
-      threads: {
-        generateTitle: {
-          model() {
-            const openaiProvider = createOpenAI({
-              baseURL: process.env.OPENAI_API_BASE_URL,
-              apiKey: process.env.OPENAI_API_KEY
-            });
+      generateTitle: {
+        model() {
+          const openaiProvider = createOpenAI({
+            baseURL: process.env.OPENAI_API_BASE_URL,
+            apiKey: process.env.OPENAI_API_KEY
+          });
 
-            const model = openaiProvider(
-              process.env.OPENAI_API_MODEL ?? "gpt-4o"
-            );
+          const model = openaiProvider(
+            process.env.OPENAI_API_MODEL ?? "gpt-4o"
+          );
 
-            return model;
-          },
-          instructions() {
-            return `你是一个专业的聊天标题生成助手。你的任务是根据用户的聊天内容生成一个简洁、准确、有吸引力的标题。
+          return model;
+        },
+        instructions() {
+          return `你是一个专业的聊天标题生成助手。你的任务是根据用户的聊天内容生成一个简洁、准确、有吸引力的标题。
 
                    请遵循以下规则：
                    1. 标题长度控制在10-20个字符以内
@@ -73,7 +71,6 @@ export const DynamicAgent = new Agent({
                    7. 只返回标题内容，不要添加任何解释或额外文字
 
                   请根据用户的聊天内容生成合适的标题。`;
-          }
         }
       }
     }
