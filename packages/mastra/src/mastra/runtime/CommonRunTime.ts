@@ -6,10 +6,10 @@ export type CommonRunTimeType = {
   assistant: AssistantDetailResult;
 };
 
-export const createCommonRunTime = ({ assistant }: CommonRunTimeType): RequestContext => {
-  const context = new RequestContext();
+export const createCommonRunTime = ({ assistant }: CommonRunTimeType) => {
+  const context = new RequestContext<CommonRunTimeType>();
 
-  (context as any).set("assistant", assistant);
+  context.set("assistant", assistant);
 
   return context;
 };

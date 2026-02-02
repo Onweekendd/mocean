@@ -1,8 +1,8 @@
+import { toAISdkStream } from "@mastra/ai-sdk";
 import { convertMessages } from "@mastra/core/agent";
 import type { StorageThreadType } from "@mastra/core/memory";
-import { RequestContext } from "@mastra/core/request-context";
-import { createUIMessageStreamResponse, UIMessage } from "ai";
-import { toAISdkStream } from "@mastra/ai-sdk";
+import type { UIMessage } from "ai";
+import { createUIMessageStreamResponse } from "ai";
 import { z } from "zod";
 
 import { DynamicAgent } from "../agents/dynamicAgent";
@@ -23,7 +23,7 @@ const createAssistantSchema = z.object({
   enableGenerateImage: z.boolean().optional().default(false),
   knowledgeRecognition: z.enum(["off", "on"]).nullable().optional(),
   modelId: z.string().nullable().optional(),
-  defaultModelId: z.string().nullable().optional(),
+  defaultModelId: z.string().nullable().optional()
 });
 
 const updateAssistantSchema = z.object({
@@ -38,7 +38,7 @@ const updateAssistantSchema = z.object({
   knowledgeRecognition: z.enum(["off", "on"]).nullable().optional(),
   providerId: z.string().nullable().optional(),
   modelId: z.string().nullable().optional(),
-  defaultModelId: z.string().nullable().optional(),
+  defaultModelId: z.string().nullable().optional()
 });
 
 // 提取 experimental_prepareRequestBody 返回值类型
@@ -52,12 +52,12 @@ export type PrepareRequestBodyReturnType = {
 };
 
 const assistantIdParamSchema = z.object({
-  assistantId: z.string().min(1, "助手ID不能为空"),
+  assistantId: z.string().min(1, "助手ID不能为空")
 });
 
 const assistantThreadIdParamSchema = z.object({
   assistantId: z.string().min(1, "助手ID不能为空"),
-  threadId: z.string().min(1, "对话ID不能为空"),
+  threadId: z.string().min(1, "对话ID不能为空")
 });
 
 const chatWithAssistantSchema = z.custom<PrepareRequestBodyReturnType>();
@@ -76,8 +76,8 @@ const getAssistants = async () => {
     include: {
       model: true,
       defaultModel: true,
-      settings: true,
-    },
+      settings: true
+    }
   });
   return assistants;
 };
@@ -91,7 +91,7 @@ const getAssistants = async () => {
 const getAssistantById = async (id: string) => {
   const assistant = await prisma.assistant.findUnique({
     where: {
-      id,
+      id
     },
     include: {
       model: true,
@@ -100,8 +100,8 @@ const getAssistantById = async (id: string) => {
       settings: true,
       topics: true,
       knowledgeBases: true,
-      mcpServers: true,
-    },
+      mcpServers: true
+    }
   });
   return assistant;
 };
@@ -114,7 +114,7 @@ const getAssistantById = async (id: string) => {
 const getFullAssistantById = async (id: string) => {
   const assistant = await prisma.assistant.findUnique({
     where: {
-      id,
+      id
     },
     include: {
       model: true,
@@ -123,8 +123,8 @@ const getFullAssistantById = async (id: string) => {
       settings: true,
       topics: true,
       knowledgeBases: true,
-      mcpServers: true,
-    },
+      mcpServers: true
+    }
   });
   return assistant;
 };
@@ -142,13 +142,13 @@ const createAssistant = async (assistant: CreateAssistantInput) => {
       modelId: "deepseek-chat",
       providerId: "deepseek",
       createdAt: new Date(),
-      updatedAt: new Date(),
+      updatedAt: new Date()
     } as Parameters<typeof prisma.assistant.create>[0]["data"],
     include: {
       model: true,
       defaultModel: true,
-      settings: true,
-    },
+      settings: true
+    }
   });
   return newAssistant;
 };
@@ -163,17 +163,17 @@ const createAssistant = async (assistant: CreateAssistantInput) => {
 const updateAssistant = async (id: string, assistant: UpdateAssistantInput) => {
   const updatedAssistant = await prisma.assistant.update({
     where: {
-      id,
+      id
     },
     data: {
       ...assistant,
-      updatedAt: new Date(),
+      updatedAt: new Date()
     },
     include: {
       model: true,
       defaultModel: true,
-      settings: true,
-    },
+      settings: true
+    }
   });
   return updatedAssistant;
 };
@@ -187,8 +187,8 @@ const updateAssistant = async (id: string, assistant: UpdateAssistantInput) => {
 const deleteAssistant = async (id: string) => {
   const deletedAssistant = await prisma.assistant.delete({
     where: {
-      id,
-    },
+      id
+    }
   });
   return deletedAssistant;
 };
@@ -202,13 +202,13 @@ const deleteAssistant = async (id: string) => {
 const getAssistantWithModelByAssistantId = async (assistantId: string) => {
   const assistant = await prisma.assistant.findUnique({
     where: {
-      id: assistantId,
+      id: assistantId
     },
     include: {
       model: true,
       defaultModel: true,
-      settings: true,
-    },
+      settings: true
+    }
   });
   return assistant;
 };
@@ -226,7 +226,7 @@ const getAssistantWithModelByAssistantId = async (assistantId: string) => {
 const executeChatWithAssistant = async (
   assistantId: string,
   messages: UIMessage[],
-  threadId: string,
+  threadId: string
 ) => {
   const assistant = await getFullAssistantById(assistantId);
 
@@ -237,14 +237,14 @@ const executeChatWithAssistant = async (
   const stream = await DynamicAgent.stream(messages, {
     memory: {
       thread: threadId,
-      resource: assistantId,
+      resource: assistantId
     },
     providerOptions: {
       openai: {
-        store: false,
-      },
+        store: false
+      }
     },
-    requestContext: createCommonRunTime({ assistant }),
+    requestContext: createCommonRunTime({ assistant })
   });
 
   const aiSdkStream = toAISdkStream(stream, { from: "agent" });
@@ -263,7 +263,7 @@ const getThreadsByAssistantId = async (assistantId: string) => {
 
   const result = await storage?.listThreads({
     filter: { resourceId: assistantId },
-    perPage: false,
+    perPage: false
   });
 
   return result?.threads ?? [];
@@ -278,7 +278,7 @@ const getThreadsByAssistantId = async (assistantId: string) => {
  */
 const getUIMessagesByThreadId = async (
   assistantId: string,
-  threadId: string,
+  threadId: string
 ): Promise<UIMessage[]> => {
   const assistant = await getFullAssistantById(assistantId);
 
@@ -287,12 +287,12 @@ const getUIMessagesByThreadId = async (
   }
 
   const memory = await DynamicAgent.getMemory({
-    requestContext: createCommonRunTime({ assistant }),
+    requestContext: createCommonRunTime({ assistant })
   });
 
   const result = await memory.recall({
     threadId,
-    resourceId: assistantId,
+    resourceId: assistantId
   });
 
   const messages = convertMessages(result.messages).to("AIV5.UI");
@@ -328,5 +328,5 @@ export {
   updateAssistantSchema,
   chatWithAssistantSchema,
   assistantIdParamSchema,
-  assistantThreadIdParamSchema,
+  assistantThreadIdParamSchema
 };

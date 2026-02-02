@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
-import { ProviderType } from "generated/prisma/enums";
+import type { ProviderType } from "generated/prisma/enums";
 
-import {
+import type {
   CreateProviderInput,
   EnabledProvidersResult,
   ProviderCreateResult,
@@ -12,9 +12,10 @@ import {
   ProvidersByModelResult,
   ProvidersByTypeResult,
   ProvidersListResult,
-  UpdateProviderInput,
+  UpdateProviderInput
 } from "../server/provider";
-import { ApiClientConfig, ApiResponse, BaseApiClient } from "./base-client";
+import type { ApiClientConfig, ApiResponse } from "./base-client";
+import { BaseApiClient } from "./base-client";
 
 /**
  * 提供商 API 客户端类
@@ -47,7 +48,7 @@ export class ProvidersApiClient extends BaseApiClient {
    * @param id - 提供商的唯一标识符
    */
   async getProviderById(
-    id: string,
+    id: string
   ): Promise<ApiResponse<ProviderDetailResult>> {
     return this.get<ProviderDetailResult>(`/providers/${id}`);
   }
@@ -58,7 +59,7 @@ export class ProvidersApiClient extends BaseApiClient {
    * @param type - 提供商类型
    */
   async getProvidersByType(
-    type: ProviderType,
+    type: ProviderType
   ): Promise<ApiResponse<ProvidersByTypeResult>> {
     return this.get<ProvidersByTypeResult>(`/providers/type/${type}`);
   }
@@ -69,7 +70,7 @@ export class ProvidersApiClient extends BaseApiClient {
    * @param modelId - 模型的唯一标识符
    */
   async getProvidersByModel(
-    modelId: string,
+    modelId: string
   ): Promise<ApiResponse<ProvidersByModelResult>> {
     return this.get<ProvidersByModelResult>(`/providers/by-model/${modelId}`);
   }
@@ -80,7 +81,7 @@ export class ProvidersApiClient extends BaseApiClient {
    * @param provider - 包含提供商信息的对象
    */
   async createProvider(
-    provider: CreateProviderInput,
+    provider: CreateProviderInput
   ): Promise<ApiResponse<ProviderCreateResult>> {
     return this.post<ProviderCreateResult>("/providers", provider);
   }
@@ -93,7 +94,7 @@ export class ProvidersApiClient extends BaseApiClient {
    */
   async updateProvider(
     id: string,
-    provider: UpdateProviderInput,
+    provider: UpdateProviderInput
   ): Promise<ApiResponse<ProviderUpdateResult>> {
     return this.put<ProviderUpdateResult>(`/providers/${id}`, provider);
   }
@@ -113,7 +114,7 @@ export class ProvidersApiClient extends BaseApiClient {
    * @param id - 提供商的唯一标识符
    */
   async toggleProviderEnabled(
-    id: string,
+    id: string
   ): Promise<ApiResponse<ProviderToggleResult>> {
     return this.put<ProviderToggleResult>(`/providers/${id}/toggle`, {});
   }
@@ -177,7 +178,7 @@ export const providersApiMethods = {
    * 切换提供商启用状态
    * @param id - 提供商ID
    */
-  toggleProviderEnabled: (id: string) => providersApi.toggleProviderEnabled(id),
+  toggleProviderEnabled: (id: string) => providersApi.toggleProviderEnabled(id)
 };
 
 /**
@@ -209,28 +210,28 @@ export type UseProvidersApiReturn = Pick<
 export const useProvidersApi = (): UseProvidersApiReturn => {
   return {
     getProviders: providersApi.getProviders.bind(
-      providersApi,
+      providersApi
     ) as UseProvidersApiReturn["getProviders"],
     getEnabledProviders: providersApi.getEnabledProviders.bind(
-      providersApi,
+      providersApi
     ) as UseProvidersApiReturn["getEnabledProviders"],
     getProviderById: providersApi.getProviderById.bind(
-      providersApi,
+      providersApi
     ) as UseProvidersApiReturn["getProviderById"],
     getProvidersByType: providersApi.getProvidersByType.bind(
-      providersApi,
+      providersApi
     ) as UseProvidersApiReturn["getProvidersByType"],
     createProvider: providersApi.createProvider.bind(
-      providersApi,
+      providersApi
     ) as UseProvidersApiReturn["createProvider"],
     updateProvider: providersApi.updateProvider.bind(
-      providersApi,
+      providersApi
     ) as UseProvidersApiReturn["updateProvider"],
     deleteProvider: providersApi.deleteProvider.bind(
-      providersApi,
+      providersApi
     ) as UseProvidersApiReturn["deleteProvider"],
     toggleProviderEnabled: providersApi.toggleProviderEnabled.bind(
-      providersApi,
-    ) as UseProvidersApiReturn["toggleProviderEnabled"],
+      providersApi
+    ) as UseProvidersApiReturn["toggleProviderEnabled"]
   };
 };

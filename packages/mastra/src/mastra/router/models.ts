@@ -19,7 +19,7 @@ import {
   providerParamSchema,
   removeModelProviderRelation,
   updateModel,
-  updateModelSchema,
+  updateModelSchema
 } from "../server/model";
 
 /**
@@ -33,18 +33,18 @@ const getModelsRouter = registerApiRoute(`${PREFIX}/models`, {
       const models = await getModels();
       return new Response(JSON.stringify(models), {
         status: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     } catch (error) {
       return new Response(
         JSON.stringify({ error, message: "获取模型列表失败" }),
         {
           status: 500,
-          headers: { "Content-Type": "application/json" },
-        },
+          headers: { "Content-Type": "application/json" }
+        }
       );
     }
-  },
+  }
 });
 
 /**
@@ -58,7 +58,7 @@ const getModelByIdRouter = registerApiRoute(`${PREFIX}/models/:id`, {
     try {
       // 参数校验
       const { id } = idParamSchema.parse({
-        id: c.req.param("id"),
+        id: c.req.param("id")
       });
 
       const model = await getModelById(id);
@@ -66,33 +66,33 @@ const getModelByIdRouter = registerApiRoute(`${PREFIX}/models/:id`, {
       if (!model) {
         return new Response(JSON.stringify({ error: "模型不存在" }), {
           status: 404,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       }
 
       return new Response(JSON.stringify(model), {
         status: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.issues,
+            details: error.issues
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
       return new Response(JSON.stringify({ error, message: "获取模型失败" }), {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     }
-  },
+  }
 });
 
 /**
@@ -108,37 +108,37 @@ const getModelsByProviderRouter = registerApiRoute(
       try {
         // 参数校验
         const { providerId } = providerParamSchema.parse({
-          providerId: c.req.param("providerId"),
+          providerId: c.req.param("providerId")
         });
 
         const models = await getModelsByProvider(providerId);
         return new Response(JSON.stringify(models), {
           status: 200,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       } catch (error) {
         if (error instanceof z.ZodError) {
           return new Response(
             JSON.stringify({
               error: "参数校验失败",
-              details: error.issues,
+              details: error.issues
             }),
             {
               status: 400,
-              headers: { "Content-Type": "application/json" },
-            },
+              headers: { "Content-Type": "application/json" }
+            }
           );
         }
         return new Response(
           JSON.stringify({ error, message: "获取模型失败" }),
           {
             status: 500,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
-    },
-  },
+    }
+  }
 );
 
 /**
@@ -154,37 +154,37 @@ const getModelsByGroupRouter = registerApiRoute(
       try {
         // 参数校验
         const { group } = groupParamSchema.parse({
-          group: c.req.param("group"),
+          group: c.req.param("group")
         });
 
         const models = await getModelsByGroup(group);
         return new Response(JSON.stringify(models), {
           status: 200,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       } catch (error) {
         if (error instanceof z.ZodError) {
           return new Response(
             JSON.stringify({
               error: "参数校验失败",
-              details: error.issues,
+              details: error.issues
             }),
             {
               status: 400,
-              headers: { "Content-Type": "application/json" },
-            },
+              headers: { "Content-Type": "application/json" }
+            }
           );
         }
         return new Response(
           JSON.stringify({ error, message: "获取模型失败" }),
           {
             status: 500,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
-    },
-  },
+    }
+  }
 );
 
 /**
@@ -204,19 +204,19 @@ const createModelRouter = registerApiRoute(`${PREFIX}/models`, {
       const newModel = await createModel(modelData);
       return new Response(JSON.stringify(newModel), {
         status: 201,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.issues,
+            details: error.issues
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
 
@@ -225,21 +225,21 @@ const createModelRouter = registerApiRoute(`${PREFIX}/models`, {
         return new Response(
           JSON.stringify({
             error: error.message,
-            code: "CREATE_MODEL_ERROR",
+            code: "CREATE_MODEL_ERROR"
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
 
       return new Response(JSON.stringify({ error: "创建模型失败" }), {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     }
-  },
+  }
 });
 
 /**
@@ -260,19 +260,19 @@ const createManyModelsRouter = registerApiRoute(`${PREFIX}/models/batch`, {
       const result = await createManyModels(modelsData);
       return new Response(JSON.stringify(result), {
         status: 201,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.issues,
+            details: error.issues
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
 
@@ -281,21 +281,21 @@ const createManyModelsRouter = registerApiRoute(`${PREFIX}/models/batch`, {
         return new Response(
           JSON.stringify({
             error: error.message,
-            code: "BATCH_CREATE_MODEL_ERROR",
+            code: "BATCH_CREATE_MODEL_ERROR"
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
 
       return new Response(JSON.stringify({ error: "批量创建模型失败" }), {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     }
-  },
+  }
 });
 
 /**
@@ -309,7 +309,7 @@ const updateModelRouter = registerApiRoute(`${PREFIX}/models/:id`, {
     try {
       // 参数校验
       const { id } = idParamSchema.parse({
-        id: c.req.param("id"),
+        id: c.req.param("id")
       });
 
       const rawData = await c.req.json();
@@ -318,19 +318,19 @@ const updateModelRouter = registerApiRoute(`${PREFIX}/models/:id`, {
       const updatedModel = await updateModel(id, modelData);
       return new Response(JSON.stringify(updatedModel), {
         status: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.issues,
+            details: error.issues
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
 
@@ -339,21 +339,21 @@ const updateModelRouter = registerApiRoute(`${PREFIX}/models/:id`, {
         return new Response(
           JSON.stringify({
             error: error.message,
-            code: "UPDATE_MODEL_ERROR",
+            code: "UPDATE_MODEL_ERROR"
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
 
       return new Response(JSON.stringify({ error: "更新模型失败" }), {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     }
-  },
+  }
 });
 
 /**
@@ -367,25 +367,25 @@ const deleteModelRouter = registerApiRoute(`${PREFIX}/models/:id`, {
     try {
       // 参数校验
       const { id } = idParamSchema.parse({
-        id: c.req.param("id"),
+        id: c.req.param("id")
       });
 
       const deletedModel = await deleteModel(id);
       return new Response(JSON.stringify(deletedModel), {
         status: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.issues,
+            details: error.issues
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
 
@@ -394,21 +394,21 @@ const deleteModelRouter = registerApiRoute(`${PREFIX}/models/:id`, {
         return new Response(
           JSON.stringify({
             error: error.message,
-            code: "DELETE_CONSTRAINT_ERROR",
+            code: "DELETE_CONSTRAINT_ERROR"
           }),
           {
             status: 409,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
 
       return new Response(JSON.stringify({ error: "删除模型失败" }), {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     }
-  },
+  }
 });
 
 /**
@@ -426,31 +426,31 @@ const addModelProviderRelationRouter = registerApiRoute(
         const result = await addModelProviderRelation(relation);
         return new Response(JSON.stringify(result), {
           status: 201,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       } catch (error) {
         if (error instanceof z.ZodError) {
           return new Response(
             JSON.stringify({
               error: error.issues,
-              message: "请求参数验证失败",
+              message: "请求参数验证失败"
             }),
             {
               status: 400,
-              headers: { "Content-Type": "application/json" },
-            },
+              headers: { "Content-Type": "application/json" }
+            }
           );
         }
         return new Response(
           JSON.stringify({ error, message: "添加模型与提供商关联失败" }),
           {
             status: 500,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
-    },
-  },
+    }
+  }
 );
 
 /**
@@ -468,31 +468,31 @@ const removeModelProviderRelationRouter = registerApiRoute(
         const result = await removeModelProviderRelation(relation);
         return new Response(JSON.stringify(result), {
           status: 200,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       } catch (error) {
         if (error instanceof z.ZodError) {
           return new Response(
             JSON.stringify({
               error: error.issues,
-              message: "请求参数验证失败",
+              message: "请求参数验证失败"
             }),
             {
               status: 400,
-              headers: { "Content-Type": "application/json" },
-            },
+              headers: { "Content-Type": "application/json" }
+            }
           );
         }
         return new Response(
           JSON.stringify({ error, message: "移除模型与提供商关联失败" }),
           {
             status: 500,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
-    },
-  },
+    }
+  }
 );
 
 /**
@@ -507,37 +507,37 @@ const getModelProviderRelationsRouter = registerApiRoute(
       try {
         // 参数校验
         const { id } = idParamSchema.parse({
-          id: c.req.param("id"),
+          id: c.req.param("id")
         });
 
         const relations = await getModelProviderRelations(id);
         return new Response(JSON.stringify(relations), {
           status: 200,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       } catch (error) {
         if (error instanceof z.ZodError) {
           return new Response(
             JSON.stringify({
               error: error.issues,
-              message: "请求参数验证失败",
+              message: "请求参数验证失败"
             }),
             {
               status: 400,
-              headers: { "Content-Type": "application/json" },
-            },
+              headers: { "Content-Type": "application/json" }
+            }
           );
         }
         return new Response(
           JSON.stringify({ error, message: "获取模型关联列表失败" }),
           {
             status: 500,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
-    },
-  },
+    }
+  }
 );
 
 // 导出所有路由
@@ -552,7 +552,7 @@ const modelsRouter = [
   deleteModelRouter,
   addModelProviderRelationRouter,
   removeModelProviderRelationRouter,
-  getModelProviderRelationsRouter,
+  getModelProviderRelationsRouter
 ];
 
 export { modelsRouter };

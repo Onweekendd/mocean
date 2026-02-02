@@ -9,7 +9,7 @@ const apiRoutes = [
   ...assistantsRouter,
   ...providersRouter,
   ...modelsRouter,
-  ...groupsRouter,
+  ...groupsRouter
 ];
 
 export { apiRoutes };

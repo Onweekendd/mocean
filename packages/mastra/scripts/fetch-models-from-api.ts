@@ -1,22 +1,26 @@
 import { z } from "zod";
 
-import { Model, Provider, ProviderType } from "../generated/prisma/index.js";
+import type {
+  Model,
+  Provider,
+  ProviderType
+} from "../generated/prisma/index.js";
 import { prisma } from "../src/mastra/server/index.js";
 
 const ModelsDevModalitiesSchema = z.object({
   input: z.array(z.string()).optional(),
-  output: z.array(z.string()).optional(),
+  output: z.array(z.string()).optional()
 });
 
 const ModelsDevLimitSchema = z.object({
   context: z.number().optional(),
-  output: z.number().optional(),
+  output: z.number().optional()
 });
 
 const ModelsDevCostSchema = z.object({
   input: z.number().optional(),
   output: z.number().optional(),
-  cache_read: z.number().optional(),
+  cache_read: z.number().optional()
 });
 
 const ModelsDevModelSchema = z.looseObject({
@@ -32,7 +36,7 @@ const ModelsDevModelSchema = z.looseObject({
   modalities: ModelsDevModalitiesSchema.optional(),
   open_weights: z.boolean().optional(),
   cost: ModelsDevCostSchema.optional(),
-  limit: ModelsDevLimitSchema.optional(),
+  limit: ModelsDevLimitSchema.optional()
 });
 
 const ModelsDevProviderSchema = z.looseObject({
@@ -42,13 +46,13 @@ const ModelsDevProviderSchema = z.looseObject({
   npm: z.string().optional(),
   api: z.string().optional(),
   doc: z.string().optional(),
-  models: z.record(z.string(), ModelsDevModelSchema).optional(),
+  models: z.record(z.string(), ModelsDevModelSchema).optional()
 });
 
 // Allow provider values to be either an object or a string (for aliases)
 const ModelsDevResponseSchema = z.record(
   z.string(),
-  z.union([z.string(), ModelsDevProviderSchema]),
+  z.union([z.string(), ModelsDevProviderSchema])
 );
 
 type ModelsDevResponse = z.infer<typeof ModelsDevResponseSchema>;
@@ -113,7 +117,7 @@ async function fetchApiData(): Promise<ModelsDevResponse> {
  */
 function createPrismaModel({
   parsedModel,
-  providerId,
+  providerId
 }: {
   parsedModel: ApiModelInfo;
   providerId: string;
@@ -136,7 +140,7 @@ function createPrismaModel({
     supportsAudio: parsedModel.modalities?.input?.includes("audio") || false,
     supportsVideo: parsedModel.modalities?.input?.includes("video") || false,
     inputPricePerMillion: parsedModel.cost?.input || null,
-    outputPricePerMillion: parsedModel.cost?.output || null,
+    outputPricePerMillion: parsedModel.cost?.output || null
   };
 }
 
@@ -151,7 +155,7 @@ function createPrismaModel({
  */
 function processRegularProvider({
   provider,
-  apiModelInfos,
+  apiModelInfos
 }: {
   provider: ApiProviderInfo;
   apiModelInfos: Array<[string, ApiModelInfo]>;
@@ -169,7 +173,7 @@ function processRegularProvider({
     const parsedModel = ModelsDevModelSchema.parse(modelData);
     const model = createPrismaModel({
       parsedModel,
-      providerId: provider.id,
+      providerId: provider.id
     });
     models.push(model);
   }
@@ -186,9 +190,9 @@ function processRegularProvider({
       docsUrl: provider.doc || "",
       isAuthed: true,
       isGateway: GATEWAY_PROVIDERS.includes(provider.id),
-      isSystem: true,
+      isSystem: true
     },
-    models,
+    models
   };
 }
 
@@ -230,7 +234,7 @@ async function fetchModelsDevData(): Promise<ScrapedData> {
       }
       const result = processRegularProvider({
         provider,
-        apiModelInfos,
+        apiModelInfos
       });
       providers.push(result.providerInfo);
       models.push(...result.models);
@@ -247,8 +251,8 @@ async function fetchModelsDevData(): Promise<ScrapedData> {
       metadata: {
         scrapedAt: new Date().toISOString(),
         totalProviders: providers.length,
-        totalModels: models.length,
-      },
+        totalModels: models.length
+      }
     };
 
     // 输出统计信息
@@ -316,7 +320,7 @@ function prepareModelsAndRelations(data: ScrapedData): {
     // 创建模型-供应商关联关系
     modelProviderRelations.push({
       modelId: modelData.id,
-      providerId: modelData.providerId,
+      providerId: modelData.providerId
     });
   }
 
@@ -372,9 +376,9 @@ async function insertProvidersAndModels(data: ScrapedData) {
         await tx.modelProvider.deleteMany({
           where: {
             providerId: {
-              in: providerIds,
-            },
-          },
+              in: providerIds
+            }
+          }
         });
 
         // 3. 插入普通供应商
@@ -384,7 +388,7 @@ async function insertProvidersAndModels(data: ScrapedData) {
 
           // 检查是否已存在
           const existing = await tx.provider.findUnique({
-            where: { id: provider.id },
+            where: { id: provider.id }
           });
 
           const providerData = {
@@ -396,14 +400,14 @@ async function insertProvidersAndModels(data: ScrapedData) {
             isAuthed: provider.isAuthed,
             isGateway: provider.isGateway,
             modelCount: provider.modelCount,
-            docsUrl: provider.docsUrl,
+            docsUrl: provider.docsUrl
           };
 
           if (existing) {
             // 更新现有供应商（保留apiKey）
             await tx.provider.update({
               where: { id: provider.id },
-              data: providerData,
+              data: providerData
             });
             providersUpdated++;
           } else {
@@ -413,8 +417,8 @@ async function insertProvidersAndModels(data: ScrapedData) {
                 id: provider.id,
                 apiKey: "", // 默认为空，用户后续填写
                 enabled: false, // 默认为禁用，用户后续启用
-                ...providerData,
-              },
+                ...providerData
+              }
             });
             providersCreated++;
           }
@@ -429,20 +433,20 @@ async function insertProvidersAndModels(data: ScrapedData) {
           for (const model of batch) {
             // 检查是否已存在
             const existing = await tx.model.findUnique({
-              where: { id: model.id },
+              where: { id: model.id }
             });
 
             if (existing) {
               // 更新现有模型
               await tx.model.update({
                 where: { id: model.id },
-                data: model,
+                data: model
               });
               modelsUpdated++;
             } else {
               // 创建新模型
               await tx.model.create({
-                data: model,
+                data: model
               });
               modelsCreated++;
             }
@@ -451,7 +455,7 @@ async function insertProvidersAndModels(data: ScrapedData) {
           // 输出进度
           const progress = Math.min(i + BATCH_SIZE, models.length);
           console.log(
-            `   处理进度: ${progress}/${models.length} (${Math.round((progress / models.length) * 100)}%)`,
+            `   处理进度: ${progress}/${models.length} (${Math.round((progress / models.length) * 100)}%)`
           );
         }
 
@@ -460,7 +464,7 @@ async function insertProvidersAndModels(data: ScrapedData) {
         for (const relation of modelProviderRelations) {
           // 检查供应商是否存在
           const providerExists = await tx.provider.findUnique({
-            where: { id: relation.providerId },
+            where: { id: relation.providerId }
           });
 
           if (!providerExists) {
@@ -472,14 +476,14 @@ async function insertProvidersAndModels(data: ScrapedData) {
             where: {
               modelId_providerId: {
                 modelId: relation.modelId,
-                providerId: relation.providerId,
-              },
+                providerId: relation.providerId
+              }
             },
             update: {},
             create: {
               modelId: relation.modelId,
-              providerId: relation.providerId,
-            },
+              providerId: relation.providerId
+            }
           });
           relationsCreated++;
         }
@@ -489,13 +493,13 @@ async function insertProvidersAndModels(data: ScrapedData) {
           providersUpdated,
           modelsCreated,
           modelsUpdated,
-          relationsCreated,
+          relationsCreated
         };
       },
       {
         maxWait: 10000, // 最大等待时间 10秒
-        timeout: 60000, // 超时时间 60秒
-      },
+        timeout: 60000 // 超时时间 60秒
+      }
     );
 
     // 输出统计信息

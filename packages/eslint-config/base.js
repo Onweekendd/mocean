@@ -17,6 +17,7 @@ export const config = [
   {
     rules: {
       "@typescript-eslint/consistent-type-imports": "error",
+      "@typescript-eslint/no-unsafe-assignment": "off",
       "no-duplicate-imports": ["error", { allowSeparateTypeImports: true }],
     },
   },

@@ -1,5 +1,5 @@
 /// <reference lib="dom" />
-import {
+import type {
   CreateModelInput,
   ModelCreateResult,
   ModelDeleteResult,
@@ -13,9 +13,10 @@ import {
   ModelsByGroupResult,
   ModelsByProviderResult,
   ModelsListResult,
-  UpdateModelInput,
+  UpdateModelInput
 } from "../server/model";
-import { ApiClientConfig, ApiResponse, BaseApiClient } from "./base-client";
+import type { ApiClientConfig, ApiResponse } from "./base-client";
+import { BaseApiClient } from "./base-client";
 
 /**
  * 模型 API 客户端类
@@ -49,7 +50,7 @@ export class ModelsApiClient extends BaseApiClient {
    * @param providerId - 提供商的唯一标识符
    */
   async getModelsByProvider(
-    providerId: string,
+    providerId: string
   ): Promise<ApiResponse<ModelsByProviderResult>> {
     return this.get<ModelsByProviderResult>(`/models/provider/${providerId}`);
   }
@@ -60,7 +61,7 @@ export class ModelsApiClient extends BaseApiClient {
    * @param group - 模型分组
    */
   async getModelsByGroup(
-    group: string,
+    group: string
   ): Promise<ApiResponse<ModelsByGroupResult>> {
     return this.get<ModelsByGroupResult>(`/models/group/${group}`);
   }
@@ -71,7 +72,7 @@ export class ModelsApiClient extends BaseApiClient {
    * @param model - 包含模型信息的对象
    */
   async createModel(
-    model: CreateModelInput,
+    model: CreateModelInput
   ): Promise<ApiResponse<ModelCreateResult>> {
     return this.post<ModelCreateResult>("/models", model);
   }
@@ -84,7 +85,7 @@ export class ModelsApiClient extends BaseApiClient {
    */
   async updateModel(
     id: string,
-    model: UpdateModelInput,
+    model: UpdateModelInput
   ): Promise<ApiResponse<ModelUpdateResult>> {
     return this.put<ModelUpdateResult>(`/models/${id}`, model);
   }
@@ -104,11 +105,11 @@ export class ModelsApiClient extends BaseApiClient {
    * @param models - 模型信息数组
    */
   async createManyModels(
-    models: CreateModelInput[],
+    models: CreateModelInput[]
   ): Promise<ApiResponse<ModelsBatchCreateResult>> {
     return this.post<ModelsBatchCreateResult>(
       "/models/batch",
-      models as unknown as Record<string, unknown>,
+      models as unknown as Record<string, unknown>
     );
   }
 
@@ -118,11 +119,11 @@ export class ModelsApiClient extends BaseApiClient {
    * @param relation - 模型ID和提供商ID
    */
   async addModelProviderRelation(
-    relation: ModelProviderRelation,
+    relation: ModelProviderRelation
   ): Promise<ApiResponse<ModelProviderRelationAddResult>> {
     return this.post<ModelProviderRelationAddResult>(
       "/models/relations",
-      relation,
+      relation
     );
   }
 
@@ -132,11 +133,11 @@ export class ModelsApiClient extends BaseApiClient {
    * @param relation - 模型ID和提供商ID
    */
   async removeModelProviderRelation(
-    relation: ModelProviderRelation,
+    relation: ModelProviderRelation
   ): Promise<ApiResponse<ModelProviderRelationRemoveResult>> {
     return this.delete<ModelProviderRelationRemoveResult>(
       "/models/relations",
-      relation,
+      relation
     );
   }
 
@@ -146,10 +147,10 @@ export class ModelsApiClient extends BaseApiClient {
    * @param modelId - 模型ID
    */
   async getModelProviderRelations(
-    modelId: string,
+    modelId: string
   ): Promise<ApiResponse<ModelProviderRelationsResult>> {
     return this.get<ModelProviderRelationsResult>(
-      `/models/${modelId}/relations`,
+      `/models/${modelId}/relations`
     );
   }
 }
@@ -214,7 +215,7 @@ export const modelsApiMethods = {
    * 删除模型
    * @param id - 模型ID
    */
-  deleteModel: (id: string) => modelsApi.deleteModel(id),
+  deleteModel: (id: string) => modelsApi.deleteModel(id)
 };
 
 /**
@@ -244,27 +245,27 @@ export type UseModelsApiReturn = {
  */
 export const useModelsApi = (): UseModelsApiReturn => ({
   getModels: modelsApi.getModels.bind(
-    modelsApi,
+    modelsApi
   ) as ModelsApiClient["getModels"],
   getModelById: modelsApi.getModelById.bind(
-    modelsApi,
+    modelsApi
   ) as ModelsApiClient["getModelById"],
   getModelsByProvider: modelsApi.getModelsByProvider.bind(
-    modelsApi,
+    modelsApi
   ) as ModelsApiClient["getModelsByProvider"],
   getModelsByGroup: modelsApi.getModelsByGroup.bind(
-    modelsApi,
+    modelsApi
   ) as ModelsApiClient["getModelsByGroup"],
   createModel: modelsApi.createModel.bind(
-    modelsApi,
+    modelsApi
   ) as ModelsApiClient["createModel"],
   createManyModels: modelsApi.createManyModels.bind(
-    modelsApi,
+    modelsApi
   ) as ModelsApiClient["createManyModels"],
   updateModel: modelsApi.updateModel.bind(
-    modelsApi,
+    modelsApi
   ) as ModelsApiClient["updateModel"],
   deleteModel: modelsApi.deleteModel.bind(
-    modelsApi,
-  ) as ModelsApiClient["deleteModel"],
+    modelsApi
+  ) as ModelsApiClient["deleteModel"]
 });

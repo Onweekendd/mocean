@@ -23,4 +23,3 @@ export const mastra = new Mastra({
     level: "info"
   })
 });
-

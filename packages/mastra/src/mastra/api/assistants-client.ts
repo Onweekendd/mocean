@@ -1,5 +1,5 @@
 /// <reference lib="dom" />
-import {
+import type {
   AssistantCreateResult,
   AssistantDeleteResult,
   AssistantDetailResult,
@@ -8,9 +8,10 @@ import {
   AssistantUpdateResult,
   AssistantsListResult,
   CreateAssistantInput,
-  UpdateAssistantInput,
+  UpdateAssistantInput
 } from "../server/assistant";
-import { ApiClientConfig, ApiResponse, BaseApiClient } from "./base-client";
+import type { ApiClientConfig, ApiResponse } from "./base-client";
+import { BaseApiClient } from "./base-client";
 
 /**
  * 助手 API 客户端类
@@ -35,7 +36,7 @@ export class AssistantsApiClient extends BaseApiClient {
    * @param assistantId - 助手的唯一标识符
    */
   async getAssistantById(
-    assistantId: string,
+    assistantId: string
   ): Promise<ApiResponse<AssistantDetailResult>> {
     return this.get<AssistantDetailResult>(`/assistants/${assistantId}`);
   }
@@ -46,7 +47,7 @@ export class AssistantsApiClient extends BaseApiClient {
    * @param assistantData - 助手信息对象
    */
   async createAssistant(
-    assistantData: CreateAssistantInput,
+    assistantData: CreateAssistantInput
   ): Promise<ApiResponse<AssistantCreateResult>> {
     return this.post<AssistantCreateResult>("/assistants", assistantData);
   }
@@ -59,11 +60,11 @@ export class AssistantsApiClient extends BaseApiClient {
    */
   async updateAssistant(
     assistantId: string,
-    assistantData: UpdateAssistantInput,
+    assistantData: UpdateAssistantInput
   ): Promise<ApiResponse<AssistantUpdateResult>> {
     return this.put<AssistantUpdateResult>(
       `/assistants/${assistantId}`,
-      assistantData,
+      assistantData
     );
   }
 
@@ -73,7 +74,7 @@ export class AssistantsApiClient extends BaseApiClient {
    * @param assistantId - 助手的唯一标识符
    */
   async deleteAssistant(
-    assistantId: string,
+    assistantId: string
   ): Promise<ApiResponse<AssistantDeleteResult>> {
     return this.delete<AssistantDeleteResult>(`/assistants/${assistantId}`);
   }
@@ -84,10 +85,10 @@ export class AssistantsApiClient extends BaseApiClient {
    * @param assistantId - 助手的唯一标识符
    */
   async getAssistantThreads(
-    assistantId: string,
+    assistantId: string
   ): Promise<ApiResponse<AssistantThreadsResult>> {
     return this.get<AssistantThreadsResult>(
-      `/assistants/history/${assistantId}`,
+      `/assistants/history/${assistantId}`
     );
   }
 
@@ -98,10 +99,10 @@ export class AssistantsApiClient extends BaseApiClient {
    */
   async getAssistantUIMessageByThreadId(
     assistantId: string,
-    threadId: string,
+    threadId: string
   ): Promise<ApiResponse<AssistantUIMessagesResult>> {
     return this.get<AssistantUIMessagesResult>(
-      `/assistants/messages/${assistantId}/${threadId}`,
+      `/assistants/messages/${assistantId}/${threadId}`
     );
   }
 }
@@ -162,7 +163,7 @@ export const assistantsApiMethods = {
    * @param threadId - 助手ID
    */
   getAssistantUIMessageByThreadId: (assistantId: string, threadId: string) =>
-    assistantsApi.getAssistantUIMessageByThreadId(assistantId, threadId),
+    assistantsApi.getAssistantUIMessageByThreadId(assistantId, threadId)
 };
 
 /**
@@ -199,6 +200,6 @@ export const useAssistantsApi = (): UseAssistantsApiReturn => {
     deleteAssistant: assistantsApiMethods.deleteAssistant,
     getAssistantThreads: assistantsApiMethods.getAssistantThreads,
     getAssistantUIMessageByThreadId:
-      assistantsApiMethods.getAssistantUIMessageByThreadId,
+      assistantsApiMethods.getAssistantUIMessageByThreadId
   };
 };

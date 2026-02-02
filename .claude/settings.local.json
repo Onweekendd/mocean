@@ -16,7 +16,10 @@
       "mcp__mastra__mastraMigration",
       "Bash(npx @mastra/codemod@latest v1:*)",
       "Bash(pnpm run check-types:*)",
-      "mcp__mastra__getMastraExports"
+      "mcp__mastra__getMastraExports",
+      "mcp__mastra__mastraDocs",
+      "mcp__mastra__mastraExamples",
+      "mcp__mastra__listMastraPackages"
     ],
     "deny": [],
     "ask": []

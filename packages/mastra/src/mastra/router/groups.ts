@@ -11,7 +11,7 @@ import {
   idParamSchema,
   providerParamSchema,
   updateGroup,
-  updateGroupSchema,
+  updateGroupSchema
 } from "../server/group";
 
 /**
@@ -27,37 +27,37 @@ const getGroupsByProviderRouter = registerApiRoute(
       try {
         // 参数校验
         const { providerId } = providerParamSchema.parse({
-          providerId: c.req.param("providerId"),
+          providerId: c.req.param("providerId")
         });
 
         const groups = await getGroupsByProvider(providerId);
         return new Response(JSON.stringify(groups), {
           status: 200,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       } catch (error) {
         if (error instanceof z.ZodError) {
           return new Response(
             JSON.stringify({
               error: "参数校验失败",
-              details: error.issues,
+              details: error.issues
             }),
             {
               status: 400,
-              headers: { "Content-Type": "application/json" },
-            },
+              headers: { "Content-Type": "application/json" }
+            }
           );
         }
         return new Response(
           JSON.stringify({ error, message: "获取分组列表失败" }),
           {
             status: 500,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
-    },
-  },
+    }
+  }
 );
 
 /**
@@ -71,7 +71,7 @@ const getGroupByIdRouter = registerApiRoute(`${PREFIX}/groups/:id`, {
     try {
       // 参数校验
       const { id } = idParamSchema.parse({
-        id: c.req.param("id"),
+        id: c.req.param("id")
       });
 
       const group = await getGroupById(id);
@@ -79,33 +79,33 @@ const getGroupByIdRouter = registerApiRoute(`${PREFIX}/groups/:id`, {
       if (!group) {
         return new Response(JSON.stringify({ error: "分组不存在" }), {
           status: 404,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       }
 
       return new Response(JSON.stringify(group), {
         status: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.issues,
+            details: error.issues
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
       return new Response(JSON.stringify({ error, message: "获取分组失败" }), {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     }
-  },
+  }
 });
 
 /**
@@ -123,19 +123,19 @@ const createGroupRouter = registerApiRoute(`${PREFIX}/groups`, {
       const newGroup = await createGroup(groupData);
       return new Response(JSON.stringify(newGroup), {
         status: 201,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.issues,
+            details: error.issues
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
 
@@ -144,21 +144,21 @@ const createGroupRouter = registerApiRoute(`${PREFIX}/groups`, {
         return new Response(
           JSON.stringify({
             error: error.message,
-            code: "CREATE_GROUP_ERROR",
+            code: "CREATE_GROUP_ERROR"
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
 
       return new Response(JSON.stringify({ error: "创建分组失败" }), {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     }
-  },
+  }
 });
 
 /**
@@ -172,7 +172,7 @@ const updateGroupRouter = registerApiRoute(`${PREFIX}/groups/:id`, {
     try {
       // 参数校验
       const { id } = idParamSchema.parse({
-        id: c.req.param("id"),
+        id: c.req.param("id")
       });
 
       const groupData = updateGroupSchema.parse(await c.req.json());
@@ -180,19 +180,19 @@ const updateGroupRouter = registerApiRoute(`${PREFIX}/groups/:id`, {
       const updatedGroup = await updateGroup(id, groupData);
       return new Response(JSON.stringify(updatedGroup), {
         status: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.issues,
+            details: error.issues
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
 
@@ -201,21 +201,21 @@ const updateGroupRouter = registerApiRoute(`${PREFIX}/groups/:id`, {
         return new Response(
           JSON.stringify({
             error: error.message,
-            code: "UPDATE_GROUP_ERROR",
+            code: "UPDATE_GROUP_ERROR"
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
 
       return new Response(JSON.stringify({ error: "更新分组失败" }), {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     }
-  },
+  }
 });
 
 /**
@@ -229,25 +229,25 @@ const deleteGroupRouter = registerApiRoute(`${PREFIX}/groups/:id`, {
     try {
       // 参数校验
       const { id } = idParamSchema.parse({
-        id: c.req.param("id"),
+        id: c.req.param("id")
       });
 
       const deletedGroup = await deleteGroup(id);
       return new Response(JSON.stringify(deletedGroup), {
         status: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.issues,
+            details: error.issues
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
 
@@ -256,21 +256,21 @@ const deleteGroupRouter = registerApiRoute(`${PREFIX}/groups/:id`, {
         return new Response(
           JSON.stringify({
             error: error.message,
-            code: "DELETE_GROUP_ERROR",
+            code: "DELETE_GROUP_ERROR"
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
 
       return new Response(JSON.stringify({ error: "删除分组失败" }), {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     }
-  },
+  }
 });
 
 // 导出所有路由
@@ -279,7 +279,7 @@ const groupsRouter = [
   getGroupByIdRouter,
   createGroupRouter,
   updateGroupRouter,
-  deleteGroupRouter,
+  deleteGroupRouter
 ];
 
 export { groupsRouter };

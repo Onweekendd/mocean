@@ -6,7 +6,7 @@ import { fileURLToPath } from "url";
 import {
   ModelType,
   PrismaClient,
-  ProviderType,
+  ProviderType
 } from "../generated/prisma/index.js";
 
 const __filename: string = fileURLToPath(import.meta.url);
@@ -136,7 +136,7 @@ class ProvidersModelsImporter {
 
   // 导入所有providers数据
   async importProviders(
-    providersData: Record<string, JsonProviderData>,
+    providersData: Record<string, JsonProviderData>
   ): Promise<{ success: number; error: number; total: number }> {
     let successCount = 0;
     let errorCount = 0;
@@ -156,7 +156,7 @@ class ProvidersModelsImporter {
             name: providerKey,
             apiHost: providerData.api.url,
             enabled: false,
-            updatedAt: new Date(),
+            updatedAt: new Date()
           },
           create: {
             id: providerKey,
@@ -169,8 +169,8 @@ class ProvidersModelsImporter {
             isAuthed: false,
             notes: providerData.websites?.official
               ? `官网: ${providerData.websites.official}`
-              : null,
-          },
+              : null
+          }
         });
 
         successCount++;
@@ -182,7 +182,7 @@ class ProvidersModelsImporter {
         errorCount++;
         console.error(
           `处理provider失败 (ID: ${providerKey}):`,
-          (error as Error).message,
+          (error as Error).message
         );
       }
     }
@@ -192,7 +192,7 @@ class ProvidersModelsImporter {
 
   // 导入所有models数据
   async importModels(
-    modelsData: Record<string, JsonModel[]>,
+    modelsData: Record<string, JsonModel[]>
   ): Promise<{ success: number; error: number; total: number }> {
     let successCount = 0;
     let errorCount = 0;
@@ -210,12 +210,12 @@ class ProvidersModelsImporter {
         try {
           // 获取provider的数据库ID
           const provider = await this.prisma.provider.findUnique({
-            where: { id: providerKey },
+            where: { id: providerKey }
           });
 
           if (!provider) {
             console.warn(
-              `⚠️ 未找到provider: ${providerKey}，跳过模型: ${model.id}`,
+              `⚠️ 未找到provider: ${providerKey}，跳过模型: ${model.id}`
             );
             errorCount++;
             continue;
@@ -227,7 +227,7 @@ class ProvidersModelsImporter {
             supportsTools: modelTypes.includes(ModelType.function_calling),
             supportsReasoning: modelTypes.includes(ModelType.reasoning),
             supportsImage: modelTypes.includes(ModelType.vision),
-            supportsEmbedding: modelTypes.includes(ModelType.embedding),
+            supportsEmbedding: modelTypes.includes(ModelType.embedding)
           };
 
           // 1. upsert model（不再包含 provider 字段）
@@ -238,7 +238,7 @@ class ProvidersModelsImporter {
               group: model.group,
               owned_by: model.owned_by || null,
               description: model.description || null,
-              ...capabilities,
+              ...capabilities
             },
             create: {
               id: model.id,
@@ -246,8 +246,8 @@ class ProvidersModelsImporter {
               group: model.group,
               owned_by: model.owned_by || null,
               description: model.description || null,
-              ...capabilities,
-            },
+              ...capabilities
+            }
           });
 
           // 2. upsert model-provider 关系
@@ -255,11 +255,11 @@ class ProvidersModelsImporter {
             where: {
               modelId_providerId: {
                 modelId: model.id,
-                providerId: provider.id,
-              },
+                providerId: provider.id
+              }
             },
             update: {},
-            create: { modelId: model.id, providerId: provider.id },
+            create: { modelId: model.id, providerId: provider.id }
           });
 
           successCount++;
@@ -271,7 +271,7 @@ class ProvidersModelsImporter {
           errorCount++;
           console.error(
             `处理model失败 (ID: ${model.id}):`,
-            (error as Error).message,
+            (error as Error).message
           );
         }
       }
@@ -294,7 +294,7 @@ class ProvidersModelsImporter {
         providersTotal: 0,
         modelsSuccess: 0,
         modelsError: 0,
-        modelsTotal: 0,
+        modelsTotal: 0
       };
 
       // 使用事务来确保数据一致性
@@ -360,10 +360,10 @@ class ProvidersModelsImporter {
           enabled: true,
           _count: {
             select: {
-              models: true,
-            },
-          },
-        },
+              models: true
+            }
+          }
+        }
       });
 
       console.log("\n📋 最近导入的Provider记录:");
@@ -381,15 +381,15 @@ class ProvidersModelsImporter {
           name: true,
           _count: {
             select: {
-              models: true,
-            },
-          },
+              models: true
+            }
+          }
         },
         orderBy: {
           models: {
-            _count: "desc",
-          },
-        },
+            _count: "desc"
+          }
+        }
       });
 
       console.log("\n📊 各提供商模型统计:");

@@ -35,7 +35,7 @@ export const weatherTool = createTool({
   description: "Get current weather for a location",
 
   inputSchema: z.object({
-    location: z.string().describe("City name"),
+    location: z.string().describe("City name")
   }),
 
   outputSchema: z.object({
@@ -51,12 +51,12 @@ export const weatherTool = createTool({
 
     conditions: z.string(),
 
-    location: z.string(),
+    location: z.string()
   }),
 
   execute: async (inputData) => {
     return await getWeather(inputData.location);
-  },
+  }
 });
 
 const getWeather = async (location: string) => {
@@ -91,7 +91,7 @@ const getWeather = async (location: string) => {
 
     conditions: getWeatherCondition(data.current.weather_code),
 
-    location: name,
+    location: name
   };
 };
 
@@ -151,7 +151,7 @@ function getWeatherCondition(code: number): string {
 
     96: "Thunderstorm with slight hail",
 
-    99: "Thunderstorm with heavy hail",
+    99: "Thunderstorm with heavy hail"
   };
 
   return conditions[code] || "Unknown";

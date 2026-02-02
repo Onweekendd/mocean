@@ -15,7 +15,7 @@ import {
   toggleProviderEnabled,
   typeParamSchema,
   updateProvider,
-  updateProviderSchema,
+  updateProviderSchema
 } from "../server/provider";
 
 /**
@@ -29,18 +29,18 @@ const getProvidersRouter = registerApiRoute(`${PREFIX}/providers`, {
       const providers = await getProviders();
       return new Response(JSON.stringify(providers), {
         status: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     } catch (error) {
       return new Response(
         JSON.stringify({ error, message: "获取提供商列表失败" }),
         {
           status: 500,
-          headers: { "Content-Type": "application/json" },
-        },
+          headers: { "Content-Type": "application/json" }
+        }
       );
     }
-  },
+  }
 });
 
 /**
@@ -56,19 +56,19 @@ const getEnabledProvidersRouter = registerApiRoute(
         const providers = await getEnabledProviders();
         return new Response(JSON.stringify(providers), {
           status: 200,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       } catch (error) {
         return new Response(
           JSON.stringify({ error, message: "获取启用提供商列表失败" }),
           {
             status: 500,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
-    },
-  },
+    }
+  }
 );
 
 /**
@@ -82,7 +82,7 @@ const getProviderByIdRouter = registerApiRoute(`${PREFIX}/providers/:id`, {
     try {
       // 参数校验
       const { id } = idParamSchema.parse({
-        id: c.req.param("id"),
+        id: c.req.param("id")
       });
 
       const provider = await getProviderById(id);
@@ -90,36 +90,36 @@ const getProviderByIdRouter = registerApiRoute(`${PREFIX}/providers/:id`, {
       if (!provider) {
         return new Response(JSON.stringify({ error: "提供商不存在" }), {
           status: 404,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       }
 
       return new Response(JSON.stringify(provider), {
         status: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.issues,
+            details: error.issues
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
       return new Response(
         JSON.stringify({ error, message: "获取提供商失败" }),
         {
           status: 500,
-          headers: { "Content-Type": "application/json" },
-        },
+          headers: { "Content-Type": "application/json" }
+        }
       );
     }
-  },
+  }
 });
 
 /**
@@ -135,37 +135,37 @@ const getProvidersByTypeRouter = registerApiRoute(
       try {
         // 参数校验
         const { type } = typeParamSchema.parse({
-          type: c.req.param("type"),
+          type: c.req.param("type")
         });
 
         const providers = await getProvidersByType(type);
         return new Response(JSON.stringify(providers), {
           status: 200,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       } catch (error) {
         if (error instanceof z.ZodError) {
           return new Response(
             JSON.stringify({
               error: "参数校验失败",
-              details: error.issues,
+              details: error.issues
             }),
             {
               status: 400,
-              headers: { "Content-Type": "application/json" },
-            },
+              headers: { "Content-Type": "application/json" }
+            }
           );
         }
         return new Response(
           JSON.stringify({ error, message: "获取提供商失败" }),
           {
             status: 500,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
-    },
-  },
+    }
+  }
 );
 
 /**
@@ -185,27 +185,27 @@ const createProviderRouter = registerApiRoute(`${PREFIX}/providers`, {
       const newProvider = await createProvider(providerData);
       return new Response(JSON.stringify(newProvider), {
         status: 201,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.issues,
+            details: error.issues
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
       return new Response(JSON.stringify({ error: "创建提供商失败" }), {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     }
-  },
+  }
 });
 
 /**
@@ -219,7 +219,7 @@ const updateProviderRouter = registerApiRoute(`${PREFIX}/providers/:id`, {
     try {
       // 参数校验
       const { id } = idParamSchema.parse({
-        id: c.req.param("id"),
+        id: c.req.param("id")
       });
 
       const rawData: unknown = await c.req.json();
@@ -236,7 +236,7 @@ const updateProviderRouter = registerApiRoute(`${PREFIX}/providers/:id`, {
 
       return new Response(JSON.stringify(updatedProvider), {
         status: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -249,13 +249,13 @@ const updateProviderRouter = registerApiRoute(`${PREFIX}/providers/:id`, {
             details: error.issues.map((err) => ({
               field: err.path.join("."),
               message: err.message,
-              code: err.code,
-            })),
+              code: err.code
+            }))
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
 
@@ -268,12 +268,12 @@ const updateProviderRouter = registerApiRoute(`${PREFIX}/providers/:id`, {
           JSON.stringify({
             error: "数据库操作失败",
             message: dbError.message || "未知的数据库错误",
-            code: dbError.code,
+            code: dbError.code
           }),
           {
             status: 500,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
 
@@ -284,15 +284,15 @@ const updateProviderRouter = registerApiRoute(`${PREFIX}/providers/:id`, {
         JSON.stringify({
           error: "更新提供商失败",
           message: error instanceof Error ? error.message : "未知错误",
-          stack: error instanceof Error ? error.stack : undefined,
+          stack: error instanceof Error ? error.stack : undefined
         }),
         {
           status: 500,
-          headers: { "Content-Type": "application/json" },
-        },
+          headers: { "Content-Type": "application/json" }
+        }
       );
     }
-  },
+  }
 });
 
 /**
@@ -306,25 +306,25 @@ const deleteProviderRouter = registerApiRoute(`${PREFIX}/providers/:id`, {
     try {
       // 参数校验
       const { id } = idParamSchema.parse({
-        id: c.req.param("id"),
+        id: c.req.param("id")
       });
 
       const deletedProvider = await deleteProvider(id);
       return new Response(JSON.stringify(deletedProvider), {
         status: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.issues,
+            details: error.issues
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
 
@@ -333,21 +333,21 @@ const deleteProviderRouter = registerApiRoute(`${PREFIX}/providers/:id`, {
         return new Response(
           JSON.stringify({
             error: error.message,
-            code: "DELETE_CONSTRAINT_ERROR",
+            code: "DELETE_CONSTRAINT_ERROR"
           }),
           {
             status: 409,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
 
       return new Response(JSON.stringify({ error: "删除提供商失败" }), {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     }
-  },
+  }
 });
 
 /**
@@ -364,25 +364,25 @@ const toggleProviderEnabledRouter = registerApiRoute(
         console.log("toggleProviderEnabledRouter");
         // 参数校验
         const { id } = idParamSchema.parse({
-          id: c.req.param("id"),
+          id: c.req.param("id")
         });
 
         const updatedProvider = await toggleProviderEnabled(id);
         return new Response(JSON.stringify(updatedProvider), {
           status: 200,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       } catch (error) {
         if (error instanceof z.ZodError) {
           return new Response(
             JSON.stringify({
               error: "参数校验失败",
-              details: error.issues,
+              details: error.issues
             }),
             {
               status: 400,
-              headers: { "Content-Type": "application/json" },
-            },
+              headers: { "Content-Type": "application/json" }
+            }
           );
         }
 
@@ -391,22 +391,22 @@ const toggleProviderEnabledRouter = registerApiRoute(
           return new Response(
             JSON.stringify({
               error: error.message,
-              code: "TOGGLE_PROVIDER_ERROR",
+              code: "TOGGLE_PROVIDER_ERROR"
             }),
             {
               status: 404,
-              headers: { "Content-Type": "application/json" },
-            },
+              headers: { "Content-Type": "application/json" }
+            }
           );
         }
 
         return new Response(JSON.stringify({ error: "切换提供商状态失败" }), {
           status: 500,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       }
-    },
-  },
+    }
+  }
 );
 
 /**
@@ -424,26 +424,26 @@ const getProvidersByModelRouter = registerApiRoute(
         if (!modelId) {
           return new Response(JSON.stringify({ error: "模型ID不能为空" }), {
             status: 400,
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json" }
           });
         }
 
         const providers = await getProvidersByModel(modelId);
         return new Response(JSON.stringify(providers), {
           status: 200,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       } catch (error) {
         return new Response(
           JSON.stringify({ error, message: "获取关联提供商列表失败" }),
           {
             status: 500,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
-    },
-  },
+    }
+  }
 );
 
 // 导出所有路由
@@ -456,7 +456,7 @@ const providersRouter = [
   createProviderRouter,
   updateProviderRouter,
   deleteProviderRouter,
-  toggleProviderEnabledRouter,
+  toggleProviderEnabledRouter
 ];
 
 export { providersRouter };

@@ -79,7 +79,7 @@ class AssistantsImporter {
               knowledgeRecognition: assistant.knowledgeRecognition || "off",
               modelId: assistant.modelId || null,
               defaultModelId: assistant.defaultModelId || null,
-              updatedAt: new Date(),
+              updatedAt: new Date()
             },
             create: {
               id: assistant.id,
@@ -93,8 +93,8 @@ class AssistantsImporter {
               enableGenerateImage: assistant.enableGenerateImage,
               knowledgeRecognition: assistant.knowledgeRecognition || "off",
               modelId: assistant.modelId || null,
-              defaultModelId: assistant.defaultModelId || null,
-            },
+              defaultModelId: assistant.defaultModelId || null
+            }
           });
 
           successCount++;
@@ -103,7 +103,7 @@ class AssistantsImporter {
           errorCount++;
           console.error(
             `处理assistant失败 (ID: ${assistant.id}):`,
-            (error as Error).message,
+            (error as Error).message
           );
           throw error; // 在事务中抛出错误会回滚整个事务
         }
@@ -112,7 +112,7 @@ class AssistantsImporter {
       const stats: ImportStats = {
         successCount,
         errorCount,
-        totalCount: 1,
+        totalCount: 1
       };
 
       console.log("\n📊 数据导入完成统计:");
@@ -145,21 +145,21 @@ class AssistantsImporter {
           emoji: true,
           enableWebSearch: true,
           enableGenerateImage: true,
-          createdAt: true,
-        },
+          createdAt: true
+        }
       });
 
       console.log("\n📋 最近导入的Assistant记录:");
       recentAssistants.forEach((assistant) => {
         console.log(
-          `  - ${assistant.emoji || "🤖"} ${assistant.name} (ID: ${assistant.id})`,
+          `  - ${assistant.emoji || "🤖"} ${assistant.name} (ID: ${assistant.id})`
         );
         console.log(`    描述: ${assistant.description || "无描述"}`);
         console.log(
-          `    网络搜索: ${assistant.enableWebSearch ? "启用" : "禁用"}`,
+          `    网络搜索: ${assistant.enableWebSearch ? "启用" : "禁用"}`
         );
         console.log(
-          `    图像生成: ${assistant.enableGenerateImage ? "启用" : "禁用"}`,
+          `    图像生成: ${assistant.enableGenerateImage ? "启用" : "禁用"}`
         );
         console.log(`    创建时间: ${assistant.createdAt.toLocaleString()}`);
       });

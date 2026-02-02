@@ -15,7 +15,7 @@ import {
   getThreadsByAssistantId,
   getUIMessagesByThreadId,
   updateAssistant,
-  updateAssistantSchema,
+  updateAssistantSchema
 } from "../server/assistant";
 
 /**
@@ -29,18 +29,18 @@ const getAssistantsRouter = registerApiRoute(`${PREFIX}/assistants`, {
       const assistants = await getAssistants();
       return new Response(JSON.stringify(assistants), {
         status: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     } catch (error) {
       return new Response(
         JSON.stringify({ error, message: "获取助手列表失败" }),
         {
           status: 500,
-          headers: { "Content-Type": "application/json" },
-        },
+          headers: { "Content-Type": "application/json" }
+        }
       );
     }
-  },
+  }
 });
 
 /**
@@ -56,7 +56,7 @@ const getAssistantByIdRouter = registerApiRoute(
       try {
         // 参数校验
         const { assistantId } = assistantIdParamSchema.parse({
-          assistantId: c.req.param("assistantId"),
+          assistantId: c.req.param("assistantId")
         });
 
         const assistant = await getAssistantById(assistantId);
@@ -64,37 +64,37 @@ const getAssistantByIdRouter = registerApiRoute(
         if (!assistant) {
           return new Response(JSON.stringify({ error: "助手不存在" }), {
             status: 404,
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json" }
           });
         }
 
         return new Response(JSON.stringify(assistant), {
           status: 200,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       } catch (error) {
         if (error instanceof z.ZodError) {
           return new Response(
             JSON.stringify({
               error: "参数校验失败",
-              details: error.issues,
+              details: error.issues
             }),
             {
               status: 400,
-              headers: { "Content-Type": "application/json" },
-            },
+              headers: { "Content-Type": "application/json" }
+            }
           );
         }
         return new Response(
           JSON.stringify({ error, message: "获取助手失败" }),
           {
             status: 500,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
-    },
-  },
+    }
+  }
 );
 
 /**
@@ -114,27 +114,27 @@ const createAssistantRouter = registerApiRoute(`${PREFIX}/assistants`, {
       const newAssistant = await createAssistant(assistantData);
       return new Response(JSON.stringify(newAssistant), {
         status: 201,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.issues,
+            details: error.issues
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
       return new Response(JSON.stringify({ error: "创建助手失败" }), {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     }
-  },
+  }
 });
 
 /**
@@ -150,7 +150,7 @@ const updateAssistantRouter = registerApiRoute(
       try {
         // 参数校验
         const { assistantId } = assistantIdParamSchema.parse({
-          assistantId: c.req.param("assistantId"),
+          assistantId: c.req.param("assistantId")
         });
 
         const rawData = await c.req.json();
@@ -158,35 +158,35 @@ const updateAssistantRouter = registerApiRoute(
 
         const updatedAssistant = await updateAssistant(
           assistantId,
-          assistantData,
+          assistantData
         );
         return new Response(JSON.stringify(updatedAssistant), {
           status: 200,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       } catch (error) {
         if (error instanceof z.ZodError) {
           return new Response(
             JSON.stringify({
               error: "参数校验失败",
-              details: error.issues,
+              details: error.issues
             }),
             {
               status: 400,
-              headers: { "Content-Type": "application/json" },
-            },
+              headers: { "Content-Type": "application/json" }
+            }
           );
         }
         return new Response(
           JSON.stringify({ error, message: "更新助手失败" }),
           {
             status: 500,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
-    },
-  },
+    }
+  }
 );
 
 /**
@@ -202,37 +202,37 @@ const deleteAssistantRouter = registerApiRoute(
       try {
         // 参数校验
         const { assistantId } = assistantIdParamSchema.parse({
-          assistantId: c.req.param("assistantId"),
+          assistantId: c.req.param("assistantId")
         });
 
         const deletedAssistant = await deleteAssistant(assistantId);
         return new Response(JSON.stringify(deletedAssistant), {
           status: 200,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       } catch (error) {
         if (error instanceof z.ZodError) {
           return new Response(
             JSON.stringify({
               error: "参数校验失败",
-              details: error.issues,
+              details: error.issues
             }),
             {
               status: 400,
-              headers: { "Content-Type": "application/json" },
-            },
+              headers: { "Content-Type": "application/json" }
+            }
           );
         }
         return new Response(
           JSON.stringify({ error, message: "删除助手失败" }),
           {
             status: 500,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
-    },
-  },
+    }
+  }
 );
 
 /**
@@ -246,7 +246,7 @@ const chatWithAssistant = registerApiRoute(`${PREFIX}/assistants/chat`, {
     try {
       // 参数校验
       const { assistantId, messages, threadId } = chatWithAssistantSchema.parse(
-        await c.req.json(),
+        await c.req.json()
       );
 
       return await executeChatWithAssistant(assistantId, messages, threadId);
@@ -256,12 +256,12 @@ const chatWithAssistant = registerApiRoute(`${PREFIX}/assistants/chat`, {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.issues,
+            details: error.issues
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
 
@@ -269,16 +269,16 @@ const chatWithAssistant = registerApiRoute(`${PREFIX}/assistants/chat`, {
       if (error instanceof Error && error.message === "助手不存在") {
         return new Response(JSON.stringify({ error: error.message }), {
           status: 404,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       }
 
       return new Response(JSON.stringify({ message: "聊天请求失败", error }), {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     }
-  },
+  }
 });
 
 const getAssistantThreads = registerApiRoute(
@@ -288,38 +288,38 @@ const getAssistantThreads = registerApiRoute(
     handler: async (c) => {
       try {
         const { assistantId } = assistantIdParamSchema.parse({
-          assistantId: c.req.param("assistantId"),
+          assistantId: c.req.param("assistantId")
         });
 
         const threads = await getThreadsByAssistantId(assistantId);
 
         return new Response(JSON.stringify(threads), {
           status: 200,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       } catch (error) {
         if (error instanceof z.ZodError) {
           return new Response(
             JSON.stringify({
               error: "参数校验失败",
-              details: error.issues,
+              details: error.issues
             }),
             {
               status: 400,
-              headers: { "Content-Type": "application/json" },
-            },
+              headers: { "Content-Type": "application/json" }
+            }
           );
         }
         return new Response(
           JSON.stringify({ error, message: "获取助手历史记录失败" }),
           {
             status: 500,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
-    },
-  },
+    }
+  }
 );
 
 const getAssistantUIMessageByThreadId = registerApiRoute(
@@ -330,38 +330,38 @@ const getAssistantUIMessageByThreadId = registerApiRoute(
       try {
         const { assistantId, threadId } = assistantThreadIdParamSchema.parse({
           threadId: c.req.param("threadId"),
-          assistantId: c.req.param("assistantId"),
+          assistantId: c.req.param("assistantId")
         });
 
         const messages = await getUIMessagesByThreadId(assistantId, threadId);
 
         return new Response(JSON.stringify(messages), {
           status: 200,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       } catch (error) {
         if (error instanceof z.ZodError) {
           return new Response(
             JSON.stringify({
               error: "参数校验失败",
-              details: error.issues,
+              details: error.issues
             }),
             {
               status: 400,
-              headers: { "Content-Type": "application/json" },
-            },
+              headers: { "Content-Type": "application/json" }
+            }
           );
         }
         return new Response(
           JSON.stringify({ error, message: "获取助手历史记录失败" }),
           {
             status: 500,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
-    },
-  },
+    }
+  }
 );
 
 /**
@@ -376,5 +376,5 @@ export const assistantsRouter = [
   deleteAssistantRouter,
   chatWithAssistant,
   getAssistantThreads,
-  getAssistantUIMessageByThreadId,
+  getAssistantUIMessageByThreadId
 ];

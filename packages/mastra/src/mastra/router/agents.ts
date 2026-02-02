@@ -12,7 +12,7 @@ import {
   groupParamSchema,
   idParamSchema,
   updateAgent,
-  updateAgentSchema,
+  updateAgentSchema
 } from "../server/agent";
 
 /**
@@ -26,18 +26,18 @@ const getAgentsRouter = registerApiRoute(`${PREFIX}/agents`, {
       const agents = await getAgents();
       return new Response(JSON.stringify(agents), {
         status: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     } catch (error) {
       return new Response(
         JSON.stringify({ error, message: "获取智能体列表失败" }),
         {
           status: 500,
-          headers: { "Content-Type": "application/json" },
-        },
+          headers: { "Content-Type": "application/json" }
+        }
       );
     }
-  },
+  }
 });
 
 /**
@@ -51,7 +51,7 @@ const getAgentByIdRouter = registerApiRoute(`${PREFIX}/agents/:id`, {
     try {
       // 参数校验
       const { id } = idParamSchema.parse({
-        id: c.req.param("id"),
+        id: c.req.param("id")
       });
 
       const agent = await getAgentById(id);
@@ -59,36 +59,36 @@ const getAgentByIdRouter = registerApiRoute(`${PREFIX}/agents/:id`, {
       if (!agent) {
         return new Response(JSON.stringify({ error: "智能体不存在" }), {
           status: 404,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       }
 
       return new Response(JSON.stringify(agent), {
         status: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.issues,
+            details: error.issues
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
       return new Response(
         JSON.stringify({ error, message: "获取智能体失败" }),
         {
           status: 500,
-          headers: { "Content-Type": "application/json" },
-        },
+          headers: { "Content-Type": "application/json" }
+        }
       );
     }
-  },
+  }
 });
 
 /**
@@ -108,27 +108,27 @@ const createAgentRouter = registerApiRoute(`${PREFIX}/agents`, {
       const newAgent = await createAgent(agentData);
       return new Response(JSON.stringify(newAgent), {
         status: 201,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.issues,
+            details: error.issues
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
       return new Response(JSON.stringify({ error: "创建智能体失败" }), {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     }
-  },
+  }
 });
 
 /**
@@ -142,7 +142,7 @@ const updateAgentRouter = registerApiRoute(`${PREFIX}/agents/:id`, {
     try {
       // 参数校验
       const { id } = idParamSchema.parse({
-        id: c.req.param("id"),
+        id: c.req.param("id")
       });
 
       const rawData = await c.req.json();
@@ -151,27 +151,27 @@ const updateAgentRouter = registerApiRoute(`${PREFIX}/agents/:id`, {
       const updatedAgent = await updateAgent(id, agentData);
       return new Response(JSON.stringify(updatedAgent), {
         status: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.issues,
+            details: error.issues
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
       return new Response(JSON.stringify({ error: "更新智能体失败" }), {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     }
-  },
+  }
 });
 
 /**
@@ -185,33 +185,33 @@ const deleteAgentRouter = registerApiRoute(`${PREFIX}/agents/:id`, {
     try {
       // 参数校验
       const { id } = idParamSchema.parse({
-        id: c.req.param("id"),
+        id: c.req.param("id")
       });
 
       const deletedAgent = await deleteAgent(id);
       return new Response(JSON.stringify(deletedAgent), {
         status: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return new Response(
           JSON.stringify({
             error: "参数校验失败",
-            details: error.issues,
+            details: error.issues
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
       return new Response(JSON.stringify({ error: "删除智能体失败" }), {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
     }
-  },
+  }
 });
 
 const getAgentByGroupRouter = registerApiRoute(
@@ -225,24 +225,24 @@ const getAgentByGroupRouter = registerApiRoute(
         if (!agents) {
           return new Response(JSON.stringify({ error: "分组不存在" }), {
             status: 404,
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json" }
           });
         }
         return new Response(JSON.stringify(agents), {
           status: 200,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         });
       } catch (error) {
         return new Response(
           JSON.stringify({ error, message: "获取智能体失败" }),
           {
             status: 500,
-            headers: { "Content-Type": "application/json" },
-          },
+            headers: { "Content-Type": "application/json" }
+          }
         );
       }
-    },
-  },
+    }
+  }
 );
 
 /**
@@ -256,5 +256,5 @@ export const agentsRouter = [
   createAgentRouter,
   updateAgentRouter,
   deleteAgentRouter,
-  getAgentByGroupRouter,
+  getAgentByGroupRouter
 ];

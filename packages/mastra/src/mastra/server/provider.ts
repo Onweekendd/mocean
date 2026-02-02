@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-import { Prisma, ProviderType } from "../../../generated/prisma";
+import type { Prisma } from "../../../generated/prisma";
+import { ProviderType } from "../../../generated/prisma";
 import { prisma } from "./index";
 
 /**
@@ -23,13 +24,13 @@ const createProviderSchema = z.object({
   name: z.string().min(1, "提供商名称不能为空"),
   apiKey: z.string().min(1, "API密钥不能为空"),
   apiHost: z.string().refine((val) => isValidUrl(val), {
-    message: "API地址格式不正确",
+    message: "API地址格式不正确"
   }),
   apiVersion: z.string().nullable().optional(),
   enabled: z.boolean().optional().default(true),
   isSystem: z.boolean().optional().default(false),
   isAuthed: z.boolean().optional().default(false),
-  notes: z.string().nullable().optional(),
+  notes: z.string().nullable().optional()
 });
 
 const updateProviderSchema = z.object({
@@ -46,23 +47,23 @@ const updateProviderSchema = z.object({
       z
         .string()
         .refine((val) => isValidUrl(val), {
-          message: "API地址格式不正确",
+          message: "API地址格式不正确"
         })
-        .optional(),
+        .optional()
     ),
   apiVersion: z.string().nullable().optional(),
   enabled: z.boolean().optional(),
   isSystem: z.boolean().optional(),
   isAuthed: z.boolean().optional(),
-  notes: z.string().nullable().optional(),
+  notes: z.string().nullable().optional()
 });
 
 const idParamSchema = z.object({
-  id: z.string().min(1, "提供商ID不能为空"),
+  id: z.string().min(1, "提供商ID不能为空")
 });
 
 const typeParamSchema = z.object({
-  type: z.nativeEnum(ProviderType, { message: "无效的提供商类型" }),
+  type: z.nativeEnum(ProviderType, { message: "无效的提供商类型" })
 });
 
 // zod类型推导
@@ -79,24 +80,24 @@ const getProviders = async () => {
     include: {
       models: {
         include: {
-          model: true,
-        },
+          model: true
+        }
       },
       _count: {
         select: {
-          models: true,
-        },
-      },
+          models: true
+        }
+      }
     },
     orderBy: {
-      createdAt: "desc",
-    },
+      createdAt: "desc"
+    }
   });
 
   // 整理模型信息
   return providers.map((provider) => ({
     ...provider,
-    modelList: provider.models.map((m) => m.model),
+    modelList: provider.models.map((m) => m.model)
   }));
 };
 
@@ -109,20 +110,20 @@ const getProviders = async () => {
 const getProviderById = async (id: string) => {
   const provider = await prisma.provider.findUnique({
     where: {
-      id,
+      id
     },
     include: {
       models: {
         include: {
-          model: true,
-        },
+          model: true
+        }
       },
       _count: {
         select: {
-          models: true,
-        },
-      },
-    },
+          models: true
+        }
+      }
+    }
   });
 
   if (!provider) return null;
@@ -131,8 +132,8 @@ const getProviderById = async (id: string) => {
   return {
     ...provider,
     modelList: provider.models.map((m) => ({
-      ...m.model,
-    })),
+      ...m.model
+    }))
   };
 };
 
@@ -145,26 +146,26 @@ const getProviderById = async (id: string) => {
 const getProvidersByType = async (type: ProviderType) => {
   const providers = await prisma.provider.findMany({
     where: {
-      type,
+      type
     },
     include: {
       models: {
         include: {
-          model: true,
-        },
+          model: true
+        }
       },
       _count: {
         select: {
-          models: true,
-        },
-      },
-    },
+          models: true
+        }
+      }
+    }
   });
 
   // 整理模型信息
   return providers.map((provider) => ({
     ...provider,
-    modelList: provider.models.map((m) => m.model),
+    modelList: provider.models.map((m) => m.model)
   }));
 };
 
@@ -176,26 +177,26 @@ const getProvidersByType = async (type: ProviderType) => {
 const getEnabledProviders = async () => {
   const providers = await prisma.provider.findMany({
     where: {
-      enabled: true,
+      enabled: true
     },
     include: {
       models: {
         include: {
-          model: true,
-        },
+          model: true
+        }
       },
       _count: {
         select: {
-          models: true,
-        },
-      },
-    },
+          models: true
+        }
+      }
+    }
   });
 
   // 整理模型信息
   return providers.map((provider) => ({
     ...provider,
-    modelList: provider.models.map((m) => m.model),
+    modelList: provider.models.map((m) => m.model)
   }));
 };
 
@@ -210,28 +211,28 @@ const getProvidersByModel = async (modelId: string) => {
     where: {
       models: {
         some: {
-          modelId,
-        },
-      },
+          modelId
+        }
+      }
     },
     include: {
       models: {
         include: {
-          model: true,
-        },
+          model: true
+        }
       },
       _count: {
         select: {
-          models: true,
-        },
-      },
-    },
+          models: true
+        }
+      }
+    }
   });
 
   // 整理模型信息
   return providers.map((provider) => ({
     ...provider,
-    modelList: provider.models.map((m) => m.model),
+    modelList: provider.models.map((m) => m.model)
   }));
 };
 
@@ -250,28 +251,28 @@ const createProvider = async (provider: CreateProviderInput) => {
       groups: {
         create: {
           name: "默认",
-          isDefault: true,
-        },
-      },
+          isDefault: true
+        }
+      }
     } as Prisma.ProviderCreateInput,
     include: {
       models: {
         include: {
-          model: true,
-        },
+          model: true
+        }
       },
       groups: true,
       _count: {
         select: {
-          models: true,
-        },
-      },
-    },
+          models: true
+        }
+      }
+    }
   });
 
   return {
     ...newProvider,
-    modelList: newProvider.models.map((m) => m.model),
+    modelList: newProvider.models.map((m) => m.model)
   };
 };
 
@@ -285,31 +286,31 @@ const createProvider = async (provider: CreateProviderInput) => {
 const updateProvider = async (id: string, provider: UpdateProviderInput) => {
   const updatedProvider = await prisma.provider.update({
     where: {
-      id,
+      id
     },
     data: {
       ...provider,
-      updatedAt: new Date(),
+      updatedAt: new Date()
     },
     include: {
       models: {
         include: {
-          model: true,
-        },
+          model: true
+        }
       },
       _count: {
         select: {
-          models: true,
-        },
-      },
-    },
+          models: true
+        }
+      }
+    }
   });
 
   return {
     ...updatedProvider,
     modelList: updatedProvider.models.map((m) => ({
-      ...m.model,
-    })),
+      ...m.model
+    }))
   };
 };
 
@@ -326,22 +327,22 @@ const deleteProvider = async (id: string) => {
     include: {
       _count: {
         select: {
-          models: true,
-        },
-      },
-    },
+          models: true
+        }
+      }
+    }
   });
 
   if (providerWithModels && providerWithModels._count.models > 0) {
     throw new Error(
-      `无法删除提供商：仍有 ${providerWithModels._count.models} 个关联的模型`,
+      `无法删除提供商：仍有 ${providerWithModels._count.models} 个关联的模型`
     );
   }
 
   const deletedProvider = await prisma.provider.delete({
     where: {
-      id,
-    },
+      id
+    }
   });
   return deletedProvider;
 };
@@ -355,7 +356,7 @@ const deleteProvider = async (id: string) => {
 const toggleProviderEnabled = async (id: string) => {
   const provider = await prisma.provider.findUnique({
     where: { id },
-    select: { enabled: true },
+    select: { enabled: true }
   });
 
   if (!provider) {
@@ -366,27 +367,27 @@ const toggleProviderEnabled = async (id: string) => {
     where: { id },
     data: {
       enabled: !provider.enabled,
-      updatedAt: new Date(),
+      updatedAt: new Date()
     },
     include: {
       models: {
         include: {
-          model: true,
-        },
+          model: true
+        }
       },
       _count: {
         select: {
-          models: true,
-        },
-      },
-    },
+          models: true
+        }
+      }
+    }
   });
 
   return {
     ...updatedProvider,
     modelList: updatedProvider.models.map((m) => ({
-      ...m.model,
-    })),
+      ...m.model
+    }))
   };
 };
 
@@ -424,5 +425,5 @@ export {
   createProviderSchema,
   updateProviderSchema,
   idParamSchema,
-  typeParamSchema,
+  typeParamSchema
 };

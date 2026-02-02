@@ -41,7 +41,7 @@ export abstract class BaseApiClient {
     this.baseUrl = config.baseUrl || API_URL;
     this.defaultHeaders = {
       "Content-Type": "application/json",
-      ...config.headers,
+      ...config.headers
     };
   }
 
@@ -52,7 +52,7 @@ export abstract class BaseApiClient {
    */
   protected async request<T>(
     endpoint: string,
-    options: RequestOptions = {},
+    options: RequestOptions = {}
   ): Promise<ApiResponse<T>> {
     try {
       const url = `${this.baseUrl}${endpoint}`;
@@ -60,8 +60,8 @@ export abstract class BaseApiClient {
         ...options,
         headers: {
           ...this.defaultHeaders,
-          ...options.headers,
-        },
+          ...options.headers
+        }
       });
 
       const data = await response.json();
@@ -83,11 +83,11 @@ export abstract class BaseApiClient {
    */
   protected async get<T>(
     endpoint: string,
-    headers?: Record<string, string>,
+    headers?: Record<string, string>
   ): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       method: "GET",
-      headers,
+      headers
     });
   }
 
@@ -100,12 +100,12 @@ export abstract class BaseApiClient {
   protected async post<T>(
     endpoint: string,
     body?: Record<string, unknown>,
-    headers?: Record<string, string>,
+    headers?: Record<string, string>
   ): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       method: "POST",
       body: body ? JSON.stringify(body) : undefined,
-      headers,
+      headers
     });
   }
 
@@ -118,12 +118,12 @@ export abstract class BaseApiClient {
   protected async put<T>(
     endpoint: string,
     body?: Record<string, unknown>,
-    headers?: Record<string, string>,
+    headers?: Record<string, string>
   ): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       method: "PUT",
       body: body ? JSON.stringify(body) : undefined,
-      headers,
+      headers
     });
   }
 
@@ -134,11 +134,11 @@ export abstract class BaseApiClient {
    */
   protected async delete<T>(
     endpoint: string,
-    headers?: Record<string, string>,
+    headers?: Record<string, string>
   ): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       method: "DELETE",
-      headers,
+      headers
     });
   }
 }

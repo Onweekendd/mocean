@@ -1,5 +1,7 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import { Agent } from "@mastra/core/agent";
+import type { MastraModelConfig } from "@mastra/core/dist/llm";
+import type { RequestContext } from "@mastra/core/request-context";
 import { LibSQLStore } from "@mastra/libsql";
 import { Memory } from "@mastra/memory";
 
@@ -9,31 +11,34 @@ export const DynamicAgent = new Agent({
   id: "dynamic-agent",
   name: "DynamicAgent",
 
-  instructions: ({ requestContext }) => {
-    const ctx = requestContext as any;
-    const assistant = ctx.get("assistant") as CommonRunTimeType["assistant"];
+  instructions: ({
+    requestContext
+  }: {
+    requestContext: RequestContext<CommonRunTimeType>;
+  }) => {
+    const assistant = requestContext.get("assistant");
 
     return assistant.prompt;
   },
 
   model: ({ requestContext }) => {
-    const ctx = requestContext as any;
-    const assistant = ctx.get("assistant") as CommonRunTimeType["assistant"];
+    const assistant = (requestContext as RequestContext<CommonRunTimeType>).get(
+      "assistant"
+    );
 
     const provider = assistant.provider;
 
     const model = assistant.model;
 
     if (!provider || !provider.apiHost || !provider.apiKey) {
-      throw new Error(
-        "Provider API host and key are required to create the model."
-      );
+      throw new Error("Provider not configured");
     }
 
     return {
       url: provider.apiHost,
       apiKey: provider.apiKey,
-      id: `${provider.id}/${model.id}`
+      providerId: provider.id,
+      modelId: model.id
     };
   },
 

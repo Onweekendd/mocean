@@ -17,7 +17,7 @@ export { type StorageThreadType } from "@mastra/core/memory";
 export {
   BaseApiClient,
   type ApiResponse,
-  type ApiClientConfig,
+  type ApiClientConfig
 } from "./base-client";
 
 // 代理相关API
@@ -25,7 +25,7 @@ export {
   AgentsApiClient,
   agentsApi,
   agentsApiMethods,
-  useAgentsApi,
+  useAgentsApi
 } from "./agents-client";
 
 // 代理类型
@@ -37,7 +37,7 @@ export {
   type AgentCreateResult,
   type AgentUpdateResult,
   type AgentDeleteResult,
-  type AgentsByGroupResult,
+  type AgentsByGroupResult
 } from "../server/agent";
 
 // 助手相关API
@@ -45,7 +45,7 @@ export {
   AssistantsApiClient,
   assistantsApi,
   assistantsApiMethods,
-  useAssistantsApi,
+  useAssistantsApi
 } from "./assistants-client";
 
 // 助手类型
@@ -58,7 +58,7 @@ export {
   type AssistantUpdateResult,
   type AssistantDeleteResult,
   type AssistantThreadsResult,
-  type AssistantUIMessagesResult,
+  type AssistantUIMessagesResult
 } from "../server/assistant";
 
 // 分组相关API
@@ -66,7 +66,7 @@ export {
   GroupsApiClient,
   groupsApi,
   groupsApiMethods,
-  useGroupsApi,
+  useGroupsApi
 } from "./groups-client";
 
 // 分组类型
@@ -77,7 +77,7 @@ export {
   type GroupDetailResult,
   type GroupCreateResult,
   type GroupUpdateResult,
-  type GroupDeleteResult,
+  type GroupDeleteResult
 } from "../server/group";
 
 // 提供商相关API
@@ -85,7 +85,7 @@ export {
   ProvidersApiClient,
   providersApi,
   providersApiMethods,
-  useProvidersApi,
+  useProvidersApi
 } from "./providers-client";
 
 // 提供商类型
@@ -100,7 +100,7 @@ export {
   type ProviderCreateResult,
   type ProviderUpdateResult,
   type ProviderDeleteResult,
-  type ProviderToggleResult,
+  type ProviderToggleResult
 } from "../server/provider";
 
 // 模型相关API
@@ -108,7 +108,7 @@ export {
   ModelsApiClient,
   modelsApi,
   modelsApiMethods,
-  useModelsApi,
+  useModelsApi
 } from "./models-client";
 
 // 模型类型
@@ -126,7 +126,7 @@ export {
   type ModelProviderRelation,
   type ModelProviderRelationAddResult,
   type ModelProviderRelationRemoveResult,
-  type ModelProviderRelationsResult,
+  type ModelProviderRelationsResult
 } from "../server/model";
 
 /**
@@ -138,7 +138,7 @@ export const api = {
   assistants: assistantsApiMethods,
   groups: groupsApiMethods,
   providers: providersApiMethods,
-  models: modelsApiMethods,
+  models: modelsApiMethods
 };
 
 /**
@@ -150,5 +150,5 @@ export const useApi = () => ({
   assistants: useAssistantsApi(),
   groups: useGroupsApi(),
   providers: useProvidersApi(),
-  models: useModelsApi(),
+  models: useModelsApi()
 });

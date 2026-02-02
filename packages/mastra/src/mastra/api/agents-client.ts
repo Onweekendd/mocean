@@ -1,5 +1,5 @@
 /// <reference lib="dom" />
-import {
+import type {
   AgentCreateResult,
   AgentDeleteResult,
   AgentDetailResult,
@@ -7,9 +7,10 @@ import {
   AgentsByGroupResult,
   AgentsListResult,
   CreateAgentInput,
-  UpdateAgentInput,
+  UpdateAgentInput
 } from "../server/agent";
-import { ApiClientConfig, ApiResponse, BaseApiClient } from "./base-client";
+import type { ApiClientConfig, ApiResponse } from "./base-client";
+import { BaseApiClient } from "./base-client";
 
 /**
  * 代理 API 客户端类
@@ -43,7 +44,7 @@ export class AgentsApiClient extends BaseApiClient {
    * @param agentData - 代理信息对象
    */
   async createAgent(
-    agentData: CreateAgentInput,
+    agentData: CreateAgentInput
   ): Promise<ApiResponse<AgentCreateResult>> {
     return this.post<AgentCreateResult>("/agents", agentData);
   }
@@ -56,7 +57,7 @@ export class AgentsApiClient extends BaseApiClient {
    */
   async updateAgent(
     id: string,
-    agentData: UpdateAgentInput,
+    agentData: UpdateAgentInput
   ): Promise<ApiResponse<AgentUpdateResult>> {
     return this.put<AgentUpdateResult>(`/agents/${id}`, agentData);
   }
@@ -76,7 +77,7 @@ export class AgentsApiClient extends BaseApiClient {
    * @param group - 分组
    */
   async getAgentByGroup(
-    group: string,
+    group: string
   ): Promise<ApiResponse<AgentsByGroupResult>> {
     return this.get<AgentsByGroupResult>(`/agents/group/${group}`);
   }
@@ -128,7 +129,7 @@ export const agentsApiMethods = {
    * 根据分组获取代理
    * @param group - 分组
    */
-  getAgentByGroup: (group: string) => agentsApi.getAgentByGroup(group),
+  getAgentByGroup: (group: string) => agentsApi.getAgentByGroup(group)
 };
 
 /**
@@ -162,6 +163,6 @@ export const useAgentsApi = (): UseAgentsApiReturn => {
     createAgent: agentsApiMethods.createAgent,
     updateAgent: agentsApiMethods.updateAgent,
     deleteAgent: agentsApiMethods.deleteAgent,
-    getAgentByGroup: agentsApiMethods.getAgentByGroup,
+    getAgentByGroup: agentsApiMethods.getAgentByGroup
   };
 };

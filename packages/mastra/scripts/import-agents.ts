@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
-import { PrismaClient } from "../generated/prisma/index.js";
+import type { PrismaClient } from "../generated/prisma/index.js";
 import { prisma } from "../src/mastra/server/index.js";
 
 const __filename: string = fileURLToPath(import.meta.url);
@@ -70,7 +70,7 @@ class AgentsImporter {
                 emoji: agent.emoji || null,
                 description: agent.description || null,
                 groupJson: agent.group ? JSON.stringify(agent.group) : "",
-                updatedAt: new Date(),
+                updatedAt: new Date()
               },
               create: {
                 id: agent.id,
@@ -83,8 +83,8 @@ class AgentsImporter {
                 enableWebSearch: false,
                 webSearchProviderId: null,
                 enableGenerateImage: false,
-                knowledgeRecognition: "off",
-              },
+                knowledgeRecognition: "off"
+              }
             });
 
             successCount++;
@@ -96,7 +96,7 @@ class AgentsImporter {
             errorCount++;
             console.error(
               `处理agent失败 (ID: ${agent.id}):`,
-              (error as Error).message,
+              (error as Error).message
             );
             throw error; // 在事务中抛出错误会回滚整个事务
           }
@@ -106,7 +106,7 @@ class AgentsImporter {
       const stats: ImportStats = {
         successCount,
         errorCount,
-        totalCount: agents.length,
+        totalCount: agents.length
       };
 
       console.log("\n📊 数据导入完成统计:");
@@ -137,8 +137,8 @@ class AgentsImporter {
           name: true,
           emoji: true,
           groupJson: true,
-          createdAt: true,
-        },
+          createdAt: true
+        }
       });
 
       console.log("\n📋 最近导入的Agent记录:");
@@ -147,7 +147,7 @@ class AgentsImporter {
           ? (JSON.parse(agent.groupJson as string) as string[])
           : [];
         console.log(
-          `  - ${agent.emoji || "🤖"} ${agent.name} (ID: ${agent.id})`,
+          `  - ${agent.emoji || "🤖"} ${agent.name} (ID: ${agent.id})`
         );
         console.log(`    分组: ${groups.join(", ")}`);
         console.log(`    创建时间: ${agent.createdAt.toLocaleString()}`);

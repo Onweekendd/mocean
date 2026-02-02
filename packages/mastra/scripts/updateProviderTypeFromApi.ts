@@ -23,17 +23,17 @@ const __dirname = dirname(__filename);
 // Zod schemas for models.dev API (从 fetch-models-from-api.ts 复用)
 const ModelsDevModalitiesSchema = z.object({
   input: z.array(z.string()).optional(),
-  output: z.array(z.string()).optional(),
+  output: z.array(z.string()).optional()
 });
 
 const ModelsDevLimitSchema = z.object({
   context: z.number().optional(),
-  output: z.number().optional(),
+  output: z.number().optional()
 });
 
 const ModelsDevCostSchema = z.object({
   input: z.number().optional(),
-  output: z.number().optional(),
+  output: z.number().optional()
 });
 
 const ModelsDevModelSchema = z.looseObject({
@@ -43,7 +43,7 @@ const ModelsDevModelSchema = z.looseObject({
   modalities: ModelsDevModalitiesSchema.optional(),
   tool_call: z.boolean().optional(),
   reasoning: z.boolean().optional(),
-  cost: ModelsDevCostSchema.optional(),
+  cost: ModelsDevCostSchema.optional()
 });
 
 const ModelsDevProviderSchema = z.looseObject({
@@ -51,12 +51,12 @@ const ModelsDevProviderSchema = z.looseObject({
   name: z.string().optional(),
   url: z.string().optional(),
   npm: z.string().optional(),
-  models: z.record(z.string(), ModelsDevModelSchema).optional(),
+  models: z.record(z.string(), ModelsDevModelSchema).optional()
 });
 
 const ModelsDevResponseSchema = z.record(
   z.string(),
-  z.union([z.string(), ModelsDevProviderSchema]),
+  z.union([z.string(), ModelsDevProviderSchema])
 );
 
 type ModelsDevResponse = z.infer<typeof ModelsDevResponseSchema>;
@@ -108,7 +108,7 @@ function mapProviderIdToType(providerId: string): string {
     zhipu: "zhipuai",
     moonshot: "moonshotai",
     dashscope: "alibaba",
-    ollama: "lmstudio", // Ollama 映射到 LMStudio
+    ollama: "lmstudio" // Ollama 映射到 LMStudio
   };
 
   // 如果在特殊映射表中找到，返回映射值
@@ -126,7 +126,7 @@ function mapProviderIdToType(providerId: string): string {
  * @returns 去重后的 ProviderType 集合
  */
 async function extractProviderTypes(
-  apiData: ModelsDevResponse,
+  apiData: ModelsDevResponse
 ): Promise<Set<string>> {
   console.log("\n🔍 提取供应商类型...");
 
@@ -162,7 +162,7 @@ async function extractProviderTypes(
  * @param providerTypes - 要添加的供应商类型集合
  */
 async function updateSchemaProviderType(
-  providerTypes: Set<string>,
+  providerTypes: Set<string>
 ): Promise<void> {
   console.log("\n📝 更新 schema.prisma 文件...");
 
@@ -203,7 +203,7 @@ async function updateSchemaProviderType(
     // 提取现有的枚举值
     const enumContent = schemaContent.substring(
       enumStartIndex,
-      enumEndIndex + 1,
+      enumEndIndex + 1
     );
     const existingTypes = new Set<string>();
     const typeRegex = /^\s*([a-z_][a-z0-9_]*)/gm;
@@ -247,7 +247,7 @@ async function updateSchemaProviderType(
         "gemini",
         "deepseek",
         "groq",
-        "mistral",
+        "mistral"
       ],
       "  // 网关供应商": ["netlify", "openrouter", "vercel"],
       "  // 中国供应商": [
@@ -257,9 +257,9 @@ async function updateSchemaProviderType(
         "zhipuai",
         "moonshotai",
         "moonshotai_cn",
-        "modelscope",
+        "modelscope"
       ],
-      "  // Azure 和其他": ["azure_openai", "xai", "xai_cn"],
+      "  // Azure 和其他": ["azure_openai", "xai", "xai_cn"]
     };
 
     // 添加带分类的类型
@@ -278,7 +278,7 @@ async function updateSchemaProviderType(
 
     // 添加未分类的其他类型
     const uncategorizedTypes = sortedTypes.filter(
-      (type) => !addedTypes.has(type),
+      (type) => !addedTypes.has(type)
     );
     if (uncategorizedTypes.length > 0) {
       newEnumLines.push("  // 其他供应商");
@@ -314,7 +314,7 @@ async function runPrismaGenerate(): Promise<void> {
 
   try {
     const { stdout, stderr } = await execAsync("npx prisma generate", {
-      cwd: join(__dirname, ".."),
+      cwd: join(__dirname, "..")
     });
 
     if (stdout) {
