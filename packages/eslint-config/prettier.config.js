@@ -1,5 +1,5 @@
 /** 配置项文档：https://prettier.io/docs/en/configuration.html */
-export const prettierConfig = {
+export default {
   /** 每一行的宽度 */
   printWidth: 80,
   /** Tab 键的空格数 */

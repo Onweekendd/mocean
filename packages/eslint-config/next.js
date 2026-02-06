@@ -21,24 +21,24 @@ export const nextJsConfig = [
   {
     rules: {
       "@typescript-eslint/no-unsafe-assignment": "off",
-      "@typescript-eslint/no-unsafe-call": "off",
-    },
+      "@typescript-eslint/no-unsafe-call": "off"
+    }
   },
   {
     ...pluginReact.configs.flat.recommended,
     languageOptions: {
       ...pluginReact.configs.flat.recommended.languageOptions,
       parserOptions: {
-        projectService: true,
+        projectService: true
       },
       globals: {
-        ...globals.serviceworker,
-      },
-    },
+        ...globals.serviceworker
+      }
+    }
   },
   {
     plugins: {
-      "@next/next": pluginNext,
+      "@next/next": pluginNext
     },
     rules: {
       ...pluginNext.configs.recommended.rules,
@@ -58,19 +58,19 @@ export const nextJsConfig = [
       "react/no-string-refs": "error",
       "react/no-unescaped-entities": "error",
       "react/no-unknown-property": "error",
-      "react/require-render-return": "error",
-    },
+      "react/require-render-return": "error"
+    }
   },
   {
     plugins: {
-      "react-hooks": pluginReactHooks,
+      "react-hooks": pluginReactHooks
     },
     settings: { react: { version: "detect" } },
     rules: {
       ...pluginReactHooks.configs.recommended.rules,
       // React scope no longer necessary with new JSX transform.
       "react/react-in-jsx-scope": "off",
-      "@typescript-eslint/no-misused-promises": "warn",
-    },
-  },
+      "@typescript-eslint/no-misused-promises": "warn"
+    }
+  }
 ];

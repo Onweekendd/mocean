@@ -10,7 +10,7 @@ import globals from "globals";
  */
 export default [
   {
-    ignores: ["node_modules/**", "dist/**"],
+    ignores: ["node_modules/**", "dist/**"]
   },
 
   eslint.configs.recommended,
@@ -22,28 +22,28 @@ export default [
       sourceType: "module",
       globals: {
         ...globals.node,
-        ...globals.es2020,
-      },
+        ...globals.es2020
+      }
     },
     plugins: {
-      prettier: prettierPlugin,
+      prettier: prettierPlugin
     },
     rules: {
       "no-unused-vars": [
         "error",
         {
           argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
-        },
+          varsIgnorePattern: "^_"
+        }
       ],
       "prettier/prettier": [
         "error",
         {
-          endOfLine: "auto",
-        },
-      ],
-    },
+          endOfLine: "auto"
+        }
+      ]
+    }
   },
 
-  prettierConfig,
+  prettierConfig
 ];

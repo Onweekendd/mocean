@@ -18,35 +18,35 @@ export const config = [
     rules: {
       "@typescript-eslint/consistent-type-imports": "error",
       "@typescript-eslint/no-unsafe-assignment": "off",
-      "no-duplicate-imports": ["error", { allowSeparateTypeImports: true }],
-    },
+      "no-duplicate-imports": ["error", { allowSeparateTypeImports: true }]
+    }
   },
   {
     languageOptions: {
       parserOptions: {
-        projectService: true,
+        projectService: true
       },
       globals: {
         ...globals.node,
-        ...globals.browser,
-      },
-    },
+        ...globals.browser
+      }
+    }
   },
   {
     plugins: {
-      turbo: turboPlugin,
+      turbo: turboPlugin
     },
     rules: {
-      "turbo/no-undeclared-env-vars": "error",
-    },
+      "turbo/no-undeclared-env-vars": "error"
+    }
   },
   {
     plugins: {
-      prettier: prettierPlugin,
+      prettier: prettierPlugin
     },
     rules: {
-      "prettier/prettier": "error",
-    },
+      "prettier/prettier": "error"
+    }
   },
   {
     rules: {
@@ -57,12 +57,19 @@ export const config = [
       "no-undef": "error",
       "no-duplicate-imports": "error",
       "no-unreachable": "error",
-      "@typescript-eslint/no-unused-vars": "error",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_"
+        }
+      ],
       "@typescript-eslint/no-explicit-any": "error",
-      "@typescript-eslint/no-non-null-assertion": "error",
-    },
+      "@typescript-eslint/no-non-null-assertion": "error"
+    }
   },
   {
-    ignores: ["dist/**"],
-  },
+    ignores: ["dist/**"]
+  }
 ];
