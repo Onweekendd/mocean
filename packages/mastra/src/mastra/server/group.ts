@@ -1,18 +1,28 @@
+import { GroupSchema } from "generated/schemas/models/index";
 import { z } from "zod";
 
 import { prisma } from "./index";
+import type { AsyncReturnType } from "./type";
 
 /**
  * 分组相关的zod校验schemas
  */
-const createGroupSchema = z.object({
+// 基于 GroupSchema 扩展自定义验证
+const createGroupSchema = GroupSchema.pick({
+  name: true,
+  providerId: true
+}).extend({
   name: z.string().min(1, "分组名称不能为空"),
   providerId: z.string().min(1, "提供商ID不能为空")
 });
 
-const updateGroupSchema = z.object({
-  name: z.string().min(1, "分组名称不能为空")
-});
+const updateGroupSchema = GroupSchema.pick({
+  name: true
+})
+  .partial()
+  .extend({
+    name: z.string().min(1, "分组名称不能为空").optional()
+  });
 
 const idParamSchema = z.object({
   id: z.string().min(1, "分组ID不能为空")
@@ -242,13 +252,13 @@ const deleteGroup = async (id: string) => {
 /**
  * Prisma 数据库操作返回类型
  */
-export type GroupsByProviderResult = Awaited<
-  ReturnType<typeof getGroupsByProvider>
+export type GroupsByProviderResult = AsyncReturnType<
+  typeof getGroupsByProvider
 >;
-export type GroupDetailResult = Awaited<ReturnType<typeof getGroupById>>;
-export type GroupCreateResult = Awaited<ReturnType<typeof createGroup>>;
-export type GroupUpdateResult = Awaited<ReturnType<typeof updateGroup>>;
-export type GroupDeleteResult = Awaited<ReturnType<typeof deleteGroup>>;
+export type GroupDetailResult = AsyncReturnType<typeof getGroupById>;
+export type GroupCreateResult = AsyncReturnType<typeof createGroup>;
+export type GroupUpdateResult = AsyncReturnType<typeof updateGroup>;
+export type GroupDeleteResult = AsyncReturnType<typeof deleteGroup>;
 
 export {
   getGroupsByProvider,

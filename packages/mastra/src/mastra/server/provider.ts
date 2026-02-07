@@ -1,7 +1,9 @@
+import { ProviderSchema } from "generated/schemas/models/index";
 import { z } from "zod";
 
 import type { Prisma } from "../../../generated/prisma";
 import { ProviderType } from "../../../generated/prisma";
+import type { AsyncReturnType } from "./type";
 import { prisma } from "./index";
 
 /**
@@ -19,44 +21,59 @@ const isValidUrl = (url: string): boolean => {
   }
 };
 
-const createProviderSchema = z.object({
-  type: z.enum(ProviderType, { message: "无效的提供商类型" }),
+// 基于 ProviderSchema 扩展自定义验证
+const createProviderSchema = ProviderSchema.pick({
+  type: true,
+  name: true,
+  apiKey: true,
+  apiHost: true,
+  apiVersion: true,
+  enabled: true,
+  isSystem: true,
+  isAuthed: true,
+  notes: true
+}).extend({
   name: z.string().min(1, "提供商名称不能为空"),
   apiKey: z.string().min(1, "API密钥不能为空"),
   apiHost: z.string().refine((val) => isValidUrl(val), {
     message: "API地址格式不正确"
   }),
-  apiVersion: z.string().nullable().optional(),
   enabled: z.boolean().optional().default(true),
   isSystem: z.boolean().optional().default(false),
-  isAuthed: z.boolean().optional().default(false),
-  notes: z.string().nullable().optional()
+  isAuthed: z.boolean().optional().default(false)
 });
 
-const updateProviderSchema = z.object({
-  type: z.enum(ProviderType, { message: "无效的提供商类型" }).optional(),
-  name: z.string().min(1, "提供商名称不能为空").optional(),
-  apiKey: z
-    .string()
-    .transform((val) => (val.trim() === "" ? undefined : val))
-    .pipe(z.string().min(1, "API密钥不能为空").optional()),
-  apiHost: z
-    .string()
-    .transform((val) => (val.trim() === "" ? undefined : val))
-    .pipe(
-      z
-        .string()
-        .refine((val) => isValidUrl(val), {
-          message: "API地址格式不正确"
-        })
-        .optional()
-    ),
-  apiVersion: z.string().nullable().optional(),
-  enabled: z.boolean().optional(),
-  isSystem: z.boolean().optional(),
-  isAuthed: z.boolean().optional(),
-  notes: z.string().nullable().optional()
-});
+const updateProviderSchema = ProviderSchema.pick({
+  type: true,
+  name: true,
+  apiKey: true,
+  apiHost: true,
+  apiVersion: true,
+  enabled: true,
+  isSystem: true,
+  isAuthed: true,
+  notes: true
+})
+  .partial()
+  .extend({
+    apiKey: z
+      .string()
+      .transform((val) => (val?.trim() === "" ? undefined : val))
+      .pipe(z.string().min(1, "API密钥不能为空").optional())
+      .optional(),
+    apiHost: z
+      .string()
+      .transform((val) => (val?.trim() === "" ? undefined : val))
+      .pipe(
+        z
+          .string()
+          .refine((val) => isValidUrl(val), {
+            message: "API地址格式不正确"
+          })
+          .optional()
+      )
+      .optional()
+  });
 
 const idParamSchema = z.object({
   id: z.string().min(1, "提供商ID不能为空")
@@ -475,41 +492,37 @@ const toggleProviderEnabled = async (id: string) => {
  */
 
 // 基础类型（不包含关联模型数据）
-export type ProviderResult = Awaited<ReturnType<typeof getProviderById>>;
-export type ProvidersResult = Awaited<ReturnType<typeof getProviders>>;
-export type EnabledProvidersResult = Awaited<
-  ReturnType<typeof getEnabledProviders>
+export type ProviderResult = AsyncReturnType<typeof getProviderById>;
+export type ProvidersResult = AsyncReturnType<typeof getProviders>;
+export type EnabledProvidersResult = AsyncReturnType<
+  typeof getEnabledProviders
 >;
-export type ProvidersByTypeResult = Awaited<
-  ReturnType<typeof getProvidersByType>
->;
-export type ProvidersByModelResult = Awaited<
-  ReturnType<typeof getProvidersByModel>
->;
+export type ProvidersByTypeResult = AsyncReturnType<typeof getProvidersByType>;
+export type ProvidersByModelResult = AsyncReturnType<typeof getProvidersByModel>;
 
 // 带模型列表的类型（models 字段为展开的 Model 数组）
-export type ProviderWithModelsResult = Awaited<
-  ReturnType<typeof getProviderWithModelsById>
+export type ProviderWithModelsResult = AsyncReturnType<
+  typeof getProviderWithModelsById
 >;
-export type ProvidersWithModelsResult = Awaited<
-  ReturnType<typeof getProvidersWithModels>
+export type ProvidersWithModelsResult = AsyncReturnType<
+  typeof getProvidersWithModels
 >;
-export type EnabledProvidersWithModelsResult = Awaited<
-  ReturnType<typeof getEnabledProvidersWithModels>
+export type EnabledProvidersWithModelsResult = AsyncReturnType<
+  typeof getEnabledProvidersWithModels
 >;
-export type ProvidersByTypeWithModelsResult = Awaited<
-  ReturnType<typeof getProvidersByTypeWithModels>
+export type ProvidersByTypeWithModelsResult = AsyncReturnType<
+  typeof getProvidersByTypeWithModels
 >;
-export type ProvidersByModelWithModelsResult = Awaited<
-  ReturnType<typeof getProvidersByModelWithModels>
+export type ProvidersByModelWithModelsResult = AsyncReturnType<
+  typeof getProvidersByModelWithModels
 >;
 
 // 写操作返回类型（默认返回带 models 的数据）
-export type ProviderCreateResult = Awaited<ReturnType<typeof createProvider>>;
-export type ProviderUpdateResult = Awaited<ReturnType<typeof updateProvider>>;
-export type ProviderDeleteResult = Awaited<ReturnType<typeof deleteProvider>>;
-export type ProviderToggleResult = Awaited<
-  ReturnType<typeof toggleProviderEnabled>
+export type ProviderCreateResult = AsyncReturnType<typeof createProvider>;
+export type ProviderUpdateResult = AsyncReturnType<typeof updateProvider>;
+export type ProviderDeleteResult = AsyncReturnType<typeof deleteProvider>;
+export type ProviderToggleResult = AsyncReturnType<
+  typeof toggleProviderEnabled
 >;
 
 export {

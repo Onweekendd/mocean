@@ -1,53 +1,45 @@
+import { AgentSchema } from "generated/schemas/models/index";
 import { z } from "zod";
 
 import { prisma } from "./index";
+import type { AsyncReturnType } from "./type";
 
 /**
  * 代理相关的zod校验schemas
  */
 
-const createAgentSchema = z.object({
+// 基于 AgentSchema 扩展自定义验证
+const createAgentSchema = AgentSchema.pick({
+  name: true,
+  prompt: true,
+  type: true,
+  emoji: true,
+  description: true,
+  enableWebSearch: true,
+  webSearchProviderId: true,
+  enableGenerateImage: true,
+  knowledgeRecognition: true
+}).extend({
   name: z.string().min(1, "代理名称不能为空"),
-
   prompt: z.string().min(1, "提示词不能为空"),
-
   type: z.string().optional().default("agent"),
-
-  emoji: z.string().nullable().optional(),
-
-  description: z.string().nullable().optional(),
-
-  groupJson: z.string().nullable().optional(),
-
   enableWebSearch: z.boolean().optional().default(false),
-
-  webSearchProviderId: z.string().nullable().optional(),
-
   enableGenerateImage: z.boolean().optional().default(false),
-
-  knowledgeRecognition: z.enum(["off", "on"]).nullable().optional()
+  groupJson: z.string().nullable().optional() // 存储 String[]
 });
 
-const updateAgentSchema = z.object({
-  name: z.string().min(1, "代理名称不能为空").optional(),
-
-  prompt: z.string().min(1, "提示词不能为空").optional(),
-
-  type: z.string().optional(),
-
-  emoji: z.string().nullable().optional(),
-
-  description: z.string().nullable().optional(),
-
-  groupJson: z.string().nullable().optional(),
-
-  enableWebSearch: z.boolean().optional(),
-
-  webSearchProviderId: z.string().nullable().optional(),
-
-  enableGenerateImage: z.boolean().optional(),
-
-  knowledgeRecognition: z.enum(["off", "on"]).nullable().optional()
+const updateAgentSchema = AgentSchema.pick({
+  name: true,
+  prompt: true,
+  type: true,
+  emoji: true,
+  description: true,
+  enableWebSearch: true,
+  webSearchProviderId: true,
+  enableGenerateImage: true,
+  knowledgeRecognition: true
+}).partial().extend({
+  groupJson: z.string().nullable().optional() // 存储 String[]
 });
 
 const idParamSchema = z.object({
@@ -444,17 +436,17 @@ const getAgentWithSettingsByAgentId = async (agentId: string) => {
 
  */
 
-export type AgentsListResult = Awaited<ReturnType<typeof getAgents>>;
+export type AgentsListResult = AsyncReturnType<typeof getAgents>;
 
-export type AgentDetailResult = Awaited<ReturnType<typeof getAgentById>>;
+export type AgentDetailResult = AsyncReturnType<typeof getAgentById>;
 
-export type AgentCreateResult = Awaited<ReturnType<typeof createAgent>>;
+export type AgentCreateResult = AsyncReturnType<typeof createAgent>;
 
-export type AgentUpdateResult = Awaited<ReturnType<typeof updateAgent>>;
+export type AgentUpdateResult = AsyncReturnType<typeof updateAgent>;
 
-export type AgentDeleteResult = Awaited<ReturnType<typeof deleteAgent>>;
+export type AgentDeleteResult = AsyncReturnType<typeof deleteAgent>;
 
-export type AgentsByGroupResult = Awaited<ReturnType<typeof getAgentByGroup>>;
+export type AgentsByGroupResult = AsyncReturnType<typeof getAgentByGroup>;
 
 export {
   getAgents,

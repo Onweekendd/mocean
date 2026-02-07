@@ -1,45 +1,55 @@
 import { toAISdkStream } from "@mastra/ai-sdk";
 import { convertMessages } from "@mastra/core/agent";
 import type { StorageThreadType } from "@mastra/core/memory";
+import type { RequestContext } from "@mastra/core/request-context";
 import type { UIMessage } from "ai";
 import { createUIMessageStreamResponse } from "ai";
+import { AssistantSchema } from "generated/schemas/models/index";
 import { z } from "zod";
 
 import { DynamicAgent } from "../agents/dynamicAgent";
 import { createCommonRunTime } from "../runtime/CommonRunTime";
 import { prisma } from "./index";
+import type { AsyncReturnType } from "./type";
 
 /**
  * 助手相关的zod校验schemas
  */
-const createAssistantSchema = z.object({
+// 基于 AssistantSchema 扩展自定义验证
+const createAssistantSchema = AssistantSchema.pick({
+  name: true,
+  prompt: true,
+  type: true,
+  emoji: true,
+  description: true,
+  enableWebSearch: true,
+  webSearchProviderId: true,
+  enableGenerateImage: true,
+  knowledgeRecognition: true,
+  modelId: true,
+  defaultModelId: true
+}).extend({
   name: z.string().min(1, "助手名称不能为空"),
   prompt: z.string().min(1, "提示词不能为空"),
   type: z.string().optional().default("assistant"),
-  emoji: z.string().nullable().optional(),
-  description: z.string().nullable().optional(),
   enableWebSearch: z.boolean().optional().default(false),
-  webSearchProviderId: z.string().nullable().optional(),
-  enableGenerateImage: z.boolean().optional().default(false),
-  knowledgeRecognition: z.enum(["off", "on"]).nullable().optional(),
-  modelId: z.string().nullable().optional(),
-  defaultModelId: z.string().nullable().optional()
+  enableGenerateImage: z.boolean().optional().default(false)
 });
 
-const updateAssistantSchema = z.object({
-  name: z.string().min(1, "助手名称不能为空").optional(),
-  prompt: z.string().min(1, "提示词不能为空").optional(),
-  type: z.string().optional(),
-  emoji: z.string().nullable().optional(),
-  description: z.string().nullable().optional(),
-  enableWebSearch: z.boolean().optional(),
-  webSearchProviderId: z.string().nullable().optional(),
-  enableGenerateImage: z.boolean().optional(),
-  knowledgeRecognition: z.enum(["off", "on"]).nullable().optional(),
-  providerId: z.string().nullable().optional(),
-  modelId: z.string().nullable().optional(),
-  defaultModelId: z.string().nullable().optional()
-});
+const updateAssistantSchema = AssistantSchema.pick({
+  name: true,
+  prompt: true,
+  type: true,
+  emoji: true,
+  description: true,
+  enableWebSearch: true,
+  webSearchProviderId: true,
+  enableGenerateImage: true,
+  knowledgeRecognition: true,
+  providerId: true,
+  modelId: true,
+  defaultModelId: true
+}).partial();
 
 // 提取 experimental_prepareRequestBody 返回值类型
 export type PrepareRequestBodyReturnType = {
@@ -248,7 +258,7 @@ const executeChatWithAssistant = async (
   });
 
   const aiSdkStream = toAISdkStream(stream, { from: "agent" });
-  return createUIMessageStreamResponse({ stream: aiSdkStream as any });
+  return createUIMessageStreamResponse({ stream: aiSdkStream });
 };
 
 /**
@@ -287,7 +297,9 @@ const getUIMessagesByThreadId = async (
   }
 
   const memory = await DynamicAgent.getMemory({
-    requestContext: createCommonRunTime({ assistant })
+    requestContext: createCommonRunTime({
+      assistant
+    }) as RequestContext<unknown>
   });
 
   const result = await memory.recall({
@@ -303,13 +315,11 @@ const getUIMessagesByThreadId = async (
 /**
  * Prisma 数据库操作返回类型
  */
-export type AssistantsListResult = Awaited<ReturnType<typeof getAssistants>>;
-export type AssistantDetailResult = Awaited<
-  ReturnType<typeof getAssistantById>
->;
-export type AssistantCreateResult = Awaited<ReturnType<typeof createAssistant>>;
-export type AssistantUpdateResult = Awaited<ReturnType<typeof updateAssistant>>;
-export type AssistantDeleteResult = Awaited<ReturnType<typeof deleteAssistant>>;
+export type AssistantsListResult = AsyncReturnType<typeof getAssistants>;
+export type AssistantDetailResult = AsyncReturnType<typeof getAssistantById>;
+export type AssistantCreateResult = AsyncReturnType<typeof createAssistant>;
+export type AssistantUpdateResult = AsyncReturnType<typeof updateAssistant>;
+export type AssistantDeleteResult = AsyncReturnType<typeof deleteAssistant>;
 export type AssistantThreadsResult = StorageThreadType[];
 export type AssistantUIMessagesResult = UIMessage[];
 

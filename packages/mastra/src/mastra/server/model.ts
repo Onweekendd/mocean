@@ -1,18 +1,35 @@
+import { ModelSchema } from "generated/schemas/models";
 import { z } from "zod";
 
+import type { ModelGroup, Prisma, Provider } from "../../../generated/prisma";
 import { prisma } from "./index";
+import type { AsyncReturnType } from "./type";
 
 /**
  * 模型相关的zod校验schemas
  */
 
-const createModelSchema = z.object({
+// 从 ModelSchema 中提取字段类型，然后扩展自定义验证
+const createModelSchema = ModelSchema.pick({
+  id: true,
+  name: true,
+  owned_by: true,
+  description: true,
+  isSystem: true,
+  contextLength: true,
+  supportsAttachments: true,
+  supportsTools: true,
+  supportsReasoning: true,
+  supportsImage: true,
+  supportsAudio: true,
+  supportsVideo: true,
+  supportsEmbedding: true,
+  inputPricePerMillion: true,
+  outputPricePerMillion: true
+}).extend({
   id: z.string().min(1, "模型ID不能为空"),
   name: z.string().min(1, "模型名称不能为空"),
-  owned_by: z.string().nullable().optional(),
-  description: z.string().nullable().optional(),
   isSystem: z.boolean().optional().default(false),
-  contextLength: z.number().int().nonnegative().nullable().optional(),
   supportsAttachments: z.boolean().optional().default(false),
   supportsTools: z.boolean().optional().default(false),
   supportsReasoning: z.boolean().optional().default(false),
@@ -20,8 +37,7 @@ const createModelSchema = z.object({
   supportsAudio: z.boolean().optional().default(false),
   supportsVideo: z.boolean().optional().default(false),
   supportsEmbedding: z.boolean().optional().default(false),
-  inputPricePerMillion: z.number().nonnegative().nullable().optional(),
-  outputPricePerMillion: z.number().nonnegative().nullable().optional(),
+  // 扩展 providers 字段（用于 modelGroups 关联）
   providers: z
     .array(
       z.object({
@@ -32,30 +48,34 @@ const createModelSchema = z.object({
     .min(1, "至少需要一个提供商")
 });
 
-const updateModelSchema = z.object({
-  name: z.string().min(1, "模型名称不能为空").optional(),
-  owned_by: z.string().nullable().optional(),
-  description: z.string().nullable().optional(),
-  isSystem: z.boolean().optional(),
-  contextLength: z.number().int().positive().nullable().optional(),
-  supportsAttachments: z.boolean().optional(),
-  supportsTools: z.boolean().optional(),
-  supportsReasoning: z.boolean().optional(),
-  supportsImage: z.boolean().optional(),
-  supportsAudio: z.boolean().optional(),
-  supportsVideo: z.boolean().optional(),
-  supportsEmbedding: z.boolean().optional(),
-  inputPricePerMillion: z.number().nonnegative().nullable().optional(),
-  outputPricePerMillion: z.number().nonnegative().nullable().optional(),
-  providers: z
-    .array(
-      z.object({
-        providerId: z.string().min(1, "提供商ID不能为空"),
-        groupId: z.string().min(1, "分组ID不能为空")
-      })
-    )
-    .optional()
-});
+const updateModelSchema = ModelSchema.pick({
+  name: true,
+  owned_by: true,
+  description: true,
+  isSystem: true,
+  contextLength: true,
+  supportsAttachments: true,
+  supportsTools: true,
+  supportsReasoning: true,
+  supportsImage: true,
+  supportsAudio: true,
+  supportsVideo: true,
+  supportsEmbedding: true,
+  inputPricePerMillion: true,
+  outputPricePerMillion: true
+})
+  .partial()
+  .extend({
+    // 扩展 providers 字段
+    providers: z
+      .array(
+        z.object({
+          providerId: z.string().min(1, "提供商ID不能为空"),
+          groupId: z.string().min(1, "分组ID不能为空")
+        })
+      )
+      .optional()
+  });
 
 const idParamSchema = z.object({
   id: z.string().min(1, "模型ID不能为空")
@@ -122,11 +142,18 @@ const getModelsWithProviders = async () => {
   });
 
   // 整理提供商信息
-  return models.map((model) => ({
-    ...model,
-    providers: model.modelGroups.map((mg) => mg.provider),
-    _modelRelations: model.modelGroups
-  }));
+  return models.map((model) => {
+    type ModelWithGroups = typeof model & {
+      modelGroups: Array<{ provider: Provider; group: ModelGroup }>;
+    };
+    return {
+      ...model,
+      providers: (model as ModelWithGroups).modelGroups.map(
+        (mg) => mg.provider
+      ),
+      _modelRelations: (model as ModelWithGroups).modelGroups
+    };
+  });
 };
 
 /**
@@ -171,10 +198,13 @@ const getModelWithProvidersById = async (id: string) => {
   if (!model) return null;
 
   // 整理提供商信息
+  type ModelWithGroups = typeof model & {
+    modelGroups: Array<{ provider: Provider; group: ModelGroup }>;
+  };
   return {
     ...model,
-    providers: model.modelGroups.map((mg) => mg.provider),
-    _modelRelations: model.modelGroups
+    providers: (model as ModelWithGroups).modelGroups.map((mg) => mg.provider),
+    _modelRelations: (model as ModelWithGroups).modelGroups
   };
 };
 
@@ -226,14 +256,26 @@ const getModelsByProviderWithProviders = async (providerId: string) => {
   });
 
   // 整理提供商信息
-  return models.map((model) => ({
-    ...model,
-    modelGroups: model.modelGroups.filter((mg) => mg.providerId === providerId),
-    providers: model.modelGroups
-      .filter((mg) => mg.providerId === providerId)
-      .map((mg) => mg.provider),
-    _modelRelations: model.modelGroups
-  }));
+  return models.map((model) => {
+    type ModelWithGroups = typeof model & {
+      modelGroups: Array<{
+        provider: Provider;
+        group: ModelGroup;
+        providerId: string;
+      }>;
+    };
+    const modelWithGroups = model as ModelWithGroups;
+    return {
+      ...model,
+      modelGroups: modelWithGroups.modelGroups.filter(
+        (mg) => mg.providerId === providerId
+      ),
+      providers: modelWithGroups.modelGroups
+        .filter((mg) => mg.providerId === providerId)
+        .map((mg) => mg.provider),
+      _modelRelations: modelWithGroups.modelGroups
+    };
+  });
 };
 
 /**
@@ -312,7 +354,7 @@ const createModel = async (model: CreateModelInput) => {
           groupId: p.groupId
         }))
       }
-    },
+    } as Prisma.ModelCreateInput,
     include: {
       modelGroups: {
         include: {
@@ -323,10 +365,16 @@ const createModel = async (model: CreateModelInput) => {
     }
   });
 
+  type ModelWithGroups = typeof newModel & {
+    modelGroups: Array<{ provider: Provider; group: ModelGroup }>;
+  };
+
   return {
     ...newModel,
-    providers: newModel.modelGroups.map((mg) => mg.provider),
-    _modelRelations: newModel.modelGroups
+    providers: (newModel as ModelWithGroups).modelGroups.map(
+      (mg) => mg.provider
+    ),
+    _modelRelations: (newModel as ModelWithGroups).modelGroups
   };
 };
 
@@ -367,7 +415,7 @@ const updateModel = async (id: string, model: UpdateModelInput) => {
           }))
         }
       })
-    },
+    } as Prisma.ModelUpdateInput,
     include: {
       modelGroups: {
         include: {
@@ -378,10 +426,15 @@ const updateModel = async (id: string, model: UpdateModelInput) => {
     }
   });
 
+  type ModelWithGroups = typeof updatedModel & {
+    modelGroups: Array<{ provider: Provider; group: ModelGroup }>;
+  };
   return {
     ...updatedModel,
-    providers: updatedModel.modelGroups.map((mg) => mg.provider),
-    _modelRelations: updatedModel.modelGroups
+    providers: (updatedModel as ModelWithGroups).modelGroups.map(
+      (mg) => mg.provider
+    ),
+    _modelRelations: (updatedModel as ModelWithGroups).modelGroups
   };
 };
 
@@ -580,14 +633,6 @@ const getModelProviderRelations = async (modelId: string) => {
 
   return relations;
 };
-
-/**
- * 工具类型：提取异步函数的返回类型
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AsyncReturnType<T> = T extends (...args: any[]) => Promise<infer R>
-  ? R
-  : never;
 
 /**
  * Prisma 数据库操作返回类型
