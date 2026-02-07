@@ -43,8 +43,11 @@
     "@mastra/libsql": "^1.1.0",
     "@mastra/loggers": "^1.0.1",
     "@mastra/memory": "^1.0.1",
+    "@mastra/server": "^1.2.0",
     "ai": "^5.0.87",
+    "hono": "^4.11.8",
     "mastra": "^1.1.0",
+    "prisma-zod-generator": "^2.1.2",
     "zod": "^4.1.8"
   },
   "devDependencies": {

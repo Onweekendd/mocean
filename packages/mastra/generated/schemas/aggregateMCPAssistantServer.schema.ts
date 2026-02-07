@@ -1,0 +1,12 @@
+import type { Prisma } from '../prisma/client';
+import * as z from 'zod';
+import { MCPAssistantServerOrderByWithRelationInputObjectSchema as MCPAssistantServerOrderByWithRelationInputObjectSchema } from './objects/MCPAssistantServerOrderByWithRelationInput.schema';
+import { MCPAssistantServerWhereInputObjectSchema as MCPAssistantServerWhereInputObjectSchema } from './objects/MCPAssistantServerWhereInput.schema';
+import { MCPAssistantServerWhereUniqueInputObjectSchema as MCPAssistantServerWhereUniqueInputObjectSchema } from './objects/MCPAssistantServerWhereUniqueInput.schema';
+import { MCPAssistantServerCountAggregateInputObjectSchema as MCPAssistantServerCountAggregateInputObjectSchema } from './objects/MCPAssistantServerCountAggregateInput.schema';
+import { MCPAssistantServerMinAggregateInputObjectSchema as MCPAssistantServerMinAggregateInputObjectSchema } from './objects/MCPAssistantServerMinAggregateInput.schema';
+import { MCPAssistantServerMaxAggregateInputObjectSchema as MCPAssistantServerMaxAggregateInputObjectSchema } from './objects/MCPAssistantServerMaxAggregateInput.schema';
+
+export const MCPAssistantServerAggregateSchema: z.ZodType<Prisma.MCPAssistantServerAggregateArgs> = z.object({ orderBy: z.union([MCPAssistantServerOrderByWithRelationInputObjectSchema, MCPAssistantServerOrderByWithRelationInputObjectSchema.array()]).optional(), where: MCPAssistantServerWhereInputObjectSchema.optional(), cursor: MCPAssistantServerWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), MCPAssistantServerCountAggregateInputObjectSchema ]).optional(), _min: MCPAssistantServerMinAggregateInputObjectSchema.optional(), _max: MCPAssistantServerMaxAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.MCPAssistantServerAggregateArgs>;
+
+export const MCPAssistantServerAggregateZodSchema = z.object({ orderBy: z.union([MCPAssistantServerOrderByWithRelationInputObjectSchema, MCPAssistantServerOrderByWithRelationInputObjectSchema.array()]).optional(), where: MCPAssistantServerWhereInputObjectSchema.optional(), cursor: MCPAssistantServerWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), MCPAssistantServerCountAggregateInputObjectSchema ]).optional(), _min: MCPAssistantServerMinAggregateInputObjectSchema.optional(), _max: MCPAssistantServerMaxAggregateInputObjectSchema.optional() }).strict();

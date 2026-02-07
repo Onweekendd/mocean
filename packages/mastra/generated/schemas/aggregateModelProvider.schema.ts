@@ -1,0 +1,12 @@
+import type { Prisma } from '../prisma/client';
+import * as z from 'zod';
+import { ModelProviderOrderByWithRelationInputObjectSchema as ModelProviderOrderByWithRelationInputObjectSchema } from './objects/ModelProviderOrderByWithRelationInput.schema';
+import { ModelProviderWhereInputObjectSchema as ModelProviderWhereInputObjectSchema } from './objects/ModelProviderWhereInput.schema';
+import { ModelProviderWhereUniqueInputObjectSchema as ModelProviderWhereUniqueInputObjectSchema } from './objects/ModelProviderWhereUniqueInput.schema';
+import { ModelProviderCountAggregateInputObjectSchema as ModelProviderCountAggregateInputObjectSchema } from './objects/ModelProviderCountAggregateInput.schema';
+import { ModelProviderMinAggregateInputObjectSchema as ModelProviderMinAggregateInputObjectSchema } from './objects/ModelProviderMinAggregateInput.schema';
+import { ModelProviderMaxAggregateInputObjectSchema as ModelProviderMaxAggregateInputObjectSchema } from './objects/ModelProviderMaxAggregateInput.schema';
+
+export const ModelProviderAggregateSchema: z.ZodType<Prisma.ModelProviderAggregateArgs> = z.object({ orderBy: z.union([ModelProviderOrderByWithRelationInputObjectSchema, ModelProviderOrderByWithRelationInputObjectSchema.array()]).optional(), where: ModelProviderWhereInputObjectSchema.optional(), cursor: ModelProviderWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), ModelProviderCountAggregateInputObjectSchema ]).optional(), _min: ModelProviderMinAggregateInputObjectSchema.optional(), _max: ModelProviderMaxAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.ModelProviderAggregateArgs>;
+
+export const ModelProviderAggregateZodSchema = z.object({ orderBy: z.union([ModelProviderOrderByWithRelationInputObjectSchema, ModelProviderOrderByWithRelationInputObjectSchema.array()]).optional(), where: ModelProviderWhereInputObjectSchema.optional(), cursor: ModelProviderWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), ModelProviderCountAggregateInputObjectSchema ]).optional(), _min: ModelProviderMinAggregateInputObjectSchema.optional(), _max: ModelProviderMaxAggregateInputObjectSchema.optional() }).strict();

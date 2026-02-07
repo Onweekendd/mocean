@@ -1,0 +1,14 @@
+import type { Prisma } from '../prisma/client';
+import * as z from 'zod';
+import { KnowledgeItemOrderByWithRelationInputObjectSchema as KnowledgeItemOrderByWithRelationInputObjectSchema } from './objects/KnowledgeItemOrderByWithRelationInput.schema';
+import { KnowledgeItemWhereInputObjectSchema as KnowledgeItemWhereInputObjectSchema } from './objects/KnowledgeItemWhereInput.schema';
+import { KnowledgeItemWhereUniqueInputObjectSchema as KnowledgeItemWhereUniqueInputObjectSchema } from './objects/KnowledgeItemWhereUniqueInput.schema';
+import { KnowledgeItemCountAggregateInputObjectSchema as KnowledgeItemCountAggregateInputObjectSchema } from './objects/KnowledgeItemCountAggregateInput.schema';
+import { KnowledgeItemMinAggregateInputObjectSchema as KnowledgeItemMinAggregateInputObjectSchema } from './objects/KnowledgeItemMinAggregateInput.schema';
+import { KnowledgeItemMaxAggregateInputObjectSchema as KnowledgeItemMaxAggregateInputObjectSchema } from './objects/KnowledgeItemMaxAggregateInput.schema';
+import { KnowledgeItemAvgAggregateInputObjectSchema as KnowledgeItemAvgAggregateInputObjectSchema } from './objects/KnowledgeItemAvgAggregateInput.schema';
+import { KnowledgeItemSumAggregateInputObjectSchema as KnowledgeItemSumAggregateInputObjectSchema } from './objects/KnowledgeItemSumAggregateInput.schema';
+
+export const KnowledgeItemAggregateSchema: z.ZodType<Prisma.KnowledgeItemAggregateArgs> = z.object({ orderBy: z.union([KnowledgeItemOrderByWithRelationInputObjectSchema, KnowledgeItemOrderByWithRelationInputObjectSchema.array()]).optional(), where: KnowledgeItemWhereInputObjectSchema.optional(), cursor: KnowledgeItemWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), KnowledgeItemCountAggregateInputObjectSchema ]).optional(), _min: KnowledgeItemMinAggregateInputObjectSchema.optional(), _max: KnowledgeItemMaxAggregateInputObjectSchema.optional(), _avg: KnowledgeItemAvgAggregateInputObjectSchema.optional(), _sum: KnowledgeItemSumAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.KnowledgeItemAggregateArgs>;
+
+export const KnowledgeItemAggregateZodSchema = z.object({ orderBy: z.union([KnowledgeItemOrderByWithRelationInputObjectSchema, KnowledgeItemOrderByWithRelationInputObjectSchema.array()]).optional(), where: KnowledgeItemWhereInputObjectSchema.optional(), cursor: KnowledgeItemWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), KnowledgeItemCountAggregateInputObjectSchema ]).optional(), _min: KnowledgeItemMinAggregateInputObjectSchema.optional(), _max: KnowledgeItemMaxAggregateInputObjectSchema.optional(), _avg: KnowledgeItemAvgAggregateInputObjectSchema.optional(), _sum: KnowledgeItemSumAggregateInputObjectSchema.optional() }).strict();

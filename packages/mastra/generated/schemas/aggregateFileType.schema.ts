@@ -1,0 +1,14 @@
+import type { Prisma } from '../prisma/client';
+import * as z from 'zod';
+import { FileTypeOrderByWithRelationInputObjectSchema as FileTypeOrderByWithRelationInputObjectSchema } from './objects/FileTypeOrderByWithRelationInput.schema';
+import { FileTypeWhereInputObjectSchema as FileTypeWhereInputObjectSchema } from './objects/FileTypeWhereInput.schema';
+import { FileTypeWhereUniqueInputObjectSchema as FileTypeWhereUniqueInputObjectSchema } from './objects/FileTypeWhereUniqueInput.schema';
+import { FileTypeCountAggregateInputObjectSchema as FileTypeCountAggregateInputObjectSchema } from './objects/FileTypeCountAggregateInput.schema';
+import { FileTypeMinAggregateInputObjectSchema as FileTypeMinAggregateInputObjectSchema } from './objects/FileTypeMinAggregateInput.schema';
+import { FileTypeMaxAggregateInputObjectSchema as FileTypeMaxAggregateInputObjectSchema } from './objects/FileTypeMaxAggregateInput.schema';
+import { FileTypeAvgAggregateInputObjectSchema as FileTypeAvgAggregateInputObjectSchema } from './objects/FileTypeAvgAggregateInput.schema';
+import { FileTypeSumAggregateInputObjectSchema as FileTypeSumAggregateInputObjectSchema } from './objects/FileTypeSumAggregateInput.schema';
+
+export const FileTypeAggregateSchema: z.ZodType<Prisma.FileTypeAggregateArgs> = z.object({ orderBy: z.union([FileTypeOrderByWithRelationInputObjectSchema, FileTypeOrderByWithRelationInputObjectSchema.array()]).optional(), where: FileTypeWhereInputObjectSchema.optional(), cursor: FileTypeWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), FileTypeCountAggregateInputObjectSchema ]).optional(), _min: FileTypeMinAggregateInputObjectSchema.optional(), _max: FileTypeMaxAggregateInputObjectSchema.optional(), _avg: FileTypeAvgAggregateInputObjectSchema.optional(), _sum: FileTypeSumAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.FileTypeAggregateArgs>;
+
+export const FileTypeAggregateZodSchema = z.object({ orderBy: z.union([FileTypeOrderByWithRelationInputObjectSchema, FileTypeOrderByWithRelationInputObjectSchema.array()]).optional(), where: FileTypeWhereInputObjectSchema.optional(), cursor: FileTypeWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), FileTypeCountAggregateInputObjectSchema ]).optional(), _min: FileTypeMinAggregateInputObjectSchema.optional(), _max: FileTypeMaxAggregateInputObjectSchema.optional(), _avg: FileTypeAvgAggregateInputObjectSchema.optional(), _sum: FileTypeSumAggregateInputObjectSchema.optional() }).strict();

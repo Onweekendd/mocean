@@ -1,0 +1,13 @@
+import type { Prisma } from '../prisma/client';
+import * as z from 'zod';
+import { AssistantWhereInputObjectSchema as AssistantWhereInputObjectSchema } from './objects/AssistantWhereInput.schema';
+import { AssistantOrderByWithAggregationInputObjectSchema as AssistantOrderByWithAggregationInputObjectSchema } from './objects/AssistantOrderByWithAggregationInput.schema';
+import { AssistantScalarWhereWithAggregatesInputObjectSchema as AssistantScalarWhereWithAggregatesInputObjectSchema } from './objects/AssistantScalarWhereWithAggregatesInput.schema';
+import { AssistantScalarFieldEnumSchema } from './enums/AssistantScalarFieldEnum.schema';
+import { AssistantCountAggregateInputObjectSchema as AssistantCountAggregateInputObjectSchema } from './objects/AssistantCountAggregateInput.schema';
+import { AssistantMinAggregateInputObjectSchema as AssistantMinAggregateInputObjectSchema } from './objects/AssistantMinAggregateInput.schema';
+import { AssistantMaxAggregateInputObjectSchema as AssistantMaxAggregateInputObjectSchema } from './objects/AssistantMaxAggregateInput.schema';
+
+export const AssistantGroupBySchema: z.ZodType<Prisma.AssistantGroupByArgs> = z.object({ where: AssistantWhereInputObjectSchema.optional(), orderBy: z.union([AssistantOrderByWithAggregationInputObjectSchema, AssistantOrderByWithAggregationInputObjectSchema.array()]).optional(), having: AssistantScalarWhereWithAggregatesInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), by: z.array(AssistantScalarFieldEnumSchema), _count: z.union([ z.literal(true), AssistantCountAggregateInputObjectSchema ]).optional(), _min: AssistantMinAggregateInputObjectSchema.optional(), _max: AssistantMaxAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.AssistantGroupByArgs>;
+
+export const AssistantGroupByZodSchema = z.object({ where: AssistantWhereInputObjectSchema.optional(), orderBy: z.union([AssistantOrderByWithAggregationInputObjectSchema, AssistantOrderByWithAggregationInputObjectSchema.array()]).optional(), having: AssistantScalarWhereWithAggregatesInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), by: z.array(AssistantScalarFieldEnumSchema), _count: z.union([ z.literal(true), AssistantCountAggregateInputObjectSchema ]).optional(), _min: AssistantMinAggregateInputObjectSchema.optional(), _max: AssistantMaxAggregateInputObjectSchema.optional() }).strict();

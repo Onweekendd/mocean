@@ -1,0 +1,14 @@
+import type { Prisma } from '../prisma/client';
+import * as z from 'zod';
+import { MCPResourceOrderByWithRelationInputObjectSchema as MCPResourceOrderByWithRelationInputObjectSchema } from './objects/MCPResourceOrderByWithRelationInput.schema';
+import { MCPResourceWhereInputObjectSchema as MCPResourceWhereInputObjectSchema } from './objects/MCPResourceWhereInput.schema';
+import { MCPResourceWhereUniqueInputObjectSchema as MCPResourceWhereUniqueInputObjectSchema } from './objects/MCPResourceWhereUniqueInput.schema';
+import { MCPResourceCountAggregateInputObjectSchema as MCPResourceCountAggregateInputObjectSchema } from './objects/MCPResourceCountAggregateInput.schema';
+import { MCPResourceMinAggregateInputObjectSchema as MCPResourceMinAggregateInputObjectSchema } from './objects/MCPResourceMinAggregateInput.schema';
+import { MCPResourceMaxAggregateInputObjectSchema as MCPResourceMaxAggregateInputObjectSchema } from './objects/MCPResourceMaxAggregateInput.schema';
+import { MCPResourceAvgAggregateInputObjectSchema as MCPResourceAvgAggregateInputObjectSchema } from './objects/MCPResourceAvgAggregateInput.schema';
+import { MCPResourceSumAggregateInputObjectSchema as MCPResourceSumAggregateInputObjectSchema } from './objects/MCPResourceSumAggregateInput.schema';
+
+export const MCPResourceAggregateSchema: z.ZodType<Prisma.MCPResourceAggregateArgs> = z.object({ orderBy: z.union([MCPResourceOrderByWithRelationInputObjectSchema, MCPResourceOrderByWithRelationInputObjectSchema.array()]).optional(), where: MCPResourceWhereInputObjectSchema.optional(), cursor: MCPResourceWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), MCPResourceCountAggregateInputObjectSchema ]).optional(), _min: MCPResourceMinAggregateInputObjectSchema.optional(), _max: MCPResourceMaxAggregateInputObjectSchema.optional(), _avg: MCPResourceAvgAggregateInputObjectSchema.optional(), _sum: MCPResourceSumAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.MCPResourceAggregateArgs>;
+
+export const MCPResourceAggregateZodSchema = z.object({ orderBy: z.union([MCPResourceOrderByWithRelationInputObjectSchema, MCPResourceOrderByWithRelationInputObjectSchema.array()]).optional(), where: MCPResourceWhereInputObjectSchema.optional(), cursor: MCPResourceWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), MCPResourceCountAggregateInputObjectSchema ]).optional(), _min: MCPResourceMinAggregateInputObjectSchema.optional(), _max: MCPResourceMaxAggregateInputObjectSchema.optional(), _avg: MCPResourceAvgAggregateInputObjectSchema.optional(), _sum: MCPResourceSumAggregateInputObjectSchema.optional() }).strict();

@@ -1,0 +1,14 @@
+import type { Prisma } from '../prisma/client';
+import * as z from 'zod';
+import { MCPServerOrderByWithRelationInputObjectSchema as MCPServerOrderByWithRelationInputObjectSchema } from './objects/MCPServerOrderByWithRelationInput.schema';
+import { MCPServerWhereInputObjectSchema as MCPServerWhereInputObjectSchema } from './objects/MCPServerWhereInput.schema';
+import { MCPServerWhereUniqueInputObjectSchema as MCPServerWhereUniqueInputObjectSchema } from './objects/MCPServerWhereUniqueInput.schema';
+import { MCPServerCountAggregateInputObjectSchema as MCPServerCountAggregateInputObjectSchema } from './objects/MCPServerCountAggregateInput.schema';
+import { MCPServerMinAggregateInputObjectSchema as MCPServerMinAggregateInputObjectSchema } from './objects/MCPServerMinAggregateInput.schema';
+import { MCPServerMaxAggregateInputObjectSchema as MCPServerMaxAggregateInputObjectSchema } from './objects/MCPServerMaxAggregateInput.schema';
+import { MCPServerAvgAggregateInputObjectSchema as MCPServerAvgAggregateInputObjectSchema } from './objects/MCPServerAvgAggregateInput.schema';
+import { MCPServerSumAggregateInputObjectSchema as MCPServerSumAggregateInputObjectSchema } from './objects/MCPServerSumAggregateInput.schema';
+
+export const MCPServerAggregateSchema: z.ZodType<Prisma.MCPServerAggregateArgs> = z.object({ orderBy: z.union([MCPServerOrderByWithRelationInputObjectSchema, MCPServerOrderByWithRelationInputObjectSchema.array()]).optional(), where: MCPServerWhereInputObjectSchema.optional(), cursor: MCPServerWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), MCPServerCountAggregateInputObjectSchema ]).optional(), _min: MCPServerMinAggregateInputObjectSchema.optional(), _max: MCPServerMaxAggregateInputObjectSchema.optional(), _avg: MCPServerAvgAggregateInputObjectSchema.optional(), _sum: MCPServerSumAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.MCPServerAggregateArgs>;
+
+export const MCPServerAggregateZodSchema = z.object({ orderBy: z.union([MCPServerOrderByWithRelationInputObjectSchema, MCPServerOrderByWithRelationInputObjectSchema.array()]).optional(), where: MCPServerWhereInputObjectSchema.optional(), cursor: MCPServerWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), MCPServerCountAggregateInputObjectSchema ]).optional(), _min: MCPServerMinAggregateInputObjectSchema.optional(), _max: MCPServerMaxAggregateInputObjectSchema.optional(), _avg: MCPServerAvgAggregateInputObjectSchema.optional(), _sum: MCPServerSumAggregateInputObjectSchema.optional() }).strict();

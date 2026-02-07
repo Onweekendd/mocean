@@ -1,0 +1,12 @@
+import type { Prisma } from '../prisma/client';
+import * as z from 'zod';
+import { MCPConfigSampleOrderByWithRelationInputObjectSchema as MCPConfigSampleOrderByWithRelationInputObjectSchema } from './objects/MCPConfigSampleOrderByWithRelationInput.schema';
+import { MCPConfigSampleWhereInputObjectSchema as MCPConfigSampleWhereInputObjectSchema } from './objects/MCPConfigSampleWhereInput.schema';
+import { MCPConfigSampleWhereUniqueInputObjectSchema as MCPConfigSampleWhereUniqueInputObjectSchema } from './objects/MCPConfigSampleWhereUniqueInput.schema';
+import { MCPConfigSampleCountAggregateInputObjectSchema as MCPConfigSampleCountAggregateInputObjectSchema } from './objects/MCPConfigSampleCountAggregateInput.schema';
+import { MCPConfigSampleMinAggregateInputObjectSchema as MCPConfigSampleMinAggregateInputObjectSchema } from './objects/MCPConfigSampleMinAggregateInput.schema';
+import { MCPConfigSampleMaxAggregateInputObjectSchema as MCPConfigSampleMaxAggregateInputObjectSchema } from './objects/MCPConfigSampleMaxAggregateInput.schema';
+
+export const MCPConfigSampleAggregateSchema: z.ZodType<Prisma.MCPConfigSampleAggregateArgs> = z.object({ orderBy: z.union([MCPConfigSampleOrderByWithRelationInputObjectSchema, MCPConfigSampleOrderByWithRelationInputObjectSchema.array()]).optional(), where: MCPConfigSampleWhereInputObjectSchema.optional(), cursor: MCPConfigSampleWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), MCPConfigSampleCountAggregateInputObjectSchema ]).optional(), _min: MCPConfigSampleMinAggregateInputObjectSchema.optional(), _max: MCPConfigSampleMaxAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.MCPConfigSampleAggregateArgs>;
+
+export const MCPConfigSampleAggregateZodSchema = z.object({ orderBy: z.union([MCPConfigSampleOrderByWithRelationInputObjectSchema, MCPConfigSampleOrderByWithRelationInputObjectSchema.array()]).optional(), where: MCPConfigSampleWhereInputObjectSchema.optional(), cursor: MCPConfigSampleWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), MCPConfigSampleCountAggregateInputObjectSchema ]).optional(), _min: MCPConfigSampleMinAggregateInputObjectSchema.optional(), _max: MCPConfigSampleMaxAggregateInputObjectSchema.optional() }).strict();

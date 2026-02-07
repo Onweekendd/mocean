@@ -1,0 +1,13 @@
+import type { Prisma } from '../prisma/client';
+import * as z from 'zod';
+import { MCPPromptWhereInputObjectSchema as MCPPromptWhereInputObjectSchema } from './objects/MCPPromptWhereInput.schema';
+import { MCPPromptOrderByWithAggregationInputObjectSchema as MCPPromptOrderByWithAggregationInputObjectSchema } from './objects/MCPPromptOrderByWithAggregationInput.schema';
+import { MCPPromptScalarWhereWithAggregatesInputObjectSchema as MCPPromptScalarWhereWithAggregatesInputObjectSchema } from './objects/MCPPromptScalarWhereWithAggregatesInput.schema';
+import { MCPPromptScalarFieldEnumSchema } from './enums/MCPPromptScalarFieldEnum.schema';
+import { MCPPromptCountAggregateInputObjectSchema as MCPPromptCountAggregateInputObjectSchema } from './objects/MCPPromptCountAggregateInput.schema';
+import { MCPPromptMinAggregateInputObjectSchema as MCPPromptMinAggregateInputObjectSchema } from './objects/MCPPromptMinAggregateInput.schema';
+import { MCPPromptMaxAggregateInputObjectSchema as MCPPromptMaxAggregateInputObjectSchema } from './objects/MCPPromptMaxAggregateInput.schema';
+
+export const MCPPromptGroupBySchema: z.ZodType<Prisma.MCPPromptGroupByArgs> = z.object({ where: MCPPromptWhereInputObjectSchema.optional(), orderBy: z.union([MCPPromptOrderByWithAggregationInputObjectSchema, MCPPromptOrderByWithAggregationInputObjectSchema.array()]).optional(), having: MCPPromptScalarWhereWithAggregatesInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), by: z.array(MCPPromptScalarFieldEnumSchema), _count: z.union([ z.literal(true), MCPPromptCountAggregateInputObjectSchema ]).optional(), _min: MCPPromptMinAggregateInputObjectSchema.optional(), _max: MCPPromptMaxAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.MCPPromptGroupByArgs>;
+
+export const MCPPromptGroupByZodSchema = z.object({ where: MCPPromptWhereInputObjectSchema.optional(), orderBy: z.union([MCPPromptOrderByWithAggregationInputObjectSchema, MCPPromptOrderByWithAggregationInputObjectSchema.array()]).optional(), having: MCPPromptScalarWhereWithAggregatesInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), by: z.array(MCPPromptScalarFieldEnumSchema), _count: z.union([ z.literal(true), MCPPromptCountAggregateInputObjectSchema ]).optional(), _min: MCPPromptMinAggregateInputObjectSchema.optional(), _max: MCPPromptMaxAggregateInputObjectSchema.optional() }).strict();

@@ -1,0 +1,13 @@
+import * as z from 'zod';
+import type { Prisma } from '../../prisma/client';
+import { SortOrderSchema } from '../enums/SortOrder.schema'
+
+const makeSchema = () => z.object({
+  modelId: SortOrderSchema.optional(),
+  groupId: SortOrderSchema.optional(),
+  providerId: SortOrderSchema.optional(),
+  createdAt: SortOrderSchema.optional(),
+  updatedAt: SortOrderSchema.optional()
+}).strict();
+export const ModelGroupMaxOrderByAggregateInputObjectSchema: z.ZodType<Prisma.ModelGroupMaxOrderByAggregateInput> = makeSchema() as unknown as z.ZodType<Prisma.ModelGroupMaxOrderByAggregateInput>;
+export const ModelGroupMaxOrderByAggregateInputObjectZodSchema = makeSchema();

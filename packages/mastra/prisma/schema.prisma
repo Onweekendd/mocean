@@ -14,6 +14,11 @@ datasource db {
   provider = "sqlite"
 }
 
+generator zod {
+  provider = "prisma-zod-generator"
+  output   = "../generated"
+}
+
 // 枚举类型定义
 enum ProviderType {
   // 主流供应商

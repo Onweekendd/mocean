@@ -1,0 +1,12 @@
+import type { Prisma } from '../prisma/client';
+import * as z from 'zod';
+import { TopicKnowledgeBaseOrderByWithRelationInputObjectSchema as TopicKnowledgeBaseOrderByWithRelationInputObjectSchema } from './objects/TopicKnowledgeBaseOrderByWithRelationInput.schema';
+import { TopicKnowledgeBaseWhereInputObjectSchema as TopicKnowledgeBaseWhereInputObjectSchema } from './objects/TopicKnowledgeBaseWhereInput.schema';
+import { TopicKnowledgeBaseWhereUniqueInputObjectSchema as TopicKnowledgeBaseWhereUniqueInputObjectSchema } from './objects/TopicKnowledgeBaseWhereUniqueInput.schema';
+import { TopicKnowledgeBaseCountAggregateInputObjectSchema as TopicKnowledgeBaseCountAggregateInputObjectSchema } from './objects/TopicKnowledgeBaseCountAggregateInput.schema';
+import { TopicKnowledgeBaseMinAggregateInputObjectSchema as TopicKnowledgeBaseMinAggregateInputObjectSchema } from './objects/TopicKnowledgeBaseMinAggregateInput.schema';
+import { TopicKnowledgeBaseMaxAggregateInputObjectSchema as TopicKnowledgeBaseMaxAggregateInputObjectSchema } from './objects/TopicKnowledgeBaseMaxAggregateInput.schema';
+
+export const TopicKnowledgeBaseAggregateSchema: z.ZodType<Prisma.TopicKnowledgeBaseAggregateArgs> = z.object({ orderBy: z.union([TopicKnowledgeBaseOrderByWithRelationInputObjectSchema, TopicKnowledgeBaseOrderByWithRelationInputObjectSchema.array()]).optional(), where: TopicKnowledgeBaseWhereInputObjectSchema.optional(), cursor: TopicKnowledgeBaseWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), TopicKnowledgeBaseCountAggregateInputObjectSchema ]).optional(), _min: TopicKnowledgeBaseMinAggregateInputObjectSchema.optional(), _max: TopicKnowledgeBaseMaxAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.TopicKnowledgeBaseAggregateArgs>;
+
+export const TopicKnowledgeBaseAggregateZodSchema = z.object({ orderBy: z.union([TopicKnowledgeBaseOrderByWithRelationInputObjectSchema, TopicKnowledgeBaseOrderByWithRelationInputObjectSchema.array()]).optional(), where: TopicKnowledgeBaseWhereInputObjectSchema.optional(), cursor: TopicKnowledgeBaseWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), TopicKnowledgeBaseCountAggregateInputObjectSchema ]).optional(), _min: TopicKnowledgeBaseMinAggregateInputObjectSchema.optional(), _max: TopicKnowledgeBaseMaxAggregateInputObjectSchema.optional() }).strict();

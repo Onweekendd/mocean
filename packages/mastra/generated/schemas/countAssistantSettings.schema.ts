@@ -1,0 +1,10 @@
+import type { Prisma } from '../prisma/client';
+import * as z from 'zod';
+import { AssistantSettingsOrderByWithRelationInputObjectSchema as AssistantSettingsOrderByWithRelationInputObjectSchema } from './objects/AssistantSettingsOrderByWithRelationInput.schema';
+import { AssistantSettingsWhereInputObjectSchema as AssistantSettingsWhereInputObjectSchema } from './objects/AssistantSettingsWhereInput.schema';
+import { AssistantSettingsWhereUniqueInputObjectSchema as AssistantSettingsWhereUniqueInputObjectSchema } from './objects/AssistantSettingsWhereUniqueInput.schema';
+import { AssistantSettingsCountAggregateInputObjectSchema as AssistantSettingsCountAggregateInputObjectSchema } from './objects/AssistantSettingsCountAggregateInput.schema';
+
+export const AssistantSettingsCountSchema: z.ZodType<Prisma.AssistantSettingsCountArgs> = z.object({ orderBy: z.union([AssistantSettingsOrderByWithRelationInputObjectSchema, AssistantSettingsOrderByWithRelationInputObjectSchema.array()]).optional(), where: AssistantSettingsWhereInputObjectSchema.optional(), cursor: AssistantSettingsWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), select: z.union([ z.literal(true), AssistantSettingsCountAggregateInputObjectSchema ]).optional() }).strict() as unknown as z.ZodType<Prisma.AssistantSettingsCountArgs>;
+
+export const AssistantSettingsCountZodSchema = z.object({ orderBy: z.union([AssistantSettingsOrderByWithRelationInputObjectSchema, AssistantSettingsOrderByWithRelationInputObjectSchema.array()]).optional(), where: AssistantSettingsWhereInputObjectSchema.optional(), cursor: AssistantSettingsWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), select: z.union([ z.literal(true), AssistantSettingsCountAggregateInputObjectSchema ]).optional() }).strict();

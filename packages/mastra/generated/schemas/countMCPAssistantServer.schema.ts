@@ -1,0 +1,10 @@
+import type { Prisma } from '../prisma/client';
+import * as z from 'zod';
+import { MCPAssistantServerOrderByWithRelationInputObjectSchema as MCPAssistantServerOrderByWithRelationInputObjectSchema } from './objects/MCPAssistantServerOrderByWithRelationInput.schema';
+import { MCPAssistantServerWhereInputObjectSchema as MCPAssistantServerWhereInputObjectSchema } from './objects/MCPAssistantServerWhereInput.schema';
+import { MCPAssistantServerWhereUniqueInputObjectSchema as MCPAssistantServerWhereUniqueInputObjectSchema } from './objects/MCPAssistantServerWhereUniqueInput.schema';
+import { MCPAssistantServerCountAggregateInputObjectSchema as MCPAssistantServerCountAggregateInputObjectSchema } from './objects/MCPAssistantServerCountAggregateInput.schema';
+
+export const MCPAssistantServerCountSchema: z.ZodType<Prisma.MCPAssistantServerCountArgs> = z.object({ orderBy: z.union([MCPAssistantServerOrderByWithRelationInputObjectSchema, MCPAssistantServerOrderByWithRelationInputObjectSchema.array()]).optional(), where: MCPAssistantServerWhereInputObjectSchema.optional(), cursor: MCPAssistantServerWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), select: z.union([ z.literal(true), MCPAssistantServerCountAggregateInputObjectSchema ]).optional() }).strict() as unknown as z.ZodType<Prisma.MCPAssistantServerCountArgs>;
+
+export const MCPAssistantServerCountZodSchema = z.object({ orderBy: z.union([MCPAssistantServerOrderByWithRelationInputObjectSchema, MCPAssistantServerOrderByWithRelationInputObjectSchema.array()]).optional(), where: MCPAssistantServerWhereInputObjectSchema.optional(), cursor: MCPAssistantServerWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), select: z.union([ z.literal(true), MCPAssistantServerCountAggregateInputObjectSchema ]).optional() }).strict();
