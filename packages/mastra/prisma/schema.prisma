@@ -17,6 +17,7 @@ datasource db {
 generator zod {
   provider = "prisma-zod-generator"
   output   = "../generated"
+  config   = "./zod-generator.json"
 }
 
 // 枚举类型定义

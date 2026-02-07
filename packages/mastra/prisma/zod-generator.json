@@ -1,0 +1,14 @@
+{
+  "mode": "custom",
+  "pureModels": true,
+  "pureModelsIncludeRelations": true,
+  "pureModelsExcludeCircularRelations": true,
+  "variants": {
+    "pure": { "enabled": false },
+    "input": { "enabled": false },
+    "result": { "enabled": false }
+  },
+  "strictMode": {
+    "enabled": true
+  }
+}
