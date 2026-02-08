@@ -3,6 +3,9 @@ import { z } from "zod";
 
 import { PREFIX } from "../api/base-client";
 import {
+  AgentResponseSchema,
+  AgentWithSettingsResponseSchema,
+  AgentsResponseSchema,
   createAgent,
   createAgentSchema,
   deleteAgent,
@@ -258,3 +261,31 @@ export const agentsRouter = [
   deleteAgentRouter,
   getAgentByGroupRouter
 ];
+
+// 导出 route 定义（path + responseSchema）供 client 使用
+export const agentRoutes = {
+  getAgents: {
+    path: `${PREFIX}/agents`,
+    responseSchema: AgentsResponseSchema
+  },
+  getAgentById: {
+    path: `${PREFIX}/agents/:id`,
+    responseSchema: AgentWithSettingsResponseSchema
+  },
+  createAgent: {
+    path: `${PREFIX}/agents`,
+    responseSchema: AgentWithSettingsResponseSchema
+  },
+  updateAgent: {
+    path: `${PREFIX}/agents/:id`,
+    responseSchema: AgentWithSettingsResponseSchema
+  },
+  deleteAgent: {
+    path: `${PREFIX}/agents/:id`,
+    responseSchema: AgentResponseSchema
+  },
+  getAgentByGroup: {
+    path: `${PREFIX}/agents/group/:group`,
+    responseSchema: AgentsResponseSchema
+  }
+} as const;

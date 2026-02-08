@@ -3,6 +3,10 @@ import { z } from "zod";
 
 import { PREFIX } from "../api/base-client";
 import {
+  AssistantFullResponseSchema,
+  AssistantResponseSchema,
+  AssistantWithModelsResponseSchema,
+  AssistantsResponseSchema,
   assistantIdParamSchema,
   assistantThreadIdParamSchema,
   chatWithAssistantSchema,
@@ -378,3 +382,27 @@ export const assistantsRouter = [
   getAssistantThreads,
   getAssistantUIMessageByThreadId
 ];
+
+// 导出 route 定义（path + responseSchema）供 client 使用
+export const assistantRoutes = {
+  getAssistants: {
+    path: `${PREFIX}/assistants`,
+    responseSchema: AssistantsResponseSchema
+  },
+  getAssistantById: {
+    path: `${PREFIX}/assistants/:assistantId`,
+    responseSchema: AssistantFullResponseSchema
+  },
+  createAssistant: {
+    path: `${PREFIX}/assistants`,
+    responseSchema: AssistantWithModelsResponseSchema
+  },
+  updateAssistant: {
+    path: `${PREFIX}/assistants/:assistantId`,
+    responseSchema: AssistantWithModelsResponseSchema
+  },
+  deleteAssistant: {
+    path: `${PREFIX}/assistants/:assistantId`,
+    responseSchema: AssistantResponseSchema
+  }
+} as const;

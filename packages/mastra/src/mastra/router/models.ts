@@ -3,6 +3,9 @@ import { z } from "zod";
 
 import { PREFIX } from "../api/base-client";
 import {
+  ModelResponseSchema,
+  ModelWithProvidersResponseSchema,
+  ModelsResponseSchema,
   addModelProviderRelation,
   createManyModels,
   createModel,
@@ -728,5 +731,56 @@ const modelsRouter = [
   removeModelProviderRelationRouter,
   getModelProviderRelationsRouter
 ];
+
+// 导出 route 定义（path + responseSchema）供 client 使用
+export const modelRoutes = {
+  // 基础版本
+  getModels: {
+    path: `${PREFIX}/models`,
+    responseSchema: ModelsResponseSchema
+  },
+  getModelById: {
+    path: `${PREFIX}/models/:id`,
+    responseSchema: ModelResponseSchema
+  },
+  getModelsByProvider: {
+    path: `${PREFIX}/models/by-provider/:providerId`,
+    responseSchema: ModelsResponseSchema
+  },
+  getModelsByGroup: {
+    path: `${PREFIX}/models/group/:group`,
+    responseSchema: ModelsResponseSchema
+  },
+  // WithProviders 版本
+  getModelsWithProviders: {
+    path: `${PREFIX}/models/with-providers`,
+    responseSchema: ModelsResponseSchema
+  },
+  getModelWithProvidersById: {
+    path: `${PREFIX}/models/:id/with-providers`,
+    responseSchema: ModelWithProvidersResponseSchema
+  },
+  getModelsByProviderWithProviders: {
+    path: `${PREFIX}/models/by-provider/:providerId/with-providers`,
+    responseSchema: ModelsResponseSchema
+  },
+  getModelsByGroupWithProviders: {
+    path: `${PREFIX}/models/group/:group/with-providers`,
+    responseSchema: ModelsResponseSchema
+  },
+  // 写操作
+  createModel: {
+    path: `${PREFIX}/models`,
+    responseSchema: ModelWithProvidersResponseSchema
+  },
+  updateModel: {
+    path: `${PREFIX}/models/:id`,
+    responseSchema: ModelWithProvidersResponseSchema
+  },
+  deleteModel: {
+    path: `${PREFIX}/models/:id`,
+    responseSchema: ModelResponseSchema
+  }
+} as const;
 
 export { modelsRouter };

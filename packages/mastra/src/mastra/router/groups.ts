@@ -11,7 +11,11 @@ import {
   idParamSchema,
   providerParamSchema,
   updateGroup,
-  updateGroupSchema
+  updateGroupSchema,
+  // Response Schemas
+  GroupResponseSchema,
+  GroupWithModelsResponseSchema,
+  GroupsResponseSchema
 } from "../server/group";
 
 /**
@@ -281,5 +285,29 @@ const groupsRouter = [
   updateGroupRouter,
   deleteGroupRouter
 ];
+
+// 导出 route 定义（path + responseSchema）供 client 使用
+export const groupRoutes = {
+  getGroupsByProvider: {
+    path: `${PREFIX}/groups/by-provider/:providerId`,
+    responseSchema: GroupsResponseSchema
+  },
+  getGroupById: {
+    path: `${PREFIX}/groups/:id`,
+    responseSchema: GroupWithModelsResponseSchema
+  },
+  createGroup: {
+    path: `${PREFIX}/groups`,
+    responseSchema: GroupWithModelsResponseSchema
+  },
+  updateGroup: {
+    path: `${PREFIX}/groups/:id`,
+    responseSchema: GroupWithModelsResponseSchema
+  },
+  deleteGroup: {
+    path: `${PREFIX}/groups/:id`,
+    responseSchema: GroupResponseSchema
+  }
+} as const;
 
 export { groupsRouter };
