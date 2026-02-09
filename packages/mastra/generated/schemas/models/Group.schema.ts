@@ -1,12 +1,21 @@
+// @ts-nocheck - Circular imports resolved with runtime require()
 import * as z from 'zod';
-import { ProviderSchema } from './Provider.schema';
+// Circular import removed: import { ModelGroupSchema } from './ModelGroup.schema';
+// Circular import removed: import { ProviderSchema } from './Provider.schema';
 
 export const GroupSchema = z.object({
   id: z.string(),
   name: z.string(),
   providerId: z.string(),
   isDefault: z.boolean(),
-  provider: z.lazy(() => ProviderSchema),
+  provider: z.lazy(() => {
+      const mod = require('./Provider.schema');
+      return mod.ProviderSchema;
+    }),
+  models: z.array(z.lazy(() => {
+      const mod = require('./ModelGroup.schema');
+      return mod.ModelGroupSchema;
+    })),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

@@ -1,7 +1,10 @@
 // @ts-nocheck - Circular imports resolved with runtime require()
 import * as z from 'zod';
-// Circular import removed: // Circular import removed: import { ModelSchema } from './Model.schema';
-
+// Circular import removed: import { AgentSchema } from './Agent.schema';
+// Circular import removed: import { AssistantSchema } from './Assistant.schema';
+// Circular import removed: import { KnowledgeItemSchema } from './KnowledgeItem.schema';
+// Circular import removed: import { ModelSchema } from './Model.schema';
+// Circular import removed: import { TopicKnowledgeBaseSchema } from './TopicKnowledgeBase.schema';
 
 export const KnowledgeBaseSchema = z.object({
   id: z.string(),
@@ -13,6 +16,14 @@ export const KnowledgeBaseSchema = z.object({
   chunkOverlap: z.number().int().nullish(),
   threshold: z.number().nullish(),
   version: z.number().int(),
+  assistants: z.array(z.lazy(() => {
+      const mod = require('./Assistant.schema');
+      return mod.AssistantSchema;
+    })),
+  agents: z.array(z.lazy(() => {
+      const mod = require('./Agent.schema');
+      return mod.AgentSchema;
+    })),
   model: z.lazy(() => {
       const mod = require('./Model.schema');
       return mod.ModelSchema;
@@ -23,6 +34,14 @@ export const KnowledgeBaseSchema = z.object({
       return mod.ModelSchema;
     }).nullish(),
   rerankModelId: z.string().nullish(),
+  items: z.array(z.lazy(() => {
+      const mod = require('./KnowledgeItem.schema');
+      return mod.KnowledgeItemSchema;
+    })),
+  topics: z.array(z.lazy(() => {
+      const mod = require('./TopicKnowledgeBase.schema');
+      return mod.TopicKnowledgeBaseSchema;
+    })),
   created_at: z.date(),
   updated_at: z.date(),
 });

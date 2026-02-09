@@ -1,8 +1,10 @@
+// @ts-nocheck - Circular imports resolved with runtime require()
 import * as z from 'zod';
 import { KnowledgeRecognitionSchema } from '../enums/KnowledgeRecognition.schema';
-import { AssistantSettingsSchema } from './AssistantSettings.schema';
-import { KnowledgeBaseSchema } from './KnowledgeBase.schema';
-import { TopicSchema } from './Topic.schema';
+// Circular import removed: import { AssistantSettingsSchema } from './AssistantSettings.schema';
+// Circular import removed: import { KnowledgeBaseSchema } from './KnowledgeBase.schema';
+// Circular import removed: import { MCPAgentServerSchema } from './MCPAgentServer.schema';
+// Circular import removed: import { TopicSchema } from './Topic.schema';
 
 export const AgentSchema = z.object({
   id: z.string(),
@@ -16,9 +18,22 @@ export const AgentSchema = z.object({
   webSearchProviderId: z.string().nullish(),
   enableGenerateImage: z.boolean(),
   knowledgeRecognition: KnowledgeRecognitionSchema.nullish(),
-  settings: z.lazy(() => AssistantSettingsSchema).nullish(),
-  topics: z.array(z.lazy(() => TopicSchema)),
-  knowledgeBases: z.array(z.lazy(() => KnowledgeBaseSchema)),
+  settings: z.lazy(() => {
+      const mod = require('./AssistantSettings.schema');
+      return mod.AssistantSettingsSchema;
+    }).nullish(),
+  topics: z.array(z.lazy(() => {
+      const mod = require('./Topic.schema');
+      return mod.TopicSchema;
+    })),
+  knowledgeBases: z.array(z.lazy(() => {
+      const mod = require('./KnowledgeBase.schema');
+      return mod.KnowledgeBaseSchema;
+    })),
+  mcpServers: z.array(z.lazy(() => {
+      const mod = require('./MCPAgentServer.schema');
+      return mod.MCPAgentServerSchema;
+    })),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

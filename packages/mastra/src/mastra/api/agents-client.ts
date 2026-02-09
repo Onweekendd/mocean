@@ -2,10 +2,7 @@
 import type { z } from "zod";
 
 import { agentRoutes } from "../router/agents";
-import type {
-  CreateAgentInput,
-  UpdateAgentInput
-} from "../server/agent";
+import type { CreateAgentInput, UpdateAgentInput } from "../server/agent";
 import type { ApiClientConfig, ApiResponse } from "./base-client";
 import { BaseApiClient } from "./base-client";
 
@@ -23,9 +20,7 @@ export class AgentsApiClient extends BaseApiClient {
    * @description 获取系统中所有可用的代理列表
    */
   async getAgents(): Promise<
-    ApiResponse<
-      z.infer<(typeof agentRoutes)["getAgents"]["responseSchema"]>
-    >
+    ApiResponse<z.infer<(typeof agentRoutes)["getAgents"]["responseSchema"]>>
   > {
     return this.get<
       z.infer<(typeof agentRoutes)["getAgents"]["responseSchema"]>
@@ -40,9 +35,7 @@ export class AgentsApiClient extends BaseApiClient {
   async getAgentById(
     id: string
   ): Promise<
-    ApiResponse<
-      z.infer<(typeof agentRoutes)["getAgentById"]["responseSchema"]>
-    >
+    ApiResponse<z.infer<(typeof agentRoutes)["getAgentById"]["responseSchema"]>>
   > {
     return this.get<
       z.infer<(typeof agentRoutes)["getAgentById"]["responseSchema"]>
@@ -57,9 +50,7 @@ export class AgentsApiClient extends BaseApiClient {
   async createAgent(
     agent: CreateAgentInput
   ): Promise<
-    ApiResponse<
-      z.infer<(typeof agentRoutes)["createAgent"]["responseSchema"]>
-    >
+    ApiResponse<z.infer<(typeof agentRoutes)["createAgent"]["responseSchema"]>>
   > {
     return this.post<
       z.infer<(typeof agentRoutes)["createAgent"]["responseSchema"]>
@@ -76,9 +67,7 @@ export class AgentsApiClient extends BaseApiClient {
     id: string,
     agent: UpdateAgentInput
   ): Promise<
-    ApiResponse<
-      z.infer<(typeof agentRoutes)["updateAgent"]["responseSchema"]>
-    >
+    ApiResponse<z.infer<(typeof agentRoutes)["updateAgent"]["responseSchema"]>>
   > {
     return this.put<
       z.infer<(typeof agentRoutes)["updateAgent"]["responseSchema"]>
@@ -93,9 +82,7 @@ export class AgentsApiClient extends BaseApiClient {
   async deleteAgent(
     id: string
   ): Promise<
-    ApiResponse<
-      z.infer<(typeof agentRoutes)["deleteAgent"]["responseSchema"]>
-    >
+    ApiResponse<z.infer<(typeof agentRoutes)["deleteAgent"]["responseSchema"]>>
   > {
     return this.delete<
       z.infer<(typeof agentRoutes)["deleteAgent"]["responseSchema"]>

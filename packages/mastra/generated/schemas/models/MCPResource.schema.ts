@@ -1,5 +1,6 @@
+// @ts-nocheck - Circular imports resolved with runtime require()
 import * as z from 'zod';
-import { MCPServerSchema } from './MCPServer.schema';
+// Circular import removed: import { MCPServerSchema } from './MCPServer.schema';
 
 export const MCPResourceSchema = z.object({
   id: z.string(),
@@ -10,7 +11,10 @@ export const MCPResourceSchema = z.object({
   size: z.number().int().nullish(),
   text: z.string().nullish(),
   blob: z.string().nullish(),
-  server: z.lazy(() => MCPServerSchema),
+  server: z.lazy(() => {
+      const mod = require('./MCPServer.schema');
+      return mod.MCPServerSchema;
+    }),
   serverId: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),

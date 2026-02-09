@@ -1,5 +1,6 @@
+// @ts-nocheck - Circular imports resolved with runtime require()
 import * as z from 'zod';
-import { KnowledgeBaseSchema } from './KnowledgeBase.schema';
+// Circular import removed: import { KnowledgeBaseSchema } from './KnowledgeBase.schema';
 
 export const KnowledgeItemSchema = z.object({
   id: z.string(),
@@ -12,7 +13,10 @@ export const KnowledgeItemSchema = z.object({
   processingProgress: z.number().nullish(),
   processingError: z.string().nullish(),
   retryCount: z.number().int().nullish(),
-  knowledgeBase: z.lazy(() => KnowledgeBaseSchema),
+  knowledgeBase: z.lazy(() => {
+      const mod = require('./KnowledgeBase.schema');
+      return mod.KnowledgeBaseSchema;
+    }),
   baseId: z.string(),
   created_at: z.date(),
   updated_at: z.date(),

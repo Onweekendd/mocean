@@ -1,11 +1,11 @@
 // @ts-nocheck - Circular imports resolved with runtime require()
 import * as z from 'zod';
-// Circular import removed: // Circular import removed: import { AssistantSchema } from './Assistant.schema';
-
-import { AssistantSettingsSchema } from './AssistantSettings.schema';
-// Circular import removed: // Circular import removed: import { KnowledgeBaseSchema } from './KnowledgeBase.schema';
-
-import { TopicSchema } from './Topic.schema';
+// Circular import removed: import { AssistantSchema } from './Assistant.schema';
+// Circular import removed: import { AssistantSettingsSchema } from './AssistantSettings.schema';
+// Circular import removed: import { KnowledgeBaseSchema } from './KnowledgeBase.schema';
+// Circular import removed: import { ModelGroupSchema } from './ModelGroup.schema';
+// Circular import removed: import { ModelProviderSchema } from './ModelProvider.schema';
+// Circular import removed: import { TopicSchema } from './Topic.schema';
 
 export const ModelSchema = z.object({
   id: z.string(),
@@ -23,6 +23,10 @@ export const ModelSchema = z.object({
   supportsEmbedding: z.boolean(),
   inputPricePerMillion: z.number().nullish(),
   outputPricePerMillion: z.number().nullish(),
+  modelGroups: z.array(z.lazy(() => {
+      const mod = require('./ModelGroup.schema');
+      return mod.ModelGroupSchema;
+    })),
   assistants: z.array(z.lazy(() => {
       const mod = require('./Assistant.schema');
       return mod.AssistantSchema;
@@ -31,12 +35,26 @@ export const ModelSchema = z.object({
       const mod = require('./Assistant.schema');
       return mod.AssistantSchema;
     })),
-  assistantSettings: z.array(z.lazy(() => AssistantSettingsSchema)),
+  knowledgeBases: z.array(z.lazy(() => {
+      const mod = require('./KnowledgeBase.schema');
+      return mod.KnowledgeBaseSchema;
+    })),
+  assistantSettings: z.array(z.lazy(() => {
+      const mod = require('./AssistantSettings.schema');
+      return mod.AssistantSettingsSchema;
+    })),
   rerankFor: z.array(z.lazy(() => {
       const mod = require('./KnowledgeBase.schema');
       return mod.KnowledgeBaseSchema;
     })),
-  Topic: z.array(z.lazy(() => TopicSchema)),
+  Topic: z.array(z.lazy(() => {
+      const mod = require('./Topic.schema');
+      return mod.TopicSchema;
+    })),
+  providers: z.array(z.lazy(() => {
+      const mod = require('./ModelProvider.schema');
+      return mod.ModelProviderSchema;
+    })),
 });
 
 export type ModelType = z.infer<typeof ModelSchema>;

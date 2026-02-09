@@ -1,11 +1,18 @@
+// @ts-nocheck - Circular imports resolved with runtime require()
 import * as z from 'zod';
-import { AssistantSchema } from './Assistant.schema';
-import { MCPServerSchema } from './MCPServer.schema';
+// Circular import removed: import { AssistantSchema } from './Assistant.schema';
+// Circular import removed: import { MCPServerSchema } from './MCPServer.schema';
 
 export const MCPAssistantServerSchema = z.object({
-  assistant: z.lazy(() => AssistantSchema),
+  assistant: z.lazy(() => {
+      const mod = require('./Assistant.schema');
+      return mod.AssistantSchema;
+    }),
   assistantId: z.string(),
-  mcpServer: z.lazy(() => MCPServerSchema),
+  mcpServer: z.lazy(() => {
+      const mod = require('./MCPServer.schema');
+      return mod.MCPServerSchema;
+    }),
   mcpServerId: z.string(),
 });
 

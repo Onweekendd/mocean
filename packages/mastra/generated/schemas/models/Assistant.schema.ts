@@ -1,12 +1,12 @@
 // @ts-nocheck - Circular imports resolved with runtime require()
 import * as z from 'zod';
 import { KnowledgeRecognitionSchema } from '../enums/KnowledgeRecognition.schema';
-import { AssistantSettingsSchema } from './AssistantSettings.schema';
-// Circular import removed: // Circular import removed: import { KnowledgeBaseSchema } from './KnowledgeBase.schema';
-
-// Circular import removed: // Circular import removed: import { ModelSchema } from './Model.schema';
-
-import { TopicSchema } from './Topic.schema';
+// Circular import removed: import { AssistantSettingsSchema } from './AssistantSettings.schema';
+// Circular import removed: import { KnowledgeBaseSchema } from './KnowledgeBase.schema';
+// Circular import removed: import { MCPAssistantServerSchema } from './MCPAssistantServer.schema';
+// Circular import removed: import { ModelSchema } from './Model.schema';
+// Circular import removed: import { ProviderSchema } from './Provider.schema';
+// Circular import removed: import { TopicSchema } from './Topic.schema';
 
 export const AssistantSchema = z.object({
   id: z.string(),
@@ -19,18 +19,36 @@ export const AssistantSchema = z.object({
   webSearchProviderId: z.string().nullish(),
   enableGenerateImage: z.boolean(),
   knowledgeRecognition: KnowledgeRecognitionSchema.nullish(),
+  model: z.lazy(() => {
+      const mod = require('./Model.schema');
+      return mod.ModelSchema;
+    }).nullish(),
   modelId: z.string().nullish(),
+  provider: z.lazy(() => {
+      const mod = require('./Provider.schema');
+      return mod.ProviderSchema;
+    }).nullish(),
   providerId: z.string().nullish(),
   defaultModel: z.lazy(() => {
       const mod = require('./Model.schema');
       return mod.ModelSchema;
     }).nullish(),
   defaultModelId: z.string().nullish(),
-  settings: z.lazy(() => AssistantSettingsSchema).nullish(),
-  topics: z.array(z.lazy(() => TopicSchema)),
+  settings: z.lazy(() => {
+      const mod = require('./AssistantSettings.schema');
+      return mod.AssistantSettingsSchema;
+    }).nullish(),
+  topics: z.array(z.lazy(() => {
+      const mod = require('./Topic.schema');
+      return mod.TopicSchema;
+    })),
   knowledgeBases: z.array(z.lazy(() => {
       const mod = require('./KnowledgeBase.schema');
       return mod.KnowledgeBaseSchema;
+    })),
+  mcpServers: z.array(z.lazy(() => {
+      const mod = require('./MCPAssistantServer.schema');
+      return mod.MCPAssistantServerSchema;
     })),
   createdAt: z.date(),
   updatedAt: z.date(),

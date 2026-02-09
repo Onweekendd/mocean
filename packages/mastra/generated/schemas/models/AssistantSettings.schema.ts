@@ -1,4 +1,8 @@
+// @ts-nocheck - Circular imports resolved with runtime require()
 import * as z from 'zod';
+// Circular import removed: import { AgentSchema } from './Agent.schema';
+// Circular import removed: import { AssistantSchema } from './Assistant.schema';
+// Circular import removed: import { ModelSchema } from './Model.schema';
 
 export const AssistantSettingsSchema = z.object({
   id: z.string(),
@@ -13,8 +17,20 @@ export const AssistantSettingsSchema = z.object({
   reasoning_effort: z.string().nullish(),
   qwenThinkMode: z.boolean().nullish(),
   toolUseMode: z.string().nullish(),
+  assistant: z.lazy(() => {
+      const mod = require('./Assistant.schema');
+      return mod.AssistantSchema;
+    }).nullish(),
   assistantId: z.string().nullish(),
+  agent: z.lazy(() => {
+      const mod = require('./Agent.schema');
+      return mod.AgentSchema;
+    }).nullish(),
   agentId: z.string().nullish(),
+  defaultModel: z.lazy(() => {
+      const mod = require('./Model.schema');
+      return mod.ModelSchema;
+    }).nullish(),
   defaultModelId: z.string().nullish(),
 });
 
