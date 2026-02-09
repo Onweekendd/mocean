@@ -33,7 +33,9 @@
       "Bash(git add:*)",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat\\(scripts\\): 添加循环引用修复脚本和文档\n\n- 创建 fix-circular-imports.ts 脚本，自动检测并修复 Prisma Zod Generator 的循环引用问题\n- 使用 DFS 算法分析 schema 文件依赖关系\n- 将循环导入替换为运行时 require\\(\\) 加载\n- 添加完整的技术文档说明实现原理\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nfix\\(schemas\\): 修复 Model/Assistant/KnowledgeBase 的循环引用\n\n- 移除静态 import 语句\n- 添加 @ts-nocheck 禁用类型检查\n- 在 z.lazy\\(\\) 中使用动态 require\\(\\) 加载依赖\n- 保留关联字段类型定义\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(npm run bundle:*)",
+      "Bash(git reset:*)"
     ],
     "deny": [],
     "ask": []

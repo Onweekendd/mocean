@@ -13,6 +13,8 @@ const packageJson = JSON.parse(
   readFileSync(new URL("./package.json", import.meta.url), "utf-8"),
 );
 
+console.log(packageJson)
+
 /**
  * 外部依赖正则表达式数组
  * @type {RegExp[]}

@@ -6,8 +6,12 @@ import type { UIMessage } from "ai";
 import { createUIMessageStreamResponse } from "ai";
 import {
   AssistantSchema,
+  AssistantSettingsSchema,
+  KnowledgeBaseSchema,
+  MCPServerSchema,
   ModelSchema,
-  ProviderSchema
+  ProviderSchema,
+  TopicSchema
 } from "generated/schemas/models/index";
 import { z } from "zod";
 
@@ -61,18 +65,9 @@ export const AssistantWithModelsResponseSchema = AssistantSchema.pick({
   createdAt: true,
   updatedAt: true
 }).extend({
-  model: ModelSchema,
-  defaultModel: ModelSchema,
-  settings: z.array(
-    z.object({
-      id: z.string(),
-      assistantId: z.string(),
-      key: z.string(),
-      value: z.string(),
-      createdAt: z.date(),
-      updatedAt: z.date()
-    })
-  )
+  model: ModelSchema.partial(),
+  defaultModel: ModelSchema.partial(),
+  settings: z.array(AssistantSettingsSchema.partial())
 });
 
 // 带 provider 的完整 Assistant Response Schema
@@ -93,43 +88,13 @@ export const AssistantFullResponseSchema = AssistantSchema.pick({
   createdAt: true,
   updatedAt: true
 }).extend({
-  model: ModelSchema,
-  defaultModel: ModelSchema,
-  provider: ProviderSchema,
-  settings: z.array(
-    z.object({
-      id: z.string(),
-      assistantId: z.string(),
-      key: z.string(),
-      value: z.string(),
-      createdAt: z.date(),
-      updatedAt: z.date()
-    })
-  ),
-  topics: z.array(
-    z.object({
-      id: z.string(),
-      name: z.string(),
-      createdAt: z.date(),
-      updatedAt: z.date()
-    })
-  ),
-  knowledgeBases: z.array(
-    z.object({
-      id: z.string(),
-      name: z.string(),
-      createdAt: z.date(),
-      updatedAt: z.date()
-    })
-  ),
-  mcpServers: z.array(
-    z.object({
-      id: z.string(),
-      name: z.string(),
-      createdAt: z.date(),
-      updatedAt: z.date()
-    })
-  )
+  model: ModelSchema.partial(),
+  defaultModel: ModelSchema.partial(),
+  provider: ProviderSchema.partial(),
+  settings: z.array(AssistantSettingsSchema.partial()),
+  topics: z.array(TopicSchema.partial()),
+  knowledgeBases: z.array(KnowledgeBaseSchema.partial()),
+  mcpServers: z.array(MCPServerSchema.partial())
 });
 
 /**

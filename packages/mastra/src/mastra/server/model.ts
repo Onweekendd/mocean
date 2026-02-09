@@ -1,5 +1,5 @@
 import type { ModelGroup, Prisma, Provider } from "generated/prisma/client";
-import { ModelSchema, ProviderSchema } from "generated/schemas/models";
+import { ModelGroupSchema, ModelSchema, ProviderSchema } from "generated/schemas/models";
 import { z } from "zod";
 
 import { prisma } from "./index";
@@ -90,14 +90,9 @@ const createModelSchema = ModelSchema.pick({
   supportsVideo: z.boolean().optional().default(false),
   supportsEmbedding: z.boolean().optional().default(false),
   // 扩展 providers 字段（用于 modelGroups 关联）
-  providers: z
-    .array(
-      z.object({
-        providerId: z.string().min(1, "提供商ID不能为空"),
-        groupId: z.string().min(1, "分组ID不能为空")
-      })
-    )
-    .min(1, "至少需要一个提供商")
+  providers: z.array(ProviderSchema.extend({
+    groups:z.array(ModelGroupSchema)
+  })).min(1, "至少需要一个提供商")
 });
 
 const updateModelSchema = ModelSchema.pick({
@@ -119,14 +114,9 @@ const updateModelSchema = ModelSchema.pick({
   .partial()
   .extend({
     // 扩展 providers 字段
-    providers: z
-      .array(
-        z.object({
-          providerId: z.string().min(1, "提供商ID不能为空"),
-          groupId: z.string().min(1, "分组ID不能为空")
-        })
-      )
-      .optional()
+    providers: z.array(ProviderSchema.extend({
+      groups:z.array(ModelGroupSchema)
+    })).min(1, "至少需要一个提供商")
   });
 
 const idParamSchema = z.object({
@@ -152,6 +142,7 @@ const modelProviderRelationSchema = z.object({
 export type CreateModelInput = z.infer<typeof createModelSchema>;
 export type UpdateModelInput = z.infer<typeof updateModelSchema>;
 export type ModelProviderRelation = z.infer<typeof modelProviderRelationSchema>;
+
 
 /**
  * 获取所有模型（基础版本，不包含关联信息）
@@ -294,6 +285,8 @@ const getModelsByProviderWithProviders = async (providerId: string) => {
         some: { providerId }
       }
     },
+    // 查询分组中间表时
+    // 还会携带供应商
     include: {
       modelGroups: {
         include: {
@@ -307,25 +300,15 @@ const getModelsByProviderWithProviders = async (providerId: string) => {
     }
   });
 
-  // 整理提供商信息
   return models.map((model) => {
-    type ModelWithGroups = typeof model & {
-      modelGroups: Array<{
-        provider: Provider;
-        group: ModelGroup;
-        providerId: string;
-      }>;
-    };
-    const modelWithGroups = model as ModelWithGroups;
     return {
       ...model,
-      modelGroups: modelWithGroups.modelGroups.filter(
+      groups: model.modelGroups.filter(
         (mg) => mg.providerId === providerId
       ),
-      providers: modelWithGroups.modelGroups
+      providers: model.modelGroups
         .filter((mg) => mg.providerId === providerId)
-        .map((mg) => mg.provider),
-      _modelRelations: modelWithGroups.modelGroups
+        .map((mg) => mg.provider)
     };
   });
 };
@@ -370,9 +353,8 @@ const getModelsByGroupWithProviders = async (groupId: string) => {
   // 注意：同一模型可能出现多次（不同供应商）
   return modelGroups.map((mg) => ({
     ...mg.model,
-    modelGroups: [mg],
-    providers: [mg.provider],
-    _modelRelations: [mg]
+    groups: [mg],
+    providers: [mg.provider]
   }));
 };
 
@@ -384,7 +366,7 @@ const getModelsByGroupWithProviders = async (groupId: string) => {
  */
 const createModel = async (model: CreateModelInput) => {
   // 验证提供商是否存在
-  const providerIds = model.providers.map((p) => p.providerId);
+  const providerIds = model.providers.map((p) => p.id);
   const providers = await prisma.provider.findMany({
     where: { id: { in: providerIds } }
   });
@@ -402,8 +384,7 @@ const createModel = async (model: CreateModelInput) => {
       ...modelData,
       modelGroups: {
         create: providerRelations.map((p) => ({
-          providerId: p.providerId,
-          groupId: p.groupId
+          providerId: p.id
         }))
       }
     } as Prisma.ModelCreateInput,
@@ -440,7 +421,7 @@ const createModel = async (model: CreateModelInput) => {
 const updateModel = async (id: string, model: UpdateModelInput) => {
   // 如果提供了providers，验证提供商是否存在
   if (model.providers) {
-    const providerIds = model.providers.map((p) => p.providerId);
+    const providerIds = model.providers.map((p) => p.id);
     const providers = await prisma.provider.findMany({
       where: { id: { in: providerIds } }
     });
@@ -462,8 +443,7 @@ const updateModel = async (id: string, model: UpdateModelInput) => {
         modelGroups: {
           deleteMany: {},
           create: providerRelations.map((p) => ({
-            providerId: p.providerId,
-            groupId: p.groupId
+            providerId: p.id
           }))
         }
       })
@@ -543,7 +523,7 @@ const deleteModel = async (id: string) => {
 const createManyModels = async (models: CreateModelInput[]) => {
   // 验证所有提供商是否存在
   const allProviderIds = [
-    ...new Set(models.flatMap((m) => m.providers.map((p) => p.providerId)))
+    ...new Set(models.flatMap((m) => m.providers.map((p) => p.id)))
   ];
   const providers = await prisma.provider.findMany({
     where: { id: { in: allProviderIds } },
@@ -574,8 +554,8 @@ const createManyModels = async (models: CreateModelInput[]) => {
       await tx.modelGroup.createMany({
         data: providerRelations.map((p) => ({
           modelId: createdModel.id,
-          providerId: p.providerId,
-          groupId: p.groupId
+          providerId: p.id,
+          groupId: p.groups.find((g) => g. === p.id)?.id || ""
         }))
       });
 

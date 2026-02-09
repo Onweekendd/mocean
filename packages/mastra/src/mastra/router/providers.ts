@@ -33,15 +33,77 @@ const modelIdParamSchema = z.object({
   modelId: z.string().min(1, "模型ID不能为空")
 });
 
+export const providerRoutes = {
+  // 基础版本
+  getProviders: {
+    path: `${PREFIX}/providers`,
+    responseSchema: ProvidersResponseSchema
+  },
+  getEnabledProviders: {
+    path: `${PREFIX}/providers/enabled`,
+    responseSchema: ProvidersResponseSchema
+  },
+  getProviderById: {
+    path: `${PREFIX}/providers/:id`,
+    responseSchema: ProviderResponseSchema.nullable()
+  },
+  getProvidersByType: {
+    path: `${PREFIX}/providers/type/:type`,
+    responseSchema: ProvidersResponseSchema
+  },
+  getProvidersByModel: {
+    path: `${PREFIX}/providers/by-model/:modelId`,
+    responseSchema: ProvidersResponseSchema
+  },
+  // WithModels 版本
+  getProvidersWithModels: {
+    path: `${PREFIX}/providers/with-models`,
+    responseSchema: ProvidersWithModelsResponseSchema
+  },
+  getEnabledProvidersWithModels: {
+    path: `${PREFIX}/providers/enabled/with-models`,
+    responseSchema: ProvidersWithModelsResponseSchema
+  },
+  getProviderWithModelsById: {
+    path: `${PREFIX}/providers/:id/with-models`,
+    responseSchema: ProviderWithModelsResponseSchema.nullable()
+  },
+  getProvidersByTypeWithModels: {
+    path: `${PREFIX}/providers/type/:type/with-models`,
+    responseSchema: ProvidersWithModelsResponseSchema
+  },
+  getProvidersByModelWithModels: {
+    path: `${PREFIX}/providers/by-model/:modelId/with-models`,
+    responseSchema: ProvidersWithModelsResponseSchema
+  },
+  // 写操作
+  createProvider: {
+    path: `${PREFIX}/providers`,
+    responseSchema: ProviderWithModelsResponseSchema
+  },
+  updateProvider: {
+    path: `${PREFIX}/providers/:id`,
+    responseSchema: ProviderWithModelsResponseSchema
+  },
+  deleteProvider: {
+    path: `${PREFIX}/providers/:id`,
+    responseSchema: ProviderResponseSchema
+  },
+  toggleProviderEnabled: {
+    path: `${PREFIX}/providers/:id/toggle`,
+    responseSchema: ProviderWithModelsResponseSchema
+  }
+} as const;
+
 /**
  * 获取所有提供商的路由处理器（基础版本）
  * @description 返回系统中所有可用的提供商列表，不包含关联模型
  */
 const getProvidersRouter = createRoute({
   method: "GET",
-  path: `${PREFIX}/providers`,
+  path: providerRoutes.getProviders.path,
   responseType: "json",
-  responseSchema: ProvidersResponseSchema,
+  responseSchema: providerRoutes.getProviders.responseSchema,
   summary: "获取所有提供商",
   description: "返回系统中所有可用的提供商列表，不包含关联模型",
   tags: ["Providers"],
@@ -56,9 +118,9 @@ const getProvidersRouter = createRoute({
  */
 const getProvidersWithModelsRouter = createRoute({
   method: "GET",
-  path: `${PREFIX}/providers/with-models`,
+  path: providerRoutes.getProvidersWithModels.path,
   responseType: "json",
-  responseSchema: ProvidersWithModelsResponseSchema,
+  responseSchema: providerRoutes.getProvidersWithModels.responseSchema,
   summary: "获取所有提供商（包含模型列表）",
   description: "返回系统中所有可用的提供商列表，包含关联的模型信息",
   tags: ["Providers"],
@@ -73,9 +135,9 @@ const getProvidersWithModelsRouter = createRoute({
  */
 const getEnabledProvidersRouter = createRoute({
   method: "GET",
-  path: `${PREFIX}/providers/enabled`,
+  path: providerRoutes.getEnabledProviders.path,
   responseType: "json",
-  responseSchema: ProvidersResponseSchema,
+  responseSchema: providerRoutes.getEnabledProviders.responseSchema,
   summary: "获取启用的提供商",
   description: "返回系统中所有启用状态的提供商列表，不包含关联模型",
   tags: ["Providers"],
@@ -90,9 +152,9 @@ const getEnabledProvidersRouter = createRoute({
  */
 const getEnabledProvidersWithModelsRouter = createRoute({
   method: "GET",
-  path: `${PREFIX}/providers/enabled/with-models`,
+  path: providerRoutes.getEnabledProvidersWithModels.path,
   responseType: "json",
-  responseSchema: ProvidersWithModelsResponseSchema,
+  responseSchema: providerRoutes.getEnabledProvidersWithModels.responseSchema,
   summary: "获取启用的提供商（包含模型列表）",
   description: "返回系统中所有启用状态的提供商列表，包含关联的模型",
   tags: ["Providers"],
@@ -107,9 +169,9 @@ const getEnabledProvidersWithModelsRouter = createRoute({
  */
 const getProviderByIdRouter = createRoute({
   method: "GET",
-  path: `${PREFIX}/providers/:id`,
+  path: providerRoutes.getProviderById.path,
   responseType: "json",
-  responseSchema: ProviderResponseSchema.nullable(),
+  responseSchema: providerRoutes.getProviderById.responseSchema,
   pathParamSchema: idParamSchema,
   summary: "根据ID获取单个提供商",
   description: "通过提供商ID获取特定提供商的详细信息，不包含关联模型",
@@ -131,9 +193,9 @@ const getProviderByIdRouter = createRoute({
  */
 const getProviderWithModelsByIdRouter = createRoute({
   method: "GET",
-  path: `${PREFIX}/providers/:id/with-models`,
+  path: providerRoutes.getProviderWithModelsById.path,
   responseType: "json",
-  responseSchema: ProviderWithModelsResponseSchema.nullable(),
+  responseSchema: providerRoutes.getProviderWithModelsById.responseSchema,
   pathParamSchema: idParamSchema,
   summary: "根据ID获取单个提供商（包含模型列表）",
   description: "通过提供商ID获取特定提供商的详细信息，包含关联的模型",
@@ -155,9 +217,9 @@ const getProviderWithModelsByIdRouter = createRoute({
  */
 const getProvidersByTypeRouter = createRoute({
   method: "GET",
-  path: `${PREFIX}/providers/type/:type`,
+  path: providerRoutes.getProvidersByType.path,
   responseType: "json",
-  responseSchema: ProvidersResponseSchema,
+  responseSchema: providerRoutes.getProvidersByType.responseSchema,
   pathParamSchema: typeParamSchema,
   summary: "根据类型获取提供商",
   description: "通过提供商类型获取对应的提供商列表，不包含关联模型",
@@ -173,9 +235,9 @@ const getProvidersByTypeRouter = createRoute({
  */
 const getProvidersByTypeWithModelsRouter = createRoute({
   method: "GET",
-  path: `${PREFIX}/providers/type/:type/with-models`,
+  path: providerRoutes.getProvidersByTypeWithModels.path,
   responseType: "json",
-  responseSchema: ProvidersWithModelsResponseSchema,
+  responseSchema: providerRoutes.getProvidersByTypeWithModels.responseSchema,
   pathParamSchema: typeParamSchema,
   summary: "根据类型获取提供商（包含模型列表）",
   description: "通过提供商类型获取对应的提供商列表，包含关联的模型",
@@ -191,10 +253,10 @@ const getProvidersByTypeWithModelsRouter = createRoute({
  */
 const createProviderRouter = createRoute({
   method: "POST",
-  path: `${PREFIX}/providers`,
+  path: providerRoutes.createProvider.path,
   responseType: "json",
   bodySchema: createProviderSchema,
-  responseSchema: ProviderWithModelsResponseSchema,
+  responseSchema: providerRoutes.createProvider.responseSchema,
   summary: "创建新提供商",
   description: "接收提供商数据并在系统中创建新的提供商",
   tags: ["Providers"],
@@ -230,11 +292,11 @@ const createProviderRouter = createRoute({
  */
 const updateProviderRouter = createRoute({
   method: "PUT",
-  path: `${PREFIX}/providers/:id`,
+  path: providerRoutes.updateProvider.path,
   responseType: "json",
   pathParamSchema: idParamSchema,
   bodySchema: updateProviderSchema,
-  responseSchema: ProviderWithModelsResponseSchema,
+  responseSchema: providerRoutes.updateProvider.responseSchema,
   summary: "更新提供商信息",
   description: "接收提供商ID和更新数据，修改指定提供商的信息",
   tags: ["Providers"],
@@ -296,10 +358,10 @@ const updateProviderRouter = createRoute({
  */
 const deleteProviderRouter = createRoute({
   method: "DELETE",
-  path: `${PREFIX}/providers/:id`,
+  path: providerRoutes.deleteProvider.path,
   responseType: "json",
   pathParamSchema: idParamSchema,
-  responseSchema: ProviderResponseSchema,
+  responseSchema: providerRoutes.deleteProvider.responseSchema,
   summary: "删除提供商",
   description: "根据提供商ID删除指定的提供商",
   tags: ["Providers"],
@@ -325,10 +387,10 @@ const deleteProviderRouter = createRoute({
  */
 const toggleProviderEnabledRouter = createRoute({
   method: "PUT",
-  path: `${PREFIX}/providers/:id/toggle`,
+  path: providerRoutes.toggleProviderEnabled.path,
   responseType: "json",
   pathParamSchema: idParamSchema,
-  responseSchema: ProviderWithModelsResponseSchema,
+  responseSchema: providerRoutes.toggleProviderEnabled.responseSchema,
   summary: "切换提供商启用状态",
   description: "切换提供商的启用/禁用状态",
   tags: ["Providers"],
@@ -353,9 +415,9 @@ const toggleProviderEnabledRouter = createRoute({
  */
 const getProvidersByModelRouter = createRoute({
   method: "GET",
-  path: `${PREFIX}/providers/by-model/:modelId`,
+  path: providerRoutes.getProvidersByModel.path,
   responseType: "json",
-  responseSchema: ProvidersResponseSchema,
+  responseSchema: providerRoutes.getProvidersByModel.responseSchema,
   pathParamSchema: modelIdParamSchema,
   summary: "根据模型ID获取提供商列表",
   description: "获取与指定模型关联的所有提供商，不包含关联模型",
@@ -371,9 +433,9 @@ const getProvidersByModelRouter = createRoute({
  */
 const getProvidersByModelWithModelsRouter = createRoute({
   method: "GET",
-  path: `${PREFIX}/providers/by-model/:modelId/with-models`,
+  path: providerRoutes.getProvidersByModelWithModels.path,
   responseType: "json",
-  responseSchema: ProvidersWithModelsResponseSchema,
+  responseSchema: providerRoutes.getProvidersByModelWithModels.responseSchema,
   pathParamSchema: modelIdParamSchema,
   summary: "根据模型ID获取提供商列表（包含模型列表）",
   description: "获取与指定模型关联的所有提供商，包含关联的模型",
@@ -405,66 +467,5 @@ const providersRouter = [
 ];
 
 // 导出 route 定义（path + responseSchema）供 client 使用
-export const providerRoutes = {
-  // 基础版本
-  getProviders: {
-    path: getProvidersRouter.path,
-    responseSchema: ProvidersResponseSchema
-  },
-  getEnabledProviders: {
-    path: getEnabledProvidersRouter.path,
-    responseSchema: ProvidersResponseSchema
-  },
-  getProviderById: {
-    path: getProviderByIdRouter.path,
-    responseSchema: ProviderResponseSchema.nullable()
-  },
-  getProvidersByType: {
-    path: getProvidersByTypeRouter.path,
-    responseSchema: ProvidersResponseSchema
-  },
-  getProvidersByModel: {
-    path: getProvidersByModelRouter.path,
-    responseSchema: ProvidersResponseSchema
-  },
-  // WithModels 版本
-  getProvidersWithModels: {
-    path: getProvidersWithModelsRouter.path,
-    responseSchema: ProvidersWithModelsResponseSchema
-  },
-  getEnabledProvidersWithModels: {
-    path: getEnabledProvidersWithModelsRouter.path,
-    responseSchema: ProvidersWithModelsResponseSchema
-  },
-  getProviderWithModelsById: {
-    path: getProviderWithModelsByIdRouter.path,
-    responseSchema: ProviderWithModelsResponseSchema.nullable()
-  },
-  getProvidersByTypeWithModels: {
-    path: getProvidersByTypeWithModelsRouter.path,
-    responseSchema: ProvidersWithModelsResponseSchema
-  },
-  getProvidersByModelWithModels: {
-    path: getProvidersByModelWithModelsRouter.path,
-    responseSchema: ProvidersWithModelsResponseSchema
-  },
-  // 写操作
-  createProvider: {
-    path: createProviderRouter.path,
-    responseSchema: ProviderWithModelsResponseSchema
-  },
-  updateProvider: {
-    path: updateProviderRouter.path,
-    responseSchema: ProviderWithModelsResponseSchema
-  },
-  deleteProvider: {
-    path: deleteProviderRouter.path,
-    responseSchema: ProviderResponseSchema
-  },
-  toggleProviderEnabled: {
-    path: toggleProviderEnabledRouter.path,
-    responseSchema: ProviderWithModelsResponseSchema
-  }
-} as const;
 
 export { providersRouter };

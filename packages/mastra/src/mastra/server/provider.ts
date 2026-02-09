@@ -4,7 +4,6 @@ import { ModelSchema, ProviderSchema } from "generated/schemas/models/index";
 import { z } from "zod";
 
 import { prisma } from "./index";
-import type { AsyncReturnType } from "./type";
 
 /**
  * 提供商相关的zod校验schemas
@@ -55,7 +54,7 @@ export const ProviderWithModelsResponseSchema = ProviderSchema.pick({
   createdAt: true,
   updatedAt: true
 }).extend({
-  models: z.array(ModelSchema),
+  models: z.array(ModelSchema.partial()),
   _count: z
     .object({
       models: z.number()
@@ -139,7 +138,7 @@ const idParamSchema = z.object({
 });
 
 const typeParamSchema = z.object({
-  type: z.nativeEnum(ProviderType, { message: "无效的提供商类型" })
+  type: z.enum(ProviderType, { message: "无效的提供商类型" })
 });
 
 // zod类型推导
@@ -184,11 +183,9 @@ const getProvidersWithModels = async () => {
   });
 
   // 整理模型信息：将关联表数据展开为模型数组
-  // 保留原始关联表数据作为 _modelRelations（包含 group 等关联字段）
   return providers.map((provider) => ({
     ...provider,
-    models: provider.models.map((m) => m.model),
-    _modelRelations: provider.models
+    models: provider.models.map((m) => m.model)
   }));
 };
 
@@ -545,46 +542,6 @@ const toggleProviderEnabled = async (id: string) => {
     models: updatedProvider.models.map((m) => m.model)
   };
 };
-
-/**
- * Prisma 数据库操作返回类型
- */
-
-// 基础类型（不包含关联模型数据）
-export type ProviderResult = AsyncReturnType<typeof getProviderById>;
-export type ProvidersResult = AsyncReturnType<typeof getProviders>;
-export type EnabledProvidersResult = AsyncReturnType<
-  typeof getEnabledProviders
->;
-export type ProvidersByTypeResult = AsyncReturnType<typeof getProvidersByType>;
-export type ProvidersByModelResult = AsyncReturnType<
-  typeof getProvidersByModel
->;
-
-// 带模型列表的类型（models 字段为展开的 Model 数组）
-export type ProviderWithModelsResult = AsyncReturnType<
-  typeof getProviderWithModelsById
->;
-export type ProvidersWithModelsResult = AsyncReturnType<
-  typeof getProvidersWithModels
->;
-export type EnabledProvidersWithModelsResult = AsyncReturnType<
-  typeof getEnabledProvidersWithModels
->;
-export type ProvidersByTypeWithModelsResult = AsyncReturnType<
-  typeof getProvidersByTypeWithModels
->;
-export type ProvidersByModelWithModelsResult = AsyncReturnType<
-  typeof getProvidersByModelWithModels
->;
-
-// 写操作返回类型（默认返回带 models 的数据）
-export type ProviderCreateResult = AsyncReturnType<typeof createProvider>;
-export type ProviderUpdateResult = AsyncReturnType<typeof updateProvider>;
-export type ProviderDeleteResult = AsyncReturnType<typeof deleteProvider>;
-export type ProviderToggleResult = AsyncReturnType<
-  typeof toggleProviderEnabled
->;
 
 export {
   // 基础查询函数（不包含关联模型）

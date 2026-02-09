@@ -18,7 +18,7 @@
     "types": ["node"],
     "lib": ["ES2023", "DOM"],
     "paths": {
-      "@generatedPrisma/*": ["./generated/prisma/*","./generated/schemas/models/index.ts"]
+      "generated/*": ["./generated/*"]
     }
   },
   "include": [
