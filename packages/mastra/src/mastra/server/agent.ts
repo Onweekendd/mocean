@@ -91,9 +91,11 @@ const updateAgentSchema = AgentSchema.pick({
   webSearchProviderId: true,
   enableGenerateImage: true,
   knowledgeRecognition: true
-}).partial().extend({
-  groupJson: z.string().nullable().optional() // 存储 String[]
-});
+})
+  .partial()
+  .extend({
+    groupJson: z.string().nullable().optional() // 存储 String[]
+  });
 
 const idParamSchema = z.object({
   id: z.string().min(1, "代理ID不能为空")
