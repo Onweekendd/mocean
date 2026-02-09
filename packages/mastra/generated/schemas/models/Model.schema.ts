@@ -1,7 +1,10 @@
+// @ts-nocheck - Circular imports resolved with runtime require()
 import * as z from 'zod';
-import { AssistantSchema } from './Assistant.schema';
+// Circular import removed: // Circular import removed: import { AssistantSchema } from './Assistant.schema';
+
 import { AssistantSettingsSchema } from './AssistantSettings.schema';
-import { KnowledgeBaseSchema } from './KnowledgeBase.schema';
+// Circular import removed: // Circular import removed: import { KnowledgeBaseSchema } from './KnowledgeBase.schema';
+
 import { TopicSchema } from './Topic.schema';
 
 export const ModelSchema = z.object({
@@ -20,10 +23,19 @@ export const ModelSchema = z.object({
   supportsEmbedding: z.boolean(),
   inputPricePerMillion: z.number().nullish(),
   outputPricePerMillion: z.number().nullish(),
-  assistants: z.array(z.lazy(() => AssistantSchema)),
-  defaultForAssistants: z.array(z.lazy(() => AssistantSchema)),
+  assistants: z.array(z.lazy(() => {
+      const mod = require('./Assistant.schema');
+      return mod.AssistantSchema;
+    })),
+  defaultForAssistants: z.array(z.lazy(() => {
+      const mod = require('./Assistant.schema');
+      return mod.AssistantSchema;
+    })),
   assistantSettings: z.array(z.lazy(() => AssistantSettingsSchema)),
-  rerankFor: z.array(z.lazy(() => KnowledgeBaseSchema)),
+  rerankFor: z.array(z.lazy(() => {
+      const mod = require('./KnowledgeBase.schema');
+      return mod.KnowledgeBaseSchema;
+    })),
   Topic: z.array(z.lazy(() => TopicSchema)),
 });
 

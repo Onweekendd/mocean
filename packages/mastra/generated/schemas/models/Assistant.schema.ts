@@ -1,8 +1,11 @@
+// @ts-nocheck - Circular imports resolved with runtime require()
 import * as z from 'zod';
 import { KnowledgeRecognitionSchema } from '../enums/KnowledgeRecognition.schema';
 import { AssistantSettingsSchema } from './AssistantSettings.schema';
-import { KnowledgeBaseSchema } from './KnowledgeBase.schema';
-import { ModelSchema } from './Model.schema';
+// Circular import removed: // Circular import removed: import { KnowledgeBaseSchema } from './KnowledgeBase.schema';
+
+// Circular import removed: // Circular import removed: import { ModelSchema } from './Model.schema';
+
 import { TopicSchema } from './Topic.schema';
 
 export const AssistantSchema = z.object({
@@ -18,11 +21,17 @@ export const AssistantSchema = z.object({
   knowledgeRecognition: KnowledgeRecognitionSchema.nullish(),
   modelId: z.string().nullish(),
   providerId: z.string().nullish(),
-  defaultModel: z.lazy(() => ModelSchema).nullish(),
+  defaultModel: z.lazy(() => {
+      const mod = require('./Model.schema');
+      return mod.ModelSchema;
+    }).nullish(),
   defaultModelId: z.string().nullish(),
   settings: z.lazy(() => AssistantSettingsSchema).nullish(),
   topics: z.array(z.lazy(() => TopicSchema)),
-  knowledgeBases: z.array(z.lazy(() => KnowledgeBaseSchema)),
+  knowledgeBases: z.array(z.lazy(() => {
+      const mod = require('./KnowledgeBase.schema');
+      return mod.KnowledgeBaseSchema;
+    })),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
