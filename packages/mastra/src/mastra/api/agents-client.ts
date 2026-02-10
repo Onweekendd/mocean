@@ -1,8 +1,8 @@
 /// <reference lib="dom" />
 import type { z } from "zod";
 
-import { agentRoutes } from "../router/agents";
-import type { CreateAgentInput, UpdateAgentInput } from "../server/agent";
+import { agentRoutes } from "../router/type";
+import type { CreateAgentInput, UpdateAgentInput } from "../schema/agent";
 import type { ApiClientConfig, ApiResponse } from "./base-client";
 import { BaseApiClient } from "./base-client";
 

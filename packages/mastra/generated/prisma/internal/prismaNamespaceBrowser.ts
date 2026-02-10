@@ -69,9 +69,7 @@ export const ModelName = {
   MCPResource: 'MCPResource',
   MCPConfigSample: 'MCPConfigSample',
   QuickPhrase: 'QuickPhrase',
-  Group: 'Group',
-  ModelGroup: 'ModelGroup',
-  ModelProvider: 'ModelProvider'
+  Group: 'Group'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -195,7 +193,10 @@ export const ModelScalarFieldEnum = {
   supportsVideo: 'supportsVideo',
   supportsEmbedding: 'supportsEmbedding',
   inputPricePerMillion: 'inputPricePerMillion',
-  outputPricePerMillion: 'outputPricePerMillion'
+  outputPricePerMillion: 'outputPricePerMillion',
+  groupId: 'groupId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type ModelScalarFieldEnum = (typeof ModelScalarFieldEnum)[keyof typeof ModelScalarFieldEnum]
@@ -387,27 +388,6 @@ export const GroupScalarFieldEnum = {
 } as const
 
 export type GroupScalarFieldEnum = (typeof GroupScalarFieldEnum)[keyof typeof GroupScalarFieldEnum]
-
-
-export const ModelGroupScalarFieldEnum = {
-  modelId: 'modelId',
-  groupId: 'groupId',
-  providerId: 'providerId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type ModelGroupScalarFieldEnum = (typeof ModelGroupScalarFieldEnum)[keyof typeof ModelGroupScalarFieldEnum]
-
-
-export const ModelProviderScalarFieldEnum = {
-  modelId: 'modelId',
-  providerId: 'providerId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type ModelProviderScalarFieldEnum = (typeof ModelProviderScalarFieldEnum)[keyof typeof ModelProviderScalarFieldEnum]
 
 
 export const SortOrder = {

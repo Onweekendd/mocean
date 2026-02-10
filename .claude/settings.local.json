@@ -35,7 +35,8 @@
       "Bash(git commit -m \"$\\(cat <<''EOF''\nfix\\(schemas\\): 修复 Model/Assistant/KnowledgeBase 的循环引用\n\n- 移除静态 import 语句\n- 添加 @ts-nocheck 禁用类型检查\n- 在 z.lazy\\(\\) 中使用动态 require\\(\\) 加载依赖\n- 保留关联字段类型定义\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(git commit:*)",
       "Bash(npm run bundle:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(tsx scripts/fix-apiClient.ts:*)"
     ],
     "deny": [],
     "ask": []

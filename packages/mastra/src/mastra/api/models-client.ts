@@ -1,8 +1,8 @@
 /// <reference lib="dom" />
 import type { z } from "zod";
 
-import { modelRoutes } from "../router/models";
-import type { CreateModelInput, UpdateModelInput } from "../server/model";
+import { modelRoutes } from "../router/type";
+import type { CreateModelInput, UpdateModelInput } from "../schema/model";
 import type { ApiClientConfig, ApiResponse } from "./base-client";
 import { BaseApiClient } from "./base-client";
 

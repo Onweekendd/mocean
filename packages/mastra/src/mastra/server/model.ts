@@ -1,5 +1,9 @@
 import type { ModelGroup, Prisma, Provider } from "generated/prisma/client";
-import { ModelGroupSchema, ModelSchema, ProviderSchema } from "generated/schemas/models";
+import {
+  ModelGroupSchema,
+  ModelSchema,
+  ProviderSchema
+} from "generated/schemas/models";
 import { z } from "zod";
 
 import { prisma } from "./index";
@@ -90,9 +94,7 @@ const createModelSchema = ModelSchema.pick({
   supportsVideo: z.boolean().optional().default(false),
   supportsEmbedding: z.boolean().optional().default(false),
   // 扩展 providers 字段（用于 modelGroups 关联）
-  providers: z.array(ProviderSchema.extend({
-    groups:z.array(ModelGroupSchema)
-  })).min(1, "至少需要一个提供商")
+  providers: ProviderSchema.partial()
 });
 
 const updateModelSchema = ModelSchema.pick({
@@ -114,9 +116,7 @@ const updateModelSchema = ModelSchema.pick({
   .partial()
   .extend({
     // 扩展 providers 字段
-    providers: z.array(ProviderSchema.extend({
-      groups:z.array(ModelGroupSchema)
-    })).min(1, "至少需要一个提供商")
+    provider: ProviderSchema.partial()
   });
 
 const idParamSchema = z.object({
@@ -137,12 +137,26 @@ const modelProviderRelationSchema = z.object({
   groupId: z.string().min(1, "分组ID不能为空")
 });
 
+// 批量创建响应 Schema
+export const CreateManyModelsResponseSchema = z.object({
+  count: z.number()
+});
+
+// 模型提供商关联响应 Schema
+export const ModelProviderRelationResponseSchema = z.object({
+  modelId: z.string(),
+  providerId: z.string(),
+  groupId: z.string(),
+  model: ModelResponseSchema,
+  provider: z.any(),
+  group: z.any()
+});
+
 // zod类型推导
 
 export type CreateModelInput = z.infer<typeof createModelSchema>;
 export type UpdateModelInput = z.infer<typeof updateModelSchema>;
 export type ModelProviderRelation = z.infer<typeof modelProviderRelationSchema>;
-
 
 /**
  * 获取所有模型（基础版本，不包含关联信息）
@@ -169,8 +183,11 @@ const getModelsWithProviders = async () => {
     include: {
       modelGroups: {
         include: {
-          provider: true,
-          group: true
+          group: {
+            include: {
+              provider: true
+            }
+          }
         }
       },
       assistants: true,
@@ -187,12 +204,12 @@ const getModelsWithProviders = async () => {
   // 整理提供商信息
   return models.map((model) => {
     type ModelWithGroups = typeof model & {
-      modelGroups: Array<{ provider: Provider; group: ModelGroup }>;
+      modelGroups: Array<{ group: { provider: Provider } }>;
     };
     return {
       ...model,
       providers: (model as ModelWithGroups).modelGroups.map(
-        (mg) => mg.provider
+        (mg) => mg.group.provider
       ),
       _modelRelations: (model as ModelWithGroups).modelGroups
     };
@@ -226,10 +243,10 @@ const getModelWithProvidersById = async (id: string) => {
     include: {
       modelGroups: {
         include: {
-          provider: true,
           group: true
         }
       },
+      provider: true,
       assistants: true,
       defaultForAssistants: true,
       knowledgeBases: true,
@@ -242,12 +259,11 @@ const getModelWithProvidersById = async (id: string) => {
 
   // 整理提供商信息
   type ModelWithGroups = typeof model & {
-    modelGroups: Array<{ provider: Provider; group: ModelGroup }>;
+    modelGroups: Array<{ group: { provider: Provider } }>;
   };
   return {
     ...model,
-    providers: (model as ModelWithGroups).modelGroups.map((mg) => mg.provider),
-    _modelRelations: (model as ModelWithGroups).modelGroups
+    groups: (model as ModelWithGroups).modelGroups.map((mg) => mg.group)
   };
 };
 
@@ -260,9 +276,7 @@ const getModelWithProvidersById = async (id: string) => {
 const getModelsByProvider = async (providerId: string) => {
   const models = await prisma.model.findMany({
     where: {
-      providers: {
-        some: { providerId }
-      }
+      providerId
     },
     orderBy: {
       name: "asc"
@@ -281,17 +295,18 @@ const getModelsByProvider = async (providerId: string) => {
 const getModelsByProviderWithProviders = async (providerId: string) => {
   const models = await prisma.model.findMany({
     where: {
-      providers: {
-        some: { providerId }
-      }
+      providerId
     },
     // 查询分组中间表时
     // 还会携带供应商
     include: {
       modelGroups: {
         include: {
-          provider: true,
-          group: true
+          group: {
+            include: {
+              provider: true
+            }
+          }
         }
       }
     },
@@ -303,12 +318,8 @@ const getModelsByProviderWithProviders = async (providerId: string) => {
   return models.map((model) => {
     return {
       ...model,
-      groups: model.modelGroups.filter(
-        (mg) => mg.providerId === providerId
-      ),
-      providers: model.modelGroups
-        .filter((mg) => mg.providerId === providerId)
-        .map((mg) => mg.provider)
+      groups: model.modelGroups.map((mg) => mg.group),
+      providers: model.modelGroups.map((mg) => mg.group.provider)
     };
   });
 };
@@ -442,9 +453,11 @@ const updateModel = async (id: string, model: UpdateModelInput) => {
       ...(providerRelations && {
         modelGroups: {
           deleteMany: {},
-          create: providerRelations.map((p) => ({
-            providerId: p.id
-          }))
+          create: providerRelations.flatMap((p) =>
+            (p.groups || []).map((g) => ({
+              groupId: typeof g === "string" ? g : g.id
+            }))
+          )
         }
       })
     } as Prisma.ModelUpdateInput,
@@ -555,7 +568,7 @@ const createManyModels = async (models: CreateModelInput[]) => {
         data: providerRelations.map((p) => ({
           modelId: createdModel.id,
           providerId: p.id,
-          groupId: p.groups.find((g) => g. === p.id)?.id || ""
+          groupId: p.groups?.[0]?.id || ""
         }))
       });
 

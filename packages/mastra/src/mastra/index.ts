@@ -3,19 +3,20 @@ import { LibSQLStore } from "@mastra/libsql";
 import { PinoLogger } from "@mastra/loggers";
 
 import { DynamicAgent } from "./agents/dynamicAgent";
-import { apiRoutes } from "./router";
 
 export const mastra = new Mastra({
   agents: {
     DynamicAgent
   },
 
-  server: { timeout: 30000, apiRoutes },
+  server: { timeout: 30000 },
 
   storage: new LibSQLStore({
     id: "mastra-storage",
     url: ":memory:"
   }),
+
+  workflows: {},
 
   logger: new PinoLogger({
     name: "Mastra",

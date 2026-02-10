@@ -1,49 +1,21 @@
 import { createRoute } from "@mastra/server/server-adapter";
 import { HTTPException } from "hono/http-exception";
 
-import { PREFIX } from "../api/base-client";
 import {
-  AgentResponseSchema,
-  AgentWithSettingsResponseSchema,
-  AgentsResponseSchema,
-  createAgent,
   createAgentSchema,
+  groupParamSchema,
+  idParamSchema,
+  updateAgentSchema
+} from "../schema/agent";
+import {
+  createAgent,
   deleteAgent,
   getAgentByGroup,
   getAgentById,
   getAgents,
-  groupParamSchema,
-  idParamSchema,
-  updateAgent,
-  updateAgentSchema
+  updateAgent
 } from "../server/agent";
-
-export const agentRoutes = {
-  getAgents: {
-    path: `${PREFIX}/agents`,
-    responseSchema: AgentsResponseSchema
-  },
-  getAgentById: {
-    path: `${PREFIX}/agents/:id`,
-    responseSchema: AgentWithSettingsResponseSchema.nullable()
-  },
-  createAgent: {
-    path: `${PREFIX}/agents`,
-    responseSchema: AgentWithSettingsResponseSchema
-  },
-  updateAgent: {
-    path: `${PREFIX}/agents/:id`,
-    responseSchema: AgentWithSettingsResponseSchema
-  },
-  deleteAgent: {
-    path: `${PREFIX}/agents/:id`,
-    responseSchema: AgentResponseSchema
-  },
-  getAgentByGroup: {
-    path: `${PREFIX}/agents/group/:group`,
-    responseSchema: AgentsResponseSchema.nullable()
-  }
-} as const;
+import { agentRoutes } from "./type";
 
 /**
  * 获取所有智能体的路由处理器

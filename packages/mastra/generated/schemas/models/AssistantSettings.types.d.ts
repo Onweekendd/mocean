@@ -7,11 +7,9 @@ import type { TopicSchema } from './Topic.schema';
 import type { MCPAssistantServerSchema } from './MCPAssistantServer.schema';
 import type { MCPServerSchema } from './MCPServer.schema';
 import type { MCPAgentServerSchema } from './MCPAgentServer.schema';
-import type { ModelGroupSchema } from './ModelGroup.schema';
 import type { GroupSchema } from './Group.schema';
 import type { ProviderSchema } from './Provider.schema';
 import type { TopicKnowledgeBaseSchema } from './TopicKnowledgeBase.schema';
-import type { ModelProviderSchema } from './ModelProvider.schema';
 
 // Type extensions for AssistantSettings with relations
 export interface AssistantSettingsWithRelations {

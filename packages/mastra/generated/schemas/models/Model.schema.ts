@@ -2,9 +2,8 @@
 import * as z from 'zod';
 // Circular import removed: import { AssistantSchema } from './Assistant.schema';
 // Circular import removed: import { AssistantSettingsSchema } from './AssistantSettings.schema';
+// Circular import removed: import { GroupSchema } from './Group.schema';
 // Circular import removed: import { KnowledgeBaseSchema } from './KnowledgeBase.schema';
-// Circular import removed: import { ModelGroupSchema } from './ModelGroup.schema';
-// Circular import removed: import { ModelProviderSchema } from './ModelProvider.schema';
 // Circular import removed: import { TopicSchema } from './Topic.schema';
 
 export const ModelSchema = z.object({
@@ -23,10 +22,11 @@ export const ModelSchema = z.object({
   supportsEmbedding: z.boolean(),
   inputPricePerMillion: z.number().nullish(),
   outputPricePerMillion: z.number().nullish(),
-  modelGroups: z.array(z.lazy(() => {
-      const mod = require('./ModelGroup.schema');
-      return mod.ModelGroupSchema;
-    })),
+  groupId: z.string(),
+  group: z.lazy(() => {
+      const mod = require('./Group.schema');
+      return mod.GroupSchema;
+    }),
   assistants: z.array(z.lazy(() => {
       const mod = require('./Assistant.schema');
       return mod.AssistantSchema;
@@ -51,10 +51,8 @@ export const ModelSchema = z.object({
       const mod = require('./Topic.schema');
       return mod.TopicSchema;
     })),
-  providers: z.array(z.lazy(() => {
-      const mod = require('./ModelProvider.schema');
-      return mod.ModelProviderSchema;
-    })),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });
 
 export type ModelType = z.infer<typeof ModelSchema>;

@@ -191,7 +191,7 @@ export type GroupWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Group"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Group"> | Date | string
   provider?: Prisma.XOR<Prisma.ProviderScalarRelationFilter, Prisma.ProviderWhereInput>
-  models?: Prisma.ModelGroupListRelationFilter
+  models?: Prisma.ModelListRelationFilter
 }
 
 export type GroupOrderByWithRelationInput = {
@@ -202,7 +202,7 @@ export type GroupOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   provider?: Prisma.ProviderOrderByWithRelationInput
-  models?: Prisma.ModelGroupOrderByRelationAggregateInput
+  models?: Prisma.ModelOrderByRelationAggregateInput
 }
 
 export type GroupWhereUniqueInput = Prisma.AtLeast<{
@@ -217,7 +217,7 @@ export type GroupWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Group"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Group"> | Date | string
   provider?: Prisma.XOR<Prisma.ProviderScalarRelationFilter, Prisma.ProviderWhereInput>
-  models?: Prisma.ModelGroupListRelationFilter
+  models?: Prisma.ModelListRelationFilter
 }, "id" | "providerId_name">
 
 export type GroupOrderByWithAggregationInput = {
@@ -251,7 +251,7 @@ export type GroupCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   provider: Prisma.ProviderCreateNestedOneWithoutGroupsInput
-  models?: Prisma.ModelGroupCreateNestedManyWithoutGroupInput
+  models?: Prisma.ModelCreateNestedManyWithoutGroupInput
 }
 
 export type GroupUncheckedCreateInput = {
@@ -261,7 +261,7 @@ export type GroupUncheckedCreateInput = {
   isDefault?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  models?: Prisma.ModelGroupUncheckedCreateNestedManyWithoutGroupInput
+  models?: Prisma.ModelUncheckedCreateNestedManyWithoutGroupInput
 }
 
 export type GroupUpdateInput = {
@@ -271,7 +271,7 @@ export type GroupUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   provider?: Prisma.ProviderUpdateOneRequiredWithoutGroupsNestedInput
-  models?: Prisma.ModelGroupUpdateManyWithoutGroupNestedInput
+  models?: Prisma.ModelUpdateManyWithoutGroupNestedInput
 }
 
 export type GroupUncheckedUpdateInput = {
@@ -281,7 +281,7 @@ export type GroupUncheckedUpdateInput = {
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  models?: Prisma.ModelGroupUncheckedUpdateManyWithoutGroupNestedInput
+  models?: Prisma.ModelUncheckedUpdateManyWithoutGroupNestedInput
 }
 
 export type GroupCreateManyInput = {
@@ -320,6 +320,11 @@ export type GroupOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type GroupScalarRelationFilter = {
+  is?: Prisma.GroupWhereInput
+  isNot?: Prisma.GroupWhereInput
+}
+
 export type GroupProviderIdNameCompoundUniqueInput = {
   providerId: string
   name: string
@@ -350,11 +355,6 @@ export type GroupMinOrderByAggregateInput = {
   isDefault?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-}
-
-export type GroupScalarRelationFilter = {
-  is?: Prisma.GroupWhereInput
-  isNot?: Prisma.GroupWhereInput
 }
 
 export type GroupCreateNestedManyWithoutProviderInput = {
@@ -419,7 +419,7 @@ export type GroupCreateWithoutProviderInput = {
   isDefault?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  models?: Prisma.ModelGroupCreateNestedManyWithoutGroupInput
+  models?: Prisma.ModelCreateNestedManyWithoutGroupInput
 }
 
 export type GroupUncheckedCreateWithoutProviderInput = {
@@ -428,7 +428,7 @@ export type GroupUncheckedCreateWithoutProviderInput = {
   isDefault?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  models?: Prisma.ModelGroupUncheckedCreateNestedManyWithoutGroupInput
+  models?: Prisma.ModelUncheckedCreateNestedManyWithoutGroupInput
 }
 
 export type GroupCreateOrConnectWithoutProviderInput = {
@@ -534,7 +534,7 @@ export type GroupUpdateWithoutProviderInput = {
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  models?: Prisma.ModelGroupUpdateManyWithoutGroupNestedInput
+  models?: Prisma.ModelUpdateManyWithoutGroupNestedInput
 }
 
 export type GroupUncheckedUpdateWithoutProviderInput = {
@@ -543,7 +543,7 @@ export type GroupUncheckedUpdateWithoutProviderInput = {
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  models?: Prisma.ModelGroupUncheckedUpdateManyWithoutGroupNestedInput
+  models?: Prisma.ModelUncheckedUpdateManyWithoutGroupNestedInput
 }
 
 export type GroupUncheckedUpdateManyWithoutProviderInput = {
@@ -581,7 +581,7 @@ export type GroupCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extens
  * GroupCountOutputType without action
  */
 export type GroupCountOutputTypeCountModelsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ModelGroupWhereInput
+  where?: Prisma.ModelWhereInput
 }
 
 
@@ -643,7 +643,7 @@ export type $GroupPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name: "Group"
   objects: {
     provider: Prisma.$ProviderPayload<ExtArgs>
-    models: Prisma.$ModelGroupPayload<ExtArgs>[]
+    models: Prisma.$ModelPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1047,7 +1047,7 @@ readonly fields: GroupFieldRefs;
 export interface Prisma__GroupClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   provider<T extends Prisma.ProviderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProviderDefaultArgs<ExtArgs>>): Prisma.Prisma__ProviderClient<runtime.Types.Result.GetResult<Prisma.$ProviderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  models<T extends Prisma.Group$modelsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Group$modelsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ModelGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  models<T extends Prisma.Group$modelsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Group$modelsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ModelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1481,23 +1481,23 @@ export type GroupDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
  */
 export type Group$modelsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ModelGroup
+   * Select specific fields to fetch from the Model
    */
-  select?: Prisma.ModelGroupSelect<ExtArgs> | null
+  select?: Prisma.ModelSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ModelGroup
+   * Omit specific fields from the Model
    */
-  omit?: Prisma.ModelGroupOmit<ExtArgs> | null
+  omit?: Prisma.ModelOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ModelGroupInclude<ExtArgs> | null
-  where?: Prisma.ModelGroupWhereInput
-  orderBy?: Prisma.ModelGroupOrderByWithRelationInput | Prisma.ModelGroupOrderByWithRelationInput[]
-  cursor?: Prisma.ModelGroupWhereUniqueInput
+  include?: Prisma.ModelInclude<ExtArgs> | null
+  where?: Prisma.ModelWhereInput
+  orderBy?: Prisma.ModelOrderByWithRelationInput | Prisma.ModelOrderByWithRelationInput[]
+  cursor?: Prisma.ModelWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.ModelGroupScalarFieldEnum | Prisma.ModelGroupScalarFieldEnum[]
+  distinct?: Prisma.ModelScalarFieldEnum | Prisma.ModelScalarFieldEnum[]
 }
 
 /**

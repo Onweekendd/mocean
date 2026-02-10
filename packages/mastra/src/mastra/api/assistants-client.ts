@@ -1,11 +1,11 @@
 /// <reference lib="dom" />
 import type { z } from "zod";
 
-import { assistantRoutes } from "../router/assistants";
+import { assistantRoutes } from "../router/type";
 import type {
   CreateAssistantInput,
   UpdateAssistantInput
-} from "../server/assistant";
+} from "../schema/assistant";
 import type { ApiClientConfig, ApiResponse } from "./base-client";
 import { BaseApiClient } from "./base-client";
 

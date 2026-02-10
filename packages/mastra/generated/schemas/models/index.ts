@@ -22,5 +22,3 @@ export { MCPResourceSchema } from './MCPResource.schema';
 export { MCPConfigSampleSchema } from './MCPConfigSample.schema';
 export { QuickPhraseSchema } from './QuickPhrase.schema';
 export { GroupSchema } from './Group.schema';
-export { ModelGroupSchema } from './ModelGroup.schema';
-export { ModelProviderSchema } from './ModelProvider.schema';

@@ -38,7 +38,7 @@ export abstract class BaseApiClient {
   protected defaultHeaders: Record<string, string>;
 
   constructor(config: ApiClientConfig = {}) {
-    this.baseUrl = config.baseUrl || API_URL;
+    this.baseUrl = config.baseUrl || BASE_URL;
     this.defaultHeaders = {
       "Content-Type": "application/json",
       ...config.headers

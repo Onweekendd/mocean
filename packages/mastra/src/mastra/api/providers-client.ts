@@ -2,11 +2,11 @@
 import type { ProviderType } from "generated/prisma/enums";
 import type { z } from "zod";
 
-import { providerRoutes } from "../router/providers";
+import { providerRoutes } from "../router/type";
 import type {
   CreateProviderInput,
   UpdateProviderInput
-} from "../server/provider";
+} from "../schema/provider";
 import type { ApiClientConfig, ApiResponse } from "./base-client";
 import { BaseApiClient } from "./base-client";
 

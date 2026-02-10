@@ -3,43 +3,22 @@ import { HTTPException } from "hono/http-exception";
 
 import { PREFIX } from "../api/base-client";
 import {
-  // Response Schemas
   GroupResponseSchema,
   GroupWithModelsResponseSchema,
   GroupsResponseSchema,
-  createGroup,
   createGroupSchema,
+  idParamSchema,
+  providerParamSchema,
+  updateGroupSchema
+} from "../schema/group";
+import {
+  createGroup,
   deleteGroup,
   getGroupById,
   getGroupsByProvider,
-  idParamSchema,
-  providerParamSchema,
-  updateGroup,
-  updateGroupSchema
+  updateGroup
 } from "../server/group";
-
-export const groupRoutes = {
-  getGroupsByProvider: {
-    path: `${PREFIX}/groups/provider/:providerId`,
-    responseSchema: GroupsResponseSchema
-  },
-  getGroupById: {
-    path: `${PREFIX}/groups/:id`,
-    responseSchema: GroupWithModelsResponseSchema.nullable()
-  },
-  createGroup: {
-    path: `${PREFIX}/groups`,
-    responseSchema: GroupWithModelsResponseSchema
-  },
-  updateGroup: {
-    path: `${PREFIX}/groups/:id`,
-    responseSchema: GroupWithModelsResponseSchema
-  },
-  deleteGroup: {
-    path: `${PREFIX}/groups/:id`,
-    responseSchema: GroupResponseSchema
-  }
-} as const;
+import { groupRoutes } from "./type";
 
 /**
  * 获取指定提供商的所有分组的路由处理器

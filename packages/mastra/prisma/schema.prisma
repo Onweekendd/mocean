@@ -142,9 +142,8 @@ model Provider {
   modelCount Int?         @default(0) // 模型数量统计
   docsUrl    String? // 文档URL
 
-  // 一对多关系：一个供应商有多个模型、多个分组
+  // 一对多关系：一个供应商有多个分组（通过分组间接关联模型）
   groups      Group[]
-  models      Model[]
 
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
@@ -262,12 +261,9 @@ model Model {
   inputPricePerMillion  Float? // 输入价格（每百万token）
   outputPricePerMillion Float? // 输出价格（每百万token）
 
-  // 关系：模型属于一个供应商
-  providerId String
-  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
-
-  // 关系：模型可以在多个分组中
-  modelGroups ModelGroup[]
+  // 关系：模型属于一个分组（多对一）
+  groupId String
+  group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
   assistants           Assistant[]         @relation("AssistantModel")
   defaultForAssistants Assistant[]         @relation("AssistantDefaultModel")
@@ -275,6 +271,9 @@ model Model {
   assistantSettings    AssistantSettings[] @relation("SettingsDefaultModel")
   rerankFor            KnowledgeBase[]     @relation("RerankModel")
   Topic                Topic[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // 助手设置
@@ -493,26 +492,12 @@ model Group {
 
   // 关系：分组属于一个供应商
   provider Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
-  // 关系：分组可以有多个模型
-  models   ModelGroup[]
+  // 关系：分组包含多个模型（一对多）
+  models   Model[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([providerId, name])
   @@index([providerId])
-}
-
-// 模型-分组关系表（简化版）
-model ModelGroup {
-  model   Model @relation(fields: [modelId], references: [id], onDelete: Cascade)
-  modelId String
-  group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  groupId String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@id([modelId, groupId])
-  @@index([groupId])
 }

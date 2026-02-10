@@ -5,11 +5,16 @@ import { z } from "zod";
 import { PREFIX } from "../api/base-client";
 import {
   ProviderResponseSchema,
-  ProviderWithModelsResponseSchema, // Response Schemas
+  ProviderWithModelsResponseSchema,
   ProvidersResponseSchema,
   ProvidersWithModelsResponseSchema,
-  createProvider,
   createProviderSchema,
+  idParamSchema,
+  typeParamSchema,
+  updateProviderSchema
+} from "../schema/provider";
+import {
+  createProvider,
   deleteProvider,
   getEnabledProviders,
   getEnabledProvidersWithModels,
@@ -21,79 +26,16 @@ import {
   getProvidersByType,
   getProvidersByTypeWithModels,
   getProvidersWithModels,
-  idParamSchema,
   toggleProviderEnabled,
-  typeParamSchema,
   updateProvider,
-  updateProviderSchema
+  type ProviderType
 } from "../server/provider";
+import { providerRoutes } from "./type";
 
 // 定义 modelId 路径参数 schema
 const modelIdParamSchema = z.object({
   modelId: z.string().min(1, "模型ID不能为空")
 });
-
-export const providerRoutes = {
-  // 基础版本
-  getProviders: {
-    path: `${PREFIX}/providers`,
-    responseSchema: ProvidersResponseSchema
-  },
-  getEnabledProviders: {
-    path: `${PREFIX}/providers/enabled`,
-    responseSchema: ProvidersResponseSchema
-  },
-  getProviderById: {
-    path: `${PREFIX}/providers/:id`,
-    responseSchema: ProviderResponseSchema.nullable()
-  },
-  getProvidersByType: {
-    path: `${PREFIX}/providers/type/:type`,
-    responseSchema: ProvidersResponseSchema
-  },
-  getProvidersByModel: {
-    path: `${PREFIX}/providers/by-model/:modelId`,
-    responseSchema: ProvidersResponseSchema
-  },
-  // WithModels 版本
-  getProvidersWithModels: {
-    path: `${PREFIX}/providers/with-models`,
-    responseSchema: ProvidersWithModelsResponseSchema
-  },
-  getEnabledProvidersWithModels: {
-    path: `${PREFIX}/providers/enabled/with-models`,
-    responseSchema: ProvidersWithModelsResponseSchema
-  },
-  getProviderWithModelsById: {
-    path: `${PREFIX}/providers/:id/with-models`,
-    responseSchema: ProviderWithModelsResponseSchema.nullable()
-  },
-  getProvidersByTypeWithModels: {
-    path: `${PREFIX}/providers/type/:type/with-models`,
-    responseSchema: ProvidersWithModelsResponseSchema
-  },
-  getProvidersByModelWithModels: {
-    path: `${PREFIX}/providers/by-model/:modelId/with-models`,
-    responseSchema: ProvidersWithModelsResponseSchema
-  },
-  // 写操作
-  createProvider: {
-    path: `${PREFIX}/providers`,
-    responseSchema: ProviderWithModelsResponseSchema
-  },
-  updateProvider: {
-    path: `${PREFIX}/providers/:id`,
-    responseSchema: ProviderWithModelsResponseSchema
-  },
-  deleteProvider: {
-    path: `${PREFIX}/providers/:id`,
-    responseSchema: ProviderResponseSchema
-  },
-  toggleProviderEnabled: {
-    path: `${PREFIX}/providers/:id/toggle`,
-    responseSchema: ProviderWithModelsResponseSchema
-  }
-} as const;
 
 /**
  * 获取所有提供商的路由处理器（基础版本）

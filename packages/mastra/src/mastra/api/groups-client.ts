@@ -1,8 +1,8 @@
 /// <reference lib="dom" />
 import type { z } from "zod";
 
-import { groupRoutes } from "../router/groups";
-import type { CreateGroupInput, UpdateGroupInput } from "../server/group";
+import { groupRoutes } from "../router/type";
+import type { CreateGroupInput, UpdateGroupInput } from "../schema/group";
 import type { ApiClientConfig, ApiResponse } from "./base-client";
 import { BaseApiClient } from "./base-client";
 

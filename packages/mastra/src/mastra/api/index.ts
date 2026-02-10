@@ -28,18 +28,6 @@ export {
   useAgentsApi
 } from "./agents-client";
 
-// 代理类型
-export {
-  type CreateAgentInput,
-  type UpdateAgentInput,
-  type AgentsListResult,
-  type AgentDetailResult,
-  type AgentCreateResult,
-  type AgentUpdateResult,
-  type AgentDeleteResult,
-  type AgentsByGroupResult
-} from "../server/agent";
-
 // 助手相关API
 export {
   AssistantsApiClient,
@@ -47,19 +35,6 @@ export {
   assistantsApiMethods,
   useAssistantsApi
 } from "./assistants-client";
-
-// 助手类型
-export {
-  type CreateAssistantInput,
-  type UpdateAssistantInput,
-  type AssistantsListResult,
-  type AssistantDetailResult,
-  type AssistantCreateResult,
-  type AssistantUpdateResult,
-  type AssistantDeleteResult,
-  type AssistantThreadsResult,
-  type AssistantUIMessagesResult
-} from "../server/assistant";
 
 // 分组相关API
 export {
@@ -69,17 +44,6 @@ export {
   useGroupsApi
 } from "./groups-client";
 
-// 分组类型
-export {
-  type CreateGroupInput,
-  type UpdateGroupInput,
-  type GroupsByProviderResult,
-  type GroupDetailResult,
-  type GroupCreateResult,
-  type GroupUpdateResult,
-  type GroupDeleteResult
-} from "../server/group";
-
 // 提供商相关API
 export {
   ProvidersApiClient,
@@ -88,29 +52,6 @@ export {
   useProvidersApi
 } from "./providers-client";
 
-// 提供商类型
-export {
-  type CreateProviderInput,
-  type UpdateProviderInput,
-  // 基础类型（不包含关联模型）
-  type ProviderResult,
-  type ProvidersResult,
-  type EnabledProvidersResult,
-  type ProvidersByTypeResult,
-  type ProvidersByModelResult,
-  // 带模型列表的类型（models 字段为展开的 Model 数组）
-  type ProviderWithModelsResult,
-  type ProvidersWithModelsResult,
-  type EnabledProvidersWithModelsResult,
-  type ProvidersByTypeWithModelsResult,
-  type ProvidersByModelWithModelsResult,
-  // 写操作返回类型
-  type ProviderCreateResult,
-  type ProviderUpdateResult,
-  type ProviderDeleteResult,
-  type ProviderToggleResult
-} from "../server/provider";
-
 // 模型相关API
 export {
   ModelsApiClient,
@@ -118,31 +59,6 @@ export {
   modelsApiMethods,
   useModelsApi
 } from "./models-client";
-
-// 模型类型
-export {
-  type CreateModelInput,
-  type UpdateModelInput,
-  // 基础类型（不包含关联信息）
-  type ModelsListResult,
-  type ModelDetailResult,
-  type ModelsByProviderResult,
-  type ModelsByGroupResult,
-  // 带提供商信息的类型
-  type ModelsWithProvidersResult,
-  type ModelWithProvidersResult,
-  type ModelsByProviderWithProvidersResult,
-  type ModelsByGroupWithProvidersResult,
-  // 写操作返回类型
-  type ModelCreateResult,
-  type ModelUpdateResult,
-  type ModelDeleteResult,
-  type ModelsBatchCreateResult,
-  type ModelProviderRelation,
-  type ModelProviderRelationAddResult,
-  type ModelProviderRelationRemoveResult,
-  type ModelProviderRelationsResult
-} from "../server/model";
 
 /**
  * 所有API方法的统一导出

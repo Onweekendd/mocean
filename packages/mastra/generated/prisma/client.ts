@@ -134,13 +134,3 @@ export type QuickPhrase = Prisma.QuickPhraseModel
  * 
  */
 export type Group = Prisma.GroupModel
-/**
- * Model ModelGroup
- * 
- */
-export type ModelGroup = Prisma.ModelGroupModel
-/**
- * Model ModelProvider
- * 
- */
-export type ModelProvider = Prisma.ModelProviderModel

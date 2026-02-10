@@ -11,52 +11,20 @@ import {
   assistantIdParamSchema,
   assistantThreadIdParamSchema,
   chatWithAssistantSchema,
-  createAssistant,
   createAssistantSchema,
+  updateAssistantSchema
+} from "../schema/assistant";
+import {
+  createAssistant,
   deleteAssistant,
   executeChatWithAssistant,
   getAssistantById,
   getAssistants,
   getThreadsByAssistantId,
   getUIMessagesByThreadId,
-  updateAssistant,
-  updateAssistantSchema
+  updateAssistant
 } from "../server/assistant";
-
-export const assistantRoutes = {
-  getAssistants: {
-    path: `${PREFIX}/assistants`,
-    responseSchema: AssistantsResponseSchema
-  },
-  getAssistantById: {
-    path: `${PREFIX}/assistants/:assistantId`,
-    responseSchema: AssistantFullResponseSchema.nullable()
-  },
-  createAssistant: {
-    path: `${PREFIX}/assistants`,
-    responseSchema: AssistantWithModelsResponseSchema
-  },
-  updateAssistant: {
-    path: `${PREFIX}/assistants/:assistantId`,
-    responseSchema: AssistantWithModelsResponseSchema
-  },
-  deleteAssistant: {
-    path: `${PREFIX}/assistants/:assistantId`,
-    responseSchema: AssistantResponseSchema
-  },
-  chatWithAssistant: {
-    path: `${PREFIX}/assistants/chat`,
-    responseSchema: z.any() // SSE 流式响应
-  },
-  getAssistantThreads: {
-    path: `${PREFIX}/assistants/history/:assistantId`,
-    responseSchema: z.any() // Thread 数组
-  },
-  getAssistantUIMessageByThreadId: {
-    path: `${PREFIX}/assistants/messages/:assistantId/:threadId`,
-    responseSchema: z.any() // 消息数组
-  }
-} as const;
+import { assistantRoutes } from "./type";
 
 /**
  * 获取所有助手的路由处理器

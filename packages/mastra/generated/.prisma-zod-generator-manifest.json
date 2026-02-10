@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "generatorVersion": "1.0.0",
-  "generatedAt": "2026-02-09T16:58:09.045Z",
-  "outputPath": "D:\\projects\\mocean-desktop-monorepo\\packages\\mastra\\generated",
+  "generatedAt": "2026-02-10T06:20:04.306Z",
+  "outputPath": "C:\\EaseClip\\packages\\mastra\\generated",
   "files": [
     "schemas\\enums\\TransactionIsolationLevel.schema.ts",
     "schemas\\enums\\ProviderScalarFieldEnum.schema.ts",
@@ -24,8 +24,6 @@
     "schemas\\enums\\MCPConfigSampleScalarFieldEnum.schema.ts",
     "schemas\\enums\\QuickPhraseScalarFieldEnum.schema.ts",
     "schemas\\enums\\GroupScalarFieldEnum.schema.ts",
-    "schemas\\enums\\ModelGroupScalarFieldEnum.schema.ts",
-    "schemas\\enums\\ModelProviderScalarFieldEnum.schema.ts",
     "schemas\\enums\\SortOrder.schema.ts",
     "schemas\\enums\\NullableJsonNullValueInput.schema.ts",
     "schemas\\enums\\JsonNullValueInput.schema.ts",

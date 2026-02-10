@@ -4,13 +4,22 @@ import { z } from "zod";
 
 import { PREFIX } from "../api/base-client";
 import {
+  CreateManyModelsResponseSchema,
+  ModelProviderRelationResponseSchema,
   ModelResponseSchema,
   ModelWithProvidersResponseSchema,
   ModelsResponseSchema,
+  createModelSchema,
+  groupParamSchema,
+  idParamSchema,
+  modelProviderRelationSchema,
+  providerParamSchema,
+  updateModelSchema
+} from "../schema/model";
+import {
   addModelProviderRelation,
   createManyModels,
   createModel,
-  createModelSchema,
   deleteModel,
   getModelById,
   getModelProviderRelations,
@@ -21,96 +30,10 @@ import {
   getModelsByProvider,
   getModelsByProviderWithProviders,
   getModelsWithProviders,
-  groupParamSchema,
-  idParamSchema,
-  modelProviderRelationSchema,
-  providerParamSchema,
   removeModelProviderRelation,
-  updateModel,
-  updateModelSchema
+  updateModel
 } from "../server/model";
-
-// 批量创建响应 Schema
-const CreateManyModelsResponseSchema = z.object({
-  count: z.number()
-});
-
-// 模型提供商关联响应 Schema
-const ModelProviderRelationResponseSchema = z.object({
-  modelId: z.string(),
-  providerId: z.string(),
-  groupId: z.string(),
-  model: ModelResponseSchema,
-  provider: z.any(),
-  group: z.any()
-});
-
-export const modelRoutes = {
-  // 基础版本
-  getModels: {
-    path: `${PREFIX}/models`,
-    responseSchema: ModelsResponseSchema
-  },
-  getModelById: {
-    path: `${PREFIX}/models/:id`,
-    responseSchema: ModelResponseSchema.nullable()
-  },
-  getModelsByProvider: {
-    path: `${PREFIX}/models/by-provider/:providerId`,
-    responseSchema: ModelsResponseSchema
-  },
-  getModelsByGroup: {
-    path: `${PREFIX}/models/group/:group`,
-    responseSchema: ModelsResponseSchema
-  },
-  // WithProviders 版本
-  getModelsWithProviders: {
-    path: `${PREFIX}/models/with-providers`,
-    responseSchema: z.array(ModelWithProvidersResponseSchema)
-  },
-  getModelWithProvidersById: {
-    path: `${PREFIX}/models/:id/with-providers`,
-    responseSchema: ModelWithProvidersResponseSchema.nullable()
-  },
-  getModelsByProviderWithProviders: {
-    path: `${PREFIX}/models/by-provider/:providerId/with-providers`,
-    responseSchema: z.array(ModelWithProvidersResponseSchema)
-  },
-  getModelsByGroupWithProviders: {
-    path: `${PREFIX}/models/group/:group/with-providers`,
-    responseSchema: z.array(ModelWithProvidersResponseSchema)
-  },
-  // 写操作
-  createModel: {
-    path: `${PREFIX}/models`,
-    responseSchema: ModelWithProvidersResponseSchema
-  },
-  createManyModels: {
-    path: `${PREFIX}/models/batch`,
-    responseSchema: CreateManyModelsResponseSchema
-  },
-  updateModel: {
-    path: `${PREFIX}/models/:id`,
-    responseSchema: ModelWithProvidersResponseSchema
-  },
-  deleteModel: {
-    path: `${PREFIX}/models/:id`,
-    responseSchema: ModelResponseSchema
-  },
-  // 关联操作
-  addModelProviderRelation: {
-    path: `${PREFIX}/models/relations`,
-    responseSchema: ModelProviderRelationResponseSchema
-  },
-  removeModelProviderRelation: {
-    path: `${PREFIX}/models/relations`,
-    responseSchema: ModelProviderRelationResponseSchema
-  },
-  getModelProviderRelations: {
-    path: `${PREFIX}/models/:id/relations`,
-    responseSchema: z.array(ModelProviderRelationResponseSchema)
-  }
-} as const;
+import { modelRoutes } from "./type";
 
 /**
  * 获取所有模型的路由处理器（基础版本）
