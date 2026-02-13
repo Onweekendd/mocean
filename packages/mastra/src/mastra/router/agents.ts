@@ -1,5 +1,4 @@
 import { registerApiRoute } from "@mastra/core/server";
-import { resolver } from "hono-openapi";
 import { HTTPException } from "hono/http-exception";
 
 import {
@@ -35,7 +34,8 @@ const getAgentsRouter = registerApiRoute(agentRoutes.getAgents.path, {
         description: "返回系统中所有可用的智能体列表",
         content: {
           "application/json": {
-            schema: resolver(AgentsResponseSchema)
+            // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+            schema: AgentsResponseSchema
           }
         }
       }
@@ -60,7 +60,8 @@ const getAgentByIdRouter = registerApiRoute(agentRoutes.getAgentById.path, {
         description: "通过智能体ID获取特定智能体的详细信息",
         content: {
           "application/json": {
-            schema: resolver(AgentWithSettingsResponseSchema.nullable())
+            // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+            schema: AgentWithSettingsResponseSchema.nullable()
           }
         }
       }
@@ -101,7 +102,8 @@ const createAgentRouter = registerApiRoute(agentRoutes.createAgent.path, {
         description: "接收智能体数据并在系统中创建新的智能体",
         content: {
           "application/json": {
-            schema: resolver(AgentWithSettingsResponseSchema)
+            // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+            schema: AgentWithSettingsResponseSchema
           }
         }
       }
@@ -135,7 +137,8 @@ const updateAgentRouter = registerApiRoute(agentRoutes.updateAgent.path, {
         description: "接收智能体ID和更新数据，修改指定智能体的信息",
         content: {
           "application/json": {
-            schema: resolver(AgentWithSettingsResponseSchema)
+            // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+            schema: AgentWithSettingsResponseSchema
           }
         }
       }
@@ -165,7 +168,8 @@ const deleteAgentRouter = registerApiRoute(agentRoutes.deleteAgent.path, {
         description: "根据智能体ID删除指定的智能体",
         content: {
           "application/json": {
-            schema: resolver(AgentResponseSchema)
+            // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+            schema: AgentResponseSchema
           }
         }
       }
@@ -194,7 +198,8 @@ const getAgentByGroupRouter = registerApiRoute(agentRoutes.getAgentByGroup.path,
         description: "通过分组获取特定分组的所有智能体",
         content: {
           "application/json": {
-            schema: resolver(AgentsResponseSchema.nullable())
+            // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+            schema: AgentsResponseSchema.nullable()
           }
         }
       }

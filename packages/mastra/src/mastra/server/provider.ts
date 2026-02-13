@@ -1,161 +1,10 @@
 import type { Prisma } from "generated/prisma/client";
-import { ProviderType } from "generated/prisma/enums";
-import { ModelSchema, ProviderSchema } from "generated/schemas/models/index";
-import { z } from "zod";
-
+import type { ProviderType } from "generated/prisma/enums";
+import type {
+  CreateProviderInput,
+  UpdateProviderInput
+} from "../schema/provider";
 import { prisma } from "./index";
-
-// 导出 ProviderType 类型供路由使用
-export { ProviderType };
-
-/**
- * 提供商相关的zod校验schemas
- */
-
-/**
- * Response Schemas
- * 用于 Router 的响应类型验证
- */
-
-// 基础 Provider Response Schema（不含关联关系）
-export const ProviderResponseSchema = ProviderSchema.pick({
-  id: true,
-  type: true,
-  name: true,
-  apiKey: true,
-  apiHost: true,
-  apiVersion: true,
-  enabled: true,
-  isSystem: true,
-  isAuthed: true,
-  notes: true,
-  isGateway: true,
-  modelCount: true,
-  docsUrl: true,
-  createdAt: true,
-  updatedAt: true
-});
-
-// Providers 列表 Response Schema（不含 models）
-export const ProvidersResponseSchema = z.array(ProviderResponseSchema);
-
-// 带 models 数组的 Provider Response Schema
-export const ProviderWithModelsResponseSchema = ProviderSchema.pick({
-  id: true,
-  type: true,
-  name: true,
-  apiKey: true,
-  apiHost: true,
-  apiVersion: true,
-  enabled: true,
-  isSystem: true,
-  isAuthed: true,
-  notes: true,
-  isGateway: true,
-  modelCount: true,
-  docsUrl: true,
-  createdAt: true,
-  updatedAt: true
-}).extend({
-  models: z.array(ModelSchema.partial()),
-  groups: z
-    .array(
-      z.object({
-        id: z.string(),
-        name: z.string(),
-        isDefault: z.boolean(),
-        models: z.array(ModelSchema.partial())
-      })
-    )
-    .optional()
-});
-
-// Providers 列表 Response Schema（含 models）
-export const ProvidersWithModelsResponseSchema = z.array(
-  ProviderWithModelsResponseSchema
-);
-
-/**
- * URL 验证辅助函数
- */
-const isValidUrl = (url: string): boolean => {
-  try {
-    new URL(url);
-    return true;
-  } catch {
-    return false;
-  }
-};
-
-// 基于 ProviderSchema 扩展自定义验证
-const createProviderSchema = ProviderSchema.pick({
-  type: true,
-  name: true,
-  apiKey: true,
-  apiHost: true,
-  apiVersion: true,
-  enabled: true,
-  isSystem: true,
-  isAuthed: true,
-  notes: true
-}).extend({
-  name: z.string().min(1, "提供商名称不能为空"),
-  apiKey: z.string().min(1, "API密钥不能为空"),
-  apiHost: z.string().refine((val) => isValidUrl(val), {
-    message: "API地址格式不正确"
-  }),
-  enabled: z.boolean().optional().default(true),
-  isSystem: z.boolean().optional().default(false),
-  isAuthed: z.boolean().optional().default(false)
-});
-
-const updateProviderSchema = ProviderSchema.pick({
-  type: true,
-  name: true,
-  apiKey: true,
-  apiHost: true,
-  apiVersion: true,
-  enabled: true,
-  isSystem: true,
-  isAuthed: true,
-  notes: true
-})
-  .partial()
-  .extend({
-    apiKey: z
-      .string()
-      .transform((val) => (val?.trim() === "" ? undefined : val))
-      .pipe(z.string().min(1, "API密钥不能为空").optional())
-      .optional(),
-    apiHost: z
-      .string()
-      .transform((val) => (val?.trim() === "" ? undefined : val))
-      .pipe(
-        z
-          .string()
-          .refine((val) => isValidUrl(val), {
-            message: "API地址格式不正确"
-          })
-          .optional()
-      )
-      .optional()
-  });
-
-const idParamSchema = z.object({
-  id: z.string().min(1, "提供商ID不能为空")
-});
-
-const typeParamSchema = z.object({
-  type: z.enum(ProviderType, { message: "无效的提供商类型" })
-});
-
-// zod类型推导
-export type CreateProviderInput = z.infer<typeof createProviderSchema>;
-export type UpdateProviderInput = z.infer<typeof updateProviderSchema>;
-
-/**
- * 辅助函数：从groups中提取所有models
- */
 const extractModelsFromGroups = (
   groups: Array<{ models: unknown[] }>
 ): unknown[] => {
@@ -470,10 +319,10 @@ const createProvider = async (provider: CreateProviderInput) => {
  * @param provider - 包含更新信息的对象
  * @returns 更新后的提供商对象
  */
-const updateProvider = async (id: string, provider: UpdateProviderInput) => {
+const updateProvider = async (provider: UpdateProviderInput) => {
   const updatedProvider = await prisma.provider.update({
     where: {
-      id
+      id: provider.id
     },
     data: {
       ...provider,
@@ -639,10 +488,5 @@ export {
   createProvider,
   updateProvider,
   deleteProvider,
-  toggleProviderEnabled,
-  // Schema 校验
-  createProviderSchema,
-  updateProviderSchema,
-  idParamSchema,
-  typeParamSchema
+  toggleProviderEnabled
 };

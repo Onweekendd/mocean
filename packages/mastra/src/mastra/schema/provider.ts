@@ -114,16 +114,9 @@ export const updateProviderSchema = ProviderSchema.pick({
       .refine((val) => !val || isValidUrl(val), {
         message: "API地址格式不正确"
       })
-      .optional()
+      .optional(),
+    id: z.string().min(1, "提供商ID不能为空")
   });
-
-export const idParamSchema = z.object({
-  id: z.string().min(1, "提供商ID不能为空")
-});
-
-export const typeParamSchema = z.object({
-  type: z.string().min(1, "提供商类型不能为空")
-});
 
 // zod类型推导
 export type CreateProviderInput = z.infer<typeof createProviderSchema>;

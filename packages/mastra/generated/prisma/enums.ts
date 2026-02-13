@@ -90,6 +90,7 @@ export const ProviderType = {
   scaleway: 'scaleway',
   siliconflow: 'siliconflow',
   siliconflow_cn: 'siliconflow_cn',
+  stackit: 'stackit',
   submodel: 'submodel',
   synthetic: 'synthetic',
   togetherai: 'togetherai',

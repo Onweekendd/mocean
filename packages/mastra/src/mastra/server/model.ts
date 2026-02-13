@@ -1,6 +1,20 @@
-import { ModelSchema, ProviderSchema } from "generated/schemas/models";
-import { z } from "zod";
-
+import type {
+  CreateModelInput,
+  UpdateModelInput
+} from "../schema/model";
+import {
+  CreateManyModelsResponseSchema,
+  ModelProviderRelationResponseSchema,
+  ModelResponseSchema,
+  ModelWithProvidersResponseSchema,
+  ModelsResponseSchema,
+  createModelSchema,
+  groupParamSchema,
+  idParamSchema,
+  modelProviderRelationSchema,
+  providerParamSchema,
+  updateModelSchema
+} from "../schema/model";
 import { prisma } from "./index";
 import type { AsyncReturnType } from "./type";
 
@@ -8,156 +22,13 @@ import type { AsyncReturnType } from "./type";
  * Response Schemas
  * 用于 Router 的响应类型验证
  */
-
-// 基础 Model Response Schema（不含关联关系）
-export const ModelResponseSchema = ModelSchema.pick({
-  id: true,
-  name: true,
-  owned_by: true,
-  description: true,
-  isSystem: true,
-  contextLength: true,
-  supportsAttachments: true,
-  supportsTools: true,
-  supportsReasoning: true,
-  supportsImage: true,
-  supportsAudio: true,
-  supportsVideo: true,
-  supportsEmbedding: true,
-  inputPricePerMillion: true,
-  outputPricePerMillion: true,
-  groupId: true,
-  createdAt: true,
-  updatedAt: true
-});
-
-// Models 列表 Response Schema
-export const ModelsResponseSchema = z.array(ModelResponseSchema);
-
-// 带 providers 数组的 Model Response Schema
-export const ModelWithProvidersResponseSchema = ModelSchema.pick({
-  id: true,
-  name: true,
-  owned_by: true,
-  description: true,
-  isSystem: true,
-  contextLength: true,
-  supportsAttachments: true,
-  supportsTools: true,
-  supportsReasoning: true,
-  supportsImage: true,
-  supportsAudio: true,
-  supportsVideo: true,
-  supportsEmbedding: true,
-  inputPricePerMillion: true,
-  outputPricePerMillion: true,
-  groupId: true,
-  createdAt: true,
-  updatedAt: true
-}).extend({
-  group: z
-    .object({
-      id: z.string(),
-      name: z.string(),
-      isDefault: z.boolean(),
-      providerId: z.string()
-    })
-    .optional(),
-  provider: ProviderSchema.partial().optional()
-});
-
-/**
- * 模型相关的zod校验schemas
- */
-
-// 从 ModelSchema 中提取字段类型，然后扩展自定义验证
-const createModelSchema = ModelSchema.pick({
-  id: true,
-  name: true,
-  owned_by: true,
-  description: true,
-  isSystem: true,
-  contextLength: true,
-  supportsAttachments: true,
-  supportsTools: true,
-  supportsReasoning: true,
-  supportsImage: true,
-  supportsAudio: true,
-  supportsVideo: true,
-  supportsEmbedding: true,
-  inputPricePerMillion: true,
-  outputPricePerMillion: true,
-  groupId: true
-}).extend({
-  id: z.string().min(1, "模型ID不能为空"),
-  name: z.string().min(1, "模型名称不能为空"),
-  groupId: z.string().min(1, "分组ID不能为空"),
-  isSystem: z.boolean().optional().default(false),
-  supportsAttachments: z.boolean().optional().default(false),
-  supportsTools: z.boolean().optional().default(false),
-  supportsReasoning: z.boolean().optional().default(false),
-  supportsImage: z.boolean().optional().default(false),
-  supportsAudio: z.boolean().optional().default(false),
-  supportsVideo: z.boolean().optional().default(false),
-  supportsEmbedding: z.boolean().optional().default(false)
-});
-
-const updateModelSchema = ModelSchema.pick({
-  name: true,
-  owned_by: true,
-  description: true,
-  isSystem: true,
-  contextLength: true,
-  supportsAttachments: true,
-  supportsTools: true,
-  supportsReasoning: true,
-  supportsImage: true,
-  supportsAudio: true,
-  supportsVideo: true,
-  supportsEmbedding: true,
-  inputPricePerMillion: true,
-  outputPricePerMillion: true,
-  groupId: true
-}).partial();
-
-const idParamSchema = z.object({
-  id: z.string().min(1, "模型ID不能为空")
-});
-
-const providerParamSchema = z.object({
-  providerId: z.string().min(1, "提供商ID不能为空")
-});
-
-const groupParamSchema = z.object({
-  group: z.string().min(1, "模型分组不能为空")
-});
-
-// 模型-分组关联的schema（用于添加/移除模型到分组）
-const modelGroupRelationSchema = z.object({
-  modelId: z.string().min(1, "模型ID不能为空"),
-  groupId: z.string().min(1, "分组ID不能为空")
-});
-
-// 批量创建响应 Schema
-export const CreateManyModelsResponseSchema = z.object({
-  count: z.number()
-});
-
-// 模型提供商关联响应 Schema（通过分组关联）
-export const ModelProviderRelationResponseSchema = z.object({
-  modelId: z.string(),
-  providerId: z.string(),
-  groupId: z.string(),
-  model: ModelResponseSchema,
-  provider: z.any(),
-  group: z.any()
-});
-
-// zod类型推导
-
-export type CreateModelInput = z.infer<typeof createModelSchema>;
-export type UpdateModelInput = z.infer<typeof updateModelSchema>;
-export type ModelGroupRelation = z.infer<typeof modelGroupRelationSchema>;
+export {
+  ModelResponseSchema,
+  ModelsResponseSchema,
+  ModelWithProvidersResponseSchema,
+  CreateManyModelsResponseSchema,
+  ModelProviderRelationResponseSchema
+};
 
 /**
  * 获取所有模型（基础版本，不包含关联信息）
@@ -719,5 +590,5 @@ export {
   idParamSchema,
   providerParamSchema,
   groupParamSchema,
-  modelGroupRelationSchema
+  modelProviderRelationSchema
 };

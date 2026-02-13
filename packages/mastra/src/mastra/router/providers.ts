@@ -1,7 +1,7 @@
 import { registerApiRoute } from "@mastra/core/server";
-import { resolver } from "hono-openapi";
+import type { ProviderType } from "generated/prisma/enums";
 import { HTTPException } from "hono/http-exception";
-import type { z } from "zod";
+import { z } from "zod";
 
 import {
   ProviderResponseSchema,
@@ -9,12 +9,9 @@ import {
   ProvidersResponseSchema,
   ProvidersWithModelsResponseSchema,
   createProviderSchema,
-  idParamSchema,
-  typeParamSchema,
   updateProviderSchema
 } from "../schema/provider";
 import {
-  type ProviderType,
   createProvider,
   deleteProvider,
   getEnabledProviders,
@@ -46,7 +43,8 @@ const getProvidersRouter = registerApiRoute(providerRoutes.getProviders.path, {
         description: "返回系统中所有可用的提供商列表，不包含关联模型",
         content: {
           "application/json": {
-            schema: resolver(ProvidersResponseSchema)
+            // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+            schema: ProvidersResponseSchema
           }
         }
       },
@@ -76,7 +74,8 @@ const getProvidersWithModelsRouter = registerApiRoute(
           description: "返回系统中所有可用的提供商列表，包含关联的模型信息",
           content: {
             "application/json": {
-              schema: resolver(ProvidersWithModelsResponseSchema)
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: ProvidersWithModelsResponseSchema
             }
           }
         }
@@ -104,7 +103,8 @@ const getEnabledProvidersRouter = registerApiRoute(
           description: "返回系统中所有启用状态的提供商列表，不包含关联模型",
           content: {
             "application/json": {
-              schema: resolver(ProvidersResponseSchema)
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: ProvidersResponseSchema
             }
           }
         }
@@ -132,7 +132,8 @@ const getEnabledProvidersWithModelsRouter = registerApiRoute(
           description: "返回系统中所有启用状态的提供商列表，包含关联的模型",
           content: {
             "application/json": {
-              schema: resolver(ProvidersWithModelsResponseSchema)
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: ProvidersWithModelsResponseSchema
             }
           }
         }
@@ -160,7 +161,8 @@ const getProviderByIdRouter = registerApiRoute(
           description: "通过提供商ID获取特定提供商的详细信息，不包含关联模型",
           content: {
             "application/json": {
-              schema: resolver(ProviderResponseSchema.nullable())
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: ProviderResponseSchema.nullable()
             }
           }
         }
@@ -196,7 +198,8 @@ const getProviderWithModelsByIdRouter = registerApiRoute(
           description: "通过提供商ID获取特定提供商的详细信息，包含关联的模型",
           content: {
             "application/json": {
-              schema: resolver(ProviderWithModelsResponseSchema.nullable())
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: ProviderWithModelsResponseSchema.nullable()
             }
           }
         }
@@ -232,7 +235,8 @@ const getProvidersByTypeRouter = registerApiRoute(
           description: "通过提供商类型获取对应的提供商列表，不包含关联模型",
           content: {
             "application/json": {
-              schema: resolver(ProvidersResponseSchema)
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: ProvidersResponseSchema
             }
           }
         }
@@ -264,7 +268,8 @@ const getProvidersByTypeWithModelsRouter = registerApiRoute(
           description: "通过提供商类型获取对应的提供商列表，包含关联的模型",
           content: {
             "application/json": {
-              schema: resolver(ProvidersWithModelsResponseSchema)
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: ProvidersWithModelsResponseSchema
             }
           }
         }
@@ -307,6 +312,7 @@ const createProviderRouter = registerApiRoute(
           description: "创建成功，返回新创建的提供商信息",
           content: {
             "application/json": {
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
               schema: ProviderWithModelsResponseSchema
             }
           }
@@ -314,9 +320,17 @@ const createProviderRouter = registerApiRoute(
       }
     },
     handler: async (c) => {
-      const body = await c.req.json();
-      const newProvider = await createProvider(body);
-      return c.json(newProvider, 201);
+      try {
+        const body = createProviderSchema.parse(await c.req.json());
+        const newProvider = await createProvider(body);
+        return c.json(newProvider, 201);
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          throw new HTTPException(400, {
+            message: error.message
+          });
+        }
+      }
     }
   }
 );
@@ -346,19 +360,16 @@ const updateProviderRouter = registerApiRoute(
           description: "更新成功，返回更新后的提供商信息",
           content: {
             "application/json": {
-              schema: resolver(ProviderWithModelsResponseSchema)
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: ProviderWithModelsResponseSchema
             }
           }
         }
       }
     },
     handler: async (c) => {
-      const id = c.req.param("id");
-      if (!id) {
-        throw new HTTPException(400, { message: "提供商ID不能为空" });
-      }
-      const body = await c.req.json();
-      const updatedProvider = await updateProvider(id, body);
+      const body = updateProviderSchema.parse(await c.req.json());
+      const updatedProvider = await updateProvider(body);
       return c.json(updatedProvider, 200);
     }
   }
@@ -380,7 +391,8 @@ const deleteProviderRouter = registerApiRoute(
           description: "删除成功，返回被删除的提供商信息",
           content: {
             "application/json": {
-              schema: resolver(ProviderResponseSchema)
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: ProviderResponseSchema
             }
           }
         }
@@ -423,7 +435,8 @@ const toggleProviderEnabledRouter = registerApiRoute(
           description: "切换成功，返回更新后的提供商信息",
           content: {
             "application/json": {
-              schema: resolver(ProviderWithModelsResponseSchema)
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: ProviderWithModelsResponseSchema
             }
           }
         }
@@ -464,7 +477,8 @@ const getProvidersByModelRouter = registerApiRoute(
           description: "获取与指定模型关联的所有提供商，不包含关联模型",
           content: {
             "application/json": {
-              schema: resolver(ProvidersResponseSchema)
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: ProvidersResponseSchema
             }
           }
         }
@@ -496,7 +510,8 @@ const getProvidersByModelWithModelsRouter = registerApiRoute(
           description: "获取与指定模型关联的所有提供商，包含关联的模型",
           content: {
             "application/json": {
-              schema: resolver(ProvidersWithModelsResponseSchema)
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: ProvidersWithModelsResponseSchema
             }
           }
         }

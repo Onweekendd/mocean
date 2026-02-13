@@ -107,6 +107,7 @@ enum ProviderType {
   scaleway
   siliconflow
   siliconflow_cn
+  stackit
   submodel
   synthetic
   togetherai

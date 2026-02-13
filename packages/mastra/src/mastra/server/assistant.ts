@@ -4,16 +4,20 @@ import type { StorageThreadType } from "@mastra/core/memory";
 import type { RequestContext } from "@mastra/core/request-context";
 import type { UIMessage } from "ai";
 import { createUIMessageStreamResponse } from "ai";
+import type {
+  CreateAssistantInput,
+  UpdateAssistantInput
+} from "../schema/assistant";
 import {
-  AssistantSchema,
-  AssistantSettingsSchema,
-  KnowledgeBaseSchema,
-  MCPServerSchema,
-  ModelSchema,
-  ProviderSchema,
-  TopicSchema
-} from "generated/schemas/models/index";
-import { z } from "zod";
+  AssistantFullResponseSchema,
+  AssistantResponseSchema,
+  AssistantWithModelsResponseSchema,
+  assistantIdParamSchema,
+  assistantThreadIdParamSchema,
+  chatWithAssistantSchema,
+  createAssistantSchema,
+  updateAssistantSchema
+} from "../schema/assistant";
 
 import { DynamicAgent } from "../agents/dynamicAgent";
 import { createCommonRunTime } from "../runtime/CommonRunTime";
@@ -24,142 +28,12 @@ import type { AsyncReturnType } from "./type";
  * Response Schemas
  * 用于 Router 的响应类型验证
  */
-
-// 基础 Assistant Response Schema（不含关联关系）
-export const AssistantResponseSchema = AssistantSchema.pick({
-  id: true,
-  name: true,
-  prompt: true,
-  type: true,
-  emoji: true,
-  description: true,
-  enableWebSearch: true,
-  webSearchProviderId: true,
-  enableGenerateImage: true,
-  knowledgeRecognition: true,
-  modelId: true,
-  defaultModelId: true,
-  providerId: true,
-  createdAt: true,
-  updatedAt: true
-});
-
-// Assistants 列表 Response Schema
-export const AssistantsResponseSchema = z.array(AssistantResponseSchema);
-
-// 带 model、defaultModel、settings 的 Assistant Response Schema
-export const AssistantWithModelsResponseSchema = AssistantSchema.pick({
-  id: true,
-  name: true,
-  prompt: true,
-  type: true,
-  emoji: true,
-  description: true,
-  enableWebSearch: true,
-  webSearchProviderId: true,
-  enableGenerateImage: true,
-  knowledgeRecognition: true,
-  modelId: true,
-  defaultModelId: true,
-  providerId: true,
-  createdAt: true,
-  updatedAt: true
-}).extend({
-  model: ModelSchema.partial(),
-  defaultModel: ModelSchema.partial(),
-  settings: z.array(AssistantSettingsSchema.partial())
-});
-
-// 带 provider 的完整 Assistant Response Schema
-export const AssistantFullResponseSchema = AssistantSchema.pick({
-  id: true,
-  name: true,
-  prompt: true,
-  type: true,
-  emoji: true,
-  description: true,
-  enableWebSearch: true,
-  webSearchProviderId: true,
-  enableGenerateImage: true,
-  knowledgeRecognition: true,
-  modelId: true,
-  defaultModelId: true,
-  providerId: true,
-  createdAt: true,
-  updatedAt: true
-}).extend({
-  model: ModelSchema.partial(),
-  defaultModel: ModelSchema.partial(),
-  provider: ProviderSchema.partial(),
-  settings: z.array(AssistantSettingsSchema.partial()),
-  topics: z.array(TopicSchema.partial()),
-  knowledgeBases: z.array(KnowledgeBaseSchema.partial()),
-  mcpServers: z.array(MCPServerSchema.partial())
-});
-
-/**
- * 助手相关的zod校验schemas
- */
-// 基于 AssistantSchema 扩展自定义验证
-const createAssistantSchema = AssistantSchema.pick({
-  name: true,
-  prompt: true,
-  type: true,
-  emoji: true,
-  description: true,
-  enableWebSearch: true,
-  webSearchProviderId: true,
-  enableGenerateImage: true,
-  knowledgeRecognition: true,
-  modelId: true,
-  defaultModelId: true
-}).extend({
-  name: z.string().min(1, "助手名称不能为空"),
-  prompt: z.string().min(1, "提示词不能为空"),
-  type: z.string().optional().default("assistant"),
-  enableWebSearch: z.boolean().optional().default(false),
-  enableGenerateImage: z.boolean().optional().default(false)
-});
-
-const updateAssistantSchema = AssistantSchema.pick({
-  name: true,
-  prompt: true,
-  type: true,
-  emoji: true,
-  description: true,
-  enableWebSearch: true,
-  webSearchProviderId: true,
-  enableGenerateImage: true,
-  knowledgeRecognition: true,
-  providerId: true,
-  modelId: true,
-  defaultModelId: true
-}).partial();
-
-// 提取 experimental_prepareRequestBody 返回值类型
-export type PrepareRequestBodyReturnType = {
-  id: string;
-  threadId: string;
-  messages: UIMessage[];
-  assistantId?: string;
-  requestBody: Record<string, unknown>;
-  requestData: Record<string, unknown>;
-};
-
-const assistantIdParamSchema = z.object({
-  assistantId: z.string().min(1, "助手ID不能为空")
-});
-
-const assistantThreadIdParamSchema = z.object({
-  assistantId: z.string().min(1, "助手ID不能为空"),
-  threadId: z.string().min(1, "对话ID不能为空")
-});
-
-const chatWithAssistantSchema = z.custom<PrepareRequestBodyReturnType>();
-
-// zod类型推导
-export type CreateAssistantInput = z.infer<typeof createAssistantSchema>;
-export type UpdateAssistantInput = z.infer<typeof updateAssistantSchema>;
+export {
+  AssistantResponseSchema,
+  AssistantsResponseSchema,
+  AssistantWithModelsResponseSchema,
+  AssistantFullResponseSchema
+} from "../schema/assistant";
 
 /**
  * 获取所有助手

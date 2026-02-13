@@ -1,5 +1,4 @@
 import { registerApiRoute } from "@mastra/core/server";
-import { resolver } from "hono-openapi";
 import { HTTPException } from "hono/http-exception";
 import { z } from "zod";
 
@@ -42,7 +41,8 @@ const getAssistantsRouter = registerApiRoute(
           description: "返回系统中所有可用的助手列表",
           content: {
             "application/json": {
-              schema: resolver(AssistantsResponseSchema)
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: AssistantsResponseSchema
             }
           }
         }
@@ -70,7 +70,8 @@ const getAssistantByIdRouter = registerApiRoute(
           description: "通过助手ID获取特定助手的详细信息",
           content: {
             "application/json": {
-              schema: resolver(AssistantFullResponseSchema.nullable())
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: AssistantFullResponseSchema.nullable()
             }
           }
         }
@@ -114,7 +115,8 @@ const createAssistantRouter = registerApiRoute(
           description: "接收助手数据并在系统中创建新的助手",
           content: {
             "application/json": {
-              schema: resolver(AssistantWithModelsResponseSchema)
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: AssistantWithModelsResponseSchema
             }
           }
         }
@@ -151,7 +153,8 @@ const updateAssistantRouter = registerApiRoute(
           description: "接收助手ID和更新数据，修改指定助手的信息",
           content: {
             "application/json": {
-              schema: resolver(AssistantWithModelsResponseSchema)
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: AssistantWithModelsResponseSchema
             }
           }
         }
@@ -184,7 +187,8 @@ const deleteAssistantRouter = registerApiRoute(
           description: "根据助手ID删除指定的助手",
           content: {
             "application/json": {
-              schema: resolver(AssistantResponseSchema)
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: AssistantResponseSchema
             }
           }
         }
@@ -224,7 +228,8 @@ const chatWithAssistantRouter = registerApiRoute(
           description: "与指定助手进行对话",
           content: {
             "application/json": {
-              schema: resolver(z.any())
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: z.any()
             }
           }
         }
@@ -260,7 +265,8 @@ const getAssistantThreadsRouter = registerApiRoute(
           description: "获取指定助手的所有对话线程",
           content: {
             "application/json": {
-              schema: resolver(z.any())
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: z.any()
             }
           }
         }
@@ -292,7 +298,8 @@ const getAssistantUIMessageByThreadIdRouter = registerApiRoute(
           description: "获取指定线程中的所有UI消息",
           content: {
             "application/json": {
-              schema: resolver(z.any())
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: z.any()
             }
           }
         }

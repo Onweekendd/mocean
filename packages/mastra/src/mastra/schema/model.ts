@@ -2,33 +2,11 @@
  * Response Schemas
  * 用于 Router 的响应类型验证
  */
-import {
-  ModelGroupSchema,
-  ModelSchema,
-  ProviderSchema
-} from "generated/schemas/models";
+import { ModelSchema, ProviderSchema } from "generated/schemas/models";
 import { z } from "zod";
 
 // 基础 Model Response Schema（不含关联关系）
-export const ModelResponseSchema = ModelSchema.pick({
-  id: true,
-  name: true,
-  owned_by: true,
-  description: true,
-  isSystem: true,
-  contextLength: true,
-  supportsAttachments: true,
-  supportsTools: true,
-  supportsReasoning: true,
-  supportsImage: true,
-  supportsAudio: true,
-  supportsVideo: true,
-  supportsEmbedding: true,
-  inputPricePerMillion: true,
-  outputPricePerMillion: true,
-  createdAt: true,
-  updatedAt: true
-});
+export const ModelResponseSchema = ModelSchema;
 
 // Models 列表 Response Schema
 export const ModelsResponseSchema = z.array(ModelResponseSchema);
@@ -95,6 +73,7 @@ export const createModelSchema = ModelSchema.pick({
 }).extend({
   id: z.string().min(1, "模型ID不能为空"),
   name: z.string().min(1, "模型名称不能为空"),
+  groupId: z.string().min(1, "分组ID不能为空"),
   isSystem: z.boolean().optional().default(false),
   supportsAttachments: z.boolean().optional().default(false),
   supportsTools: z.boolean().optional().default(false),
@@ -122,7 +101,8 @@ export const updateModelSchema = ModelSchema.pick({
   supportsVideo: true,
   supportsEmbedding: true,
   inputPricePerMillion: true,
-  outputPricePerMillion: true
+  outputPricePerMillion: true,
+  groupId: true
 })
   .partial()
   .extend({

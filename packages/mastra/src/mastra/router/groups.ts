@@ -1,5 +1,4 @@
 import { registerApiRoute } from "@mastra/core/server";
-import { resolver } from "hono-openapi";
 import { HTTPException } from "hono/http-exception";
 
 import {
@@ -36,7 +35,8 @@ const getGroupsByProviderRouter = registerApiRoute(
           description: "通过提供商ID获取对应的分组列表，包含模型数量统计",
           content: {
             "application/json": {
-              schema: resolver(GroupsResponseSchema)
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: GroupsResponseSchema
             }
           }
         }
@@ -66,7 +66,8 @@ const getGroupByIdRouter = registerApiRoute(groupRoutes.getGroupById.path, {
         description: "通过分组ID获取分组详细信息，包含关联的模型",
         content: {
           "application/json": {
-            schema: resolver(GroupWithModelsResponseSchema.nullable())
+            // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+            schema: GroupWithModelsResponseSchema.nullable()
           }
         }
       }
@@ -107,7 +108,8 @@ const createGroupRouter = registerApiRoute(groupRoutes.createGroup.path, {
         description: "接收分组数据并在系统中创建新的分组",
         content: {
           "application/json": {
-            schema: resolver(GroupWithModelsResponseSchema)
+            // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+            schema: GroupWithModelsResponseSchema
           }
         }
       }
@@ -141,7 +143,8 @@ const updateGroupRouter = registerApiRoute(groupRoutes.updateGroup.path, {
         description: "接收分组ID和更新数据，修改指定分组的信息",
         content: {
           "application/json": {
-            schema: resolver(GroupWithModelsResponseSchema)
+            // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+            schema: GroupWithModelsResponseSchema
           }
         }
       }
@@ -171,7 +174,8 @@ const deleteGroupRouter = registerApiRoute(groupRoutes.deleteGroup.path, {
         description: "根据分组ID删除指定的分组，模型将被移至默认分组",
         content: {
           "application/json": {
-            schema: resolver(GroupResponseSchema)
+            // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+            schema: GroupResponseSchema
           }
         }
       }
