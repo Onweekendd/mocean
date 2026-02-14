@@ -2,9 +2,10 @@
 
 import { useParams } from "next/navigation";
 
+import type { Provider } from "@mocean/mastra/prismaType";
 import { Database, Edit, Loader2, Plus, Search, Settings } from "lucide-react";
 
-import { useProviderPage } from "@/app/provider/hooks/useProviderPage";
+import { useProviderPage } from "@/app/provider/[id]/hooks/useProviderPage";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -48,23 +49,14 @@ export default function ProviderDetailPage() {
   const {
     provider,
     models,
+    groups,
     modelGroups,
     filteredModels,
     filteredModelGroups,
-    isLoading,
-    error,
     searchTerm,
     setSearchTerm,
-    configDialogOpen,
-    setConfigDialogOpen,
-    addModelDialogOpen,
-    setAddModelDialogOpen,
-    editModelDialogOpen,
-    setEditModelDialogOpen,
-    deleteAlertOpen,
-    setDeleteAlertOpen,
-    groupManageDialogOpen,
-    setGroupManageDialogOpen,
+    dialogs,
+    dispatchDialog,
     selectedModelForEdit,
     selectedModelForDelete,
     onModelClick,
@@ -73,11 +65,11 @@ export default function ProviderDetailPage() {
     confirmDeleteModel,
     onToggleEnabled,
     onOpenAddModel,
-    refreshModels
+    refreshProvider
   } = useProviderPage(providerId);
 
   // 加载状态
-  if (isLoading) {
+  if (!provider) {
     return (
       <div className="flex h-full items-center justify-center p-8">
         <div className="flex items-center space-x-2">
@@ -85,18 +77,6 @@ export default function ProviderDetailPage() {
           <span className="text-sm text-muted-foreground">
             加载模型数据中...
           </span>
-        </div>
-      </div>
-    );
-  }
-
-  // 错误状态
-  if (error) {
-    return (
-      <div className="flex h-full items-center justify-center p-8">
-        <div className="text-center">
-          <p className="mb-2 text-sm text-destructive">加载模型数据失败</p>
-          <p className="text-xs text-muted-foreground">{error.message}</p>
         </div>
       </div>
     );
@@ -111,7 +91,10 @@ export default function ProviderDetailPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="flex h-10 w-10 items-center justify-center">
-                {provider?.name && renderProviderAvatar({ provider })}
+                {provider?.name &&
+                  renderProviderAvatar({
+                    provider: provider as Provider
+                  })}
               </div>
               <div>
                 <div className="flex items-center space-x-2">
@@ -141,7 +124,9 @@ export default function ProviderDetailPage() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setConfigDialogOpen(true)}
+                onClick={() =>
+                  dispatchDialog({ type: "config", payload: true })
+                }
               >
                 <Settings className="mr-2 h-4 w-4" />
                 配置
@@ -167,17 +152,26 @@ export default function ProviderDetailPage() {
         {/* 对话框 */}
         {provider && (
           <ProviderConfigDialog
-            provider={provider}
-            open={configDialogOpen}
-            onOpenChange={setConfigDialogOpen}
+            provider={provider as Provider}
+            open={dialogs.config}
+            onOpenChange={(open) =>
+              dispatchDialog({ type: "config", payload: open })
+            }
+            onSuccess={() => {
+              void refreshProvider();
+            }}
           />
         )}
 
         <AddModelDialog
           providerId={providerId}
-          open={addModelDialogOpen}
-          onOpenChange={setAddModelDialogOpen}
-          onSuccess={refreshModels}
+          open={dialogs.addModel}
+          onOpenChange={(open) =>
+            dispatchDialog({ type: "addModel", payload: open })
+          }
+          onSuccess={() => {
+            void refreshProvider();
+          }}
         />
       </div>
     );
@@ -190,7 +184,8 @@ export default function ProviderDetailPage() {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="flex h-10 w-10 items-center justify-center">
-              {provider?.name && renderProviderAvatar({ provider })}
+              {provider?.name &&
+                renderProviderAvatar({ provider: provider as Provider })}
             </div>
             <div>
               <div className="flex items-center space-x-2">
@@ -215,7 +210,9 @@ export default function ProviderDetailPage() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setGroupManageDialogOpen(true)}
+              onClick={() =>
+                dispatchDialog({ type: "groupManage", payload: true })
+              }
             >
               <Edit className="mr-2 h-4 w-4" />
               管理分组
@@ -225,7 +222,7 @@ export default function ProviderDetailPage() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setConfigDialogOpen(true)}
+              onClick={() => dispatchDialog({ type: "config", payload: true })}
             >
               <Settings className="mr-2 h-4 w-4" />
               配置
@@ -329,29 +326,41 @@ export default function ProviderDetailPage() {
       {/* 对话框 */}
       {provider && (
         <ProviderConfigDialog
-          provider={provider}
-          open={configDialogOpen}
-          onOpenChange={setConfigDialogOpen}
+          provider={provider as Provider}
+          open={dialogs.config}
+          onOpenChange={(open) =>
+            dispatchDialog({ type: "config", payload: open })
+          }
         />
       )}
 
       <AddModelDialog
         providerId={providerId}
-        open={addModelDialogOpen}
-        onOpenChange={setAddModelDialogOpen}
-        onSuccess={refreshModels}
+        open={dialogs.addModel}
+        onOpenChange={(open) =>
+          dispatchDialog({ type: "addModel", payload: open })
+        }
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        onSuccess={refreshProvider}
       />
 
       <EditModelDialog
         model={selectedModelForEdit}
         providerId={providerId}
-        open={editModelDialogOpen}
-        onOpenChange={setEditModelDialogOpen}
-        onSuccess={refreshModels}
+        open={dialogs.editModel}
+        onOpenChange={(open) =>
+          dispatchDialog({ type: "editModel", payload: open })
+        }
+        onSuccess={refreshProvider}
       />
 
       {/* 删除确认对话框 */}
-      <AlertDialog open={deleteAlertOpen} onOpenChange={setDeleteAlertOpen}>
+      <AlertDialog
+        open={dialogs.deleteAlert}
+        onOpenChange={(open) =>
+          dispatchDialog({ type: "deleteAlert", payload: open })
+        }
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>确认删除模型</AlertDialogTitle>
@@ -373,10 +382,13 @@ export default function ProviderDetailPage() {
       </AlertDialog>
 
       <GroupManageDialog
+        groups={groups}
         providerId={providerId}
-        open={groupManageDialogOpen}
-        onOpenChange={setGroupManageDialogOpen}
-        onSuccess={refreshModels}
+        open={dialogs.groupManage}
+        onOpenChange={(open) =>
+          dispatchDialog({ type: "groupManage", payload: open })
+        }
+        onSuccess={refreshProvider}
       />
     </div>
   );
