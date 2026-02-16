@@ -24,10 +24,6 @@ export const KnowledgeBaseSchema = z.object({
       const mod = require('./Agent.schema');
       return mod.AgentSchema;
     })),
-  model: z.lazy(() => {
-      const mod = require('./Model.schema');
-      return mod.ModelSchema;
-    }),
   modelId: z.string(),
   rerankModel: z.lazy(() => {
       const mod = require('./Model.schema');

@@ -1,10 +1,8 @@
 // @ts-nocheck - Circular imports resolved with runtime require()
 import * as z from 'zod';
 // Circular import removed: import { AssistantSchema } from './Assistant.schema';
-// Circular import removed: import { AssistantSettingsSchema } from './AssistantSettings.schema';
 // Circular import removed: import { GroupSchema } from './Group.schema';
 // Circular import removed: import { KnowledgeBaseSchema } from './KnowledgeBase.schema';
-// Circular import removed: import { TopicSchema } from './Topic.schema';
 
 export const ModelSchema = z.object({
   id: z.string(),
@@ -12,6 +10,7 @@ export const ModelSchema = z.object({
   owned_by: z.string().nullish(),
   description: z.string().nullish(),
   isSystem: z.boolean(),
+  sort: z.number().int(),
   contextLength: z.number().int().nullish(),
   supportsAttachments: z.boolean(),
   supportsTools: z.boolean(),
@@ -35,21 +34,9 @@ export const ModelSchema = z.object({
       const mod = require('./Assistant.schema');
       return mod.AssistantSchema;
     })),
-  knowledgeBases: z.array(z.lazy(() => {
-      const mod = require('./KnowledgeBase.schema');
-      return mod.KnowledgeBaseSchema;
-    })),
-  assistantSettings: z.array(z.lazy(() => {
-      const mod = require('./AssistantSettings.schema');
-      return mod.AssistantSettingsSchema;
-    })),
   rerankFor: z.array(z.lazy(() => {
       const mod = require('./KnowledgeBase.schema');
       return mod.KnowledgeBaseSchema;
-    })),
-  Topic: z.array(z.lazy(() => {
-      const mod = require('./Topic.schema');
-      return mod.TopicSchema;
     })),
   createdAt: z.date(),
   updatedAt: z.date(),

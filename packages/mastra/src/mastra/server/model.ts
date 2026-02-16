@@ -1,7 +1,6 @@
-import type {
-  CreateModelInput,
-  UpdateModelInput
-} from "../schema/model";
+import type { ModelUpdateInput } from "generated/prisma/models";
+
+import type { CreateModelInput, UpdateModelInput } from "../schema/model";
 import {
   CreateManyModelsResponseSchema,
   ModelProviderRelationResponseSchema,
@@ -285,12 +284,26 @@ const updateModel = async (id: string, model: UpdateModelInput) => {
     }
   }
 
+  // 分离 groupId 和其他字段，因为 groupId 是外键，需要通过 connect 来更新
+  const {
+    groupId,
+    assistants,
+    defaultForAssistants,
+    rerankFor,
+    ...otherFields
+  } = model;
+
+  // 构建 Prisma 更新数据，使用 any 类型避免复杂的类型推导
+
+  const data: ModelUpdateInput = {
+    ...otherFields,
+    updatedAt: new Date(),
+    ...(groupId && { group: { connect: { id: groupId } } })
+  };
+
   const updatedModel = await prisma.model.update({
     where: { id },
-    data: {
-      ...model,
-      updatedAt: new Date()
-    },
+    data,
     include: {
       group: {
         include: {

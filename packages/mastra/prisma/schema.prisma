@@ -146,10 +146,10 @@ model Provider {
   docsUrl    String? // 文档URL
 
   // 一对多关系：一个供应商有多个分组（通过分组间接关联模型）
-  groups      Group[]
+  groups Group[]
 
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
   Assistant Assistant[]
 }
 
@@ -221,7 +221,6 @@ model Topic {
   agentId     String?
 
   modelId String? @unique
-  model   Model?  @relation(fields: [modelId], references: [id])
 
   knowledgeBases TopicKnowledgeBase[]
 
@@ -251,6 +250,7 @@ model Model {
   owned_by    String?
   description String?
   isSystem    Boolean @default(false)
+  sort        Int     @default(0) // 排序字段（用于分组内排序）
 
   // 模型能力字段
   contextLength         Int? // 上下文长度 (如 128K 转换为数字)
@@ -266,14 +266,11 @@ model Model {
 
   // 关系：模型属于一个分组（多对一）
   groupId String
-  group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  group   Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
-  assistants           Assistant[]         @relation("AssistantModel")
-  defaultForAssistants Assistant[]         @relation("AssistantDefaultModel")
-  knowledgeBases       KnowledgeBase[]
-  assistantSettings    AssistantSettings[] @relation("SettingsDefaultModel")
-  rerankFor            KnowledgeBase[]     @relation("RerankModel")
-  Topic                Topic[]
+  assistants           Assistant[]     @relation("AssistantModel")
+  defaultForAssistants Assistant[]     @relation("AssistantDefaultModel")
+  rerankFor            KnowledgeBase[] @relation("RerankModel")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -299,7 +296,6 @@ model AssistantSettings {
   assistantId    String?    @unique
   agent          Agent?     @relation(fields: [agentId], references: [id])
   agentId        String?    @unique
-  defaultModel   Model?     @relation("SettingsDefaultModel", fields: [defaultModelId], references: [id])
   defaultModelId String?
 }
 
@@ -318,7 +314,6 @@ model KnowledgeBase {
   // 关系
   assistants    Assistant[]
   agents        Agent[]
-  model         Model                @relation(fields: [modelId], references: [id])
   modelId       String
   rerankModel   Model?               @relation("RerankModel", fields: [rerankModelId], references: [id])
   rerankModelId String?

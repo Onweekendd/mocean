@@ -28,6 +28,7 @@ export const ModelWithProvidersResponseSchema = ModelSchema.pick({
   supportsEmbedding: true,
   inputPricePerMillion: true,
   outputPricePerMillion: true,
+  sort: true,
   createdAt: true,
   updatedAt: true
 }).extend({
@@ -92,6 +93,7 @@ export const updateModelSchema = ModelSchema.pick({
   owned_by: true,
   description: true,
   isSystem: true,
+  sort: true,
   contextLength: true,
   supportsAttachments: true,
   supportsTools: true,
@@ -101,14 +103,11 @@ export const updateModelSchema = ModelSchema.pick({
   supportsVideo: true,
   supportsEmbedding: true,
   inputPricePerMillion: true,
-  outputPricePerMillion: true,
-  groupId: true
-})
-  .partial()
-  .extend({
-    id: z.string().min(1, "模型ID不能为空"),
-    name: z.string().min(1, "模型名称不能为空").optional()
-  });
+  outputPricePerMillion: true
+}).extend({
+  name: z.string().min(1, "模型名称不能为空").optional(),
+  groupId: z.string().optional()
+});
 
 export const idParamSchema = z.object({
   id: z.string().min(1, "模型ID不能为空")

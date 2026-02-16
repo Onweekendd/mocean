@@ -1963,6 +1963,7 @@ export const ModelScalarFieldEnum = {
   owned_by: 'owned_by',
   description: 'description',
   isSystem: 'isSystem',
+  sort: 'sort',
   contextLength: 'contextLength',
   supportsAttachments: 'supportsAttachments',
   supportsTools: 'supportsTools',

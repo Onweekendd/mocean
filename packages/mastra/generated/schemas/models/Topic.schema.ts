@@ -2,7 +2,6 @@
 import * as z from 'zod';
 // Circular import removed: import { AgentSchema } from './Agent.schema';
 // Circular import removed: import { AssistantSchema } from './Assistant.schema';
-// Circular import removed: import { ModelSchema } from './Model.schema';
 // Circular import removed: import { TopicKnowledgeBaseSchema } from './TopicKnowledgeBase.schema';
 
 export const TopicSchema = z.object({
@@ -22,10 +21,6 @@ export const TopicSchema = z.object({
     }).nullish(),
   agentId: z.string().nullish(),
   modelId: z.string().nullish(),
-  model: z.lazy(() => {
-      const mod = require('./Model.schema');
-      return mod.ModelSchema;
-    }).nullish(),
   knowledgeBases: z.array(z.lazy(() => {
       const mod = require('./TopicKnowledgeBase.schema');
       return mod.TopicKnowledgeBaseSchema;

@@ -306,7 +306,6 @@ export type AssistantSettingsWhereInput = {
   defaultModelId?: Prisma.StringNullableFilter<"AssistantSettings"> | string | null
   assistant?: Prisma.XOR<Prisma.AssistantNullableScalarRelationFilter, Prisma.AssistantWhereInput> | null
   agent?: Prisma.XOR<Prisma.AgentNullableScalarRelationFilter, Prisma.AgentWhereInput> | null
-  defaultModel?: Prisma.XOR<Prisma.ModelNullableScalarRelationFilter, Prisma.ModelWhereInput> | null
 }
 
 export type AssistantSettingsOrderByWithRelationInput = {
@@ -327,7 +326,6 @@ export type AssistantSettingsOrderByWithRelationInput = {
   defaultModelId?: Prisma.SortOrderInput | Prisma.SortOrder
   assistant?: Prisma.AssistantOrderByWithRelationInput
   agent?: Prisma.AgentOrderByWithRelationInput
-  defaultModel?: Prisma.ModelOrderByWithRelationInput
 }
 
 export type AssistantSettingsWhereUniqueInput = Prisma.AtLeast<{
@@ -351,7 +349,6 @@ export type AssistantSettingsWhereUniqueInput = Prisma.AtLeast<{
   defaultModelId?: Prisma.StringNullableFilter<"AssistantSettings"> | string | null
   assistant?: Prisma.XOR<Prisma.AssistantNullableScalarRelationFilter, Prisma.AssistantWhereInput> | null
   agent?: Prisma.XOR<Prisma.AgentNullableScalarRelationFilter, Prisma.AgentWhereInput> | null
-  defaultModel?: Prisma.XOR<Prisma.ModelNullableScalarRelationFilter, Prisma.ModelWhereInput> | null
 }, "id" | "assistantId" | "agentId">
 
 export type AssistantSettingsOrderByWithAggregationInput = {
@@ -411,9 +408,9 @@ export type AssistantSettingsCreateInput = {
   reasoning_effort?: string | null
   qwenThinkMode?: boolean | null
   toolUseMode?: string | null
+  defaultModelId?: string | null
   assistant?: Prisma.AssistantCreateNestedOneWithoutSettingsInput
   agent?: Prisma.AgentCreateNestedOneWithoutSettingsInput
-  defaultModel?: Prisma.ModelCreateNestedOneWithoutAssistantSettingsInput
 }
 
 export type AssistantSettingsUncheckedCreateInput = {
@@ -447,9 +444,9 @@ export type AssistantSettingsUpdateInput = {
   reasoning_effort?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qwenThinkMode?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   toolUseMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assistant?: Prisma.AssistantUpdateOneWithoutSettingsNestedInput
   agent?: Prisma.AgentUpdateOneWithoutSettingsNestedInput
-  defaultModel?: Prisma.ModelUpdateOneWithoutAssistantSettingsNestedInput
 }
 
 export type AssistantSettingsUncheckedUpdateInput = {
@@ -501,6 +498,7 @@ export type AssistantSettingsUpdateManyMutationInput = {
   reasoning_effort?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qwenThinkMode?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   toolUseMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AssistantSettingsUncheckedUpdateManyInput = {
@@ -524,16 +522,6 @@ export type AssistantSettingsUncheckedUpdateManyInput = {
 export type AssistantSettingsNullableScalarRelationFilter = {
   is?: Prisma.AssistantSettingsWhereInput | null
   isNot?: Prisma.AssistantSettingsWhereInput | null
-}
-
-export type AssistantSettingsListRelationFilter = {
-  every?: Prisma.AssistantSettingsWhereInput
-  some?: Prisma.AssistantSettingsWhereInput
-  none?: Prisma.AssistantSettingsWhereInput
-}
-
-export type AssistantSettingsOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
 }
 
 export type AssistantSettingsCountOrderByAggregateInput = {
@@ -666,48 +654,6 @@ export type AssistantSettingsUncheckedUpdateOneWithoutAgentNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AssistantSettingsUpdateToOneWithWhereWithoutAgentInput, Prisma.AssistantSettingsUpdateWithoutAgentInput>, Prisma.AssistantSettingsUncheckedUpdateWithoutAgentInput>
 }
 
-export type AssistantSettingsCreateNestedManyWithoutDefaultModelInput = {
-  create?: Prisma.XOR<Prisma.AssistantSettingsCreateWithoutDefaultModelInput, Prisma.AssistantSettingsUncheckedCreateWithoutDefaultModelInput> | Prisma.AssistantSettingsCreateWithoutDefaultModelInput[] | Prisma.AssistantSettingsUncheckedCreateWithoutDefaultModelInput[]
-  connectOrCreate?: Prisma.AssistantSettingsCreateOrConnectWithoutDefaultModelInput | Prisma.AssistantSettingsCreateOrConnectWithoutDefaultModelInput[]
-  createMany?: Prisma.AssistantSettingsCreateManyDefaultModelInputEnvelope
-  connect?: Prisma.AssistantSettingsWhereUniqueInput | Prisma.AssistantSettingsWhereUniqueInput[]
-}
-
-export type AssistantSettingsUncheckedCreateNestedManyWithoutDefaultModelInput = {
-  create?: Prisma.XOR<Prisma.AssistantSettingsCreateWithoutDefaultModelInput, Prisma.AssistantSettingsUncheckedCreateWithoutDefaultModelInput> | Prisma.AssistantSettingsCreateWithoutDefaultModelInput[] | Prisma.AssistantSettingsUncheckedCreateWithoutDefaultModelInput[]
-  connectOrCreate?: Prisma.AssistantSettingsCreateOrConnectWithoutDefaultModelInput | Prisma.AssistantSettingsCreateOrConnectWithoutDefaultModelInput[]
-  createMany?: Prisma.AssistantSettingsCreateManyDefaultModelInputEnvelope
-  connect?: Prisma.AssistantSettingsWhereUniqueInput | Prisma.AssistantSettingsWhereUniqueInput[]
-}
-
-export type AssistantSettingsUpdateManyWithoutDefaultModelNestedInput = {
-  create?: Prisma.XOR<Prisma.AssistantSettingsCreateWithoutDefaultModelInput, Prisma.AssistantSettingsUncheckedCreateWithoutDefaultModelInput> | Prisma.AssistantSettingsCreateWithoutDefaultModelInput[] | Prisma.AssistantSettingsUncheckedCreateWithoutDefaultModelInput[]
-  connectOrCreate?: Prisma.AssistantSettingsCreateOrConnectWithoutDefaultModelInput | Prisma.AssistantSettingsCreateOrConnectWithoutDefaultModelInput[]
-  upsert?: Prisma.AssistantSettingsUpsertWithWhereUniqueWithoutDefaultModelInput | Prisma.AssistantSettingsUpsertWithWhereUniqueWithoutDefaultModelInput[]
-  createMany?: Prisma.AssistantSettingsCreateManyDefaultModelInputEnvelope
-  set?: Prisma.AssistantSettingsWhereUniqueInput | Prisma.AssistantSettingsWhereUniqueInput[]
-  disconnect?: Prisma.AssistantSettingsWhereUniqueInput | Prisma.AssistantSettingsWhereUniqueInput[]
-  delete?: Prisma.AssistantSettingsWhereUniqueInput | Prisma.AssistantSettingsWhereUniqueInput[]
-  connect?: Prisma.AssistantSettingsWhereUniqueInput | Prisma.AssistantSettingsWhereUniqueInput[]
-  update?: Prisma.AssistantSettingsUpdateWithWhereUniqueWithoutDefaultModelInput | Prisma.AssistantSettingsUpdateWithWhereUniqueWithoutDefaultModelInput[]
-  updateMany?: Prisma.AssistantSettingsUpdateManyWithWhereWithoutDefaultModelInput | Prisma.AssistantSettingsUpdateManyWithWhereWithoutDefaultModelInput[]
-  deleteMany?: Prisma.AssistantSettingsScalarWhereInput | Prisma.AssistantSettingsScalarWhereInput[]
-}
-
-export type AssistantSettingsUncheckedUpdateManyWithoutDefaultModelNestedInput = {
-  create?: Prisma.XOR<Prisma.AssistantSettingsCreateWithoutDefaultModelInput, Prisma.AssistantSettingsUncheckedCreateWithoutDefaultModelInput> | Prisma.AssistantSettingsCreateWithoutDefaultModelInput[] | Prisma.AssistantSettingsUncheckedCreateWithoutDefaultModelInput[]
-  connectOrCreate?: Prisma.AssistantSettingsCreateOrConnectWithoutDefaultModelInput | Prisma.AssistantSettingsCreateOrConnectWithoutDefaultModelInput[]
-  upsert?: Prisma.AssistantSettingsUpsertWithWhereUniqueWithoutDefaultModelInput | Prisma.AssistantSettingsUpsertWithWhereUniqueWithoutDefaultModelInput[]
-  createMany?: Prisma.AssistantSettingsCreateManyDefaultModelInputEnvelope
-  set?: Prisma.AssistantSettingsWhereUniqueInput | Prisma.AssistantSettingsWhereUniqueInput[]
-  disconnect?: Prisma.AssistantSettingsWhereUniqueInput | Prisma.AssistantSettingsWhereUniqueInput[]
-  delete?: Prisma.AssistantSettingsWhereUniqueInput | Prisma.AssistantSettingsWhereUniqueInput[]
-  connect?: Prisma.AssistantSettingsWhereUniqueInput | Prisma.AssistantSettingsWhereUniqueInput[]
-  update?: Prisma.AssistantSettingsUpdateWithWhereUniqueWithoutDefaultModelInput | Prisma.AssistantSettingsUpdateWithWhereUniqueWithoutDefaultModelInput[]
-  updateMany?: Prisma.AssistantSettingsUpdateManyWithWhereWithoutDefaultModelInput | Prisma.AssistantSettingsUpdateManyWithWhereWithoutDefaultModelInput[]
-  deleteMany?: Prisma.AssistantSettingsScalarWhereInput | Prisma.AssistantSettingsScalarWhereInput[]
-}
-
 export type FloatFieldUpdateOperationsInput = {
   set?: number
   increment?: number
@@ -733,8 +679,8 @@ export type AssistantSettingsCreateWithoutAssistantInput = {
   reasoning_effort?: string | null
   qwenThinkMode?: boolean | null
   toolUseMode?: string | null
+  defaultModelId?: string | null
   agent?: Prisma.AgentCreateNestedOneWithoutSettingsInput
-  defaultModel?: Prisma.ModelCreateNestedOneWithoutAssistantSettingsInput
 }
 
 export type AssistantSettingsUncheckedCreateWithoutAssistantInput = {
@@ -783,8 +729,8 @@ export type AssistantSettingsUpdateWithoutAssistantInput = {
   reasoning_effort?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qwenThinkMode?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   toolUseMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   agent?: Prisma.AgentUpdateOneWithoutSettingsNestedInput
-  defaultModel?: Prisma.ModelUpdateOneWithoutAssistantSettingsNestedInput
 }
 
 export type AssistantSettingsUncheckedUpdateWithoutAssistantInput = {
@@ -817,8 +763,8 @@ export type AssistantSettingsCreateWithoutAgentInput = {
   reasoning_effort?: string | null
   qwenThinkMode?: boolean | null
   toolUseMode?: string | null
+  defaultModelId?: string | null
   assistant?: Prisma.AssistantCreateNestedOneWithoutSettingsInput
-  defaultModel?: Prisma.ModelCreateNestedOneWithoutAssistantSettingsInput
 }
 
 export type AssistantSettingsUncheckedCreateWithoutAgentInput = {
@@ -867,8 +813,8 @@ export type AssistantSettingsUpdateWithoutAgentInput = {
   reasoning_effort?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qwenThinkMode?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   toolUseMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assistant?: Prisma.AssistantUpdateOneWithoutSettingsNestedInput
-  defaultModel?: Prisma.ModelUpdateOneWithoutAssistantSettingsNestedInput
 }
 
 export type AssistantSettingsUncheckedUpdateWithoutAgentInput = {
@@ -886,154 +832,6 @@ export type AssistantSettingsUncheckedUpdateWithoutAgentInput = {
   toolUseMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assistantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-}
-
-export type AssistantSettingsCreateWithoutDefaultModelInput = {
-  id?: string
-  contextCount: number
-  temperature: number
-  topP: number
-  maxTokens?: number | null
-  enableMaxTokens?: boolean
-  streamOutput?: boolean
-  hideMessages?: boolean
-  customParameters?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  reasoning_effort?: string | null
-  qwenThinkMode?: boolean | null
-  toolUseMode?: string | null
-  assistant?: Prisma.AssistantCreateNestedOneWithoutSettingsInput
-  agent?: Prisma.AgentCreateNestedOneWithoutSettingsInput
-}
-
-export type AssistantSettingsUncheckedCreateWithoutDefaultModelInput = {
-  id?: string
-  contextCount: number
-  temperature: number
-  topP: number
-  maxTokens?: number | null
-  enableMaxTokens?: boolean
-  streamOutput?: boolean
-  hideMessages?: boolean
-  customParameters?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  reasoning_effort?: string | null
-  qwenThinkMode?: boolean | null
-  toolUseMode?: string | null
-  assistantId?: string | null
-  agentId?: string | null
-}
-
-export type AssistantSettingsCreateOrConnectWithoutDefaultModelInput = {
-  where: Prisma.AssistantSettingsWhereUniqueInput
-  create: Prisma.XOR<Prisma.AssistantSettingsCreateWithoutDefaultModelInput, Prisma.AssistantSettingsUncheckedCreateWithoutDefaultModelInput>
-}
-
-export type AssistantSettingsCreateManyDefaultModelInputEnvelope = {
-  data: Prisma.AssistantSettingsCreateManyDefaultModelInput | Prisma.AssistantSettingsCreateManyDefaultModelInput[]
-}
-
-export type AssistantSettingsUpsertWithWhereUniqueWithoutDefaultModelInput = {
-  where: Prisma.AssistantSettingsWhereUniqueInput
-  update: Prisma.XOR<Prisma.AssistantSettingsUpdateWithoutDefaultModelInput, Prisma.AssistantSettingsUncheckedUpdateWithoutDefaultModelInput>
-  create: Prisma.XOR<Prisma.AssistantSettingsCreateWithoutDefaultModelInput, Prisma.AssistantSettingsUncheckedCreateWithoutDefaultModelInput>
-}
-
-export type AssistantSettingsUpdateWithWhereUniqueWithoutDefaultModelInput = {
-  where: Prisma.AssistantSettingsWhereUniqueInput
-  data: Prisma.XOR<Prisma.AssistantSettingsUpdateWithoutDefaultModelInput, Prisma.AssistantSettingsUncheckedUpdateWithoutDefaultModelInput>
-}
-
-export type AssistantSettingsUpdateManyWithWhereWithoutDefaultModelInput = {
-  where: Prisma.AssistantSettingsScalarWhereInput
-  data: Prisma.XOR<Prisma.AssistantSettingsUpdateManyMutationInput, Prisma.AssistantSettingsUncheckedUpdateManyWithoutDefaultModelInput>
-}
-
-export type AssistantSettingsScalarWhereInput = {
-  AND?: Prisma.AssistantSettingsScalarWhereInput | Prisma.AssistantSettingsScalarWhereInput[]
-  OR?: Prisma.AssistantSettingsScalarWhereInput[]
-  NOT?: Prisma.AssistantSettingsScalarWhereInput | Prisma.AssistantSettingsScalarWhereInput[]
-  id?: Prisma.StringFilter<"AssistantSettings"> | string
-  contextCount?: Prisma.IntFilter<"AssistantSettings"> | number
-  temperature?: Prisma.FloatFilter<"AssistantSettings"> | number
-  topP?: Prisma.FloatFilter<"AssistantSettings"> | number
-  maxTokens?: Prisma.IntNullableFilter<"AssistantSettings"> | number | null
-  enableMaxTokens?: Prisma.BoolFilter<"AssistantSettings"> | boolean
-  streamOutput?: Prisma.BoolFilter<"AssistantSettings"> | boolean
-  hideMessages?: Prisma.BoolFilter<"AssistantSettings"> | boolean
-  customParameters?: Prisma.JsonNullableFilter<"AssistantSettings">
-  reasoning_effort?: Prisma.StringNullableFilter<"AssistantSettings"> | string | null
-  qwenThinkMode?: Prisma.BoolNullableFilter<"AssistantSettings"> | boolean | null
-  toolUseMode?: Prisma.StringNullableFilter<"AssistantSettings"> | string | null
-  assistantId?: Prisma.StringNullableFilter<"AssistantSettings"> | string | null
-  agentId?: Prisma.StringNullableFilter<"AssistantSettings"> | string | null
-  defaultModelId?: Prisma.StringNullableFilter<"AssistantSettings"> | string | null
-}
-
-export type AssistantSettingsCreateManyDefaultModelInput = {
-  id?: string
-  contextCount: number
-  temperature: number
-  topP: number
-  maxTokens?: number | null
-  enableMaxTokens?: boolean
-  streamOutput?: boolean
-  hideMessages?: boolean
-  customParameters?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  reasoning_effort?: string | null
-  qwenThinkMode?: boolean | null
-  toolUseMode?: string | null
-  assistantId?: string | null
-  agentId?: string | null
-}
-
-export type AssistantSettingsUpdateWithoutDefaultModelInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  contextCount?: Prisma.IntFieldUpdateOperationsInput | number
-  temperature?: Prisma.FloatFieldUpdateOperationsInput | number
-  topP?: Prisma.FloatFieldUpdateOperationsInput | number
-  maxTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  enableMaxTokens?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  streamOutput?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hideMessages?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  customParameters?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  reasoning_effort?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  qwenThinkMode?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  toolUseMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  assistant?: Prisma.AssistantUpdateOneWithoutSettingsNestedInput
-  agent?: Prisma.AgentUpdateOneWithoutSettingsNestedInput
-}
-
-export type AssistantSettingsUncheckedUpdateWithoutDefaultModelInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  contextCount?: Prisma.IntFieldUpdateOperationsInput | number
-  temperature?: Prisma.FloatFieldUpdateOperationsInput | number
-  topP?: Prisma.FloatFieldUpdateOperationsInput | number
-  maxTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  enableMaxTokens?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  streamOutput?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hideMessages?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  customParameters?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  reasoning_effort?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  qwenThinkMode?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  toolUseMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  assistantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  agentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-}
-
-export type AssistantSettingsUncheckedUpdateManyWithoutDefaultModelInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  contextCount?: Prisma.IntFieldUpdateOperationsInput | number
-  temperature?: Prisma.FloatFieldUpdateOperationsInput | number
-  topP?: Prisma.FloatFieldUpdateOperationsInput | number
-  maxTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  enableMaxTokens?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  streamOutput?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hideMessages?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  customParameters?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  reasoning_effort?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  qwenThinkMode?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  toolUseMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  assistantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  agentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1056,7 +854,6 @@ export type AssistantSettingsSelect<ExtArgs extends runtime.Types.Extensions.Int
   defaultModelId?: boolean
   assistant?: boolean | Prisma.AssistantSettings$assistantArgs<ExtArgs>
   agent?: boolean | Prisma.AssistantSettings$agentArgs<ExtArgs>
-  defaultModel?: boolean | Prisma.AssistantSettings$defaultModelArgs<ExtArgs>
 }, ExtArgs["result"]["assistantSettings"]>
 
 export type AssistantSettingsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1077,7 +874,6 @@ export type AssistantSettingsSelectCreateManyAndReturn<ExtArgs extends runtime.T
   defaultModelId?: boolean
   assistant?: boolean | Prisma.AssistantSettings$assistantArgs<ExtArgs>
   agent?: boolean | Prisma.AssistantSettings$agentArgs<ExtArgs>
-  defaultModel?: boolean | Prisma.AssistantSettings$defaultModelArgs<ExtArgs>
 }, ExtArgs["result"]["assistantSettings"]>
 
 export type AssistantSettingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1098,7 +894,6 @@ export type AssistantSettingsSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   defaultModelId?: boolean
   assistant?: boolean | Prisma.AssistantSettings$assistantArgs<ExtArgs>
   agent?: boolean | Prisma.AssistantSettings$agentArgs<ExtArgs>
-  defaultModel?: boolean | Prisma.AssistantSettings$defaultModelArgs<ExtArgs>
 }, ExtArgs["result"]["assistantSettings"]>
 
 export type AssistantSettingsSelectScalar = {
@@ -1123,17 +918,14 @@ export type AssistantSettingsOmit<ExtArgs extends runtime.Types.Extensions.Inter
 export type AssistantSettingsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assistant?: boolean | Prisma.AssistantSettings$assistantArgs<ExtArgs>
   agent?: boolean | Prisma.AssistantSettings$agentArgs<ExtArgs>
-  defaultModel?: boolean | Prisma.AssistantSettings$defaultModelArgs<ExtArgs>
 }
 export type AssistantSettingsIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assistant?: boolean | Prisma.AssistantSettings$assistantArgs<ExtArgs>
   agent?: boolean | Prisma.AssistantSettings$agentArgs<ExtArgs>
-  defaultModel?: boolean | Prisma.AssistantSettings$defaultModelArgs<ExtArgs>
 }
 export type AssistantSettingsIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assistant?: boolean | Prisma.AssistantSettings$assistantArgs<ExtArgs>
   agent?: boolean | Prisma.AssistantSettings$agentArgs<ExtArgs>
-  defaultModel?: boolean | Prisma.AssistantSettings$defaultModelArgs<ExtArgs>
 }
 
 export type $AssistantSettingsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1141,7 +933,6 @@ export type $AssistantSettingsPayload<ExtArgs extends runtime.Types.Extensions.I
   objects: {
     assistant: Prisma.$AssistantPayload<ExtArgs> | null
     agent: Prisma.$AgentPayload<ExtArgs> | null
-    defaultModel: Prisma.$ModelPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1555,7 +1346,6 @@ export interface Prisma__AssistantSettingsClient<T, Null = never, ExtArgs extend
   readonly [Symbol.toStringTag]: "PrismaPromise"
   assistant<T extends Prisma.AssistantSettings$assistantArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AssistantSettings$assistantArgs<ExtArgs>>): Prisma.Prisma__AssistantClient<runtime.Types.Result.GetResult<Prisma.$AssistantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   agent<T extends Prisma.AssistantSettings$agentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AssistantSettings$agentArgs<ExtArgs>>): Prisma.Prisma__AgentClient<runtime.Types.Result.GetResult<Prisma.$AgentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  defaultModel<T extends Prisma.AssistantSettings$defaultModelArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AssistantSettings$defaultModelArgs<ExtArgs>>): Prisma.Prisma__ModelClient<runtime.Types.Result.GetResult<Prisma.$ModelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2029,25 +1819,6 @@ export type AssistantSettings$agentArgs<ExtArgs extends runtime.Types.Extensions
    */
   include?: Prisma.AgentInclude<ExtArgs> | null
   where?: Prisma.AgentWhereInput
-}
-
-/**
- * AssistantSettings.defaultModel
- */
-export type AssistantSettings$defaultModelArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Model
-   */
-  select?: Prisma.ModelSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Model
-   */
-  omit?: Prisma.ModelOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ModelInclude<ExtArgs> | null
-  where?: Prisma.ModelWhereInput
 }
 
 /**

@@ -9,10 +9,7 @@ import {
   ModelWithProvidersResponseSchema,
   ModelsResponseSchema,
   createModelSchema,
-  groupParamSchema,
-  idParamSchema,
   modelProviderRelationSchema,
-  providerParamSchema,
   updateModelSchema
 } from "../schema/model";
 import {
@@ -421,8 +418,19 @@ const updateModelRouter = registerApiRoute(modelRoutes.updateModel.path, {
     if (!id) {
       throw new HTTPException(400, { message: "模型ID不能为空" });
     }
-    const body = await c.req.json();
-    return c.json(await updateModel(id, body), 200);
+    try {
+      const body = updateModelSchema.parse(await c.req.json());
+      return c.json(await updateModel(id, body), 200);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        throw new HTTPException(400, { message: error.message });
+      }
+
+      throw new HTTPException(500, {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        message: error?.message || "服务器内部错误"
+      });
+    }
   }
 });
 

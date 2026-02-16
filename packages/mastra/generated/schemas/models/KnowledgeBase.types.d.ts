@@ -6,8 +6,8 @@ import type { KnowledgeItemSchema } from './KnowledgeItem.schema';
 import type { ModelSchema } from './Model.schema';
 import type { GroupSchema } from './Group.schema';
 import type { ProviderSchema } from './Provider.schema';
-import type { TopicSchema } from './Topic.schema';
 import type { TopicKnowledgeBaseSchema } from './TopicKnowledgeBase.schema';
+import type { TopicSchema } from './Topic.schema';
 import type { MCPAssistantServerSchema } from './MCPAssistantServer.schema';
 import type { MCPServerSchema } from './MCPServer.schema';
 import type { MCPAgentServerSchema } from './MCPAgentServer.schema';
@@ -16,6 +16,5 @@ import type { MCPAgentServerSchema } from './MCPAgentServer.schema';
 export interface KnowledgeBaseWithRelations {
   agents?: z.infer<typeof AgentSchema>[];
   assistants?: z.infer<typeof AssistantSchema>[];
-  model?: z.infer<typeof ModelSchema>;
   topics?: z.infer<typeof TopicSchema>[];
 }
