@@ -125,6 +125,7 @@ export const GroupManageDialog: React.FC<GroupManageDialogProps> = ({
                       variant="outline"
                       size="sm"
                       onClick={actions.startAdd}
+                      className="text-brand-primary-500 hover:bg-brand-primary-50"
                     >
                       <Plus className="mr-2 h-4 w-4" />
                       新建分组
@@ -144,7 +145,12 @@ export const GroupManageDialog: React.FC<GroupManageDialogProps> = ({
                             className="flex items-center justify-between rounded-lg border bg-card p-3"
                           >
                             <div className="flex items-center space-x-2">
-                              <Badge variant="secondary">{group.name}</Badge>
+                              <Badge
+                                variant="secondary"
+                                className="text-brand-primary-500"
+                              >
+                                {group.name}
+                              </Badge>
                             </div>
                             <div className="flex items-center space-x-1">
                               <Button
@@ -153,7 +159,7 @@ export const GroupManageDialog: React.FC<GroupManageDialogProps> = ({
                                 onClick={() =>
                                   actions.startEdit(group.id, group.name)
                                 }
-                                className="h-8 px-2"
+                                className="h-8 px-2 text-brand-primary-500 hover:text-brand-primary-600"
                               >
                                 <Edit className="h-4 w-4" />
                               </Button>
@@ -200,7 +206,7 @@ export const GroupManageDialog: React.FC<GroupManageDialogProps> = ({
                             {...field}
                             placeholder="请输入分组名称"
                             autoFocus
-                            className="focus-visible:ring-brand-primary-500"
+                            className="border-brand-primary-500/30 focus:border-brand-primary-500 focus-visible:ring-brand-primary-500"
                           />
                         </FormControl>
                         <FormMessage />
@@ -219,7 +225,10 @@ export const GroupManageDialog: React.FC<GroupManageDialogProps> = ({
 
           <DialogFooter>
             {state.mode === "list" ? (
-              <Button onClick={() => handleDialogOpenChange(false)}>
+              <Button
+                onClick={() => handleDialogOpenChange(false)}
+                className="bg-brand-primary-500 hover:bg-brand-primary-600"
+              >
                 关闭
               </Button>
             ) : (
