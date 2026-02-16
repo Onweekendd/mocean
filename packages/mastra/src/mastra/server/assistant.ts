@@ -9,16 +9,16 @@ import { z } from "zod";
 import { DynamicAgent } from "../agents/dynamicAgent";
 import { createCommonRunTime } from "../runtime/CommonRunTime";
 import type {
-  AssistantFullResponse,
   AssistantResponse,
   AssistantWithModelsResponse,
   CreateAssistantInput,
+  FullAssistant,
   UpdateAssistantInput
 } from "../schema/assistant";
 import {
-  AssistantFullResponseSchema,
   AssistantResponseSchema,
-  AssistantWithModelsResponseSchema
+  AssistantWithModelsResponseSchema,
+  FullAssistantSchema
 } from "../schema/assistant";
 import { prisma } from "./index";
 import type { AsyncReturnType } from "./type";
@@ -31,7 +31,7 @@ export {
   AssistantResponseSchema,
   AssistantsResponseSchema,
   AssistantWithModelsResponseSchema,
-  AssistantFullResponseSchema
+  FullAssistantSchema as AssistantFullResponseSchema
 } from "../schema/assistant";
 
 /**
@@ -56,9 +56,7 @@ const getAssistants = async (): Promise<AssistantWithModelsResponse[]> => {
  * @param id - 助手的唯一标识符
  * @returns 助手对象，如果不存在则返回null
  */
-const getAssistantById = async (
-  id: string
-): Promise<AssistantFullResponse | null> => {
+const getAssistantById = async (id: string): Promise<FullAssistant | null> => {
   const assistant = await prisma.assistant.findUnique({
     where: {
       id
@@ -73,7 +71,7 @@ const getAssistantById = async (
       mcpServers: true
     }
   });
-  return assistant ? AssistantFullResponseSchema.parse(assistant) : null;
+  return assistant ? FullAssistantSchema.parse(assistant) : null;
 };
 
 /**
@@ -81,7 +79,9 @@ const getAssistantById = async (
  * @param id - 助手的唯一标识符
  * @returns 包含完整助手信息的助手对象，如果不存在则返回null
  */
-const getFullAssistantById = async (id: string) => {
+const getFullAssistantById = async (
+  id: string
+): Promise<FullAssistant | null> => {
   const assistant = await prisma.assistant.findUnique({
     where: {
       id
@@ -96,7 +96,7 @@ const getFullAssistantById = async (id: string) => {
       mcpServers: true
     }
   });
-  return assistant;
+  return assistant ? FullAssistantSchema.parse(assistant) : null;
 };
 
 /**
@@ -219,7 +219,9 @@ const executeChatWithAssistant = async (
         store: false
       }
     },
-    requestContext: createCommonRunTime({ assistant })
+    requestContext: createCommonRunTime({
+      assistant
+    })
   });
 
   const aiSdkStream = toAISdkStream(stream, { from: "agent" });
