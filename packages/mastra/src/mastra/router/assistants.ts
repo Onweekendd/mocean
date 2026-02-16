@@ -1,4 +1,5 @@
 import { registerApiRoute } from "@mastra/core/server";
+import type { UIMessage } from "ai";
 import { HTTPException } from "hono/http-exception";
 import { z } from "zod";
 
@@ -78,11 +79,10 @@ const getAssistantByIdRouter = registerApiRoute(
       }
     },
     handler: async (c) => {
-      const assistantId = c.req.param("assistantId");
-      if (!assistantId) {
-        throw new HTTPException(400, { message: "助手ID不能为空" });
-      }
-      const assistant = await getAssistantById(assistantId);
+      const params = assistantIdParamSchema.parse({
+        assistantId: c.req.param("assistantId")
+      });
+      const assistant = await getAssistantById(params.assistantId);
       if (!assistant) {
         throw new HTTPException(404, { message: "助手不存在" });
       }
@@ -123,8 +123,18 @@ const createAssistantRouter = registerApiRoute(
       }
     },
     handler: async (c) => {
-      const body = await c.req.json();
-      return c.json(await createAssistant(body), 201);
+      try {
+        const body = createAssistantSchema.parse(await c.req.json());
+        return c.json(await createAssistant(body), 201);
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          throw new HTTPException(400, { message: error.message });
+        } else {
+          throw new HTTPException(500, {
+            message: error instanceof Error ? error.message : String(error)
+          });
+        }
+      }
     }
   }
 );
@@ -161,12 +171,21 @@ const updateAssistantRouter = registerApiRoute(
       }
     },
     handler: async (c) => {
-      const assistantId = c.req.param("assistantId");
-      if (!assistantId) {
-        throw new HTTPException(400, { message: "助手ID不能为空" });
+      const params = assistantIdParamSchema.parse({
+        assistantId: c.req.param("assistantId")
+      });
+      try {
+        const body = updateAssistantSchema.parse(await c.req.json());
+        return c.json(await updateAssistant(params.assistantId, body), 200);
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          throw new HTTPException(400, { message: error.message });
+        } else {
+          throw new HTTPException(500, {
+            message: error instanceof Error ? error.message : String(error)
+          });
+        }
       }
-      const body = await c.req.json();
-      return c.json(await updateAssistant(assistantId, body), 200);
     }
   }
 );
@@ -195,11 +214,10 @@ const deleteAssistantRouter = registerApiRoute(
       }
     },
     handler: async (c) => {
-      const assistantId = c.req.param("assistantId");
-      if (!assistantId) {
-        throw new HTTPException(400, { message: "助手ID不能为空" });
-      }
-      return c.json(await deleteAssistant(assistantId), 200);
+      const params = assistantIdParamSchema.parse({
+        assistantId: c.req.param("assistantId")
+      });
+      return c.json(await deleteAssistant(params.assistantId), 200);
     }
   }
 );
@@ -236,15 +254,25 @@ const chatWithAssistantRouter = registerApiRoute(
       }
     },
     handler: async (c) => {
-      const body = await c.req.json();
-      return c.json(
-        await executeChatWithAssistant(
-          body.assistantId,
-          body.messages,
-          body.threadId
-        ),
-        200
-      );
+      try {
+        const body = chatWithAssistantSchema.parse(await c.req.json());
+        return c.json(
+          await executeChatWithAssistant(
+            body.assistantId,
+            body.messages as UIMessage[],
+            body.threadId
+          ),
+          200
+        );
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          throw new HTTPException(400, { message: error.message });
+        } else {
+          throw new HTTPException(500, {
+            message: error instanceof Error ? error.message : String(error)
+          });
+        }
+      }
     }
   }
 );
@@ -273,11 +301,10 @@ const getAssistantThreadsRouter = registerApiRoute(
       }
     },
     handler: async (c) => {
-      const assistantId = c.req.param("assistantId");
-      if (!assistantId) {
-        throw new HTTPException(400, { message: "助手ID不能为空" });
-      }
-      return c.json(await getThreadsByAssistantId(assistantId), 200);
+      const params = assistantIdParamSchema.parse({
+        assistantId: c.req.param("assistantId")
+      });
+      return c.json(await getThreadsByAssistantId(params.assistantId), 200);
     }
   }
 );
@@ -306,12 +333,14 @@ const getAssistantUIMessageByThreadIdRouter = registerApiRoute(
       }
     },
     handler: async (c) => {
-      const assistantId = c.req.param("assistantId");
-      const threadId = c.req.param("threadId");
-      if (!assistantId || !threadId) {
-        throw new HTTPException(400, { message: "助手ID和线程ID不能为空" });
-      }
-      return c.json(await getUIMessagesByThreadId(assistantId, threadId), 200);
+      const params = assistantThreadIdParamSchema.parse({
+        assistantId: c.req.param("assistantId"),
+        threadId: c.req.param("threadId")
+      });
+      return c.json(
+        await getUIMessagesByThreadId(params.assistantId, params.threadId),
+        200
+      );
     }
   }
 );
