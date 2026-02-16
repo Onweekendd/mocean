@@ -8,6 +8,7 @@ import {
   useProviderWithModels
 } from "@/hooks/useProvidersSWR";
 
+import type { FullProvider } from "../type";
 import { useDragModels } from "./useDragModels";
 
 /**
@@ -261,7 +262,7 @@ export function useProviderPage(selectedProviderId: string | null) {
    * @description 处理模型拖拽排序和分组转移
    */
   const { sensors, onDragStart, onDragEnd, activeModel } = useDragModels({
-    provider,
+    provider: provider as FullProvider,
     models,
     modelGroups,
     onRefresh: refreshProvider
