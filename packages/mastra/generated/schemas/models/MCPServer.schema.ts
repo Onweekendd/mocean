@@ -1,5 +1,6 @@
-// @ts-nocheck - Circular imports resolved with runtime require()
+// @ts-nocheck - Circular imports resolved with schema registry
 import * as z from 'zod';
+import { _r } from './_registry';
 // Circular import removed: import { MCPAgentServerSchema } from './MCPAgentServer.schema';
 // Circular import removed: import { MCPAssistantServerSchema } from './MCPAssistantServer.schema';
 // Circular import removed: import { MCPConfigSampleSchema } from './MCPConfigSample.schema';
@@ -27,32 +28,17 @@ export const MCPServerSchema = z.object({
   logoUrl: z.string().nullish(),
   tagsJson: z.unknown().refine((val) => { const getDepth = (obj: unknown, depth: number = 0): number => { if (depth > 10) return depth; if (obj === null || typeof obj !== 'object') return depth; const values = Object.values(obj as Record<string, unknown>); if (values.length === 0) return depth; return Math.max(...values.map(v => getDepth(v, depth + 1))); }; return getDepth(val) <= 10; }, "JSON nesting depth exceeds maximum of 10").nullish(),
   timeout: z.number().int().nullish(),
-  tools: z.array(z.lazy(() => {
-      const mod = require('./MCPTool.schema');
-      return mod.MCPToolSchema;
-    })),
-  prompts: z.array(z.lazy(() => {
-      const mod = require('./MCPPrompt.schema');
-      return mod.MCPPromptSchema;
-    })),
-  assistants: z.array(z.lazy(() => {
-      const mod = require('./MCPAssistantServer.schema');
-      return mod.MCPAssistantServerSchema;
-    })),
-  agents: z.array(z.lazy(() => {
-      const mod = require('./MCPAgentServer.schema');
-      return mod.MCPAgentServerSchema;
-    })),
-  resources: z.array(z.lazy(() => {
-      const mod = require('./MCPResource.schema');
-      return mod.MCPResourceSchema;
-    })),
-  configSampleRelation: z.lazy(() => {
-      const mod = require('./MCPConfigSample.schema');
-      return mod.MCPConfigSampleSchema;
-    }).nullish(),
+  tools: z.array(z.lazy(() => _r.MCPToolSchema)),
+  prompts: z.array(z.lazy(() => _r.MCPPromptSchema)),
+  assistants: z.array(z.lazy(() => _r.MCPAssistantServerSchema)),
+  agents: z.array(z.lazy(() => _r.MCPAgentServerSchema)),
+  resources: z.array(z.lazy(() => _r.MCPResourceSchema)),
+  configSampleRelation: z.lazy(() => _r.MCPConfigSampleSchema).nullish(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
 
 export type MCPServerType = z.infer<typeof MCPServerSchema>;
+
+// Register to schema registry for circular reference resolution
+_r.MCPServerSchema = MCPServerSchema;

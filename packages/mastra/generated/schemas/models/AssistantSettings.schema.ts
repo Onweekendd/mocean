@@ -1,5 +1,6 @@
-// @ts-nocheck - Circular imports resolved with runtime require()
+// @ts-nocheck - Circular imports resolved with schema registry
 import * as z from 'zod';
+import { _r } from './_registry';
 // Circular import removed: import { AgentSchema } from './Agent.schema';
 // Circular import removed: import { AssistantSchema } from './Assistant.schema';
 
@@ -16,17 +17,14 @@ export const AssistantSettingsSchema = z.object({
   reasoning_effort: z.string().nullish(),
   qwenThinkMode: z.boolean().nullish(),
   toolUseMode: z.string().nullish(),
-  assistant: z.lazy(() => {
-      const mod = require('./Assistant.schema');
-      return mod.AssistantSchema;
-    }).nullish(),
+  assistant: z.lazy(() => _r.AssistantSchema).nullish(),
   assistantId: z.string().nullish(),
-  agent: z.lazy(() => {
-      const mod = require('./Agent.schema');
-      return mod.AgentSchema;
-    }).nullish(),
+  agent: z.lazy(() => _r.AgentSchema).nullish(),
   agentId: z.string().nullish(),
   defaultModelId: z.string().nullish(),
 });
 
 export type AssistantSettingsType = z.infer<typeof AssistantSettingsSchema>;
+
+// Register to schema registry for circular reference resolution
+_r.AssistantSettingsSchema = AssistantSettingsSchema;

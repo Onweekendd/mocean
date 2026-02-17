@@ -1,5 +1,6 @@
-// @ts-nocheck - Circular imports resolved with runtime require()
+// @ts-nocheck - Circular imports resolved with schema registry
 import * as z from 'zod';
+import { _r } from './_registry';
 import { KnowledgeRecognitionSchema } from '../enums/KnowledgeRecognition.schema';
 // Circular import removed: import { AssistantSettingsSchema } from './AssistantSettings.schema';
 // Circular import removed: import { KnowledgeBaseSchema } from './KnowledgeBase.schema';
@@ -19,39 +20,21 @@ export const AssistantSchema = z.object({
   webSearchProviderId: z.string().nullish(),
   enableGenerateImage: z.boolean(),
   knowledgeRecognition: KnowledgeRecognitionSchema.nullish(),
-  model: z.lazy(() => {
-      const mod = require('./Model.schema');
-      return mod.ModelSchema;
-    }).nullish(),
+  model: z.lazy(() => _r.ModelSchema).nullish(),
   modelId: z.string().nullish(),
-  provider: z.lazy(() => {
-      const mod = require('./Provider.schema');
-      return mod.ProviderSchema;
-    }).nullish(),
+  provider: z.lazy(() => _r.ProviderSchema).nullish(),
   providerId: z.string().nullish(),
-  defaultModel: z.lazy(() => {
-      const mod = require('./Model.schema');
-      return mod.ModelSchema;
-    }).nullish(),
+  defaultModel: z.lazy(() => _r.ModelSchema).nullish(),
   defaultModelId: z.string().nullish(),
-  settings: z.lazy(() => {
-      const mod = require('./AssistantSettings.schema');
-      return mod.AssistantSettingsSchema;
-    }).nullish(),
-  topics: z.array(z.lazy(() => {
-      const mod = require('./Topic.schema');
-      return mod.TopicSchema;
-    })),
-  knowledgeBases: z.array(z.lazy(() => {
-      const mod = require('./KnowledgeBase.schema');
-      return mod.KnowledgeBaseSchema;
-    })),
-  mcpServers: z.array(z.lazy(() => {
-      const mod = require('./MCPAssistantServer.schema');
-      return mod.MCPAssistantServerSchema;
-    })),
+  settings: z.lazy(() => _r.AssistantSettingsSchema).nullish(),
+  topics: z.array(z.lazy(() => _r.TopicSchema)),
+  knowledgeBases: z.array(z.lazy(() => _r.KnowledgeBaseSchema)),
+  mcpServers: z.array(z.lazy(() => _r.MCPAssistantServerSchema)),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
 
 export type AssistantType = z.infer<typeof AssistantSchema>;
+
+// Register to schema registry for circular reference resolution
+_r.AssistantSchema = AssistantSchema;

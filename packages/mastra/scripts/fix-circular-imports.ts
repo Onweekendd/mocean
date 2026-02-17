@@ -6,10 +6,12 @@ import { join } from "path";
  * 策略：
  * 1. 分析所有 schema 文件之间的导入关系
  * 2. 检测循环引用
- * 3. 完全移除循环引用的 import
- * 4. 在 z.lazy() 中使用动态 require()
- * 5. 在文件顶部添加 // @ts-nocheck 来禁用类型检查
- * 6. 创建 .d.ts 文件来提供类型信息
+ * 3. 创建 _registry.ts 共享注册表，避免循环导入
+ * 4. 移除循环引用的 import，改为从 _registry 读取
+ * 5. 在 z.lazy() 中使用 _registry 获取 schema
+ * 6. 在文件顶部添加 // @ts-nocheck 来禁用类型检查
+ * 7. 在文件末尾注册自身到 _registry
+ * 8. 创建 .d.ts 文件来提供类型信息
  */
 
 interface ImportInfo {
@@ -165,6 +167,26 @@ function detectCycles(files: FileInfo[]): Map<string, Set<string>> {
   return cycles;
 }
 
+// 创建 _registry.ts 文件
+function createRegistryFile(): void {
+  const schemasDir = join(process.cwd(), "generated", "schemas", "models");
+  const registryPath = join(schemasDir, "_registry.ts");
+  const content = `/**
+ * Schema Registry - 用于解决循环引用
+ * Auto-generated - do not edit manually
+ *
+ * 所有存在循环引用的 schema 文件会将自身注册到此 registry 中，
+ * 并通过 z.lazy(() => _r.XxxSchema) 引用其他 schema，
+ * 避免循环 import 导致的运行时和类型问题。
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const _r: Record<string, any> = {};
+`;
+  writeFileSync(registryPath, content, "utf-8");
+  // eslint-disable-next-line no-console
+  console.log("📦 Created: _registry.ts");
+}
+
 // 修复单个文件的循环引用
 function fixFile(
   file: FileInfo,
@@ -204,33 +226,41 @@ function fixFile(
     });
   }
 
-  // 步骤 2: 在文件开头添加 @ts-nocheck
+  // 步骤 2: 添加 _registry import（在 zod import 之后）
+  if (!modified.includes("from './_registry'")) {
+    modified = modified.replace(
+      /import \* as z from 'zod';/,
+      `import * as z from 'zod';\nimport { _r } from './_registry';`
+    );
+  }
+
+  // 步骤 3: 在文件开头添加 @ts-nocheck
   if (!modified.includes("// @ts-nocheck")) {
     modified =
-      "// @ts-nocheck - Circular imports resolved with runtime require()\n" +
+      "// @ts-nocheck - Circular imports resolved with schema registry\n" +
       modified;
   }
 
-  // 步骤 3: 修改 z.lazy() 中的引用，使用动态 require
+  // 步骤 4: 修改 z.lazy() 中的引用，使用 _registry
   for (const circularModel of circularModels) {
     const schemaName = `${circularModel}Schema`;
 
-    // 替换 z.lazy(() => XxxSchema) 为动态 require
+    // 替换 z.lazy(() => XxxSchema) 为 z.lazy(() => _r.XxxSchema)
     const lazyRegex = new RegExp(
       `z\\.lazy\\(\\(\\)\\s*=>\\s*${schemaName}\\)`,
       "g"
     );
 
-    modified = modified.replace(
-      lazyRegex,
-      `z.lazy(() => {
-      const mod = require('./${circularModel}.schema');
-      return mod.${schemaName};
-    })`
-    );
+    modified = modified.replace(lazyRegex, `z.lazy(() => _r.${schemaName})`);
   }
 
-  // 步骤 4: 生成类型定义
+  // 步骤 5: 在文件末尾注册自身到 registry
+  const exportName = `${file.modelName}Schema`;
+  if (!modified.includes(`_r.${exportName}`)) {
+    modified += `\n// Register to schema registry for circular reference resolution\n_r.${exportName} = ${exportName};\n`;
+  }
+
+  // 步骤 6: 生成类型定义
   const typeImports = [...circularModels]
     .map((m) => `import type { ${m}Schema } from './${m}.schema';`)
     .join("\n");
@@ -312,6 +342,9 @@ function main() {
       console.log(`  ${model} -> ${[...deps].join(", ")}`);
     }
   }
+
+  // 创建 registry 文件
+  createRegistryFile();
 
   // 修复文件
   let fixedCount = 0;

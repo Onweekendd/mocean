@@ -1,5 +1,6 @@
-// @ts-nocheck - Circular imports resolved with runtime require()
+// @ts-nocheck - Circular imports resolved with schema registry
 import * as z from 'zod';
+import { _r } from './_registry';
 import { KnowledgeRecognitionSchema } from '../enums/KnowledgeRecognition.schema';
 // Circular import removed: import { AssistantSettingsSchema } from './AssistantSettings.schema';
 // Circular import removed: import { KnowledgeBaseSchema } from './KnowledgeBase.schema';
@@ -18,24 +19,15 @@ export const AgentSchema = z.object({
   webSearchProviderId: z.string().nullish(),
   enableGenerateImage: z.boolean(),
   knowledgeRecognition: KnowledgeRecognitionSchema.nullish(),
-  settings: z.lazy(() => {
-      const mod = require('./AssistantSettings.schema');
-      return mod.AssistantSettingsSchema;
-    }).nullish(),
-  topics: z.array(z.lazy(() => {
-      const mod = require('./Topic.schema');
-      return mod.TopicSchema;
-    })),
-  knowledgeBases: z.array(z.lazy(() => {
-      const mod = require('./KnowledgeBase.schema');
-      return mod.KnowledgeBaseSchema;
-    })),
-  mcpServers: z.array(z.lazy(() => {
-      const mod = require('./MCPAgentServer.schema');
-      return mod.MCPAgentServerSchema;
-    })),
+  settings: z.lazy(() => _r.AssistantSettingsSchema).nullish(),
+  topics: z.array(z.lazy(() => _r.TopicSchema)),
+  knowledgeBases: z.array(z.lazy(() => _r.KnowledgeBaseSchema)),
+  mcpServers: z.array(z.lazy(() => _r.MCPAgentServerSchema)),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
 
 export type AgentType = z.infer<typeof AgentSchema>;
+
+// Register to schema registry for circular reference resolution
+_r.AgentSchema = AgentSchema;
