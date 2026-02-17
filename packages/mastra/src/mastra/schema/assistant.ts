@@ -59,7 +59,7 @@ export const AssistantWithModelsResponseSchema = AssistantSchema.pick({
 });
 
 // 带 provider 的完整 Assistant Response Schema
-export const AssistantFullResponseSchema = AssistantSchema.pick({
+export const FullAssistantSchema = AssistantSchema.pick({
   id: true,
   name: true,
   prompt: true,
@@ -143,6 +143,12 @@ export const chatWithAssistantSchema = z.object({
   threadId: z.string().optional()
 });
 
+export const assistantWithModelSchema = AssistantSchema.extend({
+  model: ModelSchema.partial(),
+  defaultModel: ModelSchema.partial(),
+  settings: z.array(AssistantSettingsSchema.partial())
+});
+
 // zod类型推导
 export type CreateAssistantInput = z.infer<typeof createAssistantSchema>;
 export type UpdateAssistantInput = z.infer<typeof updateAssistantSchema>;
@@ -151,4 +157,5 @@ export type AssistantsResponse = z.infer<typeof AssistantsResponseSchema>;
 export type AssistantWithModelsResponse = z.infer<
   typeof AssistantWithModelsResponseSchema
 >;
-export type AssistantFullResponse = z.infer<typeof AssistantFullResponseSchema>;
+export type FullAssistant = z.infer<typeof FullAssistantSchema>;
+export type AssistantWithModel = z.infer<typeof assistantWithModelSchema>;
