@@ -225,7 +225,9 @@ const executeChatWithAssistant = async (
   });
 
   const aiSdkStream = toAISdkStream(stream, { from: "agent" });
-  return createUIMessageStreamResponse({ stream: aiSdkStream });
+  return createUIMessageStreamResponse({
+    stream: aiSdkStream as ReadableStream
+  });
 };
 
 /**
