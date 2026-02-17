@@ -1,10 +1,13 @@
 /// <reference lib="dom" />
+import type { StorageThreadType } from "@mastra/core/memory";
+import type { UIMessage } from "ai";
 import type { z } from "zod";
 
 import { assistantRoutes } from "../router/type";
 import type {
   CreateAssistantInput,
-  UpdateAssistantInput
+  UpdateAssistantInput,
+  assistantThreadIdParamSchema
 } from "../schema/assistant";
 import type { ApiClientConfig, ApiResponse } from "./base-client";
 import { BaseApiClient } from "./base-client";
@@ -108,6 +111,65 @@ export class AssistantsApiClient extends BaseApiClient {
       assistantRoutes.deleteAssistant.path.replace(":assistantId", assistantId)
     );
   }
+
+  /**
+   * 获取助手的对话线程
+   * @param assistantId - 助手的唯一标识符
+   * @returns 包含对话线程信息的响应对象
+   */
+  async getAssistantThreads(
+    assistantId: string
+  ): Promise<ApiResponse<StorageThreadType[]>> {
+    return this.get<StorageThreadType[]>(
+      assistantRoutes.getAssistantThreads.path.replace(
+        ":assistantId",
+        assistantId
+      )
+    );
+  }
+
+  /**
+   * 获取助手线程中的UI消息
+   * @param param
+   * @param param.assistantId - 助手的唯一标识符
+   * @param param.threadId - 线程的唯一标识符
+   * @returns  包含UI消息的响应对象
+   */
+  async getAssistantUIMessageByThreadId({
+    assistantId,
+    threadId
+  }: z.infer<typeof assistantThreadIdParamSchema>): Promise<
+    ApiResponse<UIMessage>
+  > {
+    return this.get<UIMessage>(
+      assistantRoutes.getAssistantUIMessageByThreadId.path
+        .replace(":assistantId", assistantId)
+        .replace(":threadId", threadId)
+    );
+  }
+
+  /**
+   *
+   * @param param0
+   * @param param0.assistantId - 助手的唯一标识符
+   * @param param0.threadId - 线程的唯一标识符
+   * @param param0.messages - 要发送的消息数组
+   * @returns 消息流
+   */
+  async chatWithAssistant({
+    assistantId,
+    threadId,
+    messages
+  }: Omit<
+    z.infer<typeof assistantRoutes.chatWithAssistant.requestSchema>,
+    "messages"
+  > & { messages: UIMessage[] }): Promise<ApiResponse<Response>> {
+    return this.post<Response>(assistantRoutes.chatWithAssistant.path, {
+      assistantId,
+      threadId,
+      messages
+    });
+  }
 }
 
 /**
@@ -128,7 +190,23 @@ export const assistantsApiMethods = {
   updateAssistant: (assistantId: string, assistant: UpdateAssistantInput) =>
     assistantsApi.updateAssistant(assistantId, assistant),
   deleteAssistant: (assistantId: string) =>
-    assistantsApi.deleteAssistant(assistantId)
+    assistantsApi.deleteAssistant(assistantId),
+  getAssistantThreadsRouter: (assistantId: string) =>
+    assistantsApi.getAssistantThreads(assistantId),
+  getAssistantUIMessageByThreadId: ({
+    assistantId,
+    threadId
+  }: z.infer<typeof assistantThreadIdParamSchema>) =>
+    assistantsApi.getAssistantUIMessageByThreadId({ assistantId, threadId }),
+  chatWithAssistantRouter: ({
+    assistantId,
+    threadId,
+    messages
+  }: {
+    assistantId: string;
+    threadId?: string;
+    messages: UIMessage[];
+  }) => assistantsApi.chatWithAssistant({ assistantId, threadId, messages })
 };
 
 /**
@@ -142,6 +220,9 @@ export type UseAssistantsApiReturn = Pick<
   | "createAssistant"
   | "updateAssistant"
   | "deleteAssistant"
+  | "getAssistantThreads"
+  | "getAssistantUIMessageByThreadId"
+  | "chatWithAssistant"
 >;
 
 /**
@@ -170,6 +251,16 @@ export const useAssistantsApi = (): UseAssistantsApiReturn => {
     ) as UseAssistantsApiReturn["updateAssistant"],
     deleteAssistant: assistantsApi.deleteAssistant.bind(
       assistantsApi
-    ) as UseAssistantsApiReturn["deleteAssistant"]
+    ) as UseAssistantsApiReturn["deleteAssistant"],
+    getAssistantThreads: assistantsApi.getAssistantThreads.bind(
+      assistantsApi
+    ) as UseAssistantsApiReturn["getAssistantThreads"],
+    getAssistantUIMessageByThreadId:
+      assistantsApi.getAssistantUIMessageByThreadId.bind(
+        assistantsApi
+      ) as UseAssistantsApiReturn["getAssistantUIMessageByThreadId"],
+    chatWithAssistant: assistantsApi.chatWithAssistant.bind(
+      assistantsApi
+    ) as UseAssistantsApiReturn["chatWithAssistant"]
   };
 };
