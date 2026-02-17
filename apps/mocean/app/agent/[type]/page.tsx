@@ -25,11 +25,19 @@ export default function AgentTypePage({ params }: AgentTypePageProps) {
   const [isCreatingAssistant, setIsCreatingAssistant] = useState(false);
 
   // 获取并解码分组名称
-  const groupKey = activeAgentGroup || decodeURIComponent(typeof window !== "undefined" ? window.location.pathname.split("/").pop() || "精选" : "精选");
+  const groupKey =
+    activeAgentGroup ||
+    decodeURIComponent(
+      typeof window !== "undefined"
+        ? window.location.pathname.split("/").pop() || "精选"
+        : "精选"
+    );
 
   // 当 URL 参数变化时，更新 store 中的 activeAgentGroup
   if (typeof window !== "undefined") {
-    const pathGroup = decodeURIComponent(window.location.pathname.split("/").pop() || "");
+    const pathGroup = decodeURIComponent(
+      window.location.pathname.split("/").pop() || ""
+    );
     if (pathGroup && pathGroup !== activeAgentGroup) {
       setActiveAgentGroup(pathGroup);
     }
@@ -37,7 +45,11 @@ export default function AgentTypePage({ params }: AgentTypePageProps) {
 
   // 使用当前 URL 中的分组获取数据
   const currentGroup = activeAgentGroup || "精选";
-  const { agents: groupAgents, isLoading: isGroupLoading, error: groupError } = useAgentsByGroupSWR(currentGroup);
+  const {
+    agents: groupAgents,
+    isLoading: isGroupLoading,
+    error: groupError
+  } = useAgentsByGroupSWR(currentGroup);
 
   /**
    * 处理创建助手操作
@@ -51,7 +63,10 @@ export default function AgentTypePage({ params }: AgentTypePageProps) {
     try {
       // 构建创建助手的参数，符合 AssistantInput 类型
       // 注意：modelId 和 defaultModelId 已移除，由后端自动填充
-      const assistantData: Omit<Assistant, "id" | "createdAt" | "updatedAt" | "modelId" | "defaultModelId"> = {
+      const assistantData: Omit<
+        Assistant,
+        "id" | "createdAt" | "updatedAt" | "modelId" | "defaultModelId"
+      > = {
         name: agent.name,
         prompt: agent.prompt || "",
         type: agent.type || "default",
