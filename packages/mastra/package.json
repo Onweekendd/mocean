@@ -9,7 +9,7 @@
     "test:coverage": "vitest run --coverage",
     "serve": "dotenvx run -- mastra dev",
     "build": "mastra build",
-    "bundle": "rollup -c && tsx scripts/fix-apiClient.ts",
+    "bundle": "rollup -c",
     "lint": "eslint .",
     "fix": "eslint --fix .",
     "import-agents": "dotenvx run -- tsx scripts/import-agents.ts",

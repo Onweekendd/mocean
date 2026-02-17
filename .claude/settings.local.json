@@ -48,7 +48,8 @@
       "Bash(pnpm tsc:*)",
       "Bash(ls:*)",
       "Bash(git status:*)",
-      "Bash(git diff:*)"
+      "Bash(git diff:*)",
+      "Bash(pnpm test:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,9 +1,7 @@
-// @ts-nocheck - Circular imports resolved with schema registry
 import * as z from 'zod';
-import { _r } from './_registry';
-// Circular import removed: import { AssistantSchema } from './Assistant.schema';
-// Circular import removed: import { GroupSchema } from './Group.schema';
-// Circular import removed: import { KnowledgeBaseSchema } from './KnowledgeBase.schema';
+import { AssistantSchema } from './Assistant.schema';
+import { GroupSchema } from './Group.schema';
+import { KnowledgeBaseSchema } from './KnowledgeBase.schema';
 
 export const ModelSchema = z.object({
   id: z.string(),
@@ -23,15 +21,12 @@ export const ModelSchema = z.object({
   inputPricePerMillion: z.number().nullish(),
   outputPricePerMillion: z.number().nullish(),
   groupId: z.string(),
-  group: z.lazy(() => _r.GroupSchema),
-  assistants: z.array(z.lazy(() => _r.AssistantSchema)),
-  defaultForAssistants: z.array(z.lazy(() => _r.AssistantSchema)),
-  rerankFor: z.array(z.lazy(() => _r.KnowledgeBaseSchema)),
+  group: z.lazy(() => GroupSchema),
+  assistants: z.array(z.lazy(() => AssistantSchema)),
+  defaultForAssistants: z.array(z.lazy(() => AssistantSchema)),
+  rerankFor: z.array(z.lazy(() => KnowledgeBaseSchema)),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
 
 export type ModelType = z.infer<typeof ModelSchema>;
-
-// Register to schema registry for circular reference resolution
-_r.ModelSchema = ModelSchema;

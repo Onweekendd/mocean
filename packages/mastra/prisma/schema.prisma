@@ -80,7 +80,9 @@ enum ProviderType {
   inference
   io_net
   jiekou
+  kilo
   kimi_for_coding
+  kuae_cloud_coding_plan
   llama
   lmstudio
   lucidquery
@@ -108,6 +110,7 @@ enum ProviderType {
   siliconflow
   siliconflow_cn
   stackit
+  stepfun
   submodel
   synthetic
   togetherai

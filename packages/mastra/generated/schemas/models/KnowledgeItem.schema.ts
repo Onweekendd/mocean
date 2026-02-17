@@ -1,7 +1,5 @@
-// @ts-nocheck - Circular imports resolved with schema registry
 import * as z from 'zod';
-import { _r } from './_registry';
-// Circular import removed: import { KnowledgeBaseSchema } from './KnowledgeBase.schema';
+import { KnowledgeBaseSchema } from './KnowledgeBase.schema';
 
 export const KnowledgeItemSchema = z.object({
   id: z.string(),
@@ -14,13 +12,10 @@ export const KnowledgeItemSchema = z.object({
   processingProgress: z.number().nullish(),
   processingError: z.string().nullish(),
   retryCount: z.number().int().nullish(),
-  knowledgeBase: z.lazy(() => _r.KnowledgeBaseSchema),
+  knowledgeBase: z.lazy(() => KnowledgeBaseSchema),
   baseId: z.string(),
   created_at: z.date(),
   updated_at: z.date(),
 });
 
 export type KnowledgeItemType = z.infer<typeof KnowledgeItemSchema>;
-
-// Register to schema registry for circular reference resolution
-_r.KnowledgeItemSchema = KnowledgeItemSchema;

@@ -53,9 +53,9 @@ export const AssistantWithModelsResponseSchema = AssistantSchema.pick({
   createdAt: true,
   updatedAt: true
 }).extend({
-  model: ModelSchema.partial(),
-  defaultModel: ModelSchema.partial(),
-  settings: z.array(AssistantSettingsSchema.partial())
+  model: ModelSchema.partial().nullish(),
+  defaultModel: ModelSchema.partial().nullish(),
+  settings: AssistantSettingsSchema.partial().nullish()
 });
 
 // 带 provider 的完整 Assistant Response Schema
@@ -76,10 +76,10 @@ export const FullAssistantSchema = AssistantSchema.pick({
   createdAt: true,
   updatedAt: true
 }).extend({
-  model: ModelSchema.partial(),
-  defaultModel: ModelSchema.partial(),
-  provider: ProviderSchema.partial(),
-  settings: z.array(AssistantSettingsSchema.partial()),
+  model: ModelSchema.partial().nullish(),
+  defaultModel: ModelSchema.partial().nullish(),
+  provider: ProviderSchema.partial().nullish(),
+  settings: AssistantSettingsSchema.partial().nullish(),
   topics: z.array(TopicSchema.partial()),
   knowledgeBases: z.array(KnowledgeBaseSchema.partial()),
   mcpServers: z.array(MCPServerSchema.partial())
@@ -101,7 +101,8 @@ export const createAssistantSchema = AssistantSchema.pick({
   enableGenerateImage: true,
   knowledgeRecognition: true,
   modelId: true,
-  defaultModelId: true
+  defaultModelId: true,
+  providerId: true
 }).extend({
   name: z.string().min(1, "助手名称不能为空"),
   prompt: z.string().min(1, "提示词不能为空"),
@@ -144,9 +145,9 @@ export const chatWithAssistantSchema = z.object({
 });
 
 export const assistantWithModelSchema = AssistantSchema.extend({
-  model: ModelSchema.partial(),
-  defaultModel: ModelSchema.partial(),
-  settings: z.array(AssistantSettingsSchema.partial())
+  model: ModelSchema.partial().nullish(),
+  defaultModel: ModelSchema.partial().nullish(),
+  settings: AssistantSettingsSchema.partial().nullish()
 });
 
 // zod类型推导
