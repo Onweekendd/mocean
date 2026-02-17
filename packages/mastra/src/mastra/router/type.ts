@@ -2,6 +2,7 @@ import z from "zod";
 
 import { PREFIX } from "../api/base-client";
 import {
+  AgentGroupsResponseSchema,
   AgentResponseSchema,
   AgentWithSettingsResponseSchema,
   AgentsResponseSchema
@@ -224,6 +225,10 @@ export const agentRoutes = {
   getAgents: {
     path: `${PREFIX}/agents`,
     responseSchema: AgentsResponseSchema
+  },
+  getAgentGroups: {
+    path: `${PREFIX}/agents/groups`,
+    responseSchema: AgentGroupsResponseSchema
   },
   getAgentById: {
     path: `${PREFIX}/agents/:id`,

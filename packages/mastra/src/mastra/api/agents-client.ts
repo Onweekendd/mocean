@@ -105,6 +105,18 @@ export class AgentsApiClient extends BaseApiClient {
       z.infer<(typeof agentRoutes)["getAgentByGroup"]["responseSchema"]>
     >(agentRoutes.getAgentByGroup.path.replace(":group", group));
   }
+
+  /**
+   * 获取所有代理分组名称
+   * @description 获取系统中所有不重复的代理分组名称列表
+   */
+  async getAgentGroups(): Promise<
+    ApiResponse<z.infer<(typeof agentRoutes)["getAgentGroups"]["responseSchema"]>>
+  > {
+    return this.get<
+      z.infer<(typeof agentRoutes)["getAgentGroups"]["responseSchema"]>
+    >(agentRoutes.getAgentGroups.path);
+  }
 }
 
 /**
@@ -119,6 +131,7 @@ export const agentsApi = new AgentsApiClient();
 export const agentsApiMethods = {
   getAgents: () => agentsApi.getAgents(),
   getAgentById: (id: string) => agentsApi.getAgentById(id),
+  getAgentGroups: () => agentsApi.getAgentGroups(),
   createAgent: (agent: CreateAgentInput) => agentsApi.createAgent(agent),
   updateAgent: (id: string, agent: UpdateAgentInput) =>
     agentsApi.updateAgent(id, agent),
@@ -134,6 +147,7 @@ export type UseAgentsApiReturn = Pick<
   AgentsApiClient,
   | "getAgents"
   | "getAgentById"
+  | "getAgentGroups"
   | "createAgent"
   | "updateAgent"
   | "deleteAgent"
@@ -158,6 +172,9 @@ export const useAgentsApi = (): UseAgentsApiReturn => {
     getAgentById: agentsApi.getAgentById.bind(
       agentsApi
     ) as UseAgentsApiReturn["getAgentById"],
+    getAgentGroups: agentsApi.getAgentGroups.bind(
+      agentsApi
+    ) as UseAgentsApiReturn["getAgentGroups"],
     createAgent: agentsApi.createAgent.bind(
       agentsApi
     ) as UseAgentsApiReturn["createAgent"],

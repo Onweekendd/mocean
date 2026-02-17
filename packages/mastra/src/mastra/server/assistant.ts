@@ -108,9 +108,35 @@ const getFullAssistantById = async (
 const createAssistant = async (
   assistant: CreateAssistantInput
 ): Promise<AssistantWithModelsResponse> => {
+  // 如果 modelId 或 defaultModelId 未提供，自动填充
+  let modelId = assistant.modelId ?? null;
+  let defaultModelId = assistant.defaultModelId ?? null;
+
+  if (!modelId || !defaultModelId) {
+    // 优先从环境变量读取默认模型 ID
+    const defaultModelIdFromEnv = process.env.DEFAULT_MODEL_ID;
+
+    if (defaultModelIdFromEnv) {
+      if (!modelId) modelId = defaultModelIdFromEnv;
+      if (!defaultModelId) defaultModelId = defaultModelIdFromEnv;
+    } else {
+      // 如果环境变量未设置，从数据库查询第一个可用模型
+      const firstModel = await prisma.model.findFirst({
+        orderBy: { sort: "asc" }
+      });
+
+      if (firstModel) {
+        if (!modelId) modelId = firstModel.id;
+        if (!defaultModelId) defaultModelId = firstModel.id;
+      }
+    }
+  }
+
   const newAssistant = await prisma.assistant.create({
     data: {
       ...assistant,
+      modelId,
+      defaultModelId,
       createdAt: new Date(),
       updatedAt: new Date()
     } as Parameters<typeof prisma.assistant.create>[0]["data"],

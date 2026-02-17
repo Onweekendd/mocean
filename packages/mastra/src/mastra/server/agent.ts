@@ -64,6 +64,40 @@ const getAgentByGroup = async (group: string) => {
 };
 
 /**
+ * 获取所有不重复的代理分组名称
+ * @description 从所有代理的 groupJson 字段中聚合出不重复的分组名列表
+ * @returns 分组名称数组
+ */
+const getAgentGroups = async (): Promise<string[]> => {
+  const agents = await prisma.agent.findMany({
+    select: { groupJson: true },
+    where: { groupJson: { not: null } }
+  });
+
+  const groups = new Set<string>();
+  for (const agent of agents) {
+    if (!agent.groupJson) continue;
+    try {
+      let groupData = agent.groupJson;
+      if (typeof groupData === "string") {
+        groupData = JSON.parse(groupData);
+      }
+      if (Array.isArray(groupData)) {
+        for (const item of groupData) {
+          if (typeof item === "string") groups.add(item);
+        }
+      } else if (typeof groupData === "string") {
+        groups.add(groupData);
+      }
+    } catch {
+      // skip invalid groupJson
+    }
+  }
+
+  return Array.from(groups);
+};
+
+/**
  * 创建新代理
  * @description 在数据库中创建一个新的代理记录
  * @param agent - 包含代理信息的对象，包括名称、描述、提示词等必要字段
@@ -170,10 +204,15 @@ export type AgentDeleteResult = AsyncReturnType<typeof deleteAgent>;
 
 export type AgentsByGroupResult = AsyncReturnType<typeof getAgentByGroup>;
 
+export type AgentGroupsResult = Awaited<ReturnType<typeof getAgentGroups>>;
+
+export type { CreateAgentInput };
+
 export {
   getAgents,
   getAgentById,
   getAgentByGroup,
+  getAgentGroups,
   createAgent,
   updateAgent,
   deleteAgent,

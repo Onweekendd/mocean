@@ -101,6 +101,9 @@ export const groupParamSchema = z.object({
   group: z.string().min(1, "分组不能为空")
 });
 
+// Agent 分组列表 Response Schema
+export const AgentGroupsResponseSchema = z.array(z.string());
+
 // zod类型推导
 
 export type CreateAgentInput = z.infer<typeof createAgentSchema>;

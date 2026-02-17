@@ -108,7 +108,9 @@ export const createAssistantSchema = AssistantSchema.pick({
   prompt: z.string().min(1, "提示词不能为空"),
   type: z.string().optional().default("assistant"),
   enableWebSearch: z.boolean().optional().default(false),
-  enableGenerateImage: z.boolean().optional().default(false)
+  enableGenerateImage: z.boolean().optional().default(false),
+  modelId: z.string().nullable().optional(),
+  defaultModelId: z.string().nullable().optional()
 });
 
 export const updateAssistantSchema = AssistantSchema.pick({
