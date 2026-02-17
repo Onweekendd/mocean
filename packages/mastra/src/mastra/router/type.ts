@@ -7,10 +7,11 @@ import {
   AgentsResponseSchema
 } from "../schema/agent";
 import {
-  AssistantFullResponseSchema,
   AssistantResponseSchema,
   AssistantWithModelsResponseSchema,
-  AssistantsResponseSchema
+  AssistantsResponseSchema,
+  FullAssistantSchema,
+  chatWithAssistantSchema
 } from "../schema/assistant";
 import {
   GroupResponseSchema,
@@ -25,8 +26,8 @@ import {
   ModelsResponseSchema
 } from "../schema/model";
 import {
-  ProviderResponseSchema,
   FullProviderSchema,
+  ProviderResponseSchema,
   ProvidersResponseSchema,
   ProvidersWithModelsResponseSchema
 } from "../schema/provider";
@@ -190,7 +191,7 @@ export const assistantRoutes = {
   },
   getAssistantById: {
     path: `${PREFIX}/assistants/:assistantId`,
-    responseSchema: AssistantFullResponseSchema.nullable()
+    responseSchema: FullAssistantSchema.nullable()
   },
   createAssistant: {
     path: `${PREFIX}/assistants`,
@@ -206,6 +207,7 @@ export const assistantRoutes = {
   },
   chatWithAssistant: {
     path: `${PREFIX}/assistants/chat`,
+    requestSchema: chatWithAssistantSchema,
     responseSchema: z.any() // SSE 流式响应
   },
   getAssistantThreads: {

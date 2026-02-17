@@ -104,7 +104,7 @@ const getEnabledProvidersRouter = registerApiRoute(
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: ProvidersResponseSchema
+              schema: ProvidersWithModelsResponseSchema
             }
           }
         }
@@ -236,7 +236,7 @@ const getProvidersByTypeRouter = registerApiRoute(
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: ProvidersResponseSchema
+              schema: ProvidersWithModelsResponseSchema
             }
           }
         }
@@ -528,21 +528,23 @@ const getProvidersByModelWithModelsRouter = registerApiRoute(
 );
 
 // 导出所有路由
+// 注意：具体路径必须在参数化路径(:id)之前注册，否则会被错误匹配
 const providersRouter = [
-  // 基础版本（不包含关联模型）
+  // 具体路径（无参数）
   getProvidersRouter,
-  getEnabledProvidersRouter,
-  getProviderByIdRouter,
-  getProvidersByTypeRouter,
-  getProvidersByModelRouter,
-  // WithModels 版本（包含模型列表）
   getProvidersWithModelsRouter,
+  getEnabledProvidersRouter,
   getEnabledProvidersWithModelsRouter,
-  getProviderWithModelsByIdRouter,
+  // 带前缀的参数路径（不会与 :id 冲突）
+  getProvidersByTypeRouter,
   getProvidersByTypeWithModelsRouter,
+  getProvidersByModelRouter,
   getProvidersByModelWithModelsRouter,
-  // 写操作
+  // 写操作（POST 不会与 GET :id 冲突）
   createProviderRouter,
+  // 参数化路径（:id）放最后
+  getProviderByIdRouter,
+  getProviderWithModelsByIdRouter,
   updateProviderRouter,
   deleteProviderRouter,
   toggleProviderEnabledRouter

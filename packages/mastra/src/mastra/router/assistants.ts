@@ -4,10 +4,10 @@ import { HTTPException } from "hono/http-exception";
 import { z } from "zod";
 
 import {
-  AssistantFullResponseSchema,
   AssistantResponseSchema,
   AssistantWithModelsResponseSchema,
   AssistantsResponseSchema,
+  FullAssistantSchema,
   assistantIdParamSchema,
   assistantThreadIdParamSchema,
   chatWithAssistantSchema,
@@ -72,7 +72,7 @@ const getAssistantByIdRouter = registerApiRoute(
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: AssistantFullResponseSchema.nullable()
+              schema: FullAssistantSchema.nullable()
             }
           }
         }
@@ -255,12 +255,14 @@ const chatWithAssistantRouter = registerApiRoute(
     },
     handler: async (c) => {
       try {
-        const body = chatWithAssistantSchema.parse(await c.req.json());
+        const { assistantId, messages, threadId } =
+          chatWithAssistantSchema.parse(await c.req.json());
+
         return c.json(
           await executeChatWithAssistant(
-            body.assistantId,
-            body.messages as UIMessage[],
-            body.threadId
+            assistantId,
+            messages as UIMessage[],
+            threadId
           ),
           200
         );
