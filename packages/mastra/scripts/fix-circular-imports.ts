@@ -1,125 +1,105 @@
-import { readFileSync, readdirSync, writeFileSync } from "fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  writeFileSync
+} from "fs";
 import { join } from "path";
 
 /**
  * 修复 prisma-zod-generator 生成的循环引用问题
+ *
  * 策略：
- * 1. 分析所有 schema 文件之间的导入关系
- * 2. 检测循环引用
- * 3. 创建 _registry.ts 共享注册表，避免循环导入
- * 4. 移除循环引用的 import，改为从 _registry 读取
- * 5. 在 z.lazy() 中使用 _registry 获取 schema
- * 6. 在文件顶部添加 // @ts-nocheck 来禁用类型检查
- * 7. 在文件末尾注册自身到 _registry
- * 8. 创建 .d.ts 文件来提供类型信息
+ * 1. 解析所有 schema 文件，检测循环引用
+ * 2. 对存在循环引用的文件：
+ *    a. 生成 BASE schema（去除循环字段）→ generated/schemas/models/
+ *    b. 生成 FULL schema（加回循环字段，用 BASE refs）→ generated/schemas/composed/
+ * 3. 生成 composed/index.ts 导出所有 Full schema
+ *
+ * 不再使用 _registry.ts 模式
  */
 
 interface ImportInfo {
-  source: string; // 导入来源，如 './Model.schema'
-  names: string[]; // 导入的名称，如 ['ModelSchema']
-  fullMatch: string; // 完整的 import 语句
+  source: string;
+  names: string[];
+  fullMatch: string;
+}
+
+interface CircularField {
+  fieldName: string;
+  schemaName: string;
+  modelName: string;
+  isList: boolean;
+  isOptional: boolean;
+  originalLine: string;
 }
 
 interface FileInfo {
   path: string;
-  name: string; // 文件名，如 'Model.schema.ts'
-  modelName: string; // 模型名，如 'Model'
+  name: string;
+  modelName: string;
   content: string;
   imports: ImportInfo[];
-  lazyRefs: string[]; // z.lazy 中引用的 schema 名称
 }
 
-// 获取 schema 文件列表
+// ─── 解析工具 ─────────────────────────────────────────────────────────────────
+
 function getSchemaFiles(): string[] {
   const schemasDir = join(process.cwd(), "generated", "schemas", "models");
   try {
-    const files = readdirSync(schemasDir);
-    return files
-      .filter((f) => f.endsWith(".schema.ts"))
+    return readdirSync(schemasDir)
+      .filter((f) => f.endsWith(".schema.ts") && !f.startsWith("_"))
       .map((f) => join(schemasDir, f));
   } catch {
     return [];
   }
 }
 
-// 解析文件中的 import 语句
 function parseImports(content: string): ImportInfo[] {
   const imports: ImportInfo[] = [];
-
-  // 匹配常规 import: import { XxxSchema } from './Xxx.schema'
   const importRegex = /import\s*\{\s*([^}]+)\}\s*from\s*['"]([^'"]+)['"];?/g;
   let match: RegExpExecArray | null = null;
-
   while ((match = importRegex.exec(content)) !== null) {
-    const names = match[1]
-      .split(",")
-      .map((n) => n.trim())
-      .filter((n) => n);
-    const source = match[2];
-
     imports.push({
-      source,
-      names,
+      source: match[2],
+      names: match[1]
+        .split(",")
+        .map((n) => n.trim())
+        .filter(Boolean),
       fullMatch: match[0]
     });
   }
-
   return imports;
 }
 
-// 解析文件中 z.lazy 引用的 schema
-function parseLazyRefs(content: string): string[] {
-  const refs: string[] = [];
-  const lazyRegex = /z\.lazy\(\(\)\s*=>\s*(\w+)\)/g;
-  let match: RegExpExecArray | null = null;
-
-  while ((match = lazyRegex.exec(content)) !== null) {
-    refs.push(match[1]);
-  }
-
-  return [...new Set(refs)];
-}
-
-// 获取模型名从文件名
 function getModelName(fileName: string): string {
   return fileName.replace(".schema.ts", "");
 }
 
-// 从 schema 名称获取模型名
-function getModelFromSchema(schemaName: string): string {
-  return schemaName.replace("Schema", "");
-}
+// ─── 循环检测 ─────────────────────────────────────────────────────────────────
 
-// 构建依赖图并检测循环引用
 function detectCycles(files: FileInfo[]): Map<string, Set<string>> {
   const graph = new Map<string, Set<string>>();
   const cycles = new Map<string, Set<string>>();
 
-  // 构建图 - 同时考虑 import 和 z.lazy 引用
   for (const file of files) {
     const deps = new Set<string>();
-
-    // 从 import 语句收集依赖
     for (const imp of file.imports) {
       if (imp.source.startsWith("./") && imp.source.endsWith(".schema")) {
-        const depModel = imp.source.replace("./", "").replace(".schema", "");
-        deps.add(depModel);
+        deps.add(imp.source.replace("./", "").replace(".schema", ""));
       }
     }
-
-    // 从 z.lazy 引用收集依赖
-    for (const ref of file.lazyRefs) {
-      const depModel = getModelFromSchema(ref);
-      if (depModel !== file.modelName) {
-        deps.add(depModel);
-      }
+    const lazyRegex = /z\.lazy\(\(\)\s*=>\s*(\w+Schema)\)/g;
+    let m: RegExpExecArray | null = null;
+    while ((m = lazyRegex.exec(file.content)) !== null) {
+      const depModel = m[1].replace("Schema", "");
+      if (depModel !== file.modelName) deps.add(depModel);
     }
-
     graph.set(file.modelName, deps);
     cycles.set(file.modelName, new Set());
   }
 
-  // 检测循环引用（使用 DFS）
   function findCycles(
     node: string,
     visited: Set<string>,
@@ -127,35 +107,22 @@ function detectCycles(files: FileInfo[]): Map<string, Set<string>> {
     pathList: string[]
   ) {
     if (path.has(node)) {
-      // 发现循环
-      const cycleStart = pathList.indexOf(node);
-      const cycleNodes = pathList.slice(cycleStart);
+      const start = pathList.indexOf(node);
+      const cycleNodes = pathList.slice(start);
       for (const n of cycleNodes) {
         for (const other of cycleNodes) {
-          if (n !== other) {
-            const cycleSet = cycles.get(n);
-            if (cycleSet) {
-              cycleSet.add(other);
-            }
-          }
+          if (n !== other) cycles.get(n)?.add(other);
         }
       }
       return;
     }
-
     if (visited.has(node)) return;
-
     visited.add(node);
     path.add(node);
     pathList.push(node);
-
-    const deps = graph.get(node);
-    if (deps) {
-      for (const dep of deps) {
-        findCycles(dep, visited, path, pathList);
-      }
+    for (const dep of graph.get(node) ?? []) {
+      findCycles(dep, visited, path, pathList);
     }
-
     path.delete(node);
     pathList.pop();
   }
@@ -163,215 +130,287 @@ function detectCycles(files: FileInfo[]): Map<string, Set<string>> {
   for (const node of graph.keys()) {
     findCycles(node, new Set(), new Set(), []);
   }
-
   return cycles;
 }
 
-// 创建 _registry.ts 文件
-function createRegistryFile(): void {
-  const schemasDir = join(process.cwd(), "generated", "schemas", "models");
-  const registryPath = join(schemasDir, "_registry.ts");
-  const content = `/**
- * Schema Registry - 用于解决循环引用
- * Auto-generated - do not edit manually
- *
- * 所有存在循环引用的 schema 文件会将自身注册到此 registry 中，
- * 并通过 z.lazy(() => _r.XxxSchema) 引用其他 schema，
- * 避免循环 import 导致的运行时和类型问题。
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const _r: Record<string, any> = {};
-`;
-  writeFileSync(registryPath, content, "utf-8");
-  // eslint-disable-next-line no-console
-  console.log("📦 Created: _registry.ts");
-}
+// ─── 循环字段解析 ─────────────────────────────────────────────────────────────
 
-// 修复单个文件的循环引用
-function fixFile(
-  file: FileInfo,
-  cycles: Map<string, Set<string>>
-): { fixedContent: string; typeDefinitions: string } | null {
-  const circularModels = cycles.get(file.modelName);
-  if (!circularModels || circularModels.size === 0) {
-    return null; // 没有循环引用需要修复
+function extractCircularFields(
+  content: string,
+  circularModels: Set<string>
+): CircularField[] {
+  const fields: CircularField[] = [];
+  const seen = new Set<string>();
+
+  for (const modelName of circularModels) {
+    const schemaName = `${modelName}Schema`;
+
+    // list：  fieldName: z.array(z.lazy(() => XxxSchema)),
+    const listRe = new RegExp(
+      `^([ \\t]+)(\\w+):\\s*z\\.array\\(z\\.lazy\\(\\(\\)\\s*=>\\s*${schemaName}\\)\\),?[ \\t]*$`,
+      "gm"
+    );
+    let m: RegExpExecArray | null = null;
+    while ((m = listRe.exec(content)) !== null) {
+      const key = `${m[2]}:${schemaName}:list`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        fields.push({
+          fieldName: m[2],
+          schemaName,
+          modelName,
+          isList: true,
+          isOptional: false,
+          originalLine: m[0]
+        });
+      }
+    }
+
+    // single optional：  fieldName: z.lazy(() => XxxSchema).nullish(),
+    const optRe = new RegExp(
+      `^([ \\t]+)(\\w+):\\s*z\\.lazy\\(\\(\\)\\s*=>\\s*${schemaName}\\)\\.nullish\\(\\),?[ \\t]*$`,
+      "gm"
+    );
+    while ((m = optRe.exec(content)) !== null) {
+      const key = `${m[2]}:${schemaName}:opt`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        fields.push({
+          fieldName: m[2],
+          schemaName,
+          modelName,
+          isList: false,
+          isOptional: true,
+          originalLine: m[0]
+        });
+      }
+    }
+
+    // single required：  fieldName: z.lazy(() => XxxSchema),
+    const reqRe = new RegExp(
+      `^([ \\t]+)(\\w+):\\s*z\\.lazy\\(\\(\\)\\s*=>\\s*${schemaName}\\),?[ \\t]*$`,
+      "gm"
+    );
+    while ((m = reqRe.exec(content)) !== null) {
+      const key = `${m[2]}:${schemaName}:req`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        fields.push({
+          fieldName: m[2],
+          schemaName,
+          modelName,
+          isList: false,
+          isOptional: false,
+          originalLine: m[0]
+        });
+      }
+    }
   }
 
-  let modified = file.content;
+  return fields;
+}
 
-  // 步骤 1: 移除循环引用的 import
-  for (const circularModel of circularModels) {
-    const schemaName = `${circularModel}Schema`;
+// ─── BASE schema 生成 ────────────────────────────────────────────────────────
 
-    // 匹配 import { XxxSchema } from './Xxx.schema'
-    const importRegex = new RegExp(
-      `import\\s*\\{\\s*([^}]*${schemaName}[^}]*)\\}\\s*from\\s*['"](\\./${circularModel}\\.schema)['"]\\s*;?\\n?`,
+function createBaseSchema(
+  file: FileInfo,
+  circularFields: CircularField[]
+): string {
+  let content = file.content;
+
+  // 去除循环字段行（含换行）
+  for (const field of circularFields) {
+    content = content.replace(field.originalLine + "\n", "\n");
+    content = content.replace(field.originalLine, "");
+  }
+
+  // 去除循环模型的 import 行
+  const circularModels = new Set(circularFields.map((f) => f.modelName));
+  for (const modelName of circularModels) {
+    const schemaName = `${modelName}Schema`;
+    const importRe = new RegExp(
+      `import\\s*\\{\\s*([^}]*)\\}\\s*from\\s*['"].*${modelName}\\.schema['"]\\s*;?\\n?`,
       "g"
     );
-
-    modified = modified.replace(importRegex, (match: string) => {
-      // 检查是否还有其他导入
-      const otherImports = match
+    content = content.replace(importRe, (match: string) => {
+      const others = match
         .replace(/import\s*\{\s*/, "")
-        .replace(/\s*\}\s*from.*/, "")
+        .replace(/\s*\}.*/, "")
         .split(",")
         .map((s) => s.trim())
-        .filter((s) => s && !s.includes(schemaName));
-
-      if (otherImports.length > 0) {
-        // 还有其他导入，保留 but remove the circular one
-        return `import { ${otherImports.join(", ")} } from './${circularModel}.schema';\n`;
-      }
-      return `// Circular import removed: ${match.trim()}\n`;
+        .filter((s) => s && s !== schemaName);
+      return others.length > 0
+        ? `import { ${others.join(", ")} } from './${modelName}.schema';\n`
+        : "";
     });
   }
 
-  // 步骤 2: 添加 _registry import（在 zod import 之后）
-  if (!modified.includes("from './_registry'")) {
-    modified = modified.replace(
-      /import \* as z from 'zod';/,
-      `import * as z from 'zod';\nimport { _r } from './_registry';`
-    );
-  }
+  // 清理旧 _registry 痕迹
+  content = content.replace(/^\/\/ @ts-nocheck[^\n]*\n/m, "");
+  content = content.replace(/^import \{ _r \} from '\.\/\_registry';\n/m, "");
+  content = content.replace(/^\/\/ Circular import removed:[^\n]*\n/gm, "");
+  content = content.replace(
+    /^\/\/ Register to schema registry[^\n]*\n_r\.\w+ = \w+;\n/gm,
+    ""
+  );
+  content = content.replace(/^_r\.\w+ = \w+;\n/gm, "");
 
-  // 步骤 3: 在文件开头添加 @ts-nocheck
-  if (!modified.includes("// @ts-nocheck")) {
-    modified =
-      "// @ts-nocheck - Circular imports resolved with schema registry\n" +
-      modified;
-  }
+  // 清理多余空行
+  return content.replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
+}
 
-  // 步骤 4: 修改 z.lazy() 中的引用，使用 _registry
-  for (const circularModel of circularModels) {
-    const schemaName = `${circularModel}Schema`;
+// ─── FULL schema 生成 ────────────────────────────────────────────────────────
 
-    // 替换 z.lazy(() => XxxSchema) 为 z.lazy(() => _r.XxxSchema)
-    const lazyRegex = new RegExp(
-      `z\\.lazy\\(\\(\\)\\s*=>\\s*${schemaName}\\)`,
-      "g"
-    );
+function generateFullSchema(
+  file: FileInfo,
+  circularFields: CircularField[]
+): string {
+  const schemaName = `${file.modelName}Schema`;
+  const fullSchemaName = `${file.modelName}FullSchema`;
+  const fullTypeName = `${file.modelName}FullType`;
 
-    modified = modified.replace(lazyRegex, `z.lazy(() => _r.${schemaName})`);
-  }
+  const importModels = new Map<string, string>();
+  importModels.set(schemaName, file.modelName);
+  for (const f of circularFields) importModels.set(f.schemaName, f.modelName);
 
-  // 步骤 5: 在文件末尾注册自身到 registry
-  const exportName = `${file.modelName}Schema`;
-  if (!modified.includes(`_r.${exportName}`)) {
-    modified += `\n// Register to schema registry for circular reference resolution\n_r.${exportName} = ${exportName};\n`;
-  }
-
-  // 步骤 6: 生成类型定义
-  const typeImports = [...circularModels]
-    .map((m) => `import type { ${m}Schema } from './${m}.schema';`)
+  const importLines = [...importModels.entries()]
+    .map(
+      ([name, model]) => `import { ${name} } from "../models/${model}.schema";`
+    )
     .join("\n");
 
-  const typeFields = [...circularModels]
-    .flatMap((m) => {
-      const lowerM = m.toLowerCase();
-      const fields: string[] = [];
-
-      // 检查原始内容中是否有这些字段
-      if (
-        file.content.includes(`${lowerM}s:`) ||
-        file.content.includes(`${lowerM}s `)
-      ) {
-        fields.push(`${lowerM}s?: z.infer<typeof ${m}Schema>[];`);
-      }
-      if (
-        file.content.includes(`${lowerM}:`) ||
-        file.content.includes(`${lowerM} `)
-      ) {
-        fields.push(`${lowerM}?: z.infer<typeof ${m}Schema>;`);
-      }
-      if (
-        file.content.includes(`default${m}:`) ||
-        file.content.includes(`default${m} `)
-      ) {
-        fields.push(`default${m}?: z.infer<typeof ${m}Schema>;`);
-      }
-      if (
-        file.content.includes(`defaultFor${m}s:`) ||
-        file.content.includes(`defaultFor${m}s `)
-      ) {
-        fields.push(`defaultFor${m}s?: z.infer<typeof ${m}Schema>[];`);
-      }
-
-      return fields;
+  const extendFields = circularFields
+    .map((f) => {
+      if (f.isList) return `  ${f.fieldName}: z.array(${f.schemaName}),`;
+      if (f.isOptional) return `  ${f.fieldName}: ${f.schemaName}.nullish(),`;
+      return `  ${f.fieldName}: ${f.schemaName},`;
     })
-    .join("\n  ");
+    .join("\n");
 
-  const typeDefinitions = `import { z } from 'zod';
-${typeImports}
+  return `/**
+ * Auto-generated Full Schema for ${file.modelName}
+ * Generated by scripts/fix-circular-imports.ts
+ * Do not edit manually - re-run 'pnpm generate' to update
+ */
+import z from "zod";
+${importLines}
 
-// Type extensions for ${file.modelName} with relations
-export interface ${file.modelName}WithRelations {
-  ${typeFields || "// No additional relation fields"}
-}
+export const ${fullSchemaName} = ${schemaName}.extend({
+${extendFields}
+});
+
+export type ${fullTypeName} = z.infer<typeof ${fullSchemaName}>;
 `;
-
-  return { fixedContent: modified, typeDefinitions };
 }
+
+// ─── Barrel 生成 ─────────────────────────────────────────────────────────────
+
+function generateComposedBarrel(modelNames: string[]): string {
+  return (
+    modelNames
+      .map(
+        (m) =>
+          `export { ${m}FullSchema } from "./${m}.schema";\nexport type { ${m}FullType } from "./${m}.schema";`
+      )
+      .join("\n") + "\n"
+  );
+}
+
+// ─── Main ─────────────────────────────────────────────────────────────────────
 
 function main() {
   const schemaFiles = getSchemaFiles();
-  // eslint-disable-next-line no-console
   console.log(`Found ${schemaFiles.length} schema files`);
 
-  // 解析所有文件
   const files: FileInfo[] = schemaFiles.map((filePath) => {
     const content = readFileSync(filePath, "utf-8");
-    const name = filePath.split(/[/\\]/).pop() || "";
+    const name = filePath.split(/[/\\]/).pop() ?? "";
     return {
       path: filePath,
       name,
       modelName: getModelName(name),
       content,
-      imports: parseImports(content),
-      lazyRefs: parseLazyRefs(content)
+      imports: parseImports(content)
     };
   });
 
-  // 检测循环引用
   const cycles = detectCycles(files);
 
-  // eslint-disable-next-line no-console
   console.log("\nDetected circular dependencies:");
+  let hasCycles = false;
   for (const [model, deps] of cycles) {
     if (deps.size > 0) {
-      // eslint-disable-next-line no-console
       console.log(`  ${model} -> ${[...deps].join(", ")}`);
+      hasCycles = true;
     }
   }
+  if (!hasCycles) {
+    console.log("  None detected.");
+    return;
+  }
 
-  // 创建 registry 文件
-  createRegistryFile();
+  const composedDir = join(process.cwd(), "generated", "schemas", "composed");
+  if (!existsSync(composedDir)) {
+    mkdirSync(composedDir, { recursive: true });
+    console.log("\n📁 Created: generated/schemas/composed/");
+  }
 
-  // 修复文件
+  const composedModels: string[] = [];
   let fixedCount = 0;
+
   for (const file of files) {
-    const result = fixFile(file, cycles);
-    if (result) {
-      writeFileSync(file.path, result.fixedContent, "utf-8");
-      // eslint-disable-next-line no-console
-      console.log(`\n✅ Fixed: ${file.name}`);
+    const circularModels = cycles.get(file.modelName);
+    if (!circularModels || circularModels.size === 0) continue;
 
-      // 创建类型定义文件
-      const dtsPath = file.path.replace(".schema.ts", ".types.d.ts");
-      writeFileSync(dtsPath, result.typeDefinitions, "utf-8");
-      // eslint-disable-next-line no-console
-      console.log(`📝 Created: ${dtsPath.split(/[/\\]/).pop()}`);
+    const circularFields = extractCircularFields(file.content, circularModels);
+    if (circularFields.length === 0) continue;
 
-      fixedCount++;
-    }
+    // BASE schema
+    writeFileSync(file.path, createBaseSchema(file, circularFields), "utf-8");
+    console.log(
+      `\n✅ BASE : ${file.name}  (removed: ${circularFields.map((f) => f.fieldName).join(", ")})`
+    );
+
+    // FULL schema
+    const fullPath = join(composedDir, file.name);
+    writeFileSync(fullPath, generateFullSchema(file, circularFields), "utf-8");
+    console.log(
+      `📦 FULL : composed/${file.name}  (added: ${circularFields.map((f) => f.fieldName).join(", ")})`
+    );
+
+    composedModels.push(file.modelName);
+    fixedCount++;
   }
 
-  if (fixedCount === 0) {
-    // eslint-disable-next-line no-console
-    console.log("\nℹ️  No circular imports needed fixing.");
-  } else {
-    // eslint-disable-next-line no-console
-    console.log(`\n✨ Fixed ${fixedCount} file(s) with circular imports.`);
+  if (composedModels.length > 0) {
+    writeFileSync(
+      join(composedDir, "index.ts"),
+      generateComposedBarrel(composedModels),
+      "utf-8"
+    );
+    console.log(
+      `\n📋 composed/index.ts  (${composedModels.length} full schemas)`
+    );
   }
+
+  // 清理旧 _registry.ts
+  const registryPath = join(
+    process.cwd(),
+    "generated",
+    "schemas",
+    "models",
+    "_registry.ts"
+  );
+  if (existsSync(registryPath)) {
+    writeFileSync(
+      registryPath,
+      "// This file is no longer used.\nexport {};\n",
+      "utf-8"
+    );
+    console.log("🗑  Cleared: _registry.ts");
+  }
+
+  console.log(`\n✨ Done: ${fixedCount} model(s) → base + full schema.`);
 }
 
 main();
