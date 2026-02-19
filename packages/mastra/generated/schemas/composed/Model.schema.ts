@@ -11,7 +11,6 @@ import { GroupSchema } from "../models/Group.schema";
 
 export const ModelFullSchema = ModelSchema.extend({
   assistants: z.array(AssistantSchema),
-  defaultForAssistants: z.array(AssistantSchema),
   rerankFor: z.array(KnowledgeBaseSchema),
   group: GroupSchema,
 });

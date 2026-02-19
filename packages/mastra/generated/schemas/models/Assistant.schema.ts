@@ -17,8 +17,6 @@ export const AssistantSchema = z.object({
 
   providerId: z.string().nullish(),
 
-  defaultModelId: z.string().nullish(),
-
   createdAt: z.date(),
   updatedAt: z.date(),
 });

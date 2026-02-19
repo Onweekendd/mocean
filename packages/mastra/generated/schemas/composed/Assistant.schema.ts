@@ -16,7 +16,6 @@ export const AssistantFullSchema = AssistantSchema.extend({
   settings: AssistantSettingsSchema.nullish(),
   knowledgeBases: z.array(KnowledgeBaseSchema),
   model: ModelSchema.nullish(),
-  defaultModel: ModelSchema.nullish(),
   provider: ProviderSchema.nullish(),
   topics: z.array(TopicSchema),
   mcpServers: z.array(MCPAssistantServerSchema),

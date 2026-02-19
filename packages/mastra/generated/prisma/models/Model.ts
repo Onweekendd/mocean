@@ -342,7 +342,6 @@ export type ModelWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Model"> | Date | string
   group?: Prisma.XOR<Prisma.GroupScalarRelationFilter, Prisma.GroupWhereInput>
   assistants?: Prisma.AssistantListRelationFilter
-  defaultForAssistants?: Prisma.AssistantListRelationFilter
   rerankFor?: Prisma.KnowledgeBaseListRelationFilter
 }
 
@@ -368,7 +367,6 @@ export type ModelOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   group?: Prisma.GroupOrderByWithRelationInput
   assistants?: Prisma.AssistantOrderByRelationAggregateInput
-  defaultForAssistants?: Prisma.AssistantOrderByRelationAggregateInput
   rerankFor?: Prisma.KnowledgeBaseOrderByRelationAggregateInput
 }
 
@@ -397,7 +395,6 @@ export type ModelWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Model"> | Date | string
   group?: Prisma.XOR<Prisma.GroupScalarRelationFilter, Prisma.GroupWhereInput>
   assistants?: Prisma.AssistantListRelationFilter
-  defaultForAssistants?: Prisma.AssistantListRelationFilter
   rerankFor?: Prisma.KnowledgeBaseListRelationFilter
 }, "id">
 
@@ -474,7 +471,6 @@ export type ModelCreateInput = {
   updatedAt?: Date | string
   group: Prisma.GroupCreateNestedOneWithoutModelsInput
   assistants?: Prisma.AssistantCreateNestedManyWithoutModelInput
-  defaultForAssistants?: Prisma.AssistantCreateNestedManyWithoutDefaultModelInput
   rerankFor?: Prisma.KnowledgeBaseCreateNestedManyWithoutRerankModelInput
 }
 
@@ -499,7 +495,6 @@ export type ModelUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   assistants?: Prisma.AssistantUncheckedCreateNestedManyWithoutModelInput
-  defaultForAssistants?: Prisma.AssistantUncheckedCreateNestedManyWithoutDefaultModelInput
   rerankFor?: Prisma.KnowledgeBaseUncheckedCreateNestedManyWithoutRerankModelInput
 }
 
@@ -524,7 +519,6 @@ export type ModelUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   group?: Prisma.GroupUpdateOneRequiredWithoutModelsNestedInput
   assistants?: Prisma.AssistantUpdateManyWithoutModelNestedInput
-  defaultForAssistants?: Prisma.AssistantUpdateManyWithoutDefaultModelNestedInput
   rerankFor?: Prisma.KnowledgeBaseUpdateManyWithoutRerankModelNestedInput
 }
 
@@ -549,7 +543,6 @@ export type ModelUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assistants?: Prisma.AssistantUncheckedUpdateManyWithoutModelNestedInput
-  defaultForAssistants?: Prisma.AssistantUncheckedUpdateManyWithoutDefaultModelNestedInput
   rerankFor?: Prisma.KnowledgeBaseUncheckedUpdateManyWithoutRerankModelNestedInput
 }
 
@@ -719,12 +712,6 @@ export type ModelCreateNestedOneWithoutAssistantsInput = {
   connect?: Prisma.ModelWhereUniqueInput
 }
 
-export type ModelCreateNestedOneWithoutDefaultForAssistantsInput = {
-  create?: Prisma.XOR<Prisma.ModelCreateWithoutDefaultForAssistantsInput, Prisma.ModelUncheckedCreateWithoutDefaultForAssistantsInput>
-  connectOrCreate?: Prisma.ModelCreateOrConnectWithoutDefaultForAssistantsInput
-  connect?: Prisma.ModelWhereUniqueInput
-}
-
 export type ModelUpdateOneWithoutAssistantsNestedInput = {
   create?: Prisma.XOR<Prisma.ModelCreateWithoutAssistantsInput, Prisma.ModelUncheckedCreateWithoutAssistantsInput>
   connectOrCreate?: Prisma.ModelCreateOrConnectWithoutAssistantsInput
@@ -733,16 +720,6 @@ export type ModelUpdateOneWithoutAssistantsNestedInput = {
   delete?: Prisma.ModelWhereInput | boolean
   connect?: Prisma.ModelWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ModelUpdateToOneWithWhereWithoutAssistantsInput, Prisma.ModelUpdateWithoutAssistantsInput>, Prisma.ModelUncheckedUpdateWithoutAssistantsInput>
-}
-
-export type ModelUpdateOneWithoutDefaultForAssistantsNestedInput = {
-  create?: Prisma.XOR<Prisma.ModelCreateWithoutDefaultForAssistantsInput, Prisma.ModelUncheckedCreateWithoutDefaultForAssistantsInput>
-  connectOrCreate?: Prisma.ModelCreateOrConnectWithoutDefaultForAssistantsInput
-  upsert?: Prisma.ModelUpsertWithoutDefaultForAssistantsInput
-  disconnect?: Prisma.ModelWhereInput | boolean
-  delete?: Prisma.ModelWhereInput | boolean
-  connect?: Prisma.ModelWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ModelUpdateToOneWithWhereWithoutDefaultForAssistantsInput, Prisma.ModelUpdateWithoutDefaultForAssistantsInput>, Prisma.ModelUncheckedUpdateWithoutDefaultForAssistantsInput>
 }
 
 export type NullableFloatFieldUpdateOperationsInput = {
@@ -831,7 +808,6 @@ export type ModelCreateWithoutAssistantsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   group: Prisma.GroupCreateNestedOneWithoutModelsInput
-  defaultForAssistants?: Prisma.AssistantCreateNestedManyWithoutDefaultModelInput
   rerankFor?: Prisma.KnowledgeBaseCreateNestedManyWithoutRerankModelInput
 }
 
@@ -855,66 +831,12 @@ export type ModelUncheckedCreateWithoutAssistantsInput = {
   groupId: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  defaultForAssistants?: Prisma.AssistantUncheckedCreateNestedManyWithoutDefaultModelInput
   rerankFor?: Prisma.KnowledgeBaseUncheckedCreateNestedManyWithoutRerankModelInput
 }
 
 export type ModelCreateOrConnectWithoutAssistantsInput = {
   where: Prisma.ModelWhereUniqueInput
   create: Prisma.XOR<Prisma.ModelCreateWithoutAssistantsInput, Prisma.ModelUncheckedCreateWithoutAssistantsInput>
-}
-
-export type ModelCreateWithoutDefaultForAssistantsInput = {
-  id: string
-  name: string
-  owned_by?: string | null
-  description?: string | null
-  isSystem?: boolean
-  sort?: number
-  contextLength?: number | null
-  supportsAttachments?: boolean
-  supportsTools?: boolean
-  supportsReasoning?: boolean
-  supportsImage?: boolean
-  supportsAudio?: boolean
-  supportsVideo?: boolean
-  supportsEmbedding?: boolean
-  inputPricePerMillion?: number | null
-  outputPricePerMillion?: number | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  group: Prisma.GroupCreateNestedOneWithoutModelsInput
-  assistants?: Prisma.AssistantCreateNestedManyWithoutModelInput
-  rerankFor?: Prisma.KnowledgeBaseCreateNestedManyWithoutRerankModelInput
-}
-
-export type ModelUncheckedCreateWithoutDefaultForAssistantsInput = {
-  id: string
-  name: string
-  owned_by?: string | null
-  description?: string | null
-  isSystem?: boolean
-  sort?: number
-  contextLength?: number | null
-  supportsAttachments?: boolean
-  supportsTools?: boolean
-  supportsReasoning?: boolean
-  supportsImage?: boolean
-  supportsAudio?: boolean
-  supportsVideo?: boolean
-  supportsEmbedding?: boolean
-  inputPricePerMillion?: number | null
-  outputPricePerMillion?: number | null
-  groupId: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  assistants?: Prisma.AssistantUncheckedCreateNestedManyWithoutModelInput
-  rerankFor?: Prisma.KnowledgeBaseUncheckedCreateNestedManyWithoutRerankModelInput
-}
-
-export type ModelCreateOrConnectWithoutDefaultForAssistantsInput = {
-  where: Prisma.ModelWhereUniqueInput
-  create: Prisma.XOR<Prisma.ModelCreateWithoutDefaultForAssistantsInput, Prisma.ModelUncheckedCreateWithoutDefaultForAssistantsInput>
 }
 
 export type ModelUpsertWithoutAssistantsInput = {
@@ -948,7 +870,6 @@ export type ModelUpdateWithoutAssistantsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   group?: Prisma.GroupUpdateOneRequiredWithoutModelsNestedInput
-  defaultForAssistants?: Prisma.AssistantUpdateManyWithoutDefaultModelNestedInput
   rerankFor?: Prisma.KnowledgeBaseUpdateManyWithoutRerankModelNestedInput
 }
 
@@ -972,66 +893,6 @@ export type ModelUncheckedUpdateWithoutAssistantsInput = {
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  defaultForAssistants?: Prisma.AssistantUncheckedUpdateManyWithoutDefaultModelNestedInput
-  rerankFor?: Prisma.KnowledgeBaseUncheckedUpdateManyWithoutRerankModelNestedInput
-}
-
-export type ModelUpsertWithoutDefaultForAssistantsInput = {
-  update: Prisma.XOR<Prisma.ModelUpdateWithoutDefaultForAssistantsInput, Prisma.ModelUncheckedUpdateWithoutDefaultForAssistantsInput>
-  create: Prisma.XOR<Prisma.ModelCreateWithoutDefaultForAssistantsInput, Prisma.ModelUncheckedCreateWithoutDefaultForAssistantsInput>
-  where?: Prisma.ModelWhereInput
-}
-
-export type ModelUpdateToOneWithWhereWithoutDefaultForAssistantsInput = {
-  where?: Prisma.ModelWhereInput
-  data: Prisma.XOR<Prisma.ModelUpdateWithoutDefaultForAssistantsInput, Prisma.ModelUncheckedUpdateWithoutDefaultForAssistantsInput>
-}
-
-export type ModelUpdateWithoutDefaultForAssistantsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  owned_by?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  sort?: Prisma.IntFieldUpdateOperationsInput | number
-  contextLength?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  supportsAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  supportsTools?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  supportsReasoning?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  supportsImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  supportsAudio?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  supportsVideo?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  supportsEmbedding?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  inputPricePerMillion?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  outputPricePerMillion?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  group?: Prisma.GroupUpdateOneRequiredWithoutModelsNestedInput
-  assistants?: Prisma.AssistantUpdateManyWithoutModelNestedInput
-  rerankFor?: Prisma.KnowledgeBaseUpdateManyWithoutRerankModelNestedInput
-}
-
-export type ModelUncheckedUpdateWithoutDefaultForAssistantsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  owned_by?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  sort?: Prisma.IntFieldUpdateOperationsInput | number
-  contextLength?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  supportsAttachments?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  supportsTools?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  supportsReasoning?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  supportsImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  supportsAudio?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  supportsVideo?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  supportsEmbedding?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  inputPricePerMillion?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  outputPricePerMillion?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  groupId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  assistants?: Prisma.AssistantUncheckedUpdateManyWithoutModelNestedInput
   rerankFor?: Prisma.KnowledgeBaseUncheckedUpdateManyWithoutRerankModelNestedInput
 }
 
@@ -1056,7 +917,6 @@ export type ModelCreateWithoutRerankForInput = {
   updatedAt?: Date | string
   group: Prisma.GroupCreateNestedOneWithoutModelsInput
   assistants?: Prisma.AssistantCreateNestedManyWithoutModelInput
-  defaultForAssistants?: Prisma.AssistantCreateNestedManyWithoutDefaultModelInput
 }
 
 export type ModelUncheckedCreateWithoutRerankForInput = {
@@ -1080,7 +940,6 @@ export type ModelUncheckedCreateWithoutRerankForInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   assistants?: Prisma.AssistantUncheckedCreateNestedManyWithoutModelInput
-  defaultForAssistants?: Prisma.AssistantUncheckedCreateNestedManyWithoutDefaultModelInput
 }
 
 export type ModelCreateOrConnectWithoutRerankForInput = {
@@ -1120,7 +979,6 @@ export type ModelUpdateWithoutRerankForInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   group?: Prisma.GroupUpdateOneRequiredWithoutModelsNestedInput
   assistants?: Prisma.AssistantUpdateManyWithoutModelNestedInput
-  defaultForAssistants?: Prisma.AssistantUpdateManyWithoutDefaultModelNestedInput
 }
 
 export type ModelUncheckedUpdateWithoutRerankForInput = {
@@ -1144,7 +1002,6 @@ export type ModelUncheckedUpdateWithoutRerankForInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assistants?: Prisma.AssistantUncheckedUpdateManyWithoutModelNestedInput
-  defaultForAssistants?: Prisma.AssistantUncheckedUpdateManyWithoutDefaultModelNestedInput
 }
 
 export type ModelCreateWithoutGroupInput = {
@@ -1167,7 +1024,6 @@ export type ModelCreateWithoutGroupInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   assistants?: Prisma.AssistantCreateNestedManyWithoutModelInput
-  defaultForAssistants?: Prisma.AssistantCreateNestedManyWithoutDefaultModelInput
   rerankFor?: Prisma.KnowledgeBaseCreateNestedManyWithoutRerankModelInput
 }
 
@@ -1191,7 +1047,6 @@ export type ModelUncheckedCreateWithoutGroupInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   assistants?: Prisma.AssistantUncheckedCreateNestedManyWithoutModelInput
-  defaultForAssistants?: Prisma.AssistantUncheckedCreateNestedManyWithoutDefaultModelInput
   rerankFor?: Prisma.KnowledgeBaseUncheckedCreateNestedManyWithoutRerankModelInput
 }
 
@@ -1286,7 +1141,6 @@ export type ModelUpdateWithoutGroupInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assistants?: Prisma.AssistantUpdateManyWithoutModelNestedInput
-  defaultForAssistants?: Prisma.AssistantUpdateManyWithoutDefaultModelNestedInput
   rerankFor?: Prisma.KnowledgeBaseUpdateManyWithoutRerankModelNestedInput
 }
 
@@ -1310,7 +1164,6 @@ export type ModelUncheckedUpdateWithoutGroupInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assistants?: Prisma.AssistantUncheckedUpdateManyWithoutModelNestedInput
-  defaultForAssistants?: Prisma.AssistantUncheckedUpdateManyWithoutDefaultModelNestedInput
   rerankFor?: Prisma.KnowledgeBaseUncheckedUpdateManyWithoutRerankModelNestedInput
 }
 
@@ -1342,13 +1195,11 @@ export type ModelUncheckedUpdateManyWithoutGroupInput = {
 
 export type ModelCountOutputType = {
   assistants: number
-  defaultForAssistants: number
   rerankFor: number
 }
 
 export type ModelCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assistants?: boolean | ModelCountOutputTypeCountAssistantsArgs
-  defaultForAssistants?: boolean | ModelCountOutputTypeCountDefaultForAssistantsArgs
   rerankFor?: boolean | ModelCountOutputTypeCountRerankForArgs
 }
 
@@ -1366,13 +1217,6 @@ export type ModelCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extens
  * ModelCountOutputType without action
  */
 export type ModelCountOutputTypeCountAssistantsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AssistantWhereInput
-}
-
-/**
- * ModelCountOutputType without action
- */
-export type ModelCountOutputTypeCountDefaultForAssistantsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.AssistantWhereInput
 }
 
@@ -1406,7 +1250,6 @@ export type ModelSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   updatedAt?: boolean
   group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>
   assistants?: boolean | Prisma.Model$assistantsArgs<ExtArgs>
-  defaultForAssistants?: boolean | Prisma.Model$defaultForAssistantsArgs<ExtArgs>
   rerankFor?: boolean | Prisma.Model$rerankForArgs<ExtArgs>
   _count?: boolean | Prisma.ModelCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["model"]>
@@ -1483,7 +1326,6 @@ export type ModelOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
 export type ModelInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>
   assistants?: boolean | Prisma.Model$assistantsArgs<ExtArgs>
-  defaultForAssistants?: boolean | Prisma.Model$defaultForAssistantsArgs<ExtArgs>
   rerankFor?: boolean | Prisma.Model$rerankForArgs<ExtArgs>
   _count?: boolean | Prisma.ModelCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1499,7 +1341,6 @@ export type $ModelPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   objects: {
     group: Prisma.$GroupPayload<ExtArgs>
     assistants: Prisma.$AssistantPayload<ExtArgs>[]
-    defaultForAssistants: Prisma.$AssistantPayload<ExtArgs>[]
     rerankFor: Prisma.$KnowledgeBasePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1918,7 +1759,6 @@ export interface Prisma__ModelClient<T, Null = never, ExtArgs extends runtime.Ty
   readonly [Symbol.toStringTag]: "PrismaPromise"
   group<T extends Prisma.GroupDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GroupDefaultArgs<ExtArgs>>): Prisma.Prisma__GroupClient<runtime.Types.Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   assistants<T extends Prisma.Model$assistantsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Model$assistantsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssistantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  defaultForAssistants<T extends Prisma.Model$defaultForAssistantsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Model$defaultForAssistantsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssistantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   rerankFor<T extends Prisma.Model$rerankForArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Model$rerankForArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KnowledgeBasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2365,30 +2205,6 @@ export type ModelDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
  * Model.assistants
  */
 export type Model$assistantsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Assistant
-   */
-  select?: Prisma.AssistantSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Assistant
-   */
-  omit?: Prisma.AssistantOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AssistantInclude<ExtArgs> | null
-  where?: Prisma.AssistantWhereInput
-  orderBy?: Prisma.AssistantOrderByWithRelationInput | Prisma.AssistantOrderByWithRelationInput[]
-  cursor?: Prisma.AssistantWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.AssistantScalarFieldEnum | Prisma.AssistantScalarFieldEnum[]
-}
-
-/**
- * Model.defaultForAssistants
- */
-export type Model$defaultForAssistantsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Assistant
    */

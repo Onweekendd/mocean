@@ -121,7 +121,6 @@ export const AssistantScalarFieldEnum = {
   knowledgeRecognition: 'knowledgeRecognition',
   modelId: 'modelId',
   providerId: 'providerId',
-  defaultModelId: 'defaultModelId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
