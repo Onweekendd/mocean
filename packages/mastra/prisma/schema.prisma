@@ -193,13 +193,13 @@ model Agent {
   type                 String                @default("agent")
   emoji                String?
   description          String?
-  groupJson            Json? // 存储String[]
   enableWebSearch      Boolean               @default(false)
   webSearchProviderId  String?
   enableGenerateImage  Boolean               @default(false)
   knowledgeRecognition KnowledgeRecognition?
 
   // 关系
+  groups         AgentAgentGroup[]
   settings       AssistantSettings?
   topics         Topic[]
   knowledgeBases KnowledgeBase[]
@@ -207,6 +207,25 @@ model Agent {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model AgentGroup {
+  id        String            @id @default(uuid())
+  name      String            @unique
+  label     String
+  agents    AgentAgentGroup[]
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
+
+// Agent和AgentGroup的多对多关系
+model AgentAgentGroup {
+  agent        Agent      @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  agentId      String
+  agentGroup   AgentGroup @relation(fields: [agentGroupId], references: [id], onDelete: Cascade)
+  agentGroupId String
+
+  @@id([agentId, agentGroupId])
 }
 
 // 主题模型
