@@ -2,9 +2,8 @@
 
 import { useParams } from "next/navigation";
 
-import { Loader2 } from "lucide-react";
-
 import { Card, CardContent } from "@/components/ui/card";
+import { LoadingPlaceholder } from "@/components/custom/loading-placeholder";
 import { useProviders } from "@/hooks/useProvidersSWR";
 
 import { ProviderSelect } from "./components/ProviderSelect";
@@ -24,16 +23,7 @@ export default function ProviderLayout({ children }: ProviderLayoutProps) {
   const { providers, isLoading, error } = useProviders();
 
   if (isLoading) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <div className="flex items-center space-x-2">
-          <Loader2 className="h-6 w-6 animate-spin" />
-          <span className="text-sm text-muted-foreground">
-            加载提供商数据中...
-          </span>
-        </div>
-      </div>
-    );
+    return <LoadingPlaceholder text="加载提供商数据中..." />;
   }
 
   if (error) {

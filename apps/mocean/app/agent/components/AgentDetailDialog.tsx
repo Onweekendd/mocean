@@ -2,9 +2,13 @@
 
 import { Suspense, lazy, useCallback } from "react";
 
-import { Agent } from "@mocean/mastra/prismaType";
 import { Bot, Eye, Loader2, Tag, X, Zap } from "lucide-react";
 
+import { getGroupLabel } from "@/app/agent/lib/agent-groups";
+import {
+  type AgentWithGroups,
+  getAgentGroupNames
+} from "@/app/agent/lib/parse-group-json";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,55 +16,30 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from "@/components/ui/dialog";
 
-// 动态导入 MarkdownRenderer
 const MarkdownRenderer = lazy(() =>
   import("@/components/markdown-renderer").then((module) => ({
-    default: module.MarkdownRenderer,
-  })),
+    default: module.MarkdownRenderer
+  }))
 );
 
 export interface AgentDetailDialogProps {
-  agent: Agent | null;
+  agent: AgentWithGroups | null;
   isOpen: boolean;
   onClose: () => void;
-  onCreateAssistant?: (agent: Agent) => Promise<boolean>;
+  onCreateAssistant?: (agent: AgentWithGroups) => Promise<boolean>;
   isCreatingAssistant?: boolean;
 }
 
-/**
- * 智能体详情对话框组件
- * @description 显示智能体的详细信息，包括基本信息、描述和系统提示词
- *
- * @param agent - 要显示详情的智能体对象
- * @param isOpen - 对话框是否打开
- * @param onClose - 关闭对话框的回调函数
- * @param [onSelect] - 选择智能体时的回调函数
- * @param [onCreateAssistant] - 创建助手时的回调函数
- * @param [isCreatingAssistant] - 是否正在创建助手
- *
- * @example
- * // 显示智能体详情对话框
- * <AgentDetailDialog
- *   agent={selectedAgent}
- *   isOpen={isDialogOpen}
- *   onClose={() => setIsDialogOpen(false)}
- *   onCreateAssistant={(agent) => createAssistant(agent)}
- *   isCreatingAssistant={isCreating}
- * />
- */
 export const AgentDetailDialog: React.FC<AgentDetailDialogProps> = ({
   agent,
   isOpen,
   onClose,
   onCreateAssistant,
-  isCreatingAssistant = false,
+  isCreatingAssistant = false
 }) => {
-  /**
-   * 处理选择智能体操作 - 创建助手
-   */
   const onSelectAgent = useCallback(async () => {
     if (!agent || !onCreateAssistant) return;
     try {
@@ -70,40 +49,7 @@ export const AgentDetailDialog: React.FC<AgentDetailDialogProps> = ({
     }
   }, [agent, onCreateAssistant]);
 
-  /**
-   * 获取智能体分组信息
-   * @param agent - 智能体对象
-   * @returns 分组数组
-   */
-  const getAgentGroups = (agent: Agent): string[] => {
-    if (!agent.groupJson) return [];
-
-    try {
-      let groupData;
-
-      // 如果是字符串，先解析 JSON
-      if (typeof agent.groupJson === "string") {
-        groupData = JSON.parse(agent.groupJson);
-      } else {
-        groupData = agent.groupJson;
-      }
-
-      // 处理解析后的数据
-      if (Array.isArray(groupData)) {
-        return groupData.filter((item) => typeof item === "string");
-      } else if (typeof groupData === "string") {
-        return [groupData];
-      } else if (typeof groupData === "object" && groupData !== null) {
-        return [String(groupData)];
-      }
-
-      return [];
-    } catch {
-      return [];
-    }
-  };
-
-  const agentGroups = agent ? getAgentGroups(agent) : [];
+  const agentGroups = agent ? getAgentGroupNames(agent.groups) : [];
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -119,7 +65,6 @@ export const AgentDetailDialog: React.FC<AgentDetailDialogProps> = ({
 
         {agent && (
           <div className="space-y-4 overflow-y-auto pr-2">
-            {/* 基本信息卡片 */}
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center space-x-2 text-base">
@@ -128,7 +73,6 @@ export const AgentDetailDialog: React.FC<AgentDetailDialogProps> = ({
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {/* 分组标签 */}
                 <div>
                   <div className="mb-2 flex items-center space-x-2">
                     <Tag className="h-4 w-4 text-muted-foreground" />
@@ -136,13 +80,13 @@ export const AgentDetailDialog: React.FC<AgentDetailDialogProps> = ({
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {agentGroups.length > 0 ? (
-                      agentGroups.map((group, index) => (
+                      agentGroups.map((groupKey, index) => (
                         <Badge
                           key={index}
                           variant="secondary"
                           className="border-info/20 bg-info/10 text-info dark:border-info/30 dark:bg-info/20 dark:text-info-foreground"
                         >
-                          {group}
+                          {getGroupLabel(groupKey)}
                         </Badge>
                       ))
                     ) : (
@@ -169,7 +113,6 @@ export const AgentDetailDialog: React.FC<AgentDetailDialogProps> = ({
               </CardContent>
             </Card>
 
-            {/* 提示词信息 */}
             {agent.prompt && (
               <Card>
                 <CardHeader className="pb-2">
@@ -191,7 +134,6 @@ export const AgentDetailDialog: React.FC<AgentDetailDialogProps> = ({
               </Card>
             )}
 
-            {/* 操作按钮 */}
             <div className="flex justify-end space-x-3 border-t border-border pt-4">
               <Button
                 variant="outline"

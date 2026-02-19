@@ -1,20 +1,19 @@
 "use client";
 
-import { useEffect } from "react";
+import { Bot, MousePointerClick, Sparkles } from "lucide-react";
 
-import { useRouter } from "next/navigation";
+import { EmptyPlaceholder } from "@/components/custom/empty-placeholder";
 
 export default function AgentPage() {
-  const router = useRouter();
-
-  useEffect(() => {
-    // 重定向到默认分组
-    router.replace("/agent/%E7%B2%BE%E9%80%89"); // encodeURIComponent("精选")
-  }, [router]);
-
   return (
-    <div className="flex h-full items-center justify-center">
-      <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary" />
-    </div>
+    <EmptyPlaceholder
+      icon={Bot}
+      title="选择 Agent"
+      description="从左侧选择一个 Agent，即可查看详情并创建助手"
+      hints={[
+        { icon: MousePointerClick, text: "点击左侧 Agent 卡片选择" },
+        { icon: Sparkles, text: "选择 Agent 后可基于它创建专属助手" }
+      ]}
+    />
   );
 }

@@ -1,6 +1,8 @@
 "use client";
 
-import { Database } from "lucide-react";
+import { Database, MousePointerClick } from "lucide-react";
+
+import { EmptyPlaceholder } from "@/components/custom/empty-placeholder";
 
 /**
  * 供应商默认页面
@@ -8,14 +10,13 @@ import { Database } from "lucide-react";
  */
 export default function ProviderPage() {
   return (
-    <div className="flex h-full items-center justify-center p-8">
-      <div className="text-center">
-        <Database className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
-        <h3 className="mb-2 text-lg font-semibold">选择提供商</h3>
-        <p className="text-sm text-muted-foreground">
-          请在左侧选择一个提供商来查看其可用的模型列表
-        </p>
-      </div>
-    </div>
+    <EmptyPlaceholder
+      icon={Database}
+      title="选择提供商"
+      description="从左侧选择一个提供商，即可查看其可用的模型列表"
+      hints={[
+        { icon: MousePointerClick, text: "点击左侧提供商卡片选择" }
+      ]}
+    />
   );
 }

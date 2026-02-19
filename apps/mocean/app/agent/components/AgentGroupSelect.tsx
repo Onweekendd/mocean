@@ -1,68 +1,50 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
-import { useStore } from "@/app/store/useStore";
+import type { AgentGroup } from "@mocean/mastra/prismaType";
+
+import {
+  AGENT_GROUPS,
+  DEFAULT_GROUP,
+  getGroupLabel
+} from "@/app/agent/lib/agent-groups";
 import { ItemList } from "@/components/custom/item-list";
-import { useAgentGroupsSWR } from "@/hooks/useAgentsSWR";
 
-import { AgentGroupIcon, iconMap } from "./AgentGroupIcon";
+import { AgentGroupIcon } from "./AgentGroupIcon";
 
 export interface AgentGroupSelectProps {
-  onGroupSelect?: (group: string) => void;
+  groups: AgentGroup[];
   className?: string;
 }
 
-/**
- * Agent分组选择组件
- * @description 展示可选的 Agent 分组列表，支持选择和切换
- */
 export const AgentGroupSelect: React.FC<AgentGroupSelectProps> = ({
-  onGroupSelect
+  groups
 }) => {
   const router = useRouter();
-  const { activeAgentGroup, setActiveAgentGroup } = useStore();
-  const { groups: groupListFromBackend, isLoading } = useAgentGroupsSWR();
+  const params = useParams<{ type: string }>();
+  const currentGroupId = params.type ?? DEFAULT_GROUP;
 
-  const currentGroup = activeAgentGroup || "精选";
+  // 只显示后端存在且在 AGENT_GROUPS 中已定义的分组
+  const groupList = groups.filter((g) => AGENT_GROUPS[g.name]);
 
-  // 合并后端分组数据与前端 iconMap，确保只显示后端存在的分组
-  const groupList =
-    groupListFromBackend.length > 0
-      ? groupListFromBackend.filter(
-          (group: string) => iconMap[group as keyof typeof iconMap]
-        )
-      : Object.keys(iconMap);
-
-  /**
-   * 处理分组选择事件
-   * @param group - 选中的分组名称
-   */
-  const onGroupClick = (group: string) => {
-    setActiveAgentGroup(group);
-    onGroupSelect?.(group);
-
-    // URL 导航到对应分组
-    const encodedGroup = encodeURIComponent(group);
-    router.push(`/agent/${encodedGroup}`);
+  const onGroupClick = (groupId: string) => {
+    router.push(`/agent/${groupId}`);
   };
 
-  /**
-   * 渲染单个分组项
-   * @param group - 分组名称
-   */
-  const renderGroupItem = (group: string) => {
-    const isSelected = currentGroup === group;
+  const renderGroupItem = (group: AgentGroup) => {
+    const isSelected = currentGroupId === group.id;
+    const label = getGroupLabel(group.name);
 
     return (
       <div
-        key={group}
+        key={group.id}
         className={`cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${
           isSelected
             ? "border border-transparent bg-gradient-brand text-white shadow-lg"
             : "border border-border bg-card hover:border-primary/50 hover:bg-muted/80"
         } group rounded-lg p-3`}
-        onClick={() => onGroupClick(group)}
+        onClick={() => onGroupClick(group.id)}
       >
         <div className="flex items-center space-x-3">
           <div
@@ -72,39 +54,28 @@ export const AgentGroupSelect: React.FC<AgentGroupSelectProps> = ({
                 : "to-brand-secondary/10 bg-gradient-to-br from-brand-primary/10 text-info"
             } `}
           >
-            <AgentGroupIcon
-              groupName={group as keyof typeof iconMap}
-              size={16}
-              strokeWidth={1.5}
-            />
+            <AgentGroupIcon groupKey={group.name} size={16} strokeWidth={1.5} />
           </div>
           <span
             className={`text-sm font-medium transition-colors ${isSelected ? "text-white" : "text-foreground group-hover:text-primary"} `}
           >
-            {group}
+            {label}
           </span>
         </div>
-        <div className="flex items-center space-x-2" />
       </div>
     );
   };
 
-  /**
-   * 分组搜索过滤函数
-   * @param group - 分组名称
-   * @param searchTerm - 搜索词
-   */
-  const searchFilter = (group: string, searchTerm: string): boolean => {
-    return group.toLowerCase().includes(searchTerm.toLowerCase());
-  };
-
-  if (isLoading) {
+  const searchFilter = (group: AgentGroup, searchTerm: string): boolean => {
+    const label = getGroupLabel(group.name);
+    const term = searchTerm.toLowerCase();
     return (
-      <div className="flex h-full items-center justify-center">
-        <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-primary" />
-      </div>
+      group.name.toLowerCase().includes(term) ||
+      label.toLowerCase().includes(term)
     );
-  }
+  };
+
+  const currentGroup = groups.find((g) => g.id === currentGroupId);
 
   return (
     <div className="flex h-full flex-col">
@@ -132,15 +103,12 @@ export const AgentGroupSelect: React.FC<AgentGroupSelectProps> = ({
       {currentGroup && (
         <div className="mt-4 flex flex-shrink-0 items-center space-x-2 pl-2">
           <div className="flex h-4 w-4 items-center justify-center rounded-full bg-gradient-brand text-white">
-            <AgentGroupIcon
-              groupName={currentGroup as keyof typeof iconMap}
-              size={12}
-            />
+            <AgentGroupIcon groupKey={currentGroup.name} size={12} />
           </div>
           <span className="text-xs text-muted-foreground">
             当前:{" "}
             <span className="text-base font-medium text-foreground">
-              {currentGroup}
+              {getGroupLabel(currentGroup.name)}
             </span>
           </span>
         </div>

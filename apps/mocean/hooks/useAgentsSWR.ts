@@ -1,4 +1,5 @@
 import { useAgentsApi } from "@mocean/mastra/apiClient";
+import type { AgentGroup } from "@mocean/mastra/prismaType";
 import useSWR from "swr";
 
 /**
@@ -118,13 +119,13 @@ export function useAgentsByGroupSWR(group: string | null) {
 }
 
 /**
- * 获取所有代理分组名称 - 使用 SWR
- * @returns 包含分组名称数组、加载状态、错误信息和刷新方法的对象
+ * 获取所有代理分组 - 使用 SWR
+ * @returns 包含分组数组、加载状态、错误信息和刷新方法的对象
  *
  * @example
  * // 获取所有分组
  * const { groups, isLoading, error, refresh } = useAgentGroupsSWR();
- * console.log(groups); // -> string[]
+ * console.log(groups); // -> AgentGroup[]
  */
 export function useAgentGroupsSWR() {
   const { getAgentGroups } = useAgentsApi();
@@ -133,7 +134,7 @@ export function useAgentGroupsSWR() {
     "agent-groups",
     async () => {
       const result = await getAgentGroups();
-      return result?.data || [];
+      return result?.data ?? [];
     },
     {
       refreshInterval: 0,
@@ -146,7 +147,7 @@ export function useAgentGroupsSWR() {
   );
 
   return {
-    groups: data || [],
+    groups: data ?? ([] as AgentGroup[]),
     isLoading,
     error,
     refresh: mutate
