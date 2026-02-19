@@ -174,8 +174,6 @@ model Assistant {
   modelId        String?
   provider       Provider?            @relation(fields: [providerId], references: [id])
   providerId     String?
-  defaultModel   Model?               @relation("AssistantDefaultModel", fields: [defaultModelId], references: [id])
-  defaultModelId String?
   settings       AssistantSettings?
   topics         Topic[]
   knowledgeBases KnowledgeBase[]
@@ -290,9 +288,8 @@ model Model {
   groupId String
   group   Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
-  assistants           Assistant[]     @relation("AssistantModel")
-  defaultForAssistants Assistant[]     @relation("AssistantDefaultModel")
-  rerankFor            KnowledgeBase[] @relation("RerankModel")
+  assistants Assistant[]     @relation("AssistantModel")
+  rerankFor  KnowledgeBase[] @relation("RerankModel")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
