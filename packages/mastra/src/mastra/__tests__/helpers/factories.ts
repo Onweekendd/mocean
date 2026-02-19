@@ -34,7 +34,7 @@ export const providerFactory = {
     >
   ) => {
     const data = providerFactory.build(overrides);
-    return await prisma.provider.create({
+    const res = await prisma.provider.create({
       data: {
         ...data,
         groups: {
@@ -48,6 +48,8 @@ export const providerFactory = {
         groups: true
       }
     });
+    console.log("创建 Provider", res.id);
+    return res;
   }
 };
 
@@ -144,7 +146,6 @@ export const assistantFactory = {
       data,
       include: {
         model: true,
-        defaultModel: true,
         settings: true
       }
     });

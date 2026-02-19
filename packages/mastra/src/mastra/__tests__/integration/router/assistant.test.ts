@@ -29,6 +29,7 @@ describe("Assistants Router", () => {
   function buildCreateBody(
     overrides?: Partial<Omit<Assistant, "id" | "createdAt" | "updatedAt">>
   ) {
+    console.log("overrides", overrides);
     return {
       name: "Test Assistant",
       description: "A test assistant",
@@ -38,7 +39,6 @@ describe("Assistants Router", () => {
       type: "assistant",
       emoji: "🤖",
       enableWebSearch: false,
-      defaultModelId: model.id,
       webSearchProviderId: null,
       enableGenerateImage: false,
       knowledgeRecognition: "off",
@@ -55,7 +55,13 @@ describe("Assistants Router", () => {
       body: JSON.stringify(buildCreateBody(overrides)),
       headers: { "Content-Type": "application/json" }
     });
-    return { res, body: (await res.json()) as Record<string, unknown> };
+    const resClone = res.clone();
+    try {
+      const body = (await res.json()) as Record<string, unknown>;
+      return { res, body };
+    } catch (e) {
+      const error = await resClone.text();
+    }
   }
 
   // ─── 创建 ───────────────────────────────────────────────
@@ -85,6 +91,7 @@ describe("Assistants Router", () => {
     });
 
     it("提示词为空时应返回 400", async () => {
+      console.log("提示词为空时应返回 400123");
       const res = await app.request(BASE, {
         method: "POST",
         body: JSON.stringify(buildCreateBody({ prompt: "" })),
@@ -105,8 +112,34 @@ describe("Assistants Router", () => {
     });
 
     it("type 应有默认值 assistant", async () => {
-      const { body } = await createViaApi({ type: undefined });
+      const { body } = await createViaApi({ type: undefined, name: "12345" });
       expect(body.type).toBe("assistant");
+    });
+
+    it("使用前端的agent参数来创建 assistant", async () => {
+      const agent = {
+        name: "诗人 - Poet",
+        prompt:
+          "I want you to act as a poet. You will create poems that evoke emotions and have the power to stir people's soul. Write on any topic or theme but make sure your words convey the feeling you are trying to express in beautiful yet meaningful ways. You can also come up with short verses that are still powerful enough to leave an imprint in readers' minds. My first request is \"I need a poem about love.\"",
+        type: "agent",
+        emoji: "🖋️",
+        description:
+          "创作打动人心的诗歌，表达情感和主题。\\nCreate emotionally stirring poems that express feelings and themes.",
+        enableWebSearch: false,
+        webSearchProviderId: null,
+        enableGenerateImage: false,
+        knowledgeRecognition: "off"
+      };
+
+      const res = await app.request(BASE, {
+        method: "POST",
+        body: JSON.stringify(agent),
+        headers: { "Content-Type": "application/json" }
+      });
+
+      expect(res.status).toBe(201);
+      const body = (await res.json()) as Record<string, unknown>;
+      expect(body.id).toBeDefined();
     });
   });
 
@@ -178,6 +211,7 @@ describe("Assistants Router", () => {
     });
 
     it("应成功更新多个字段", async () => {
+      console.log("应成功更新多个字段 test");
       const { body: created } = await createViaApi();
       const id = created.id as string;
 

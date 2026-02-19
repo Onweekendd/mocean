@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { providersRouter } from "../../../router/providers";

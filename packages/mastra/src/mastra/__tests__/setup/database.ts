@@ -8,18 +8,50 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// 使用文件数据库，这样 prisma db push（独立进程）和 PrismaClient 能访问同一个库
 const mastraDir = join(__dirname, "..", "..", "..", "..");
 const TEST_DB_DIR = join(mastraDir, "db");
-const TEST_DB_PATH = join(TEST_DB_DIR, "test.db");
-const TEST_DB_URL = `file:${TEST_DB_PATH}`;
 
-// 全局 Prisma 实例
+// 使用测试文件名作为数据库名称，实现测试隔离
+let currentTestDbPath: string | null = null;
 let prismaInstance: PrismaClient | null = null;
+let schemaSynced = false;
+
+/**
+ * 根据调用栈获取测试文件名，用于生成唯一的数据库路径
+ */
+function getTestFileName(): string {
+  // 从错误栈中提取调用者信息
+  const stack = new Error().stack || "";
+  const lines = stack.split("\n");
+
+  // 查找测试文件路径（包含 .test. 的行）
+  for (const line of lines) {
+    const match = line.match(/([\\/.\w-]+\.test\.\w+)/);
+    if (match) {
+      const fullPath = match[1];
+      // 从路径中提取文件名（移除扩展名）
+      const fileName = fullPath.split(/[\\/]/).pop() || "test";
+      return fileName.replace(/\./g, "_");
+    }
+  }
+
+  // 如果找不到测试文件名，使用时间戳
+  return `test_${Date.now()}`;
+}
+
+/**
+ * 获取当前测试的数据库路径
+ */
+function getTestDbPath(): string {
+  if (!currentTestDbPath) {
+    const testFileName = getTestFileName();
+    currentTestDbPath = join(TEST_DB_DIR, `${testFileName}.db`);
+  }
+  return currentTestDbPath;
+}
 
 /**
  * 同步获取已初始化的 Prisma 实例（供 vi.mock 使用）
- * 必须在 initTestDatabase 之后调用
  */
 export function getPrismaInstance(): PrismaClient {
   if (!prismaInstance) {
@@ -38,8 +70,9 @@ export async function getTestPrisma(): Promise<PrismaClient> {
     return prismaInstance;
   }
 
+  const dbPath = getTestDbPath();
   const adapter = new PrismaBetterSqlite3({
-    url: TEST_DB_PATH
+    url: dbPath
   });
 
   prismaInstance = new PrismaClient({
@@ -53,85 +86,97 @@ export async function getTestPrisma(): Promise<PrismaClient> {
 
 /**
  * 初始化测试数据库 schema
- * 使用 prisma db push 同步 schema 到测试数据库文件
  */
-let initialized = false;
-
 export async function initTestDatabase(): Promise<void> {
-  // 避免多个测试文件重复初始化（setupFiles 的 beforeAll 每个文件都会调用）
-  if (initialized) {
-    return;
-  }
-
   // 确保 db 目录存在
   if (!existsSync(TEST_DB_DIR)) {
     mkdirSync(TEST_DB_DIR, { recursive: true });
   }
 
-  // 清理旧的测试数据库（如果存在）
-  if (existsSync(TEST_DB_PATH)) {
+  const dbPath = getTestDbPath();
+  const dbUrl = `file:${dbPath}`;
+
+  // Schema 同步只需执行一次
+  if (!schemaSynced) {
+    const schemaPath = join(mastraDir, "prisma", "schema.prisma");
     try {
-      unlinkSync(TEST_DB_PATH);
+      execSync(
+        `npx prisma db push --schema "${schemaPath}" --accept-data-loss --url "${dbUrl}"`,
+        {
+          cwd: mastraDir,
+          stdio: "pipe"
+        }
+      );
     } catch {
-      // 文件可能被占用，忽略
-    }
-  }
-
-  const schemaPath = join(mastraDir, "prisma", "schema.prisma");
-
-  // 使用 --url 直接指定数据库地址，避免依赖 schema 中的 url 字段
-  try {
-    execSync(
-      `npx prisma db push --schema "${schemaPath}" --accept-data-loss --url "${TEST_DB_URL}"`,
-      {
-        cwd: mastraDir,
-        stdio: "pipe"
+      if (!existsSync(dbPath)) {
+        throw new Error("Failed to initialize test database");
       }
-    );
-  } catch {
-    // 如果 DB 文件已存在且 schema 已同步（如另一个测试文件先初始化了），忽略错误
-    if (!existsSync(TEST_DB_PATH)) {
-      throw new Error("Failed to initialize test database");
     }
+    schemaSynced = true;
   }
 
-  // 建表完成后再创建 PrismaClient 连接
-  await getTestPrisma();
-  initialized = true;
+  // 确保 prisma 实例已创建
+  if (!prismaInstance) {
+    await getTestPrisma();
+  }
 }
 
 /**
  * 清空所有表数据（保留 schema）
- * 动态查询 sqlite_master 获取表名，无需手动维护列表
+ * 使用顺序 await deleteMany，按 FK 依赖顺序删除
  */
 export async function clearTestDatabase(): Promise<void> {
   const prisma = await getTestPrisma();
 
-  const tables = await prisma.$queryRawUnsafe<Array<{ name: string }>>(
-    `SELECT name FROM sqlite_master WHERE type='table'
-     AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_prisma_%'`
-  );
+  // 1. 联表 & 叶子表
+  await prisma.topicKnowledgeBase.deleteMany();
+  await prisma.mCPAssistantServer.deleteMany();
+  await prisma.mCPAgentServer.deleteMany();
+  await prisma.agentAgentGroup.deleteMany();
+  await prisma.knowledgeItem.deleteMany();
+  await prisma.mCPTool.deleteMany();
+  await prisma.mCPPrompt.deleteMany();
+  await prisma.mCPResource.deleteMany();
+  await prisma.mCPConfigSample.deleteMany();
+  await prisma.assistantSettings.deleteMany();
 
-  await prisma.$executeRawUnsafe("PRAGMA foreign_keys = OFF");
+  // 2. 中间层表
+  await prisma.topic.deleteMany();
+  await prisma.knowledgeBase.deleteMany();
+  await prisma.quickPhrase.deleteMany();
+  await prisma.fileType.deleteMany();
 
-  for (const { name } of tables) {
-    try {
-      await prisma.$executeRawUnsafe(`DELETE FROM "${name}"`);
-    } catch {
-      // 忽略
-    }
-  }
+  // 3. 主实体表
+  await prisma.assistant.deleteMany();
+  await prisma.agent.deleteMany();
+  await prisma.agentGroup.deleteMany();
+  await prisma.mCPServer.deleteMany();
 
-  await prisma.$executeRawUnsafe("PRAGMA foreign_keys = ON");
+  // 4. 模型层级（子 → 父）
+  await prisma.model.deleteMany();
+  await prisma.group.deleteMany();
+  await prisma.provider.deleteMany();
 }
 
 /**
- * 关闭数据库连接
- * 注意：不删除 DB 文件，因为其他测试文件可能还需要使用同一个 DB
+ * 关闭数据库连接并删除数据库文件
  */
 export async function closeTestDatabase(): Promise<void> {
   if (prismaInstance) {
     await prismaInstance.$disconnect();
     prismaInstance = null;
   }
+
+  // 删除测试数据库文件（实现完全隔离）
+  if (currentTestDbPath && existsSync(currentTestDbPath)) {
+    try {
+      unlinkSync(currentTestDbPath);
+    } catch {
+      // 忽略删除错误
+    }
+  }
+
+  // 重置状态
+  currentTestDbPath = null;
+  schemaSynced = false;
 }
