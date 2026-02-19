@@ -67,6 +67,18 @@
         "uriFormat": "%s",
         "webRoot": "${workspaceFolder}/apps/mocean"
       }
+    },
+    {
+      "name": "Vitest: Watch Debug (Mastra)",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/packages/mastra",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "test", "--", "--inspect-brk", "--no-coverage"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": ["<node_internals>/**", "node_modules/**"],
+      "autoAttachChildProcesses": true
     }
   ]
 }
