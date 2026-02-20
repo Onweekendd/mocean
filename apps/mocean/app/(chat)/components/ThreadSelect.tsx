@@ -17,36 +17,36 @@ interface ThreadSelectProps {
 }
 
 const ThreadSelect: React.FC<ThreadSelectProps> = ({ isActive }) => {
-  const { activeAssistant, activeThread, setActiveThread } = useStore();
+  const { activeAssistantId, activeThread, setActiveThread } = useStore();
 
   const router = useRouter();
 
   const { threads, refresh } = useAssistantThreadsSWR(
-    activeAssistant?.id || null,
+    activeAssistantId || null,
   );
 
   const { refresh: refreshUIMessage } = useAssistantUIMessageSWR(
-    activeAssistant?.id || null,
+    activeAssistantId || null,
     activeThread || null,
   );
 
   useEffect(() => {
     void refresh();
-  }, [refresh, activeAssistant?.id, isActive]);
+  }, [refresh, activeAssistantId, isActive]);
 
   const onCreateThread = useCallback(() => {
-    if (!activeAssistant) {
+    if (!activeAssistantId) {
       return;
     }
     setActiveThread(null);
     void refreshUIMessage();
-    router.push(`/${activeAssistant.id}`);
-  }, [activeAssistant, refreshUIMessage, router, setActiveThread]);
+    router.push(`/${activeAssistantId}`);
+  }, [activeAssistantId, refreshUIMessage, router, setActiveThread]);
 
   const onThreadClick = (thread: StorageThreadType) => {
     setActiveThread(thread.id);
     void refreshUIMessage();
-    router.replace(`/${activeAssistant?.id}/${thread.id}`);
+    router.replace(`/${activeAssistantId}/${thread.id}`);
   };
 
   return (

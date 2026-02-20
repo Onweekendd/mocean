@@ -22,8 +22,8 @@ const AssistantCard: React.FC<AssistantCardProps> = ({
   assistant,
   onClick,
 }) => {
-  const { activeAssistant } = useStore();
-  const isActive = activeAssistant?.id === assistant.id;
+  const { activeAssistantId } = useStore();
+  const isActive = activeAssistantId === assistant.id;
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat("zh-CN", {

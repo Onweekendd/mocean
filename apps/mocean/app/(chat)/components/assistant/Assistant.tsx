@@ -1,16 +1,18 @@
-import { AssistantModel } from "@mocean/mastra/prismaType";
+import { Assistant } from "@mocean/mastra/prismaType";
 
-import { useStore } from "@/app/store/useStore";
+import { useAssistantsSWR } from "@/hooks/useAssistantsSWR";
 
 import AssistantCard from "./AssistantCard";
 import CreateAssistantCard from "./CreateAssistantCard";
 
 interface AssistantSelectProps {
-  onClick: (assistant: AssistantModel) => void;
+  onClick: (assistant: Assistant) => void;
 }
 
 const AssistantSelect: React.FC<AssistantSelectProps> = ({ onClick }) => {
-  const { assistantList } = useStore();
+  const { assistants, isLoading, error } = useAssistantsSWR();
+
+  const assistantList = error ? [] : (assistants || []);
 
   const handleCreateAssistant = () => {
     // TODO: 实现创建助手的逻辑
@@ -46,7 +48,7 @@ const AssistantSelect: React.FC<AssistantSelectProps> = ({ onClick }) => {
         </div>
 
         {/* Empty State */}
-        {assistantList.length === 0 && (
+        {!isLoading && assistantList.length === 0 && (
           <div className="py-12 text-center">
             <div className="mb-4 text-gray-400 dark:text-gray-500">
               <svg

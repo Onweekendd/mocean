@@ -1,6 +1,6 @@
-import { FC } from "react";
+import type { FC } from "react";
 
-import { UIMessage } from "ai";
+import type { UIMessage } from "ai";
 
 import { MastraRuntimeProvider } from "@/app/context/MastraRuntimeProvider";
 import { Thread } from "@/components/thread";
@@ -18,3 +18,5 @@ const ChatView: FC<ChatViewProps> = ({ messages = [] }) => {
 };
 
 export default ChatView;
+
+export { ChatView };

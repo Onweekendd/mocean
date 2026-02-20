@@ -16,8 +16,8 @@ import { ModelSelector } from "./model-selector";
  */
 export function Toolbar() {
   const { update: updateAssistant } = useAssistantActions();
-  const { activeAssistant, setActiveAssistant } = useStore();
-  const { assistant, refresh } = useAssistantSWR(activeAssistant?.id ?? "");
+  const { activeAssistantId } = useStore();
+  const { assistant, refresh } = useAssistantSWR(activeAssistantId ?? "");
 
   /**
    * 处理模型选择变更
@@ -30,29 +30,25 @@ export function Toolbar() {
     modelId: string;
     modelName: string;
   }) => {
-    if (!activeAssistant) {
+    if (!activeAssistantId) {
       toast.error("请选择一个助手");
       return;
     }
 
     try {
-      await updateAssistant(activeAssistant.id, {
+      await updateAssistant(activeAssistantId, {
         modelId: selection.modelId,
         providerId: selection.providerId
       });
 
-      const assistant = await refresh();
-
-      if (assistant) {
-        setActiveAssistant(assistant);
-      }
+      await refresh();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "更新助手失败");
       console.error("更新助手失败:", error);
     }
   };
 
-  if (!activeAssistant) {
+  if (!activeAssistantId || !assistant) {
     return (
       <div className="flex items-center justify-center gap-2 rounded-md border border-dashed border-muted-foreground/25 bg-muted/20 px-4 py-2 text-sm text-muted-foreground">
         <Info className="h-4 w-4 opacity-60" />

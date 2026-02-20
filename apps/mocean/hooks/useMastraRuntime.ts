@@ -32,15 +32,15 @@ export function useMastraRuntime({
   api: string;
   initialMessages?: UIMessage[];
 }) {
-  const { activeThread, activeAssistant } = useStore();
+  const { activeThread, activeAssistantId } = useStore();
 
-  const { refresh } = useAssistantThreadsSWR(activeAssistant?.id || null);
+  const { refresh } = useAssistantThreadsSWR(activeAssistantId || null);
 
   const runtime = useChatRuntime({
     transport: new AssistantChatTransport({
       api,
       prepareSendMessagesRequest: (requestParams) => {
-        if (!activeAssistant) {
+        if (!activeAssistantId) {
           return {
             ...requestParams,
             body: {
@@ -58,7 +58,7 @@ export function useMastraRuntime({
             body: {
               ...(body || {}),
               threadId: generateId(),
-              assistantId: activeAssistant.id,
+              assistantId: activeAssistantId,
               messages: requestParams.messages,
             },
           };
@@ -69,7 +69,7 @@ export function useMastraRuntime({
           body: {
             ...(body || {}),
             threadId: activeThread,
-            assistantId: activeAssistant.id,
+            assistantId: activeAssistantId,
             messages: requestParams.messages,
           },
         };

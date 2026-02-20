@@ -1,12 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 import { Assistant } from "@mocean/mastra/prismaType";
 
 import { useStore } from "@/app/store/useStore";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useAssistantSWR } from "@/hooks/useAssistantsSWR";
 
 import ThreadSelect from "./ThreadSelect";
 import AssistantSelect from "./assistant/Assistant";
@@ -27,24 +26,15 @@ const ChatConfig = () => {
     },
   ];
 
-  const { activeAssistant, setActiveAssistant } = useStore();
-  const { getAssistantById } = useAssistantSWR(activeAssistant?.id || null);
+  const { activeAssistantId, setActiveAssistantId } = useStore();
 
   const [activeTab, setActiveTab] = useState<string>(
     tabsConfig[0]?.value || "assistant",
   );
 
-  const selectedAssistantId = useRef<string | null>(null);
-
   const onAssistantSelect = async (assistant: Assistant) => {
     setActiveTab(tabsConfig[1]?.value || "topic");
-    selectedAssistantId.current = assistant.id;
-
-    // 使用新添加的方法获取助手详情
-    const assistantDetail = await getAssistantById(assistant.id);
-    if (assistantDetail) {
-      setActiveAssistant(assistantDetail);
-    }
+    setActiveAssistantId(assistant.id);
   };
   return (
     <Tabs
