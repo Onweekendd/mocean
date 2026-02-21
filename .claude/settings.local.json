@@ -68,7 +68,12 @@
       "WebFetch(domain:www.prisma.io)",
       "Bash(for i in 1 2 3)",
       "Bash(do echo \"=== Run $i ===\")",
-      "Bash(done)"
+      "Bash(done)",
+      "mcp__mastra__searchMastraDocs",
+      "Bash(xargs basename:*)",
+      "WebFetch(domain:www.assistant-ui.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": [],
     "ask": []

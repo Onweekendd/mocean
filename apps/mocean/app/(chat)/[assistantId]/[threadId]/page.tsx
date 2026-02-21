@@ -17,7 +17,7 @@ export default function Chat() {
   // 获取消息数据
   const { messages, isLoading, error } = useAssistantUIMessageSWR(
     (assistantId as string) || null,
-    (threadId as string) || null,
+    (threadId as string) || null
   );
 
   useEffect(() => {

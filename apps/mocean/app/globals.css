@@ -1,3 +1,4 @@
+@import "tw-shimmer";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -73,7 +74,6 @@
     --brand-secondary-900: 222 47% 11%;
     --brand-secondary-950: 229 84% 5%;
 
-
     /* 状态颜色 */
     --success: 142 76% 36%;
     --success-foreground: 0 0% 98%;
@@ -145,7 +145,6 @@
     --brand-secondary-800: 214 32% 91%;
     --brand-secondary-900: 210 40% 96%;
     --brand-secondary-950: 210 40% 98%;
-
 
     /* 状态颜色 - 暗黑模式 */
     --success: 142 70% 45%;

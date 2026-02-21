@@ -121,7 +121,9 @@ const createAssistantRouter = registerApiRoute(
     },
     handler: async (c) => {
       try {
-        const body = assistantRoutes["createAssistant"]["requestSchema"].parse(await c.req.json());
+        const body = assistantRoutes["createAssistant"]["requestSchema"].parse(
+          await c.req.json()
+        );
         return c.json(await createAssistant(body), 201);
       } catch (error) {
         if (error instanceof z.ZodError) {
@@ -172,7 +174,9 @@ const updateAssistantRouter = registerApiRoute(
         assistantId: c.req.param("assistantId")
       });
       try {
-        const body = assistantRoutes["updateAssistant"]["requestSchema"].parse(await c.req.json());
+        const body = assistantRoutes["updateAssistant"]["requestSchema"].parse(
+          await c.req.json()
+        );
         return c.json(await updateAssistant(params.assistantId, body), 200);
       } catch (error) {
         if (error instanceof z.ZodError) {
@@ -252,16 +256,14 @@ const chatWithAssistantRouter = registerApiRoute(
     },
     handler: async (c) => {
       try {
-        const { assistantId, messages, threadId } =
-          assistantRoutes["chatWithAssistant"]["requestSchema"].parse(await c.req.json());
+        const { assistantId, messages, threadId } = assistantRoutes[
+          "chatWithAssistant"
+        ]["requestSchema"].parse(await c.req.json());
 
-        return c.json(
-          await executeChatWithAssistant(
-            assistantId,
-            messages as UIMessage[],
-            threadId
-          ),
-          200
+        return executeChatWithAssistant(
+          assistantId,
+          messages as UIMessage[],
+          threadId
         );
       } catch (error) {
         if (error instanceof z.ZodError) {

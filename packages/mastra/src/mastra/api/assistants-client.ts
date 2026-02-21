@@ -163,8 +163,8 @@ export class AssistantsApiClient extends BaseApiClient {
   }: Omit<
     z.infer<typeof assistantRoutes.chatWithAssistant.requestSchema>,
     "messages"
-  > & { messages: UIMessage[] }): Promise<ApiResponse<Response>> {
-    return this.post<Response>(assistantRoutes.chatWithAssistant.path, {
+  > & { messages: UIMessage[] }): Promise<Response> {
+    return this.postStream(assistantRoutes.chatWithAssistant.path, {
       assistantId,
       threadId,
       messages

@@ -1,4 +1,4 @@
-import { Assistant } from "@mocean/mastra/prismaType";
+import type { Assistant } from "@mocean/mastra/prismaType";
 
 import { useAssistantsSWR } from "@/hooks/useAssistantsSWR";
 
@@ -12,7 +12,7 @@ interface AssistantSelectProps {
 const AssistantSelect: React.FC<AssistantSelectProps> = ({ onClick }) => {
   const { assistants, isLoading, error } = useAssistantsSWR();
 
-  const assistantList = error ? [] : (assistants || []);
+  const assistantList = error ? [] : assistants || [];
 
   const handleCreateAssistant = () => {
     // TODO: 实现创建助手的逻辑
@@ -41,7 +41,7 @@ const AssistantSelect: React.FC<AssistantSelectProps> = ({ onClick }) => {
           {assistantList.map((assistant) => (
             <AssistantCard
               key={assistant.id}
-              assistant={assistant}
+              assistant={assistant as Assistant}
               onClick={onClick}
             />
           ))}

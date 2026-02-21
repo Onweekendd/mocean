@@ -1,11 +1,28 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import { Agent } from "@mastra/core/agent";
-import type { MastraModelConfig } from "@mastra/core/dist/llm";
 import type { RequestContext } from "@mastra/core/request-context";
 import { LibSQLStore } from "@mastra/libsql";
 import { Memory } from "@mastra/memory";
 
 import type { CommonRunTimeType } from "../runtime/CommonRunTime";
+
+/**
+ * 转换 modelId 格式
+ * 将 "zhipuai&GLM-4.5-Flash" 转换为 "zhipuai/glm-4.5-flash"
+ * 将 "openai&gpt-4o" 转换为 "openai/gpt-4o"
+ */
+function normalizeModelId(modelId: string): `${string}/${string}` {
+  // 如果已经包含 /，直接返回
+  if (modelId.includes("/")) {
+    return modelId as `${string}/${string}`;
+  }
+  // 按 & 分割并转换为小写，用 / 连接
+  const [provider, model] = modelId.split("&");
+  if (!provider || !model) {
+    return modelId as `${string}/${string}`;
+  }
+  return `${provider.toLowerCase()}/${model.toLowerCase()}`;
+}
 
 export const DynamicAgent = new Agent({
   id: "dynamic-agent",
@@ -28,18 +45,22 @@ export const DynamicAgent = new Agent({
 
     const provider = assistant.provider;
 
-    const model = assistant.model;
+    if (provider.isSystem) {
+      /**
+       * providerId&modelId
+       */
+      const model = assistant.model;
 
-    if (!provider || !provider.apiHost || !provider.apiKey) {
-      throw new Error("Provider not configured");
+      if (!provider || !provider.apiHost || !provider.apiKey) {
+        throw new Error("Provider not configured");
+      }
+
+      return {
+        url: provider.apiHost,
+        apiKey: provider.apiKey,
+        id: normalizeModelId(model.id)
+      };
     }
-
-    return {
-      url: provider.apiHost,
-      apiKey: provider.apiKey,
-      providerId: provider.id,
-      modelId: model.id
-    };
   },
 
   memory: new Memory({

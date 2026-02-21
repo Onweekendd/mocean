@@ -110,6 +110,34 @@ export abstract class BaseApiClient {
   }
 
   /**
+   * POST 请求并返回原始 Response（用于流式响应）
+   * @param endpoint - API 端点
+   * @param body - 请求体数据
+   * @param headers - 额外的请求头
+   */
+  protected async postStream(
+    endpoint: string,
+    body?: Record<string, unknown>,
+    headers?: Record<string, string>
+  ): Promise<Response> {
+    const url = `${this.baseUrl}${endpoint}`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        ...this.defaultHeaders,
+        ...headers
+      },
+      body: body ? JSON.stringify(body) : undefined
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    return response;
+  }
+
+  /**
    * PUT 请求的便捷方法
    * @param endpoint - API 端点
    * @param body - 请求体数据

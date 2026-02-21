@@ -96,13 +96,13 @@ export function ItemList<T>({
     default: 1,
     lg: 2,
     xl: 3,
-    "2xl": 4,
+    "2xl": 4
   },
   loading = false,
   loadingText = "加载中...",
   emptyState,
   className = "",
-  height = "h-full",
+  height = "h-full"
 }: ItemListProps<T>) {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -120,7 +120,7 @@ export function ItemList<T>({
     // 搜索过滤
     if (searchFilter && searchTerm.trim()) {
       filtered = filtered.filter((item) =>
-        searchFilter(item, searchTerm.trim()),
+        searchFilter(item, searchTerm.trim())
       );
     }
 
@@ -137,7 +137,7 @@ export function ItemList<T>({
       3: "grid-cols-3",
       4: "grid-cols-4",
       5: "grid-cols-5",
-      6: "grid-cols-6",
+      6: "grid-cols-6"
     };
 
     let className = "grid gap-4";

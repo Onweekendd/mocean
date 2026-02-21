@@ -4,7 +4,7 @@ import { memo } from "react";
 
 import Image from "next/image";
 
-import type { Provider } from "@mocean/mastra/prismaType";
+import type { Model, Provider } from "@mocean/mastra/prismaType";
 
 import { renderProviderAvatar as RenderProviderAvatar } from "@/app/provider/components/CustomerIcon";
 import { getModelLogo } from "@/app/provider/constant";
@@ -36,16 +36,11 @@ const ModelSelectorComponent = ({
   onChange,
   className
 }: ModelSelectorProps) => {
-  const {
-    providersWithGroups,
-    open,
-    setOpen,
-    selectedProvider,
-    onSelectModel
-  } = useModelSelector({
-    value,
-    onChange
-  });
+  const { providers, models, open, setOpen, selectedProvider, onSelectModel } =
+    useModelSelector({
+      value,
+      onChange
+    });
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -81,7 +76,7 @@ const ModelSelectorComponent = ({
         side="top"
         sideOffset={-4}
       >
-        {providersWithGroups.map((provider) => (
+        {providers.map((provider) => (
           <DropdownMenuSub key={provider.id}>
             <DropdownMenuSubTrigger className="gap-2">
               <div className="h-5 w-5 shrink-0">
@@ -93,10 +88,10 @@ const ModelSelectorComponent = ({
             <DropdownMenuSubContent className="p-0">
               <ScrollArea className="h-52">
                 <div className="p-2">
-                  {provider.length > 0 ? (
-                    provider.modelGroups.map((group, groupIndex) => (
+                  {models.length > 0 ? (
+                    provider.groups.map((group, groupIndex) => (
                       <div
-                        key={group.groupName}
+                        key={group.name}
                         className={cn(
                           "relative rounded-md border border-border/50 bg-muted/20 p-2 pb-1",
                           groupIndex > 0 && "mt-3"
@@ -111,7 +106,12 @@ const ModelSelectorComponent = ({
                                 value?.modelId === model.id &&
                                   "bg-brand-primary/10 font-medium text-brand-primary"
                               )}
-                              onSelect={() => onSelectModel(provider, model)}
+                              onSelect={() =>
+                                onSelectModel(
+                                  provider as Provider,
+                                  model as Model
+                                )
+                              }
                             >
                               <div className="h-4 w-4 shrink-0">
                                 <Image
@@ -133,7 +133,7 @@ const ModelSelectorComponent = ({
                           ))}
                         </div>
                         <span className="absolute -bottom-1 right-1 text-[10px] leading-none text-brand-primary/60">
-                          {group.groupName}
+                          {group.name}
                         </span>
                       </div>
                     ))
@@ -148,7 +148,7 @@ const ModelSelectorComponent = ({
           </DropdownMenuSub>
         ))}
 
-        {providersWithGroups.length === 0 && (
+        {providers.length === 0 && (
           <div className="px-2 py-6 text-center text-sm text-muted-foreground">
             暂无可用供应商
           </div>
