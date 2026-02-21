@@ -1,72 +1,86 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
 import type { Assistant } from "@mocean/mastra/prismaType";
 
 import { useStore } from "@/app/store/useStore";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import ThreadSelect from "./ThreadSelect";
 import AssistantSelect from "./assistant/Assistant";
 
+type View = "assistants" | "threads";
+
 const ChatConfig: React.FC = () => {
   const router = useRouter();
-  const tabsConfig = [
-    {
-      value: "assistant",
-      label: "助手"
-    },
-    {
-      value: "topic",
-      label: "话题"
-    },
-    {
-      value: "setting",
-      label: "设置"
+  const { activeAssistantId, setActiveAssistantId } = useStore();
+
+  // Track current and previous view for animation direction
+  const [view, setView] = useState<View>(
+    activeAssistantId ? "threads" : "assistants"
+  );
+  const [direction, setDirection] = useState<"forward" | "back">("forward");
+  const [isAnimating, setIsAnimating] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Sync view with activeAssistantId from URL params
+  useEffect(() => {
+    if (activeAssistantId && view === "assistants") {
+      setView("threads");
+      setDirection("forward");
     }
-  ];
+  }, [activeAssistantId]);
 
-  const { setActiveAssistantId } = useStore();
-
-  const [activeTab, setActiveTab] = useState<string>(
-    tabsConfig[0]?.value || "assistant"
+  const onAssistantSelect = useCallback(
+    (assistant: Assistant) => {
+      setActiveAssistantId(assistant.id);
+      setDirection("forward");
+      setIsAnimating(true);
+      setView("threads");
+      router.push(`/${assistant.id}`);
+    },
+    [router, setActiveAssistantId]
   );
 
-  const onAssistantSelect = (assistant: Assistant) => {
-    setActiveTab(tabsConfig[1]?.value || "topic");
-    setActiveAssistantId(assistant.id);
+  const onBack = useCallback(() => {
+    setDirection("back");
+    setIsAnimating(true);
+    setView("assistants");
+  }, []);
 
-    router.push(`/${assistant.id}`);
-  };
+  const handleAnimationEnd = useCallback(() => {
+    setIsAnimating(false);
+  }, []);
+
   return (
-    <Tabs
-      value={activeTab}
-      onValueChange={setActiveTab}
-      className="flex w-[400px] flex-col px-2"
+    <div
+      ref={containerRef}
+      className="relative flex w-[400px] flex-col overflow-hidden px-2"
     >
-      <TabsList className="w-full">
-        {tabsConfig.map((tab) => (
-          <TabsTrigger className="flex-1" key={tab.value} value={tab.value}>
-            {tab.label}
-          </TabsTrigger>
-        ))}
-      </TabsList>
-
-      <TabsContent value="assistant" className="h-0 flex-1">
+      {/* Assistants View */}
+      <div
+        className={`absolute inset-0 px-2 transition-transform duration-300 ease-out ${
+          view === "assistants" ? "translate-x-0" : "-translate-x-full"
+        } ${!isAnimating && view !== "assistants" ? "invisible" : ""}`}
+        onTransitionEnd={handleAnimationEnd}
+      >
         <AssistantSelect
           onClick={(assistant) => void onAssistantSelect(assistant)}
         />
-      </TabsContent>
+      </div>
 
-      <TabsContent value="topic" className="h-0 flex-1">
-        <ThreadSelect isActive={activeTab === "topic"} />
-      </TabsContent>
-
-      <TabsContent value="setting">Change your setting here.</TabsContent>
-    </Tabs>
+      {/* Threads View */}
+      <div
+        className={`absolute inset-0 px-2 transition-transform duration-300 ease-out ${
+          view === "threads" ? "translate-x-0" : "translate-x-full"
+        } ${!isAnimating && view !== "threads" ? "invisible" : ""}`}
+        onTransitionEnd={handleAnimationEnd}
+      >
+        <ThreadSelect onBack={onBack} />
+      </div>
+    </div>
   );
 };
 

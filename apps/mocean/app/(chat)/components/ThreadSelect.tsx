@@ -2,37 +2,40 @@ import { useCallback, useEffect } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { StorageThreadType } from "@mocean/mastra/apiClient";
+import type { StorageThreadType } from "@mocean/mastra/apiClient";
 
 import { useStore } from "@/app/store/useStore";
 import {
+  useAssistantSWR,
   useAssistantThreadsSWR,
-  useAssistantUIMessageSWR,
+  useAssistantUIMessageSWR
 } from "@/hooks/useAssistantsSWR";
 
 import ThreadList from "./thead/ThreadList";
 
 interface ThreadSelectProps {
-  isActive: boolean;
+  onBack: () => void;
 }
 
-const ThreadSelect: React.FC<ThreadSelectProps> = ({ isActive }) => {
+const ThreadSelect: React.FC<ThreadSelectProps> = ({ onBack }) => {
   const { activeAssistantId, activeThread, setActiveThread } = useStore();
 
   const router = useRouter();
 
+  const { assistant } = useAssistantSWR(activeAssistantId || null);
+
   const { threads, refresh } = useAssistantThreadsSWR(
-    activeAssistantId || null,
+    activeAssistantId || null
   );
 
   const { refresh: refreshUIMessage } = useAssistantUIMessageSWR(
     activeAssistantId || null,
-    activeThread || null,
+    activeThread || null
   );
 
   useEffect(() => {
     void refresh();
-  }, [refresh, activeAssistantId, isActive]);
+  }, [refresh, activeAssistantId]);
 
   const onCreateThread = useCallback(() => {
     if (!activeAssistantId) {
@@ -53,8 +56,11 @@ const ThreadSelect: React.FC<ThreadSelectProps> = ({ isActive }) => {
     <div className="h-full w-full">
       <ThreadList
         threads={threads || []}
+        assistantName={assistant?.name || "助手"}
+        assistantEmoji={assistant?.emoji || undefined}
         onCreateThread={onCreateThread}
         onThreadClick={onThreadClick}
+        onBack={onBack}
       />
     </div>
   );

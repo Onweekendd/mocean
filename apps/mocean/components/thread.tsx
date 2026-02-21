@@ -6,7 +6,7 @@ import {
   ComposerPrimitive,
   ErrorPrimitive,
   MessagePrimitive,
-  ThreadPrimitive,
+  ThreadPrimitive
 } from "@assistant-ui/react";
 import {
   ArrowDownIcon,
@@ -16,20 +16,22 @@ import {
   CopyIcon,
   PencilIcon,
   RefreshCwIcon,
-  SendHorizontalIcon,
+  SendHorizontalIcon
 } from "lucide-react";
 
+import { ChatToolbar } from "@/app/(chat)/components/ChatToolbar";
 import { MarkdownText } from "@/components/markdown-text";
+import { Reasoning, ReasoningGroup } from "@/components/reasoning";
 import { TooltipIconButton } from "@/components/tooltip-icon-button";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-import { Toolbar } from "./custom/toolbar";
 import { Textarea } from "./ui/textarea";
 
 export const Thread: FC = () => {
   return (
     <ThreadPrimitive.Root className="box-border flex h-full flex-col overflow-hidden bg-background">
+      <ChatToolbar />
       <ThreadPrimitive.Viewport className="flex h-full flex-col items-center overflow-y-scroll scroll-smooth bg-inherit px-4 pt-8">
         <ThreadWelcome />
 
@@ -37,7 +39,7 @@ export const Thread: FC = () => {
           components={{
             UserMessage: UserMessage,
             EditComposer: EditComposer,
-            AssistantMessage: AssistantMessage,
+            AssistantMessage: AssistantMessage
           }}
         />
 
@@ -126,34 +128,29 @@ const Composer: FC = () => {
 
 const ComposerAction: FC = () => {
   return (
-    <div className="flex w-full items-center justify-center px-2">
-      <div className="flex flex-1 items-center">
-        <Toolbar />
-      </div>
-      <>
-        <ThreadPrimitive.If running={false}>
-          <ComposerPrimitive.Send asChild>
-            <TooltipIconButton
-              tooltip="Send"
-              variant="default"
-              className="my-2.5 size-8 bg-brand-primary p-2 transition-opacity ease-in hover:bg-brand-primary/90"
-            >
-              <SendHorizontalIcon />
-            </TooltipIconButton>
-          </ComposerPrimitive.Send>
-        </ThreadPrimitive.If>
-        <ThreadPrimitive.If running>
-          <ComposerPrimitive.Cancel asChild>
-            <TooltipIconButton
-              tooltip="Cancel"
-              variant="default"
-              className="my-2.5 size-8 bg-brand-primary p-2 transition-opacity ease-in hover:bg-brand-primary/90"
-            >
-              <CircleStopIcon />
-            </TooltipIconButton>
-          </ComposerPrimitive.Cancel>
-        </ThreadPrimitive.If>
-      </>
+    <div className="flex w-full items-center justify-end px-2">
+      <ThreadPrimitive.If running={false}>
+        <ComposerPrimitive.Send asChild>
+          <TooltipIconButton
+            tooltip="Send"
+            variant="default"
+            className="my-2.5 size-8 bg-brand-primary p-2 transition-opacity ease-in hover:bg-brand-primary/90"
+          >
+            <SendHorizontalIcon />
+          </TooltipIconButton>
+        </ComposerPrimitive.Send>
+      </ThreadPrimitive.If>
+      <ThreadPrimitive.If running>
+        <ComposerPrimitive.Cancel asChild>
+          <TooltipIconButton
+            tooltip="Cancel"
+            variant="default"
+            className="my-2.5 size-8 bg-brand-primary p-2 transition-opacity ease-in hover:bg-brand-primary/90"
+          >
+            <CircleStopIcon />
+          </TooltipIconButton>
+        </ComposerPrimitive.Cancel>
+      </ThreadPrimitive.If>
     </div>
   );
 };
@@ -208,7 +205,13 @@ const AssistantMessage: FC = () => {
   return (
     <MessagePrimitive.Root className="relative grid w-full grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] py-4">
       <div className="col-span-2 col-start-2 row-start-1 my-1.5 break-words leading-7 text-foreground">
-        <MessagePrimitive.Content components={{ Text: MarkdownText }} />
+        <MessagePrimitive.Parts
+          components={{
+            Text: MarkdownText,
+            Reasoning: Reasoning,
+            ReasoningGroup: ReasoningGroup
+          }}
+        />
         <MessageError />
       </div>
 
@@ -265,7 +268,7 @@ const BranchPicker: FC<BranchPickerPrimitive.Root.Props> = ({
       hideWhenSingleBranch
       className={cn(
         "inline-flex items-center text-xs text-muted-foreground",
-        className,
+        className
       )}
       {...rest}
     >
