@@ -49,6 +49,7 @@ export function useEnabledProviders() {
     "providers-enabled",
     async () => {
       const result = await getEnabledProviders();
+
       return result?.data || [];
     },
     defaultSWRConfig

@@ -1,5 +1,7 @@
 import type { ModelUpdateInput } from "generated/prisma/models";
+import type z from "zod";
 
+import type { modelRoutes } from "../router/type";
 import type { CreateModelInput, UpdateModelInput } from "../schema/model";
 import {
   CreateManyModelsResponseSchema,
@@ -34,7 +36,9 @@ export {
  * @description 从数据库中获取所有模型的列表，不包含关联信息
  * @returns 包含所有模型信息的数组
  */
-const getModels = async () => {
+const getModels = async (): Promise<
+  z.infer<(typeof modelRoutes)["getModels"]["responseSchema"]>
+> => {
   const models = await prisma.model.findMany({
     orderBy: {
       name: "asc"
@@ -49,7 +53,9 @@ const getModels = async () => {
  * @description 从数据库中获取所有模型的列表，包含关联的提供商信息
  * @returns 包含所有模型信息和关联提供商的数组
  */
-const getModelsWithProviders = async () => {
+const getModelsWithProviders = async (): Promise<
+  z.infer<(typeof modelRoutes)["getModelsWithProviders"]["responseSchema"]>
+> => {
   const models = await prisma.model.findMany({
     include: {
       group: {
@@ -66,7 +72,7 @@ const getModelsWithProviders = async () => {
   // 整理提供商信息
   return models.map((model) => ({
     ...model,
-    provider: model.group.provider
+    providers: [model.group.provider]
   }));
 };
 
@@ -76,7 +82,9 @@ const getModelsWithProviders = async () => {
  * @param id - 模型的唯一标识符
  * @returns 模型对象，如果不存在则返回null
  */
-const getModelById = async (id: string) => {
+const getModelById = async (
+  id: string
+): Promise<z.infer<(typeof modelRoutes)["getModelById"]["responseSchema"]>> => {
   const model = await prisma.model.findUnique({
     where: { id }
   });
@@ -91,7 +99,11 @@ const getModelById = async (id: string) => {
  * @param id - 模型的唯一标识符
  * @returns 模型对象，如果不存在则返回null
  */
-const getModelWithProvidersById = async (id: string) => {
+const getModelWithProvidersById = async (
+  id: string
+): Promise<
+  z.infer<(typeof modelRoutes)["getModelWithProvidersById"]["responseSchema"]>
+> => {
   const model = await prisma.model.findUnique({
     where: { id },
     include: {
@@ -107,7 +119,7 @@ const getModelWithProvidersById = async (id: string) => {
 
   return {
     ...model,
-    provider: model.group.provider
+    providers: [model.group.provider]
   };
 };
 
@@ -117,7 +129,11 @@ const getModelWithProvidersById = async (id: string) => {
  * @param providerId - 提供商ID
  * @returns 符合提供商的模型数组
  */
-const getModelsByProvider = async (providerId: string) => {
+const getModelsByProvider = async (
+  providerId: string
+): Promise<
+  z.infer<(typeof modelRoutes)["getModelsByProvider"]["responseSchema"]>
+> => {
   // 通过 Group 查询，因为 Model -> Group -> Provider
   const models = await prisma.model.findMany({
     where: {
@@ -139,7 +155,13 @@ const getModelsByProvider = async (providerId: string) => {
  * @param providerId - 提供商ID
  * @returns 符合提供商的模型数组
  */
-const getModelsByProviderWithProviders = async (providerId: string) => {
+const getModelsByProviderWithProviders = async (
+  providerId: string
+): Promise<
+  z.infer<
+    (typeof modelRoutes)["getModelsByProviderWithProviders"]["responseSchema"]
+  >
+> => {
   const models = await prisma.model.findMany({
     where: {
       group: {
@@ -160,7 +182,7 @@ const getModelsByProviderWithProviders = async (providerId: string) => {
 
   return models.map((model) => ({
     ...model,
-    provider: model.group.provider
+    providers: [model.group.provider]
   }));
 };
 
@@ -170,7 +192,11 @@ const getModelsByProviderWithProviders = async (providerId: string) => {
  * @param groupId - 分组ID
  * @returns 符合分组的模型数组
  */
-const getModelsByGroup = async (groupId: string) => {
+const getModelsByGroup = async (
+  groupId: string
+): Promise<
+  z.infer<(typeof modelRoutes)["getModelsByGroup"]["responseSchema"]>
+> => {
   const models = await prisma.model.findMany({
     where: {
       groupId
@@ -189,7 +215,13 @@ const getModelsByGroup = async (groupId: string) => {
  * @param groupId - 分组ID
  * @returns 符合分组的模型数组
  */
-const getModelsByGroupWithProviders = async (groupId: string) => {
+const getModelsByGroupWithProviders = async (
+  groupId: string
+): Promise<
+  z.infer<
+    (typeof modelRoutes)["getModelsByGroupWithProviders"]["responseSchema"]
+  >
+> => {
   const models = await prisma.model.findMany({
     where: {
       groupId
@@ -208,7 +240,7 @@ const getModelsByGroupWithProviders = async (groupId: string) => {
 
   return models.map((model) => ({
     ...model,
-    provider: model.group.provider
+    providers: [model.group.provider]
   }));
 };
 
@@ -218,7 +250,9 @@ const getModelsByGroupWithProviders = async (groupId: string) => {
  * @param model - 包含模型信息的对象
  * @returns 新创建的模型对象
  */
-const createModel = async (model: CreateModelInput) => {
+const createModel = async (
+  model: CreateModelInput
+): Promise<z.infer<(typeof modelRoutes)["createModel"]["responseSchema"]>> => {
   // 验证分组是否存在
   const group = await prisma.group.findUnique({
     where: { id: model.groupId },
@@ -261,7 +295,7 @@ const createModel = async (model: CreateModelInput) => {
 
   return {
     ...newModel,
-    provider: newModel.group.provider
+    providers: [newModel.group.provider]
   };
 };
 
@@ -272,7 +306,10 @@ const createModel = async (model: CreateModelInput) => {
  * @param model - 包含更新信息的对象
  * @returns 更新后的模型对象
  */
-const updateModel = async (id: string, model: UpdateModelInput) => {
+const updateModel = async (
+  id: string,
+  model: UpdateModelInput
+): Promise<z.infer<(typeof modelRoutes)["updateModel"]["responseSchema"]>> => {
   // 如果提供了groupId，验证分组是否存在
   if (model.groupId) {
     const group = await prisma.group.findUnique({
@@ -309,7 +346,7 @@ const updateModel = async (id: string, model: UpdateModelInput) => {
 
   return {
     ...updatedModel,
-    provider: updatedModel.group.provider
+    providers: [updatedModel.group.provider]
   };
 };
 
@@ -319,7 +356,9 @@ const updateModel = async (id: string, model: UpdateModelInput) => {
  * @param id - 要删除的模型的唯一标识符
  * @returns 被删除的模型对象
  */
-const deleteModel = async (id: string) => {
+const deleteModel = async (
+  id: string
+): Promise<z.infer<(typeof modelRoutes)["deleteModel"]["responseSchema"]>> => {
   // 先检查是否有关联的助手或知识库
   const modelWithRelations = await prisma.model.findUnique({
     where: { id },
@@ -327,7 +366,6 @@ const deleteModel = async (id: string) => {
       _count: {
         select: {
           assistants: true,
-          defaultForAssistants: true,
           rerankFor: true
         }
       }
@@ -336,8 +374,7 @@ const deleteModel = async (id: string) => {
 
   if (modelWithRelations) {
     const { _count } = modelWithRelations;
-    const totalRelations =
-      _count.assistants + _count.defaultForAssistants + _count.rerankFor;
+    const totalRelations = _count.assistants + _count.rerankFor;
 
     if (totalRelations > 0) {
       throw new Error(`无法删除模型：仍有 ${totalRelations} 个关联的记录`);
@@ -357,7 +394,11 @@ const deleteModel = async (id: string) => {
  * @param models - 模型信息数组
  * @returns 创建结果统计
  */
-const createManyModels = async (models: CreateModelInput[]) => {
+const createManyModels = async (
+  models: CreateModelInput[]
+): Promise<
+  z.infer<(typeof modelRoutes)["createManyModels"]["responseSchema"]>
+> => {
   // 验证所有分组是否存在
   const allGroupIds = [...new Set(models.map((m) => m.groupId))];
   const groups = await prisma.group.findMany({
@@ -403,7 +444,9 @@ const createManyModels = async (models: CreateModelInput[]) => {
 const addModelProviderRelation = async (relation: {
   modelId: string;
   groupId: string;
-}) => {
+}): Promise<
+  z.infer<(typeof modelRoutes)["addModelProviderRelation"]["responseSchema"]>
+> => {
   // 验证模型是否存在
   const model = await prisma.model.findUnique({
     where: { id: relation.modelId }
@@ -455,7 +498,9 @@ const addModelProviderRelation = async (relation: {
 const removeModelProviderRelation = async (relation: {
   modelId: string;
   providerId: string;
-}) => {
+}): Promise<
+  z.infer<(typeof modelRoutes)["removeModelProviderRelation"]["responseSchema"]>
+> => {
   // 获取提供商的默认分组
   const defaultGroup = await prisma.group.findFirst({
     where: {
@@ -497,7 +542,11 @@ const removeModelProviderRelation = async (relation: {
  * @param modelId - 模型ID
  * @returns 模型信息（包含分组和提供商）
  */
-const getModelProviderRelations = async (modelId: string) => {
+const getModelProviderRelations = async (
+  modelId: string
+): Promise<
+  z.infer<(typeof modelRoutes)["getModelProviderRelations"]["responseSchema"]>
+> => {
   const model = await prisma.model.findUnique({
     where: { id: modelId },
     include: {

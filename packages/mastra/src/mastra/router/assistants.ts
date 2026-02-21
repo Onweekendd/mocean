@@ -9,10 +9,7 @@ import {
   AssistantsResponseSchema,
   FullAssistantSchema,
   assistantIdParamSchema,
-  assistantThreadIdParamSchema,
-  chatWithAssistantSchema,
-  createAssistantSchema,
-  updateAssistantSchema
+  assistantThreadIdParamSchema
 } from "../schema/assistant";
 import {
   createAssistant,
@@ -106,7 +103,7 @@ const createAssistantRouter = registerApiRoute(
         content: {
           "application/json": {
             // @ts-expect-error hono-openapi requestBody schema type doesn't support ZodSchema
-            schema: createAssistantSchema
+            schema: assistantRoutes["createAssistant"]["requestSchema"]
           }
         }
       },
@@ -124,7 +121,7 @@ const createAssistantRouter = registerApiRoute(
     },
     handler: async (c) => {
       try {
-        const body = createAssistantSchema.parse(await c.req.json());
+        const body = assistantRoutes["createAssistant"]["requestSchema"].parse(await c.req.json());
         return c.json(await createAssistant(body), 201);
       } catch (error) {
         if (error instanceof z.ZodError) {
@@ -154,7 +151,7 @@ const updateAssistantRouter = registerApiRoute(
         content: {
           "application/json": {
             // @ts-expect-error hono-openapi requestBody schema type doesn't support ZodSchema
-            schema: updateAssistantSchema
+            schema: assistantRoutes["updateAssistant"]["requestSchema"]
           }
         }
       },
@@ -175,7 +172,7 @@ const updateAssistantRouter = registerApiRoute(
         assistantId: c.req.param("assistantId")
       });
       try {
-        const body = updateAssistantSchema.parse(await c.req.json());
+        const body = assistantRoutes["updateAssistant"]["requestSchema"].parse(await c.req.json());
         return c.json(await updateAssistant(params.assistantId, body), 200);
       } catch (error) {
         if (error instanceof z.ZodError) {
@@ -237,7 +234,7 @@ const chatWithAssistantRouter = registerApiRoute(
         content: {
           "application/json": {
             // @ts-expect-error hono-openapi requestBody schema type doesn't support ZodSchema
-            schema: chatWithAssistantSchema
+            schema: assistantRoutes["chatWithAssistant"]["requestSchema"]
           }
         }
       },
@@ -256,7 +253,7 @@ const chatWithAssistantRouter = registerApiRoute(
     handler: async (c) => {
       try {
         const { assistantId, messages, threadId } =
-          chatWithAssistantSchema.parse(await c.req.json());
+          assistantRoutes["chatWithAssistant"]["requestSchema"].parse(await c.req.json());
 
         return c.json(
           await executeChatWithAssistant(

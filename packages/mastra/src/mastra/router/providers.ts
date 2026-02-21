@@ -4,14 +4,6 @@ import { HTTPException } from "hono/http-exception";
 import { z } from "zod";
 
 import {
-  FullProviderSchema,
-  ProviderResponseSchema,
-  ProvidersResponseSchema,
-  ProvidersWithModelsResponseSchema,
-  createProviderSchema,
-  updateProviderSchema
-} from "../schema/provider";
-import {
   createProvider,
   deleteProvider,
   getEnabledProviders,
@@ -44,7 +36,7 @@ const getProvidersRouter = registerApiRoute(providerRoutes.getProviders.path, {
         content: {
           "application/json": {
             // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-            schema: ProvidersResponseSchema
+            schema: providerRoutes["getProviders"]["responseSchema"]
           }
         }
       },
@@ -75,7 +67,7 @@ const getProvidersWithModelsRouter = registerApiRoute(
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: ProvidersWithModelsResponseSchema
+              schema: providerRoutes["getProvidersWithModels"]["responseSchema"]
             }
           }
         }
@@ -104,7 +96,7 @@ const getEnabledProvidersRouter = registerApiRoute(
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: ProvidersWithModelsResponseSchema
+              schema: providerRoutes["getEnabledProviders"]["responseSchema"]
             }
           }
         }
@@ -133,7 +125,10 @@ const getEnabledProvidersWithModelsRouter = registerApiRoute(
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: ProvidersWithModelsResponseSchema
+              schema:
+                providerRoutes["getEnabledProvidersWithModels"][
+                  "responseSchema"
+                ]
             }
           }
         }
@@ -162,7 +157,7 @@ const getProviderByIdRouter = registerApiRoute(
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: ProviderResponseSchema.nullable()
+              schema: providerRoutes["getProviderById"]["responseSchema"]
             }
           }
         }
@@ -199,7 +194,8 @@ const getProviderWithModelsByIdRouter = registerApiRoute(
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: FullProviderSchema.nullable()
+              schema:
+                providerRoutes["getProviderWithModelsById"]["responseSchema"]
             }
           }
         }
@@ -236,7 +232,7 @@ const getProvidersByTypeRouter = registerApiRoute(
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: ProvidersWithModelsResponseSchema
+              schema: providerRoutes["getProvidersByType"]["responseSchema"]
             }
           }
         }
@@ -269,7 +265,8 @@ const getProvidersByTypeWithModelsRouter = registerApiRoute(
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: ProvidersWithModelsResponseSchema
+              schema:
+                providerRoutes["getProvidersByTypeWithModels"]["responseSchema"]
             }
           }
         }
@@ -303,7 +300,7 @@ const createProviderRouter = registerApiRoute(
         content: {
           "application/json": {
             // @ts-expect-error hono-openapi requestBody schema type doesn't support ZodSchema
-            schema: createProviderSchema
+            schema: providerRoutes["createProvider"]["requestSchema"]
           }
         }
       },
@@ -313,7 +310,7 @@ const createProviderRouter = registerApiRoute(
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: FullProviderSchema
+              schema: providerRoutes["createProvider"]["responseSchema"]
             }
           }
         }
@@ -321,7 +318,9 @@ const createProviderRouter = registerApiRoute(
     },
     handler: async (c) => {
       try {
-        const body = createProviderSchema.parse(await c.req.json());
+        const body = providerRoutes["createProvider"]["requestSchema"].parse(
+          await c.req.json()
+        );
         const newProvider = await createProvider(body);
         return c.json(newProvider, 201);
       } catch (error) {
@@ -351,7 +350,7 @@ const updateProviderRouter = registerApiRoute(
         content: {
           "application/json": {
             // @ts-expect-error hono-openapi requestBody schema type doesn't support ZodSchema
-            schema: updateProviderSchema
+            schema: providerRoutes["updateProvider"]["requestSchema"]
           }
         }
       },
@@ -361,14 +360,16 @@ const updateProviderRouter = registerApiRoute(
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: FullProviderSchema
+              schema: providerRoutes["updateProvider"]["responseSchema"]
             }
           }
         }
       }
     },
     handler: async (c) => {
-      const body = updateProviderSchema.parse(await c.req.json());
+      const body = providerRoutes["updateProvider"]["requestSchema"].parse(
+        await c.req.json()
+      );
       const updatedProvider = await updateProvider(body);
       return c.json(updatedProvider, 200);
     }
@@ -392,7 +393,7 @@ const deleteProviderRouter = registerApiRoute(
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: ProviderResponseSchema
+              schema: providerRoutes["deleteProvider"]["responseSchema"]
             }
           }
         }
@@ -436,7 +437,7 @@ const toggleProviderEnabledRouter = registerApiRoute(
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: FullProviderSchema
+              schema: providerRoutes["toggleProviderEnabled"]["responseSchema"]
             }
           }
         }
@@ -478,7 +479,7 @@ const getProvidersByModelRouter = registerApiRoute(
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: ProvidersResponseSchema
+              schema: providerRoutes["getProvidersByModel"]["responseSchema"]
             }
           }
         }
@@ -511,7 +512,10 @@ const getProvidersByModelWithModelsRouter = registerApiRoute(
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: ProvidersWithModelsResponseSchema
+              schema:
+                providerRoutes["getProvidersByModelWithModels"][
+                  "responseSchema"
+                ]
             }
           }
         }

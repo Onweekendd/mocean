@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 
-import { Assistant } from "@mocean/mastra/prismaType";
+import { useRouter } from "next/navigation";
+
+import type { Assistant } from "@mocean/mastra/prismaType";
 
 import { useStore } from "@/app/store/useStore";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,31 +12,34 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ThreadSelect from "./ThreadSelect";
 import AssistantSelect from "./assistant/Assistant";
 
-const ChatConfig = () => {
+const ChatConfig: React.FC = () => {
+  const router = useRouter();
   const tabsConfig = [
     {
       value: "assistant",
-      label: "助手",
+      label: "助手"
     },
     {
       value: "topic",
-      label: "话题",
+      label: "话题"
     },
     {
       value: "setting",
-      label: "设置",
-    },
+      label: "设置"
+    }
   ];
 
-  const { activeAssistantId, setActiveAssistantId } = useStore();
+  const { setActiveAssistantId } = useStore();
 
   const [activeTab, setActiveTab] = useState<string>(
-    tabsConfig[0]?.value || "assistant",
+    tabsConfig[0]?.value || "assistant"
   );
 
-  const onAssistantSelect = async (assistant: Assistant) => {
+  const onAssistantSelect = (assistant: Assistant) => {
     setActiveTab(tabsConfig[1]?.value || "topic");
     setActiveAssistantId(assistant.id);
+
+    router.push(`/${assistant.id}`);
   };
   return (
     <Tabs

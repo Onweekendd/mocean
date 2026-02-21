@@ -1,8 +1,8 @@
+import type z from "zod";
+
+import type { groupRoutes } from "../router/type";
 import type { CreateGroupInput, UpdateGroupInput } from "../schema/group";
 import {
-  GroupResponseSchema,
-  GroupWithModelsResponseSchema,
-  GroupsResponseSchema,
   createGroupSchema,
   idParamSchema,
   providerParamSchema,
@@ -12,22 +12,16 @@ import { prisma } from "./index";
 import type { AsyncReturnType } from "./type";
 
 /**
- * Response Schemas
- * 用于 Router 的响应类型验证
- */
-export {
-  GroupResponseSchema,
-  GroupsResponseSchema,
-  GroupWithModelsResponseSchema
-};
-
-/**
  * 获取指定提供商的所有分组
  * @description 从数据库中获取指定提供商的所有分组，包含模型数量统计
  * @param providerId - 提供商ID
  * @returns 分组列表，包含模型数量
  */
-const getGroupsByProvider = async (providerId: string) => {
+const getGroupsByProvider = async (
+  providerId: string
+): Promise<
+  z.infer<(typeof groupRoutes)["getGroupsByProvider"]["responseSchema"]>
+> => {
   const groups = await prisma.group.findMany({
     where: {
       providerId
@@ -54,7 +48,9 @@ const getGroupsByProvider = async (providerId: string) => {
  * @param id - 分组ID
  * @returns 分组对象，如果不存在则返回null
  */
-const getGroupById = async (id: string) => {
+const getGroupById = async (
+  id: string
+): Promise<z.infer<(typeof groupRoutes)["getGroupById"]["responseSchema"]>> => {
   const group = await prisma.group.findUnique({
     where: {
       id
@@ -79,7 +75,9 @@ const getGroupById = async (id: string) => {
  * @returns 新创建的分组对象
  * @throws 如果分组名称已存在
  */
-const createGroup = async (group: CreateGroupInput) => {
+const createGroup = async (
+  group: CreateGroupInput
+): Promise<z.infer<(typeof groupRoutes)["createGroup"]["responseSchema"]>> => {
   // 检查同一提供商下是否已存在同名分组
   const existingGroup = await prisma.group.findUnique({
     where: {
@@ -121,7 +119,10 @@ const createGroup = async (group: CreateGroupInput) => {
  * @returns 更新后的分组对象
  * @throws 如果尝试修改默认分组或新名称已存在
  */
-const updateGroup = async (id: string, group: UpdateGroupInput) => {
+const updateGroup = async (
+  id: string,
+  group: UpdateGroupInput
+): Promise<z.infer<(typeof groupRoutes)["updateGroup"]["responseSchema"]>> => {
   // 检查是否为默认分组
   const existing = await prisma.group.findUnique({
     where: { id }
@@ -176,7 +177,9 @@ const updateGroup = async (id: string, group: UpdateGroupInput) => {
  * @returns 被删除的分组对象
  * @throws 如果尝试删除默认分组
  */
-const deleteGroup = async (id: string) => {
+const deleteGroup = async (
+  id: string
+): Promise<z.infer<(typeof groupRoutes)["deleteGroup"]["responseSchema"]>> => {
   // 检查是否为默认分组
   const group = await prisma.group.findUnique({
     where: { id },

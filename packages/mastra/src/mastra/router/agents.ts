@@ -7,10 +7,8 @@ import {
   AgentResponseSchema,
   AgentWithSettingsResponseSchema,
   AgentsResponseSchema,
-  createAgentSchema,
   groupParamSchema,
-  idParamSchema,
-  updateAgentSchema
+  idParamSchema
 } from "../schema/agent";
 import {
   createAgent,
@@ -119,7 +117,7 @@ const createAgentRouter = registerApiRoute(agentRoutes.createAgent.path, {
       content: {
         "application/json": {
           // @ts-expect-error hono-openapi requestBody schema type doesn't support ZodSchema
-          schema: createAgentSchema
+          schema: agentRoutes["createAgent"]["requestSchema"]
         }
       }
     },
@@ -137,7 +135,7 @@ const createAgentRouter = registerApiRoute(agentRoutes.createAgent.path, {
   },
   handler: async (c) => {
     try {
-      const body = createAgentSchema.parse(await c.req.json());
+      const body = agentRoutes["createAgent"]["requestSchema"].parse(await c.req.json());
       return c.json(await createAgent(body), 201);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -164,7 +162,7 @@ const updateAgentRouter = registerApiRoute(agentRoutes.updateAgent.path, {
       content: {
         "application/json": {
           // @ts-expect-error hono-openapi requestBody schema type doesn't support ZodSchema
-          schema: updateAgentSchema
+          schema: agentRoutes["updateAgent"]["requestSchema"]
         }
       }
     },
@@ -183,7 +181,7 @@ const updateAgentRouter = registerApiRoute(agentRoutes.updateAgent.path, {
   handler: async (c) => {
     try {
       const params = idParamSchema.parse({ id: c.req.param("id") });
-      const body = updateAgentSchema.parse(await c.req.json());
+      const body = agentRoutes["updateAgent"]["requestSchema"].parse(await c.req.json());
       return c.json(await updateAgent(params.id, body), 200);
     } catch (error) {
       if (error instanceof z.ZodError) {

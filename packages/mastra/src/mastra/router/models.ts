@@ -7,10 +7,7 @@ import {
   ModelProviderRelationResponseSchema,
   ModelResponseSchema,
   ModelWithProvidersResponseSchema,
-  ModelsResponseSchema,
-  createModelSchema,
-  modelProviderRelationSchema,
-  updateModelSchema
+  ModelsResponseSchema
 } from "../schema/model";
 import {
   addModelProviderRelation,
@@ -302,7 +299,7 @@ const createModelRouter = registerApiRoute(modelRoutes.createModel.path, {
       content: {
         "application/json": {
           // @ts-expect-error hono-openapi requestBody schema type doesn't support ZodSchema
-          schema: createModelSchema
+          schema: modelRoutes["createModel"]["requestSchema"]
         }
       }
     },
@@ -320,7 +317,7 @@ const createModelRouter = registerApiRoute(modelRoutes.createModel.path, {
   },
   handler: async (c) => {
     try {
-      const body = createModelSchema.parse(await c.req.json());
+      const body = modelRoutes["createModel"]["requestSchema"].parse(await c.req.json());
       return c.json(await createModel(body), 201);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -350,7 +347,7 @@ const createManyModelsRouter = registerApiRoute(
         content: {
           "application/json": {
             // @ts-expect-error hono-openapi requestBody schema type doesn't support ZodSchema
-            schema: z.array(createModelSchema)
+            schema: modelRoutes["createManyModels"]["requestSchema"]
           }
         }
       },
@@ -368,7 +365,7 @@ const createManyModelsRouter = registerApiRoute(
     },
     handler: async (c) => {
       try {
-        const body = z.array(createModelSchema).parse(await c.req.json());
+        const body = modelRoutes["createManyModels"]["requestSchema"].parse(await c.req.json());
         return c.json(await createManyModels(body), 201);
       } catch (error) {
         if (error instanceof z.ZodError) {
@@ -397,7 +394,7 @@ const updateModelRouter = registerApiRoute(modelRoutes.updateModel.path, {
       content: {
         "application/json": {
           // @ts-expect-error hono-openapi requestBody schema type doesn't support ZodSchema
-          schema: updateModelSchema
+          schema: modelRoutes["updateModel"]["requestSchema"]
         }
       }
     },
@@ -419,7 +416,7 @@ const updateModelRouter = registerApiRoute(modelRoutes.updateModel.path, {
       throw new HTTPException(400, { message: "模型ID不能为空" });
     }
     try {
-      const body = updateModelSchema.parse(await c.req.json());
+      const body = modelRoutes["updateModel"]["requestSchema"].parse(await c.req.json());
       return c.json(await updateModel(id, body), 200);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -479,7 +476,7 @@ const addModelProviderRelationRouter = registerApiRoute(
         content: {
           "application/json": {
             // @ts-expect-error hono-openapi requestBody schema type doesn't support ZodSchema
-            schema: modelProviderRelationSchema
+            schema: modelRoutes["addModelProviderRelation"]["requestSchema"]
           }
         }
       },
@@ -517,7 +514,7 @@ const removeModelProviderRelationRouter = registerApiRoute(
         content: {
           "application/json": {
             // @ts-expect-error hono-openapi requestBody schema type doesn't support ZodSchema
-            schema: modelProviderRelationSchema
+            schema: modelRoutes["removeModelProviderRelation"]["requestSchema"]
           }
         }
       },

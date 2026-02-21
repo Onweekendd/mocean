@@ -8,10 +8,9 @@ import type { KnowledgeRecognition } from "generated/prisma/enums";
 import { z } from "zod";
 
 import { DynamicAgent } from "../agents/dynamicAgent";
+import type { assistantRoutes } from "../router/type";
 import { createCommonRunTime } from "../runtime/CommonRunTime";
 import type {
-  AssistantResponse,
-  AssistantWithModelsResponse,
   CreateAssistantInput,
   FullAssistant,
   UpdateAssistantInput
@@ -40,7 +39,9 @@ export {
  * @description 从数据库中获取所有助手的列表
  * @returns 包含所有助手信息的数组
  */
-const getAssistants = async (): Promise<AssistantWithModelsResponse[]> => {
+const getAssistants = async (): Promise<
+  z.infer<(typeof assistantRoutes)["getAssistants"]["responseSchema"]>
+> => {
   const assistants = await prisma.assistant.findMany({
     include: {
       model: true,
@@ -56,7 +57,11 @@ const getAssistants = async (): Promise<AssistantWithModelsResponse[]> => {
  * @param id - 助手的唯一标识符
  * @returns 助手对象，如果不存在则返回null
  */
-const getAssistantById = async (id: string): Promise<FullAssistant | null> => {
+const getAssistantById = async (
+  id: string
+): Promise<
+  z.infer<(typeof assistantRoutes)["getAssistantById"]["responseSchema"]>
+> => {
   const assistant = await prisma.assistant.findUnique({
     where: {
       id
@@ -105,7 +110,9 @@ const getFullAssistantById = async (
  */
 const createAssistant = async (
   assistant: CreateAssistantInput
-): Promise<AssistantWithModelsResponse> => {
+): Promise<
+  z.infer<(typeof assistantRoutes)["createAssistant"]["responseSchema"]>
+> => {
   const newAssistant = await prisma.assistant.create({
     data: {
       name: assistant.name,
@@ -140,7 +147,9 @@ const createAssistant = async (
 const updateAssistant = async (
   id: string,
   assistant: UpdateAssistantInput
-): Promise<AssistantWithModelsResponse> => {
+): Promise<
+  z.infer<(typeof assistantRoutes)["updateAssistant"]["responseSchema"]>
+> => {
   // Filter out undefined values to avoid overwriting with undefined
   const updateData: Record<string, unknown> = { updatedAt: new Date() };
 
@@ -181,7 +190,11 @@ const updateAssistant = async (
  * @param id - 要删除的助手的唯一标识符
  * @returns 被删除的助手对象
  */
-const deleteAssistant = async (id: string): Promise<AssistantResponse> => {
+const deleteAssistant = async (
+  id: string
+): Promise<
+  z.infer<(typeof assistantRoutes)["deleteAssistant"]["responseSchema"]>
+> => {
   const deletedAssistant = await prisma.assistant.delete({
     where: {
       id

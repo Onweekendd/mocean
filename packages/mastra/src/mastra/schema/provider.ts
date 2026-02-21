@@ -3,65 +3,34 @@
  * 用于 Router 的响应类型验证
  */
 import {
-  GroupSchema,
-  ModelSchema,
-  ProviderSchema
-} from "generated/schemas/models/index";
+  GroupFullSchema,
+  ProviderFullSchema
+} from "generated/schemas/composed";
+import { ProviderSchema } from "generated/schemas/models/index";
 import { z } from "zod";
 
-// 基础 Provider Response Schema（不含关联关系）
-export const ProviderResponseSchema = ProviderSchema.pick({
-  id: true,
-  type: true,
-  name: true,
-  apiKey: true,
-  apiHost: true,
-  apiVersion: true,
-  enabled: true,
-  isSystem: true,
-  isAuthed: true,
-  notes: true,
-  isGateway: true,
-  modelCount: true,
-  docsUrl: true,
-  createdAt: true,
-  updatedAt: true
-});
+/**
+ * 简单的 Provider 列表 Schema
+ * 不包含关联的 groups 和 models
+ */
+export const SimpleProvidersArraySchema = z.array(ProviderSchema);
 
-// 带 models 数组的 Provider Response Schema
-export const FullProviderSchema = ProviderSchema.pick({
-  id: true,
-  type: true,
-  name: true,
-  apiKey: true,
-  apiHost: true,
-  apiVersion: true,
-  enabled: true,
-  isSystem: true,
-  isAuthed: true,
-  notes: true,
-  isGateway: true,
-  modelCount: true,
-  docsUrl: true,
-  createdAt: true,
-  updatedAt: true
+/**
+ * Provider 层级结构 Schema
+ * Provider -> Group -> Model 三层嵌套结构
+ * 不包含 Assistant 关联
+ */
+export const ProviderHierarchySchema = ProviderFullSchema.omit({
+  Assistant: true
 }).extend({
-  groups: z.array(
-    GroupSchema.extend({
-      models: z.array(ModelSchema.partial())
-    })
-  ),
-  _count: z
-    .object({
-      models: z.number()
-    })
-    .optional()
+  groups: z.array(GroupFullSchema.omit({ provider: true }))
 });
 
-export const ProvidersResponseSchema = z.array(ProviderResponseSchema);
-
-// Providers 列表 Response Schema（含 models）
-export const ProvidersWithModelsResponseSchema = z.array(FullProviderSchema);
+/**
+ * Provider 层级结构数组 Schema
+ * 用于返回多个 Provider 的完整层级数据
+ */
+export const ProviderHierarchyArraySchema = z.array(ProviderHierarchySchema);
 
 /**
  * URL 验证辅助函数
@@ -122,3 +91,11 @@ export const updateProviderSchema = ProviderSchema.pick({
 // zod类型推导
 export type CreateProviderInput = z.infer<typeof createProviderSchema>;
 export type UpdateProviderInput = z.infer<typeof updateProviderSchema>;
+
+// 响应类型
+export type SimpleProvider = z.infer<typeof SimpleProvidersArraySchema>[number];
+export type SimpleProviderArray = z.infer<typeof SimpleProvidersArraySchema>;
+export type ProviderHierarchy = z.infer<typeof ProviderHierarchySchema>;
+export type ProviderHierarchyArray = z.infer<
+  typeof ProviderHierarchyArraySchema
+>;

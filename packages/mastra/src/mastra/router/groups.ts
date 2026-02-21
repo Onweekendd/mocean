@@ -1,15 +1,9 @@
 import { registerApiRoute } from "@mastra/core/server";
 import { HTTPException } from "hono/http-exception";
+import { z } from "zod";
 
-import {
-  GroupResponseSchema,
-  GroupWithModelsResponseSchema,
-  GroupsResponseSchema,
-  createGroupSchema,
-  idParamSchema,
-  providerParamSchema,
-  updateGroupSchema
-} from "../schema/group";
+import { GroupSchema } from "generated/schemas/models";
+import { GroupWithModelsResponseSchema } from "../schema/group";
 import {
   createGroup,
   deleteGroup,
@@ -36,7 +30,7 @@ const getGroupsByProviderRouter = registerApiRoute(
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: GroupsResponseSchema
+              schema: z.array(GroupSchema)
             }
           }
         }
@@ -99,7 +93,7 @@ const createGroupRouter = registerApiRoute(groupRoutes.createGroup.path, {
       content: {
         "application/json": {
           // @ts-expect-error hono-openapi requestBody schema type doesn't support ZodSchema
-          schema: createGroupSchema
+          schema: groupRoutes["createGroup"]["requestSchema"]
         }
       }
     },
@@ -134,7 +128,7 @@ const updateGroupRouter = registerApiRoute(groupRoutes.updateGroup.path, {
       content: {
         "application/json": {
           // @ts-expect-error hono-openapi requestBody schema type doesn't support ZodSchema
-          schema: updateGroupSchema
+          schema: groupRoutes["updateGroup"]["requestSchema"]
         }
       }
     },
@@ -175,7 +169,7 @@ const deleteGroupRouter = registerApiRoute(groupRoutes.deleteGroup.path, {
         content: {
           "application/json": {
             // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-            schema: GroupResponseSchema
+            schema: GroupSchema
           }
         }
       }

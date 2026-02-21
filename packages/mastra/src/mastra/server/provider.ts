@@ -2,27 +2,12 @@ import type { Prisma, PrismaClient } from "generated/prisma/client";
 import type { ProviderType } from "generated/prisma/enums";
 import type z from "zod";
 
-import type { FullProviderSchema } from "../schema/provider";
+import type { providerRoutes } from "../router/type";
 import {
   type CreateProviderInput,
   type UpdateProviderInput
 } from "../schema/provider";
 import { prisma } from "./index";
-
-const extractModelsFromGroups = (
-  groups: Array<{ models: unknown[] }>
-): unknown[] => {
-  return groups.flatMap((group) => group.models);
-};
-
-/**
- * 辅助函数：计算所有groups中的models总数
- */
-const countModelsFromGroups = (
-  groups: Array<{ models: unknown[] }>
-): number => {
-  return groups.reduce((sum, group) => sum + group.models.length, 0);
-};
 
 /**
  * Provider Service 工厂函数
@@ -31,7 +16,9 @@ const countModelsFromGroups = (
  */
 
 export function createProviderService(db: PrismaClient) {
-  const getProviders = async () => {
+  const getProviders = async (): Promise<
+    z.infer<(typeof providerRoutes)["getProviders"]["responseSchema"]>
+  > => {
     return db.provider.findMany({
       orderBy: {
         createdAt: "desc"
@@ -39,8 +26,10 @@ export function createProviderService(db: PrismaClient) {
     });
   };
 
-  const getProvidersWithModels = async () => {
-    const providers = await db.provider.findMany({
+  const getProvidersWithModels = async (): Promise<
+    z.infer<(typeof providerRoutes)["getProvidersWithModels"]["responseSchema"]>
+  > => {
+    return db.provider.findMany({
       include: {
         groups: {
           include: {
@@ -52,19 +41,13 @@ export function createProviderService(db: PrismaClient) {
         createdAt: "desc"
       }
     });
-
-    return providers.map(
-      (provider: { groups: Array<{ models: unknown[] }> }) => ({
-        ...provider,
-        models: extractModelsFromGroups(provider.groups),
-        _count: {
-          models: countModelsFromGroups(provider.groups)
-        }
-      })
-    );
   };
 
-  const getProviderById = async (id: string) => {
+  const getProviderById = async (
+    id: string
+  ): Promise<
+    z.infer<(typeof providerRoutes)["getProviderById"]["responseSchema"]>
+  > => {
     return db.provider.findUnique({
       where: {
         id
@@ -74,7 +57,11 @@ export function createProviderService(db: PrismaClient) {
 
   const getProviderWithModelsById = async (
     id: string
-  ): Promise<z.infer<typeof FullProviderSchema>> => {
+  ): Promise<
+    z.infer<
+      (typeof providerRoutes)["getProviderWithModelsById"]["responseSchema"]
+    >
+  > => {
     const provider = await db.provider.findUnique({
       where: {
         id
@@ -90,15 +77,14 @@ export function createProviderService(db: PrismaClient) {
 
     if (!provider) return null;
 
-    return {
-      ...provider,
-      _count: {
-        models: countModelsFromGroups(provider.groups)
-      }
-    };
+    return provider;
   };
 
-  const getProvidersByType = async (type: ProviderType) => {
+  const getProvidersByType = async (
+    type: ProviderType
+  ): Promise<
+    z.infer<(typeof providerRoutes)["getProvidersByType"]["responseSchema"]>
+  > => {
     return db.provider.findMany({
       where: {
         type
@@ -106,8 +92,14 @@ export function createProviderService(db: PrismaClient) {
     });
   };
 
-  const getProvidersByTypeWithModels = async (type: ProviderType) => {
-    const providers = await db.provider.findMany({
+  const getProvidersByTypeWithModels = async (
+    type: ProviderType
+  ): Promise<
+    z.infer<
+      (typeof providerRoutes)["getProvidersByTypeWithModels"]["responseSchema"]
+    >
+  > => {
+    return db.provider.findMany({
       where: {
         type
       },
@@ -119,23 +111,11 @@ export function createProviderService(db: PrismaClient) {
         }
       }
     });
-
-    return providers.map(
-      (provider: { groups: Array<{ models: unknown[] }> }) => ({
-        ...provider,
-        models: extractModelsFromGroups(provider.groups),
-        groups: provider.groups.map((group) => ({
-          ...group,
-          models: group.models
-        })),
-        _count: {
-          models: countModelsFromGroups(provider.groups)
-        }
-      })
-    );
   };
 
-  const getEnabledProviders = async () => {
+  const getEnabledProviders = async (): Promise<
+    z.infer<(typeof providerRoutes)["getEnabledProviders"]["responseSchema"]>
+  > => {
     return db.provider.findMany({
       where: {
         enabled: true
@@ -144,7 +124,9 @@ export function createProviderService(db: PrismaClient) {
   };
 
   const getEnabledProvidersWithModels = async (): Promise<
-    Array<z.infer<typeof FullProviderSchema>>
+    z.infer<
+      (typeof providerRoutes)["getEnabledProvidersWithModels"]["responseSchema"]
+    >
   > => {
     const providers = await db.provider.findMany({
       where: {
@@ -162,7 +144,11 @@ export function createProviderService(db: PrismaClient) {
     return providers;
   };
 
-  const getProvidersByModel = async (modelId: string) => {
+  const getProvidersByModel = async (
+    modelId: string
+  ): Promise<
+    z.infer<(typeof providerRoutes)["getProvidersByModel"]["responseSchema"]>
+  > => {
     return db.provider.findMany({
       where: {
         groups: {
@@ -178,8 +164,14 @@ export function createProviderService(db: PrismaClient) {
     });
   };
 
-  const getProvidersByModelWithModels = async (modelId: string) => {
-    const providers = await db.provider.findMany({
+  const getProvidersByModelWithModels = async (
+    modelId: string
+  ): Promise<
+    z.infer<
+      (typeof providerRoutes)["getProvidersByModelWithModels"]["responseSchema"]
+    >
+  > => {
+    return db.provider.findMany({
       where: {
         groups: {
           some: {
@@ -199,24 +191,14 @@ export function createProviderService(db: PrismaClient) {
         }
       }
     });
-
-    return providers.map(
-      (provider: { groups: Array<{ models: unknown[] }> }) => ({
-        ...provider,
-        models: extractModelsFromGroups(provider.groups),
-        groups: provider.groups.map((group) => ({
-          ...group,
-          models: group.models
-        })),
-        _count: {
-          models: countModelsFromGroups(provider.groups)
-        }
-      })
-    );
   };
 
-  const createProvider = async (provider: CreateProviderInput) => {
-    const newProvider = await db.provider.create({
+  const createProvider = async (
+    provider: CreateProviderInput
+  ): Promise<
+    z.infer<(typeof providerRoutes)["createProvider"]["responseSchema"]>
+  > => {
+    return db.provider.create({
       data: {
         ...provider,
         createdAt: new Date(),
@@ -236,22 +218,14 @@ export function createProviderService(db: PrismaClient) {
         }
       }
     });
-
-    return {
-      ...newProvider,
-      models: extractModelsFromGroups(newProvider.groups),
-      groups: newProvider.groups.map((group: { models: unknown[] }) => ({
-        ...group,
-        models: group.models
-      })),
-      _count: {
-        models: countModelsFromGroups(newProvider.groups)
-      }
-    };
   };
 
-  const updateProvider = async (provider: UpdateProviderInput) => {
-    const updatedProvider = await db.provider.update({
+  const updateProvider = async (
+    provider: UpdateProviderInput
+  ): Promise<
+    z.infer<(typeof providerRoutes)["updateProvider"]["responseSchema"]>
+  > => {
+    return db.provider.update({
       where: {
         id: provider.id
       },
@@ -267,21 +241,13 @@ export function createProviderService(db: PrismaClient) {
         }
       }
     });
-
-    return {
-      ...updatedProvider,
-      models: extractModelsFromGroups(updatedProvider.groups),
-      groups: updatedProvider.groups.map((group: { models: unknown[] }) => ({
-        ...group,
-        models: group.models
-      })),
-      _count: {
-        models: countModelsFromGroups(updatedProvider.groups)
-      }
-    };
   };
 
-  const deleteProvider = async (id: string) => {
+  const deleteProvider = async (
+    id: string
+  ): Promise<
+    z.infer<(typeof providerRoutes)["deleteProvider"]["responseSchema"]>
+  > => {
     const providerWithGroups = await db.provider.findUnique({
       where: { id },
       include: {
@@ -316,7 +282,11 @@ export function createProviderService(db: PrismaClient) {
     return deletedProvider;
   };
 
-  const toggleProviderEnabled = async (id: string) => {
+  const toggleProviderEnabled = async (
+    id: string
+  ): Promise<
+    z.infer<(typeof providerRoutes)["toggleProviderEnabled"]["responseSchema"]>
+  > => {
     const provider = await db.provider.findUnique({
       where: { id },
       select: { enabled: true }
@@ -326,7 +296,7 @@ export function createProviderService(db: PrismaClient) {
       throw new Error("提供商不存在");
     }
 
-    const updatedProvider = await db.provider.update({
+    return db.provider.update({
       where: { id },
       data: {
         enabled: !provider.enabled,
@@ -340,18 +310,6 @@ export function createProviderService(db: PrismaClient) {
         }
       }
     });
-
-    return {
-      ...updatedProvider,
-      models: extractModelsFromGroups(updatedProvider.groups),
-      groups: updatedProvider.groups.map((group: { models: unknown[] }) => ({
-        ...group,
-        models: group.models
-      })),
-      _count: {
-        models: countModelsFromGroups(updatedProvider.groups)
-      }
-    };
   };
 
   return {
