@@ -2,7 +2,7 @@ import type { FC } from "react";
 
 import {
   ThreadListItemPrimitive,
-  ThreadListPrimitive,
+  ThreadListPrimitive
 } from "@assistant-ui/react";
 import { ArchiveIcon, PlusIcon } from "lucide-react";
 

@@ -1,4 +1,4 @@
-import { FC } from "react";
+import type { FC } from "react";
 
 import { Loader2 } from "lucide-react";
 
@@ -43,26 +43,26 @@ export const Loading: FC<LoadingProps> = ({
   text = "加载中...",
   showSpinner = true,
   className,
-  size = "md",
+  size = "md"
 }) => {
   const sizeClasses = {
     sm: "w-4 h-4",
     md: "w-6 h-6",
-    lg: "w-8 h-8",
+    lg: "w-8 h-8"
   };
 
   return (
     <div
       className={cn(
         "flex flex-col items-center justify-center gap-3 p-8",
-        className,
+        className
       )}
     >
       {showSpinner && (
         <Loader2
           className={cn(
             "animate-spin text-muted-foreground",
-            sizeClasses[size],
+            sizeClasses[size]
           )}
         />
       )}
@@ -88,7 +88,7 @@ export const Loading: FC<LoadingProps> = ({
 export const FullScreenLoading: FC<Omit<LoadingProps, "className">> = ({
   text,
   showSpinner,
-  size,
+  size
 }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
@@ -117,12 +117,12 @@ export const FullScreenLoading: FC<Omit<LoadingProps, "className">> = ({
 export const InlineLoading: FC<Omit<LoadingProps, "className">> = ({
   text,
   showSpinner,
-  size,
+  size
 }) => {
   const sizeClasses = {
     sm: "w-4 h-4",
     md: "w-6 h-6",
-    lg: "w-8 h-8",
+    lg: "w-8 h-8"
   };
 
   return (

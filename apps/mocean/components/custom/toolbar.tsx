@@ -1,5 +1,6 @@
 "use client";
 
+import type { Model, Provider } from "@mocean/mastra/prismaType";
 import { Info } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -7,6 +8,7 @@ import { useStore } from "@/app/store/useStore";
 import { useAssistantActions, useAssistantSWR } from "@/hooks/useAssistantsSWR";
 
 import { ModelSelector } from "./model-selector";
+import type { ModelSelection } from "./useModelSelector";
 
 /**
  * 工具栏组件
@@ -24,12 +26,7 @@ export function Toolbar() {
    *
    * @param selection - 选择的模型信息
    */
-  const onModelChange = async (selection: {
-    providerId: string;
-    providerName: string;
-    modelId: string;
-    modelName: string;
-  }) => {
+  const onModelChange = async (selection: ModelSelection) => {
     if (!activeAssistantId) {
       toast.error("请选择一个助手");
       return;
@@ -37,8 +34,8 @@ export function Toolbar() {
 
     try {
       await updateAssistant(activeAssistantId, {
-        modelId: selection.modelId,
-        providerId: selection.providerId
+        modelId: selection.model.id,
+        providerId: selection.provider.id
       });
 
       await refresh();
@@ -59,12 +56,14 @@ export function Toolbar() {
 
   return (
     <ModelSelector
-      value={{
-        providerId: assistant?.provider?.id ?? "",
-        providerName: assistant?.provider?.name ?? "",
-        modelId: assistant?.model?.id ?? "",
-        modelName: assistant?.model?.name ?? ""
-      }}
+      value={
+        assistant?.provider && assistant?.model
+          ? {
+              provider: assistant.provider as Provider,
+              model: assistant.model as Model
+            }
+          : undefined
+      }
       onChange={onModelChange}
     />
   );

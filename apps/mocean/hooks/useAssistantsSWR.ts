@@ -205,7 +205,12 @@ export function useAssistantUIMessageSWR(
  *   await Promise.all([refreshList(), refreshDetail()]);
  * });
  */
-export function useAssistantActions(customMutate?: () => Promise<unknown>) {
+export function useAssistantActions(
+  customMutate?: (
+    data?: unknown,
+    opts?: boolean | Record<string, unknown>
+  ) => Promise<unknown>
+) {
   const { mutate: globalMutate } = useSWRConfig();
   const { createAssistant, updateAssistant, deleteAssistant } =
     useAssistantsApi();
@@ -234,8 +239,20 @@ export function useAssistantActions(customMutate?: () => Promise<unknown>) {
 
   const update = async (
     id: string,
-    data: Parameters<typeof updateAssistant>[1]
+    data: Parameters<typeof updateAssistant>[1],
+    optimisticData?: unknown
   ) => {
+    if (optimisticData && customMutate) {
+      // 乐观更新：fire-and-forget API + SWR 乐观写入
+      void updateAssistant(id, data);
+      await customMutate(() => optimisticData, {
+        optimisticData,
+        rollbackOnError: true,
+        revalidate: false
+      });
+      return null;
+    }
+    // 无乐观更新：等待 API 完成后刷新
     const result = await updateAssistant(id, data);
     if (result) {
       await refreshData();

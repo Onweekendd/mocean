@@ -4,11 +4,13 @@ import { useCallback } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { SquarePen } from "lucide-react";
+import type { Model, Provider } from "@mocean/mastra/prismaType";
+import { MessageSquarePlus } from "lucide-react";
 import toast from "react-hot-toast";
 
 import { useStore } from "@/app/store/useStore";
 import { ModelSelector } from "@/components/custom/model-selector";
+import type { ModelSelection } from "@/components/custom/useModelSelector";
 import {
   useAssistantActions,
   useAssistantSWR,
@@ -20,7 +22,7 @@ export function ChatToolbar() {
   const router = useRouter();
   const { activeAssistantId, activeThread, setActiveThread } = useStore();
   const { assistant, refresh } = useAssistantSWR(activeAssistantId ?? "");
-  const { update: updateAssistant } = useAssistantActions();
+  const { update: updateAssistant } = useAssistantActions(refresh);
   const { threads } = useAssistantThreadsSWR(activeAssistantId || null);
   const { refresh: refreshUIMessage } = useAssistantUIMessageSWR(
     activeAssistantId || null,
@@ -28,32 +30,32 @@ export function ChatToolbar() {
   );
 
   const currentThread = threads?.find((t) => t.id === activeThread);
-  const threadTitle =
-    currentThread?.title ||
-    (activeThread ? `对话 ${activeThread.slice(-8)}` : "");
+  const threadTitle = getThreadDisplayTitle(currentThread, activeThread);
 
   const onModelChange = useCallback(
-    async (selection: {
-      providerId: string;
-      providerName: string;
-      modelId: string;
-      modelName: string;
-    }) => {
-      if (!activeAssistantId) {
+    async (selection: ModelSelection) => {
+      if (!activeAssistantId || !assistant) {
         toast.error("请选择一个助手");
         return;
       }
       try {
-        await updateAssistant(activeAssistantId, {
-          modelId: selection.modelId,
-          providerId: selection.providerId
-        });
-        await refresh();
+        await updateAssistant(
+          activeAssistantId,
+          {
+            modelId: selection.model.id,
+            providerId: selection.provider.id
+          },
+          {
+            ...assistant,
+            model: { ...assistant.model, ...selection.model },
+            provider: { ...assistant.provider, ...selection.provider }
+          }
+        );
       } catch (error) {
         toast.error(error instanceof Error ? error.message : "更新助手失败");
       }
     },
-    [activeAssistantId, updateAssistant, refresh]
+    [activeAssistantId, assistant, updateAssistant]
   );
 
   const onCreateThread = useCallback(() => {
@@ -64,40 +66,53 @@ export function ChatToolbar() {
   }, [activeAssistantId, refreshUIMessage, router, setActiveThread]);
 
   return (
-    <div className="flex h-12 shrink-0 items-center justify-between border-b border-border/40 px-4">
+    <div className="flex h-11 shrink-0 items-center justify-between border-b border-border/30 px-4">
       {/* Left: model selector */}
-      <div className="flex min-w-0 flex-1 items-center">
+      <div className="flex max-w-16 items-center">
         {activeAssistantId && assistant ? (
           <ModelSelector
-            value={{
-              providerId: assistant.provider?.id ?? "",
-              providerName: assistant.provider?.name ?? "",
-              modelId: assistant.model?.id ?? "",
-              modelName: assistant.model?.name ?? ""
-            }}
+            value={
+              assistant.provider && assistant.model
+                ? {
+                    provider: assistant.provider as Provider,
+                    model: assistant.model as Model
+                  }
+                : undefined
+            }
             onChange={onModelChange}
           />
         ) : (
-          <span className="text-sm text-muted-foreground">未选择助手</span>
+          <span className="text-[13px] text-muted-foreground">未选择助手</span>
         )}
       </div>
 
       {/* Center: thread title */}
-      <div className="flex min-w-0 shrink items-center justify-center px-4">
-        <span className="truncate text-sm font-medium text-foreground/80">
-          {threadTitle}
-        </span>
-      </div>
+      {threadTitle && (
+        <div className="">
+          <span className="text-[13px] text-muted-foreground">
+            {threadTitle}
+          </span>
+        </div>
+      )}
 
-      {/* Right: new thread button */}
-      <div className="flex flex-1 items-center justify-end">
+      {/* Right: new thread */}
+      <div className="flex items-center">
         <button
           onClick={onCreateThread}
-          className=":hover:bg-brand-primary-500/80 flex items-center justify-center rounded-full bg-brand-primary-500 px-2 py-1 text-sm text-brand-main transition-all duration-150 hover:bg-brand-primary-500/80"
+          className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors duration-150 hover:bg-foreground/[0.04] hover:text-foreground"
+          title="新建对话"
         >
-          + 新建对话
+          <MessageSquarePlus className="h-3.5 w-3.5" />
         </button>
       </div>
     </div>
   );
+}
+
+function getThreadDisplayTitle(
+  thread: { title?: string | null } | undefined,
+  activeThreadId: string | null
+): string {
+  if (!activeThreadId) return "";
+  return thread?.title ?? "";
 }

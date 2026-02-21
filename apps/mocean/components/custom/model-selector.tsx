@@ -60,12 +60,12 @@ const ModelSelectorComponent = ({
               <div className="h-4 w-4 shrink-0">
                 <RenderProviderAvatar provider={selectedProvider as Provider} />
               </div>
-              <span className="truncate text-sm font-medium">
-                {value.modelName}
+              <span className="truncate text-[13px] font-medium">
+                {value.model.name}
               </span>
             </div>
           ) : (
-            <span className="text-muted-foreground">选择模型</span>
+            <span className="text-[13px] text-muted-foreground">选择模型</span>
           )}
         </Button>
       </DropdownMenuTrigger>
@@ -82,7 +82,7 @@ const ModelSelectorComponent = ({
               <div className="h-5 w-5 shrink-0">
                 <RenderProviderAvatar provider={provider as Provider} />
               </div>
-              <span className="font-medium">{provider.name}</span>
+              <span className="text-[13px] font-medium">{provider.name}</span>
             </DropdownMenuSubTrigger>
 
             <DropdownMenuSubContent className="p-0">
@@ -103,7 +103,7 @@ const ModelSelectorComponent = ({
                               key={model.id}
                               className={cn(
                                 "cursor-pointer gap-2 rounded-sm",
-                                value?.modelId === model.id &&
+                                value?.model.id === model.id &&
                                   "bg-brand-primary/10 font-medium text-brand-primary"
                               )}
                               onSelect={() =>
@@ -126,7 +126,7 @@ const ModelSelectorComponent = ({
                                   className="h-full w-full object-contain"
                                 />
                               </div>
-                              <span className="truncate text-sm">
+                              <span className="truncate text-[13px]">
                                 {model.name}
                               </span>
                             </DropdownMenuItem>
@@ -138,7 +138,7 @@ const ModelSelectorComponent = ({
                       </div>
                     ))
                   ) : (
-                    <div className="px-2 py-6 text-center text-sm text-muted-foreground">
+                    <div className="px-2 py-6 text-center text-[13px] text-muted-foreground">
                       暂无模型
                     </div>
                   )}
@@ -149,7 +149,7 @@ const ModelSelectorComponent = ({
         ))}
 
         {providers.length === 0 && (
-          <div className="px-2 py-6 text-center text-sm text-muted-foreground">
+          <div className="px-2 py-6 text-center text-[13px] text-muted-foreground">
             暂无可用供应商
           </div>
         )}

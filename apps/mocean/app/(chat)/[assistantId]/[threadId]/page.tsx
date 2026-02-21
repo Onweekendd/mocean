@@ -4,6 +4,8 @@ import { useEffect } from "react";
 
 import { useParams } from "next/navigation";
 
+import type { UIMessage } from "ai";
+
 import { useStore } from "@/app/store/useStore";
 import { Loading } from "@/components/ui/loading";
 import { useAssistantUIMessageSWR } from "@/hooks/useAssistantsSWR";
@@ -55,7 +57,7 @@ export default function Chat() {
 
   return (
     <div className="h-full flex-1">
-      <ChatView messages={messages || []} />
+      <ChatView messages={(messages || []) as UIMessage[]} />
     </div>
   );
 }

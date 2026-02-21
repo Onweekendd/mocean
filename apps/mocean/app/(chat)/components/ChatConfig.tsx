@@ -15,7 +15,8 @@ type View = "assistants" | "threads";
 
 const ChatConfig: React.FC = () => {
   const router = useRouter();
-  const { activeAssistantId, setActiveAssistantId } = useStore();
+  const { activeAssistantId, setActiveAssistantId, setActiveThread } =
+    useStore();
 
   // Track current and previous view for animation direction
   const [view, setView] = useState<View>(
@@ -35,13 +36,14 @@ const ChatConfig: React.FC = () => {
 
   const onAssistantSelect = useCallback(
     (assistant: Assistant) => {
+      setActiveThread(null);
       setActiveAssistantId(assistant.id);
       setDirection("forward");
       setIsAnimating(true);
       setView("threads");
       router.push(`/${assistant.id}`);
     },
-    [router, setActiveAssistantId]
+    [router, setActiveAssistantId, setActiveThread]
   );
 
   const onBack = useCallback(() => {
@@ -57,7 +59,7 @@ const ChatConfig: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      className="relative flex w-[400px] flex-col overflow-hidden px-2"
+      className="relative flex h-full w-[400px] flex-col overflow-hidden px-2"
     >
       {/* Assistants View */}
       <div

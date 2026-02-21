@@ -20,9 +20,11 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
   }, [assistantId, setActiveAssistantId]);
 
   return (
-    <div className="flex h-full pt-2">
-      <ChatConfig />
-      {children}
+    <div className="flex h-full">
+      <div className="h-full border-r border-border/30 bg-muted/30">
+        <ChatConfig />
+      </div>
+      <div className="flex-1">{children}</div>
     </div>
   );
 };

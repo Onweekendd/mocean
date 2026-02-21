@@ -1,4 +1,4 @@
-import { Assistant } from "@mocean/mastra/prismaType";
+import type { Assistant } from "@mocean/mastra/prismaType";
 import { Bot, Calendar, Globe, Image, Sparkles } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -8,7 +8,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 
 import { useStore } from "../../../store/useStore";
@@ -20,7 +20,7 @@ interface AssistantCardProps {
 
 const AssistantCard: React.FC<AssistantCardProps> = ({
   assistant,
-  onClick,
+  onClick
 }) => {
   const { activeAssistantId } = useStore();
   const isActive = activeAssistantId === assistant.id;
@@ -29,16 +29,16 @@ const AssistantCard: React.FC<AssistantCardProps> = ({
     return new Intl.DateTimeFormat("zh-CN", {
       year: "numeric",
       month: "short",
-      day: "numeric",
+      day: "numeric"
     }).format(new Date(date));
   };
 
   return (
     <Card
-      className={`group cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-lg ${
+      className={`group cursor-pointer transition-all duration-200 hover:shadow-md ${
         isActive
-          ? "border-brand-primary shadow-md ring-1 ring-brand-primary/20"
-          : ""
+          ? "border-foreground/15 bg-foreground/[0.03] shadow-sm"
+          : "hover:border-foreground/10"
       }`}
       onClick={() => onClick(assistant)}
     >
@@ -46,46 +46,39 @@ const AssistantCard: React.FC<AssistantCardProps> = ({
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-3">
             <div
-              className={`flex h-10 w-10 items-center justify-center rounded-lg text-lg font-semibold transition-all duration-200 ${
+              className={`flex h-9 w-9 items-center justify-center rounded-lg text-base transition-all duration-200 ${
                 isActive
-                  ? "scale-105 bg-gradient-brand-active text-brand-primary-500"
-                  : "bg-gradient-brand text-brand-main"
+                  ? "bg-foreground/[0.08] text-foreground"
+                  : "bg-muted text-muted-foreground"
               }`}
             >
-              {assistant.emoji || <Bot className="h-5 w-5" />}
+              {assistant.emoji || <Bot className="h-4 w-4" />}
             </div>
             <div>
-              <CardTitle
-                className={`text-base transition-colors ${
-                  isActive
-                    ? "font-semibold text-brand-primary"
-                    : "group-hover:text-primary"
-                }`}
-              >
+              <CardTitle className="text-sm font-medium text-foreground">
                 {assistant.name}
               </CardTitle>
-              <Badge
-                variant={isActive ? "default" : "secondary"}
-                className={`mt-1 text-xs capitalize ${
-                  isActive
-                    ? "bg-brand-primary-100 text-brand-primary hover:bg-brand-primary-200"
-                    : ""
-                }`}
-              >
+              <span className="mt-0.5 block text-xs capitalize text-muted-foreground">
                 {isActive ? "当前助手" : assistant.type}
-              </Badge>
+              </span>
             </div>
           </div>
 
-          <div className="flex space-x-1">
+          <div className="flex gap-1">
             {assistant.enableWebSearch && (
-              <Badge variant="outline" className="p-1">
-                <Globe className="h-3 w-3 text-success" />
+              <Badge
+                variant="outline"
+                className="border-transparent p-0.5 text-muted-foreground/60"
+              >
+                <Globe className="h-3 w-3" />
               </Badge>
             )}
             {assistant.enableGenerateImage && (
-              <Badge variant="outline" className="p-1">
-                <Image className="h-3 w-3 text-brand-primary" />
+              <Badge
+                variant="outline"
+                className="border-transparent p-0.5 text-muted-foreground/60"
+              >
+                <Image className="h-3 w-3" />
               </Badge>
             )}
           </div>
@@ -93,12 +86,12 @@ const AssistantCard: React.FC<AssistantCardProps> = ({
 
         {assistant.description && (
           <CardDescription
-            className="mt-2"
+            className="mt-2 text-xs"
             style={{
               display: "-webkit-box",
               WebkitLineClamp: 2,
               WebkitBoxOrient: "vertical",
-              overflow: "hidden",
+              overflow: "hidden"
             }}
           >
             {assistant.description}
@@ -107,20 +100,14 @@ const AssistantCard: React.FC<AssistantCardProps> = ({
       </CardHeader>
 
       <CardContent className="pt-0">
-        <div
-          className={`rounded-md p-3 ${
-            isActive
-              ? "bg-brand-primary-100 dark:bg-brand-primary-900/30"
-              : "bg-muted/50"
-          }`}
-        >
+        <div className="rounded-md bg-muted/40 p-2.5">
           <p
-            className="text-xs text-muted-foreground"
+            className="text-xs leading-relaxed text-muted-foreground/80"
             style={{
               display: "-webkit-box",
               WebkitLineClamp: 3,
               WebkitBoxOrient: "vertical",
-              overflow: "hidden",
+              overflow: "hidden"
             }}
           >
             {assistant.prompt}
@@ -128,7 +115,7 @@ const AssistantCard: React.FC<AssistantCardProps> = ({
         </div>
       </CardContent>
 
-      <CardFooter className="flex items-center justify-between pt-0 text-xs text-muted-foreground">
+      <CardFooter className="flex items-center justify-between pt-0 text-xs text-muted-foreground/60">
         <div className="flex items-center space-x-1">
           <Calendar className="h-3 w-3" />
           <span>{formatDate(assistant.createdAt)}</span>
