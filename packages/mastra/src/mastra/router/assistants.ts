@@ -4,10 +4,10 @@ import { HTTPException } from "hono/http-exception";
 import { z } from "zod";
 
 import {
-  AssistantResponseSchema,
-  AssistantWithModelsResponseSchema,
-  AssistantsResponseSchema,
-  FullAssistantSchema,
+  AssistantFullSchema,
+  AssistantSchema,
+  AssistantWithModelsAndSettingsSchema,
+  SimpleAssistantArraySchema,
   assistantIdParamSchema,
   assistantThreadIdParamSchema
 } from "../schema/assistant";
@@ -16,6 +16,7 @@ import {
   deleteAssistant,
   executeChatWithAssistant,
   getAssistantById,
+  getFullAssistantById,
   getAssistants,
   getThreadsByAssistantId,
   getUIMessagesByThreadId,
@@ -40,7 +41,7 @@ const getAssistantsRouter = registerApiRoute(
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: AssistantsResponseSchema
+              schema: SimpleAssistantArraySchema
             }
           }
         }
@@ -54,7 +55,7 @@ const getAssistantsRouter = registerApiRoute(
 
 /**
  * 根据ID获取单个助手的路由处理器
- * @description 通过助手ID获取特定助手的详细信息
+ * @description 通过助手ID获取助手基本信息（含模型和设置）
  */
 const getAssistantByIdRouter = registerApiRoute(
   assistantRoutes.getAssistantById.path,
@@ -65,11 +66,11 @@ const getAssistantByIdRouter = registerApiRoute(
       tags: ["Assistants"],
       responses: {
         200: {
-          description: "通过助手ID获取特定助手的详细信息",
+          description: "通过助手ID获取助手基本信息（含模型和设置）",
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: FullAssistantSchema.nullable()
+              schema: AssistantWithModelsAndSettingsSchema.nullable()
             }
           }
         }
@@ -80,6 +81,43 @@ const getAssistantByIdRouter = registerApiRoute(
         assistantId: c.req.param("assistantId")
       });
       const assistant = await getAssistantById(params.assistantId);
+      if (!assistant) {
+        throw new HTTPException(404, { message: "助手不存在" });
+      }
+      return c.json(assistant, 200);
+    }
+  }
+);
+
+/**
+ * 根据ID获取完整助手的路由处理器
+ * @description 通过助手ID获取完整助手信息，包括模型、供应商、设置、主题、知识库、MCP服务器等
+ */
+const getFullAssistantByIdRouter = registerApiRoute(
+  assistantRoutes.getFullAssistantById.path,
+  {
+    method: "GET",
+    openapi: {
+      summary: "根据ID获取完整助手信息",
+      tags: ["Assistants"],
+      responses: {
+        200: {
+          description:
+            "通过助手ID获取完整助手信息，包括模型、供应商、设置、主题、知识库、MCP服务器等",
+          content: {
+            "application/json": {
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: AssistantFullSchema.nullable()
+            }
+          }
+        }
+      }
+    },
+    handler: async (c) => {
+      const params = assistantIdParamSchema.parse({
+        assistantId: c.req.param("assistantId")
+      });
+      const assistant = await getFullAssistantById(params.assistantId);
       if (!assistant) {
         throw new HTTPException(404, { message: "助手不存在" });
       }
@@ -113,7 +151,7 @@ const createAssistantRouter = registerApiRoute(
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: AssistantWithModelsResponseSchema
+              schema: AssistantWithModelsAndSettingsSchema
             }
           }
         }
@@ -163,7 +201,7 @@ const updateAssistantRouter = registerApiRoute(
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: AssistantWithModelsResponseSchema
+              schema: AssistantWithModelsAndSettingsSchema
             }
           }
         }
@@ -208,7 +246,7 @@ const deleteAssistantRouter = registerApiRoute(
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: AssistantResponseSchema
+              schema: AssistantSchema
             }
           }
         }
@@ -353,6 +391,7 @@ const getAssistantUIMessageByThreadIdRouter = registerApiRoute(
 export const assistantsRouter = [
   getAssistantsRouter,
   getAssistantByIdRouter,
+  getFullAssistantByIdRouter,
   createAssistantRouter,
   updateAssistantRouter,
   deleteAssistantRouter,

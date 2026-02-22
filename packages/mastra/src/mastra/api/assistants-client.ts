@@ -5,8 +5,8 @@ import type { z } from "zod";
 
 import { assistantRoutes } from "../router/type";
 import type {
-  CreateAssistantInput,
-  UpdateAssistantInput,
+  CreateAssistantInputType,
+  UpdateAssistantInputType,
   assistantThreadIdParamSchema
 } from "../schema/assistant";
 import type { ApiClientConfig, ApiResponse } from "./base-client";
@@ -55,12 +55,38 @@ export class AssistantsApiClient extends BaseApiClient {
   }
 
   /**
+   * 根据ID获取完整助手信息
+   * @description 通过助手ID获取完整助手信息，包括模型、供应商、设置、主题、知识库、MCP服务器等
+   * @param assistantId - 助手的唯一标识符
+   */
+  async getFullAssistantById(
+    assistantId: string
+  ): Promise<
+    ApiResponse<
+      z.infer<
+        (typeof assistantRoutes)["getFullAssistantById"]["responseSchema"]
+      >
+    >
+  > {
+    return this.get<
+      z.infer<
+        (typeof assistantRoutes)["getFullAssistantById"]["responseSchema"]
+      >
+    >(
+      assistantRoutes.getFullAssistantById.path.replace(
+        ":assistantId",
+        assistantId
+      )
+    );
+  }
+
+  /**
    * 创建新助手
    * @description 在系统中创建一个新的助手
    * @param assistant - 包含助手信息的对象
    */
   async createAssistant(
-    assistant: CreateAssistantInput
+    assistant: CreateAssistantInputType
   ): Promise<
     ApiResponse<
       z.infer<(typeof assistantRoutes)["createAssistant"]["responseSchema"]>
@@ -79,7 +105,7 @@ export class AssistantsApiClient extends BaseApiClient {
    */
   async updateAssistant(
     assistantId: string,
-    assistant: UpdateAssistantInput
+    assistant: UpdateAssistantInputType
   ): Promise<
     ApiResponse<
       z.infer<(typeof assistantRoutes)["updateAssistant"]["responseSchema"]>
@@ -185,9 +211,11 @@ export const assistantsApiMethods = {
   getAssistants: () => assistantsApi.getAssistants(),
   getAssistantById: (assistantId: string) =>
     assistantsApi.getAssistantById(assistantId),
-  createAssistant: (assistant: CreateAssistantInput) =>
+  getFullAssistantById: (assistantId: string) =>
+    assistantsApi.getFullAssistantById(assistantId),
+  createAssistant: (assistant: CreateAssistantInputType) =>
     assistantsApi.createAssistant(assistant),
-  updateAssistant: (assistantId: string, assistant: UpdateAssistantInput) =>
+  updateAssistant: (assistantId: string, assistant: UpdateAssistantInputType) =>
     assistantsApi.updateAssistant(assistantId, assistant),
   deleteAssistant: (assistantId: string) =>
     assistantsApi.deleteAssistant(assistantId),
@@ -217,6 +245,7 @@ export type UseAssistantsApiReturn = Pick<
   AssistantsApiClient,
   | "getAssistants"
   | "getAssistantById"
+  | "getFullAssistantById"
   | "createAssistant"
   | "updateAssistant"
   | "deleteAssistant"
@@ -243,6 +272,9 @@ export const useAssistantsApi = (): UseAssistantsApiReturn => {
     getAssistantById: assistantsApi.getAssistantById.bind(
       assistantsApi
     ) as UseAssistantsApiReturn["getAssistantById"],
+    getFullAssistantById: assistantsApi.getFullAssistantById.bind(
+      assistantsApi
+    ) as UseAssistantsApiReturn["getFullAssistantById"],
     createAssistant: assistantsApi.createAssistant.bind(
       assistantsApi
     ) as UseAssistantsApiReturn["createAssistant"],

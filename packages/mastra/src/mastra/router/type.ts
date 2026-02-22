@@ -11,10 +11,10 @@ import {
   updateAgentSchema
 } from "../schema/agent";
 import {
-  AssistantResponseSchema,
-  AssistantWithModelsResponseSchema,
-  AssistantsResponseSchema,
-  FullAssistantSchema,
+  AssistantFullSchema,
+  AssistantSchema,
+  AssistantWithModelsAndSettingsSchema,
+  SimpleAssistantArraySchema,
   chatWithAssistantSchema,
   createAssistantSchema,
   updateAssistantSchema
@@ -209,25 +209,29 @@ export const groupRoutes = {
 export const assistantRoutes = {
   getAssistants: {
     path: `${PREFIX}/assistants`,
-    responseSchema: AssistantsResponseSchema
+    responseSchema: SimpleAssistantArraySchema
   },
   getAssistantById: {
     path: `${PREFIX}/assistants/:assistantId`,
-    responseSchema: FullAssistantSchema.nullable()
+    responseSchema: AssistantWithModelsAndSettingsSchema.nullable()
+  },
+  getFullAssistantById: {
+    path: `${PREFIX}/assistants/:assistantId/full`,
+    responseSchema: AssistantFullSchema.nullable()
   },
   createAssistant: {
     path: `${PREFIX}/assistants`,
     requestSchema: createAssistantSchema,
-    responseSchema: AssistantWithModelsResponseSchema
+    responseSchema: AssistantWithModelsAndSettingsSchema
   },
   updateAssistant: {
     path: `${PREFIX}/assistants/:assistantId`,
     requestSchema: updateAssistantSchema,
-    responseSchema: AssistantWithModelsResponseSchema
+    responseSchema: AssistantWithModelsAndSettingsSchema
   },
   deleteAssistant: {
     path: `${PREFIX}/assistants/:assistantId`,
-    responseSchema: AssistantResponseSchema
+    responseSchema: AssistantSchema
   },
   chatWithAssistant: {
     path: `${PREFIX}/assistants/chat`,

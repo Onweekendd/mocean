@@ -5,34 +5,21 @@ import type { RequestContext } from "@mastra/core/request-context";
 import type { UIMessage } from "ai";
 import { createUIMessageStreamResponse } from "ai";
 import type { KnowledgeRecognition } from "generated/prisma/enums";
+import { AssistantFullSchema } from "generated/schemas/composed";
+import { AssistantSchema } from "generated/schemas/models";
 import { z } from "zod";
 
 import { DynamicAgent } from "../agents/dynamicAgent";
 import type { assistantRoutes } from "../router/type";
 import { createCommonRunTime } from "../runtime/CommonRunTime";
 import type {
-  CreateAssistantInput,
-  FullAssistant,
-  UpdateAssistantInput
+  CreateAssistantInputType,
+  FullAssistantType,
+  UpdateAssistantInputType
 } from "../schema/assistant";
-import {
-  AssistantResponseSchema,
-  AssistantWithModelsResponseSchema,
-  FullAssistantSchema
-} from "../schema/assistant";
+import { AssistantWithModelsAndSettingsSchema } from "../schema/assistant";
 import { prisma } from "./index";
 import type { AsyncReturnType } from "./type";
-
-/**
- * Response Schemas
- * 用于 Router 的响应类型验证
- */
-export {
-  AssistantResponseSchema,
-  AssistantsResponseSchema,
-  AssistantWithModelsResponseSchema,
-  FullAssistantSchema as AssistantFullResponseSchema
-} from "../schema/assistant";
 
 /**
  * 获取所有助手
@@ -48,12 +35,12 @@ const getAssistants = async (): Promise<
       settings: true
     }
   });
-  return z.array(AssistantWithModelsResponseSchema).parse(assistants);
+  return z.array(AssistantWithModelsAndSettingsSchema).parse(assistants);
 };
 
 /**
  * 根据ID获取单个助手
- * @description 通过助手ID从数据库中获取特定助手的详细信息
+ * @description 通过助手ID从数据库中获取助手基本信息
  * @param id - 助手的唯一标识符
  * @returns 助手对象，如果不存在则返回null
  */
@@ -65,17 +52,11 @@ const getAssistantById = async (
   const assistant = await prisma.assistant.findUnique({
     where: {
       id
-    },
-    include: {
-      model: true,
-      provider: true,
-      settings: true,
-      topics: true,
-      knowledgeBases: true,
-      mcpServers: true
     }
   });
-  return assistant ? FullAssistantSchema.parse(assistant) : null;
+  return assistant
+    ? AssistantWithModelsAndSettingsSchema.parse(assistant)
+    : null;
 };
 
 /**
@@ -85,7 +66,7 @@ const getAssistantById = async (
  */
 const getFullAssistantById = async (
   id: string
-): Promise<FullAssistant | null> => {
+): Promise<FullAssistantType | null> => {
   const assistant = await prisma.assistant.findUnique({
     where: {
       id
@@ -99,7 +80,7 @@ const getFullAssistantById = async (
       mcpServers: true
     }
   });
-  return assistant ? FullAssistantSchema.parse(assistant) : null;
+  return assistant ? AssistantFullSchema.parse(assistant) : null;
 };
 
 /**
@@ -109,7 +90,7 @@ const getFullAssistantById = async (
  * @returns 新创建的助手对象，包含生成的ID和时间戳
  */
 const createAssistant = async (
-  assistant: CreateAssistantInput
+  assistant: CreateAssistantInputType
 ): Promise<
   z.infer<(typeof assistantRoutes)["createAssistant"]["responseSchema"]>
 > => {
@@ -134,7 +115,7 @@ const createAssistant = async (
     }
   });
 
-  return AssistantWithModelsResponseSchema.parse(newAssistant);
+  return AssistantWithModelsAndSettingsSchema.parse(newAssistant);
 };
 
 /**
@@ -146,7 +127,7 @@ const createAssistant = async (
  */
 const updateAssistant = async (
   id: string,
-  assistant: UpdateAssistantInput
+  assistant: UpdateAssistantInputType
 ): Promise<
   z.infer<(typeof assistantRoutes)["updateAssistant"]["responseSchema"]>
 > => {
@@ -181,7 +162,7 @@ const updateAssistant = async (
       settings: true
     }
   });
-  return AssistantWithModelsResponseSchema.parse(updatedAssistant);
+  return AssistantWithModelsAndSettingsSchema.parse(updatedAssistant);
 };
 
 /**
@@ -200,7 +181,7 @@ const deleteAssistant = async (
       id
     }
   });
-  return AssistantResponseSchema.parse(deletedAssistant);
+  return AssistantSchema.parse(deletedAssistant);
 };
 
 /**

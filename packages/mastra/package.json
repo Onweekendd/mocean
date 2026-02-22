@@ -25,6 +25,9 @@
       "import": "./dist/prismaType.js",
       "types": "./dist/prismaType.d.ts"
     },
+    "./schemas": {
+      "types": "./dist/schemas.d.ts"
+    },
     "./apiClient": {
       "import": "./dist/apiClient.js",
       "types": "./dist/apiClient.d.ts"

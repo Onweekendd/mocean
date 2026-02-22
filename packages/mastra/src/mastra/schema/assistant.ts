@@ -2,40 +2,22 @@
  * Response Schemas
  * 用于 Router 的响应类型验证
  */
+import { AssistantFullSchema } from "generated/schemas/composed";
 import {
   AssistantSchema,
   AssistantSettingsSchema,
-  KnowledgeBaseSchema,
-  MCPServerSchema,
-  ModelSchema,
-  ProviderSchema,
-  TopicSchema
+  ModelSchema
 } from "generated/schemas/models/index";
 import { z } from "zod";
 
-// 基础 Assistant Response Schema（不含关联关系）
-export const AssistantResponseSchema = AssistantSchema.pick({
-  id: true,
-  name: true,
-  prompt: true,
-  type: true,
-  emoji: true,
-  description: true,
-  enableWebSearch: true,
-  webSearchProviderId: true,
-  enableGenerateImage: true,
-  knowledgeRecognition: true,
-  modelId: true,
-  providerId: true,
-  createdAt: true,
-  updatedAt: true
-});
+// Re-export base schemas for router usage
+export { AssistantSchema, AssistantFullSchema };
 
 // Assistants 列表 Response Schema
-export const AssistantsResponseSchema = z.array(AssistantResponseSchema);
+export const SimpleAssistantArraySchema = z.array(AssistantSchema);
 
 // 带 model、settings 的 Assistant Response Schema
-export const AssistantWithModelsResponseSchema = AssistantSchema.pick({
+export const AssistantWithModelsAndSettingsSchema = AssistantSchema.pick({
   id: true,
   name: true,
   prompt: true,
@@ -53,31 +35,6 @@ export const AssistantWithModelsResponseSchema = AssistantSchema.pick({
 }).extend({
   model: ModelSchema.partial().nullish(),
   settings: AssistantSettingsSchema.partial().nullish()
-});
-
-// 带 provider 的完整 Assistant Response Schema
-export const FullAssistantSchema = AssistantSchema.pick({
-  id: true,
-  name: true,
-  prompt: true,
-  type: true,
-  emoji: true,
-  description: true,
-  enableWebSearch: true,
-  webSearchProviderId: true,
-  enableGenerateImage: true,
-  knowledgeRecognition: true,
-  modelId: true,
-  providerId: true,
-  createdAt: true,
-  updatedAt: true
-}).extend({
-  model: ModelSchema.partial().nullish(),
-  provider: ProviderSchema.partial().nullish(),
-  settings: AssistantSettingsSchema.partial().nullish(),
-  topics: z.array(TopicSchema.partial()),
-  knowledgeBases: z.array(KnowledgeBaseSchema.partial()),
-  mcpServers: z.array(MCPServerSchema.partial())
 });
 
 /**
@@ -128,18 +85,7 @@ export const chatWithAssistantSchema = z.object({
   threadId: z.string().optional()
 });
 
-export const assistantWithModelSchema = AssistantSchema.extend({
-  model: ModelSchema.partial().nullish(),
-  settings: AssistantSettingsSchema.partial().nullish()
-});
+export type FullAssistantType = z.infer<typeof AssistantFullSchema>;
 
-// zod类型推导
-export type CreateAssistantInput = z.infer<typeof createAssistantSchema>;
-export type UpdateAssistantInput = z.infer<typeof updateAssistantSchema>;
-export type AssistantResponse = z.infer<typeof AssistantResponseSchema>;
-export type AssistantsResponse = z.infer<typeof AssistantsResponseSchema>;
-export type AssistantWithModelsResponse = z.infer<
-  typeof AssistantWithModelsResponseSchema
->;
-export type FullAssistant = z.infer<typeof FullAssistantSchema>;
-export type AssistantWithModel = z.infer<typeof assistantWithModelSchema>;
+export type CreateAssistantInputType = z.infer<typeof createAssistantSchema>;
+export type UpdateAssistantInputType = z.infer<typeof updateAssistantSchema>;

@@ -60,11 +60,22 @@ const basePlugins = [
  * import { agentsApi } from '@mocean/mastra/apiClient'
  */
 export default [
-  // 2. prismaType 导出 - 类型声明
+  // 1. prismaType 导出 - 类型声明
   {
     input: "generated/prisma/client.ts",
     output: {
       file: "dist/prismaType.d.ts",
+      format: "esm",
+      sourcemap: false,
+    },
+    external,
+    plugins: [dts()],
+  },
+  // 2. schemas 导出 - 类型声明 (composed schema types)
+  {
+    input: "generated/schemas/composed/index.ts",
+    output: {
+      file: "dist/schemas.d.ts",
       format: "esm",
       sourcemap: false,
     },
