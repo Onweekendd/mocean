@@ -79,11 +79,11 @@ export default function AppSidebar() {
   const pathname = usePathname();
 
   return (
-    <Sidebar>
+    <Sidebar className="bg-primary-light-100">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-2">
+            <SidebarMenu className="space-y-6">
               <UserAvatar />
               {items.map((item) => {
                 const isActive = isActiveItem(item.url, pathname);
@@ -95,19 +95,17 @@ export default function AppSidebar() {
                         asChild
                         className={cn(
                           "flex items-center justify-center rounded-lg transition-all duration-200",
-                          isActive
-                            ? "bg-brand-primary-100 hover:bg-brand-primary-200 dark:bg-brand-primary-900/30 dark:hover:bg-brand-primary-900/40"
-                            : "bg-transparent hover:bg-muted/50"
+                          isActive ? "" : "hover:scale-105"
                         )}
                       >
-                        <a href={item.url} className="!h-12 w-full">
+                        <a href={item.url} className="!h-6 w-full">
                           <item.Icon
                             size={24}
                             className={cn(
-                              "h-6 w-6 transition-colors duration-200",
+                              "h-6 w-6 transition-all duration-200",
                               isActive
                                 ? "text-brand-primary"
-                                : "text-muted-foreground hover:text-foreground"
+                                : "text-muted-foreground hover:text-foreground/90"
                             )}
                           />
                         </a>
