@@ -1,9 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
-
-import { useParams } from "next/navigation";
-
 import type { UIMessage } from "ai";
 
 import { useStore } from "@/app/store/useStore";
@@ -13,21 +9,13 @@ import { useAssistantUIMessageSWR } from "@/hooks/useAssistantsSWR";
 import ChatView from "../components/ChatView";
 
 export default function Chat() {
-  const { assistantId, threadId } = useParams();
-  const { setActiveThread } = useStore();
+  const { activeAssistantId, activeThreadId } = useStore();
 
   // 获取消息数据
   const { messages, isLoading, error } = useAssistantUIMessageSWR(
-    (assistantId as string) || null,
-    (threadId as string) || null
+    activeAssistantId,
+    activeThreadId
   );
-
-  useEffect(() => {
-    if (threadId) {
-      setActiveThread(threadId as string);
-    }
-  }, [threadId, setActiveThread]);
-
   // 显示加载状态
   if (isLoading) {
     return (
