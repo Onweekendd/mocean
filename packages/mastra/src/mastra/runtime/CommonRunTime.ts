@@ -1,9 +1,9 @@
 import { RequestContext } from "@mastra/core/request-context";
 
-import type { AssistantDetailResult } from "../server/assistant";
+import type { FullAssistantType } from "../schema/assistant";
 
 export type CommonRunTimeType = {
-  assistant: AssistantDetailResult;
+  assistant: FullAssistantType;
 };
 
 export const createCommonRunTime = ({ assistant }: CommonRunTimeType) => {
