@@ -1,5 +1,6 @@
-import type { Assistant } from "@mocean/mastra/prismaType";
 import { useRouter } from "next/navigation";
+
+import type { Assistant } from "@mocean/mastra/prismaType";
 
 import { useAssistantsSWR } from "@/hooks/useAssistantsSWR";
 
@@ -25,10 +26,10 @@ const AssistantList: React.FC<AssistantListProps> = ({ onClick }) => {
       <div className="mx-auto h-full max-w-7xl overflow-y-auto pr-2">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="mb-1 text-xl font-semibold text-foreground">
+          <h1 className="font-bricolage-grotesque mb-1 text-xl font-semibold text-foreground">
             AI 助手
           </h1>
-          <p className="text-[13px] text-muted-foreground">
+          <p className="font-bricolage-grotesque text-[13px] text-muted-foreground">
             选择或创建你的专属AI助手
           </p>
         </div>

@@ -58,7 +58,7 @@ const ChatConfig: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      className="relative flex h-full w-[400px] flex-col overflow-hidden px-2"
+      className="relative flex h-full w-[18rem] flex-col overflow-hidden px-2"
     >
       {/* Assistants View */}
       <div
