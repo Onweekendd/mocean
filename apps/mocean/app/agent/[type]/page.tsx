@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { AgentList } from "@/app/agent/components/AgentList";
 import { getGroupLabel } from "@/app/agent/lib/agent-groups";
 import type { AgentWithGroups } from "@/app/agent/lib/parse-group-json";
+import { useStore } from "@/app/store/useStore";
 import { useAgentGroupsSWR, useAgentsByGroupSWR } from "@/hooks/useAgentsSWR";
 import { useAssistantActions } from "@/hooks/useAssistantsSWR";
 
@@ -27,6 +28,7 @@ export default function AgentTypePage() {
     currentGroupId || null
   );
   const { create: createAssistant } = useAssistantActions();
+  const setActiveAssistantId = useStore((s) => s.setActiveAssistantId);
 
   const [isCreatingAssistant, setIsCreatingAssistant] = useState(false);
 
@@ -54,6 +56,7 @@ export default function AgentTypePage() {
           description: `助手 "${agent.name}" 已成功创建`
         });
         const assistantId = (result.data as { id: string }).id;
+        setActiveAssistantId(assistantId);
         router.push(`/${assistantId}`);
         return true;
       }

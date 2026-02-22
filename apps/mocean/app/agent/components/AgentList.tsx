@@ -31,7 +31,9 @@ export const AgentList: React.FC<AgentListProps> = ({
   className = ""
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedAgent, setSelectedAgent] = useState<AgentWithGroups | null>(null);
+  const [selectedAgent, setSelectedAgent] = useState<AgentWithGroups | null>(
+    null
+  );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const onAgentCardSelect = (agent: AgentWithGroups) => {

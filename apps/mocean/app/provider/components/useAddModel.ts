@@ -17,7 +17,7 @@ export interface AddModelProps {
   /** 状态变更回调 */
   onOpenChange: (open: boolean) => void;
   /** 成功回调 */
-  onSuccess?: () => void;
+  onSuccess?: () => Promise<unknown>;
 }
 
 /**

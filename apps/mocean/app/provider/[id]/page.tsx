@@ -157,9 +157,9 @@ export default function ProviderDetailPage() {
             onOpenChange={(open) =>
               dispatchDialog({ type: "config", payload: open })
             }
-            onSuccess={() => {
-              void refreshProvider();
-              void refreshEnabledProviders();
+            onSuccess={async () => {
+              await refreshProvider();
+              await refreshEnabledProviders();
             }}
           />
         )}
