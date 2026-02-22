@@ -9,20 +9,22 @@ import type { Assistant } from "@mocean/mastra/prismaType";
 import { useStore } from "@/app/store/useStore";
 
 import ThreadSelect from "./ThreadSelect";
-import AssistantSelect from "./assistant/Assistant";
+import AssistantList from "./assistant/Assistant";
 
 type View = "assistants" | "threads";
 
 const ChatConfig: React.FC = () => {
   const router = useRouter();
-  const { activeAssistantId, setActiveAssistantId, setActiveThread } =
-    useStore();
+  const {
+    activeAssistantId,
+    setActiveAssistantId,
+    setActiveThreadId: setActiveThread
+  } = useStore();
 
   // Track current and previous view for animation direction
   const [view, setView] = useState<View>(
     activeAssistantId ? "threads" : "assistants"
   );
-  const [direction, setDirection] = useState<"forward" | "back">("forward");
   const [isAnimating, setIsAnimating] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -30,7 +32,6 @@ const ChatConfig: React.FC = () => {
   useEffect(() => {
     if (activeAssistantId && view === "assistants") {
       setView("threads");
-      setDirection("forward");
     }
   }, [activeAssistantId]);
 
@@ -38,7 +39,6 @@ const ChatConfig: React.FC = () => {
     (assistant: Assistant) => {
       setActiveThread(null);
       setActiveAssistantId(assistant.id);
-      setDirection("forward");
       setIsAnimating(true);
       setView("threads");
       router.push(`/${assistant.id}`);
@@ -47,7 +47,6 @@ const ChatConfig: React.FC = () => {
   );
 
   const onBack = useCallback(() => {
-    setDirection("back");
     setIsAnimating(true);
     setView("assistants");
   }, []);
@@ -68,7 +67,7 @@ const ChatConfig: React.FC = () => {
         } ${!isAnimating && view !== "assistants" ? "invisible" : ""}`}
         onTransitionEnd={handleAnimationEnd}
       >
-        <AssistantSelect
+        <AssistantList
           onClick={(assistant) => void onAssistantSelect(assistant)}
         />
       </div>

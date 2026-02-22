@@ -1,22 +1,23 @@
 import type { Assistant } from "@mocean/mastra/prismaType";
+import { useRouter } from "next/navigation";
 
 import { useAssistantsSWR } from "@/hooks/useAssistantsSWR";
 
 import AssistantCard from "./AssistantCard";
 import CreateAssistantCard from "./CreateAssistantCard";
 
-interface AssistantSelectProps {
+interface AssistantListProps {
   onClick: (assistant: Assistant) => void;
 }
 
-const AssistantSelect: React.FC<AssistantSelectProps> = ({ onClick }) => {
+const AssistantList: React.FC<AssistantListProps> = ({ onClick }) => {
+  const router = useRouter();
   const { assistants, isLoading, error } = useAssistantsSWR();
 
   const assistantList = error ? [] : assistants || [];
 
   const handleCreateAssistant = () => {
-    // TODO: 实现创建助手的逻辑
-    console.log("创建新助手");
+    router.push("/agent");
   };
 
   return (
@@ -61,4 +62,4 @@ const AssistantSelect: React.FC<AssistantSelectProps> = ({ onClick }) => {
   );
 };
 
-export default AssistantSelect;
+export default AssistantList;

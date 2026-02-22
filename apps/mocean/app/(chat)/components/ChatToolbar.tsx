@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 import type { Model, Provider } from "@mocean/mastra/prismaType";
+import type { AssistantFullType } from "@mocean/mastra/schemas";
 import { MessageSquarePlus } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -13,16 +14,21 @@ import { ModelSelector } from "@/components/custom/model-selector";
 import type { ModelSelection } from "@/components/custom/useModelSelector";
 import {
   useAssistantActions,
-  useAssistantSWR,
   useAssistantThreadsSWR,
-  useAssistantUIMessageSWR
+  useAssistantUIMessageSWR,
+  useFullAssistant
 } from "@/hooks/useAssistantsSWR";
 
 export function ChatToolbar() {
   const router = useRouter();
-  const { activeAssistantId, activeThread, setActiveThread } = useStore();
-  const { assistant, refresh } = useAssistantSWR(activeAssistantId ?? "");
-  const { update: updateAssistant } = useAssistantActions(refresh);
+  const {
+    activeAssistantId,
+    activeThreadId: activeThread,
+    setActiveThreadId: setActiveThread
+  } = useStore();
+  const { assistant, refresh } = useFullAssistant(activeAssistantId ?? "");
+  const { update: updateAssistant } =
+    useAssistantActions<AssistantFullType | null>(refresh);
   const { threads } = useAssistantThreadsSWR(activeAssistantId || null);
   const { refresh: refreshUIMessage } = useAssistantUIMessageSWR(
     activeAssistantId || null,

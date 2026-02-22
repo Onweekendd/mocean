@@ -1,5 +1,5 @@
 import type { StorageThreadType } from "@mocean/mastra/apiClient";
-import { ArrowLeft, Bot, MessageCircle, SquarePen } from "lucide-react";
+import { ArrowLeft, Bot, MessageCircle } from "lucide-react";
 
 import { useStore } from "@/app/store/useStore";
 import { cn } from "@/lib/utils";
@@ -37,11 +37,10 @@ const ThreadList: React.FC<ThreadListProps> = ({
   threads,
   assistantName,
   assistantEmoji,
-  onCreateThread,
   onThreadClick,
   onBack
 }) => {
-  const { activeThread } = useStore();
+  const { activeThreadId: activeThread } = useStore();
 
   return (
     <div className="flex h-full flex-col">
@@ -67,7 +66,7 @@ const ThreadList: React.FC<ThreadListProps> = ({
 
       {/* Thread list */}
       <div className="flex-1 overflow-y-auto px-2 pb-4 pt-1">
-        <div className="flex flex-col gap-4">
+        <div className="flex h-full w-full flex-col gap-4">
           {threads.length > 0 ? (
             threads.map((thread) => (
               <ThreadItem
@@ -78,7 +77,7 @@ const ThreadList: React.FC<ThreadListProps> = ({
               />
             ))
           ) : (
-            <div className="flex flex-col items-center justify-center py-16 text-center">
+            <div className="flex h-full w-full flex-col items-center justify-center py-16 text-center">
               <MessageCircle className="mb-3 h-6 w-6 text-muted-foreground/20" />
               <p className="text-[13px] text-muted-foreground/60">
                 暂无对话记录

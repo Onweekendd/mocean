@@ -18,7 +18,11 @@ interface ThreadSelectProps {
 }
 
 const ThreadSelect: React.FC<ThreadSelectProps> = ({ onBack }) => {
-  const { activeAssistantId, activeThread, setActiveThread } = useStore();
+  const {
+    activeAssistantId,
+    activeThreadId: activeThread,
+    setActiveThreadId: setActiveThread
+  } = useStore();
 
   const router = useRouter();
 
