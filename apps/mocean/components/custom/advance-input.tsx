@@ -14,7 +14,7 @@ export const AdvanceInput: FC<TextareaProps> = ({ className, ...props }) => {
       autoFocus
       placeholder="有什么可以帮你的吗..."
       className={cn(
-        "max-h-40 flex-grow resize-none border-none bg-transparent p-2 text-sm shadow-none outline-none placeholder:text-muted-foreground focus:ring-0 focus-visible:ring-0 disabled:cursor-not-allowed",
+        "flex-grow resize-none border-none bg-transparent p-2 text-sm shadow-none outline-none placeholder:text-muted-foreground focus:ring-0 focus-visible:ring-0 disabled:cursor-not-allowed",
         className
       )}
     />

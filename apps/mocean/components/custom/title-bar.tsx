@@ -5,6 +5,8 @@ import { useCallback, useEffect, useRef } from "react";
 import type { Window } from "@tauri-apps/api/window";
 import { Minus, Square, X } from "lucide-react";
 
+import Logo from "../app-sidebar/Logo";
+
 export function TitleBar() {
   const appWindowRef = useRef<Window | null>(null);
 
@@ -24,15 +26,9 @@ export function TitleBar() {
   return (
     <div
       data-tauri-drag-region
-      className="flex h-8 shrink-0 select-none items-center justify-between"
+      className="flex h-10 shrink-0 select-none items-center justify-between"
     >
-      {/* Left: app title */}
-      <div
-        data-tauri-drag-region
-        className="flex items-center gap-2 pl-3 text-xs font-medium text-muted-foreground"
-      >
-        墨海AI
-      </div>
+      <Logo />
 
       {/* Right: window controls */}
       <div className="flex h-full">
