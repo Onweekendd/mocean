@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 
-import { UserAvatar } from "./Avatar";
 import { MenuItemWithTooltip } from "./MenuItemWithTooltip";
 
 // Menu items.
@@ -79,12 +78,11 @@ export default function AppSidebar() {
   const pathname = usePathname();
 
   return (
-    <Sidebar className="bg-primary-light-100">
+    <Sidebar className="mt-4 bg-primary-light-100">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-6">
-              <UserAvatar />
               {items.map((item) => {
                 const isActive = isActiveItem(item.url, pathname);
 
