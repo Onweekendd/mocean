@@ -45,11 +45,11 @@ const ThreadList: React.FC<ThreadListProps> = ({
   return (
     <div className="flex h-full flex-col">
       {/* Header: back + new thread */}
-      <div className="flex shrink-0 items-center justify-between px-3 pb-1 pt-4">
+      <div className="flex shrink-0 items-center justify-between pb-1 pt-4">
         {onBack && (
           <button
             onClick={onBack}
-            className="group flex min-w-0 items-center gap-2 rounded-lg px-2 py-1.5 transition-colors duration-150 hover:bg-foreground/[0.04]"
+            className="group flex min-w-0 items-center gap-1 rounded-lg px-1 py-1.5 transition-colors duration-150 hover:bg-foreground/[0.04]"
           >
             <ArrowLeft className="h-3.5 w-3.5 shrink-0 text-muted-foreground transition-transform duration-150 group-hover:-translate-x-0.5" />
             <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded text-xs">

@@ -22,29 +22,19 @@ const AssistantList: React.FC<AssistantListProps> = ({ onClick }) => {
   };
 
   return (
-    <div className="h-full p-5 pr-0">
+    <div className="h-full pt-2">
       <div className="mx-auto h-full max-w-7xl overflow-y-auto pr-2">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="font-bricolage-grotesque mb-1 text-xl font-semibold text-foreground">
-            AI 助手
-          </h1>
-          <p className="font-bricolage-grotesque text-[13px] text-muted-foreground">
-            选择或创建你的专属AI助手
-          </p>
-        </div>
-
         {/* Assistant List */}
         <div className="flex flex-col gap-3">
-          <CreateAssistantCard onClick={handleCreateAssistant} />
-
           {assistantList.map((assistant) => (
             <AssistantCard
-              key={assistant.id}
-              assistant={assistant as Assistant}
-              onClick={onClick}
+            key={assistant.id}
+            assistant={assistant as Assistant}
+            onClick={onClick}
             />
           ))}
+
+          <CreateAssistantCard onClick={handleCreateAssistant} />
         </div>
 
         {/* Empty State */}
