@@ -59,11 +59,13 @@ enum ProviderType {
   berget
   cerebras
   chutes
+  cloudferro_sherlock
   cloudflare_ai_gateway
   cloudflare_workers_ai
   cohere
   cortecs
   deepinfra
+  evroc
   fastrouter
   fireworks_ai
   firmware
@@ -86,6 +88,7 @@ enum ProviderType {
   llama
   lmstudio
   lucidquery
+  meganova
   minimax
   minimax_cn
   minimax_cn_coding_plan
@@ -99,11 +102,14 @@ enum ProviderType {
   nvidia
   ollama_cloud
   opencode
+  opencode_go
   ovhcloud
   perplexity
   poe
   privatemode_ai
   provider_302ai
+  qihang_ai
+  qiniu_ai
   requesty
   sap_ai_core
   scaleway
