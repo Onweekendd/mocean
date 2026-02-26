@@ -4,6 +4,8 @@ import type { StorageThreadType } from "@mastra/core/memory";
 import type { RequestContext } from "@mastra/core/request-context";
 import type { UIMessage } from "ai";
 import { createUIMessageStreamResponse } from "ai";
+import { group } from "console";
+import type { Model } from "generated/prisma/client";
 import type { KnowledgeRecognition } from "generated/prisma/enums";
 import { AssistantFullSchema } from "generated/schemas/composed";
 import { AssistantSchema } from "generated/schemas/models";
@@ -18,7 +20,9 @@ import type {
   UpdateAssistantInputType
 } from "../schema/assistant";
 import { AssistantWithModelsAndSettingsSchema } from "../schema/assistant";
+import type { ProviderHierarchy } from "../schema/provider";
 import { prisma } from "./index";
+import { getProviderWithModelsById } from "./provider";
 import type { AsyncReturnType } from "./type";
 
 /**
@@ -132,25 +136,12 @@ const updateAssistant = async (
   z.infer<(typeof assistantRoutes)["updateAssistant"]["responseSchema"]>
 > => {
   // Filter out undefined values to avoid overwriting with undefined
-  const updateData: Record<string, unknown> = { updatedAt: new Date() };
-
-  if (assistant.name !== undefined) updateData.name = assistant.name;
-  if (assistant.prompt !== undefined) updateData.prompt = assistant.prompt;
-  if (assistant.type !== undefined) updateData.type = assistant.type;
-  if (assistant.emoji !== undefined) updateData.emoji = assistant.emoji;
-  if (assistant.description !== undefined)
-    updateData.description = assistant.description;
-  if (assistant.enableWebSearch !== undefined)
-    updateData.enableWebSearch = assistant.enableWebSearch;
-  if (assistant.webSearchProviderId !== undefined)
-    updateData.webSearchProviderId = assistant.webSearchProviderId;
-  if (assistant.enableGenerateImage !== undefined)
-    updateData.enableGenerateImage = assistant.enableGenerateImage;
-  if (assistant.knowledgeRecognition !== undefined)
-    updateData.knowledgeRecognition = assistant.knowledgeRecognition;
-  if (assistant.modelId !== undefined) updateData.modelId = assistant.modelId;
-  if (assistant.providerId !== undefined)
-    updateData.providerId = assistant.providerId;
+  const updateData = {
+    updatedAt: new Date(),
+    ...Object.fromEntries(
+      Object.entries(assistant).filter(([_, value]) => value !== undefined)
+    )
+  };
 
   const updatedAssistant = await prisma.assistant.update({
     where: {
@@ -300,6 +291,120 @@ const getUIMessagesByThreadId = async (
 };
 
 /**
+ * @description 从供应商的模型列表中找到最便宜的模型
+ * @param providerWithModel - 包含模型分组的供应商数据
+ * @returns 最便宜的模型，如果没有找到则返回 null
+ */
+const findCheapestModel = (providerWithModel: ProviderHierarchy): Model => {
+  const allModels = providerWithModel.groups.flatMap((group) => group.models);
+
+  // 过滤出有价格信息的模型，按输出价格排序
+  const modelsWithPrice = allModels.filter(
+    (model) => model.outputPricePerMillion != null
+  );
+
+  if (modelsWithPrice.length === 0) {
+    return null;
+  }
+
+  // 找到输出价格最低的模型
+  return modelsWithPrice.reduce((cheapest, current) => {
+    const currentPrice = current.outputPricePerMillion ?? 0;
+    const cheapestPrice = cheapest.outputPricePerMillion ?? 0;
+    return currentPrice < cheapestPrice ? current : cheapest;
+  }) as Model;
+};
+
+/**
+ * @description 创建专门用于生成标题的助手配置
+ * @param baseAssistant - 基础助手配置
+ * @param model - 用于生成标题的模型
+ * @returns 配置好标题生成提示词的助手
+ */
+const createTitleGenerationAssistant = (
+  baseAssistant: FullAssistantType,
+  model: Model
+): FullAssistantType => ({
+  ...baseAssistant,
+  prompt: `你是一个专业的聊天标题生成助手。你的任务是根据用户的聊天内容生成一个简洁、准确、有吸引力的标题。
+
+请遵循以下规则：
+1. 标题长度控制在10-20个字符以内
+2. 标题要准确反映聊天的主要内容或主题
+3. 使用简洁明了的语言，避免过于复杂的词汇
+4. 如果聊天内容涉及技术问题，使用相关的技术术语
+5. 如果聊天内容涉及日常对话，使用通俗易懂的表达
+6. 标题要有一定的吸引力，但不能过于夸张
+7. 只返回标题内容，不要添加任何解释或额外文字
+
+请根据用户的聊天内容生成合适的标题。`,
+  model,
+  modelId: model.id
+});
+
+/**
+ * @description 生成对话标题
+ * @param assistantId - 助手 ID
+ * @param threadId - 对话线程 ID
+ * @returns 返回生成标题的流式响应
+ */
+const generateThreadTitle = async (assistantId: string, threadId: string) => {
+  const fullAssistant = await getFullAssistantById(assistantId);
+  if (!fullAssistant) {
+    throw new Error("助手不存在");
+  }
+
+  const providerWithModel = await getProviderWithModelsById(
+    fullAssistant.providerId
+  );
+  if (!providerWithModel) {
+    throw new Error("供应商不存在");
+  }
+
+  const cheapestModel = findCheapestModel(providerWithModel);
+  if (!cheapestModel) {
+    throw new Error("没有找到可用的模型");
+  }
+
+  const titleGenerationAssistant = createTitleGenerationAssistant(
+    fullAssistant,
+    cheapestModel
+  );
+
+  // 获取 thread 的消息用于生成标题
+  const memory = await DynamicAgent.getMemory({
+    requestContext: createCommonRunTime({
+      assistant: titleGenerationAssistant
+    }) as RequestContext<unknown>
+  });
+
+  const { messages: threadMessages } = await memory.recall({
+    threadId,
+    resourceId: assistantId
+  });
+
+  if (threadMessages.length === 0) {
+    throw new Error("对话中没有消息");
+  }
+
+  // 转换消息格式并生成标题
+  const messages = convertMessages(threadMessages).to("AIV5.UI");
+  const requestContext = createCommonRunTime({
+    assistant: titleGenerationAssistant
+  });
+
+  const stream = await DynamicAgent.stream(messages, { requestContext });
+  const aiSdkStream = toAISdkStream(stream, {
+    from: "agent",
+    sendReasoning: true
+  });
+
+  return createUIMessageStreamResponse({
+    stream: aiSdkStream as ReadableStream
+  });
+};
+
+/**
  * Prisma 数据库操作返回类型
  */
 export type AssistantsListResult = AsyncReturnType<typeof getAssistants>;
@@ -320,5 +425,6 @@ export {
   getAssistantWithModelByAssistantId,
   executeChatWithAssistant,
   getThreadsByAssistantId,
-  getUIMessagesByThreadId
+  getUIMessagesByThreadId,
+  generateThreadTitle
 };
