@@ -71,7 +71,7 @@ export const AgentList: React.FC<AgentListProps> = ({
   }
 
   return (
-    <div className={`space-y-6 ${className}`}>
+    <div className={`space-y-6 p-2 ${className}`}>
       <div className="m-1 space-y-4">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

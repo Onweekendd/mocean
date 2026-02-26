@@ -2,8 +2,10 @@
 
 import { useParams } from "next/navigation";
 
-import { Card, CardContent } from "@/components/ui/card";
+import type { Provider } from "@mocean/mastra/prismaType";
+
 import { LoadingPlaceholder } from "@/components/custom/loading-placeholder";
+import { Card, CardContent } from "@/components/ui/card";
 import { useProviders } from "@/hooks/useProvidersSWR";
 
 import { ProviderSelect } from "./components/ProviderSelect";
@@ -44,17 +46,19 @@ export default function ProviderLayout({ children }: ProviderLayoutProps) {
   }
 
   return (
-    <div className="flex h-screen gap-2 overflow-hidden bg-background">
+    <div className="flex h-screen gap-2 overflow-hidden">
       {/* 左侧提供商列表 */}
-      <div className="h-full w-80 flex-shrink-0">
+      <div className="h-full w-80 flex-shrink-0 bg-primary-light-100">
         <ProviderSelect
-          providers={providers}
+          providers={providers as Provider[]}
           selectedProviderId={selectedProviderId}
         />
       </div>
 
       {/* 右侧内容区域 */}
-      <div className="h-full min-w-0 flex-1 overflow-y-auto">{children}</div>
+      <div className="h-full min-w-0 flex-1 overflow-y-auto rounded-tl-[1rem] bg-brand-main">
+        {children}
+      </div>
     </div>
   );
 }

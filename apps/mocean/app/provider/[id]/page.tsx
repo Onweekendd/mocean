@@ -87,7 +87,7 @@ export default function ProviderDetailPage() {
     return (
       <div className="flex h-full flex-col">
         {/* 头部信息 */}
-        <div className="border-b border-border bg-card/50 p-6">
+        <div className="p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="flex h-10 w-10 items-center justify-center">
@@ -181,7 +181,7 @@ export default function ProviderDetailPage() {
   return (
     <div className="flex h-full flex-col">
       {/* 头部信息 */}
-      <div className="border-b border-border bg-card/50 p-6">
+      <div className="p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="flex h-10 w-10 items-center justify-center">
