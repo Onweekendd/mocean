@@ -202,16 +202,14 @@ export class AssistantsApiClient extends BaseApiClient {
    * @param param0
    * @param param0.assistantId - 助手的唯一标识符
    * @param param0.threadId - 线程的唯一标识符
-   * @param param0.messages - 要发送的消息数组
    * @returns 消息流
    */
   async generateTitleWithAssistant({
     assistantId,
     threadId
-  }: Omit<
-    z.infer<typeof assistantRoutes.generateTitleWithAssistant.requestSchema>,
-    "messages"
-  > & { messages: UIMessage[] }): Promise<Response> {
+  }: z.infer<
+    typeof assistantRoutes.generateTitleWithAssistant.requestSchema
+  >): Promise<Response> {
     return this.postStream(assistantRoutes.generateTitleWithAssistant.path, {
       assistantId,
       threadId
@@ -255,7 +253,18 @@ export const assistantsApiMethods = {
     assistantId: string;
     threadId?: string;
     messages: UIMessage[];
-  }) => assistantsApi.chatWithAssistant({ assistantId, threadId, messages })
+  }) => assistantsApi.chatWithAssistant({ assistantId, threadId, messages }),
+  generateTitleWithAssistant: ({
+    assistantId,
+    threadId
+  }: {
+    assistantId: string;
+    threadId: string;
+  }) =>
+    assistantsApi.generateTitleWithAssistant({
+      assistantId,
+      threadId
+    })
 };
 
 /**
@@ -273,6 +282,7 @@ export type UseAssistantsApiReturn = Pick<
   | "getAssistantThreads"
   | "getAssistantUIMessageByThreadId"
   | "chatWithAssistant"
+  | "generateTitleWithAssistant"
 >;
 
 /**
@@ -314,6 +324,9 @@ export const useAssistantsApi = (): UseAssistantsApiReturn => {
       ) as UseAssistantsApiReturn["getAssistantUIMessageByThreadId"],
     chatWithAssistant: assistantsApi.chatWithAssistant.bind(
       assistantsApi
-    ) as UseAssistantsApiReturn["chatWithAssistant"]
+    ) as UseAssistantsApiReturn["chatWithAssistant"],
+    generateTitleWithAssistant: assistantsApi.generateTitleWithAssistant.bind(
+      assistantsApi
+    ) as UseAssistantsApiReturn["generateTitleWithAssistant"]
   };
 };

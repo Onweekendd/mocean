@@ -4,7 +4,6 @@ import type { StorageThreadType } from "@mastra/core/memory";
 import type { RequestContext } from "@mastra/core/request-context";
 import type { UIMessage } from "ai";
 import { createUIMessageStreamResponse } from "ai";
-import { group } from "console";
 import type { Model } from "generated/prisma/client";
 import type { KnowledgeRecognition } from "generated/prisma/enums";
 import { AssistantFullSchema } from "generated/schemas/composed";
@@ -24,6 +23,42 @@ import type { ProviderHierarchy } from "../schema/provider";
 import { prisma } from "./index";
 import { getProviderWithModelsById } from "./provider";
 import type { AsyncReturnType } from "./type";
+
+/**
+ * 将 ReadableStream 转换为异步生成器，逐块 yield 流内容
+ * @param stream - 要消费的可读流
+ * @yields 流中的每个字符串块
+ */
+const consumeStream = async function* (stream: ReadableStream<string>) {
+  const reader = stream.getReader();
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      yield value;
+    }
+  } finally {
+    reader.releaseLock();
+  }
+};
+
+/**
+ * 透传流内容，并在流结束后触发回调
+ * @param stream - 原始可读流
+ * @param onFinish - 流结束时的回调，参数为所有块拼接后的完整文本
+ * @yields 与原始流相同的每个字符串块
+ */
+export const tapStream = async function* (
+  stream: ReadableStream<string>,
+  onFinish: (text: string) => void
+) {
+  const chunks: string[] = [];
+  for await (const chunk of consumeStream(stream)) {
+    chunks.push(chunk);
+    yield chunk;
+  }
+  onFinish(chunks.join(""));
+};
 
 /**
  * 获取所有助手
@@ -394,6 +429,14 @@ const generateThreadTitle = async (assistantId: string, threadId: string) => {
   });
 
   const stream = await DynamicAgent.stream(messages, { requestContext });
+
+  void stream.text.then(async (title) => {
+    const thread = await memory.getThreadById({ threadId });
+    if (thread) {
+      await memory.saveThread({ thread: { ...thread, title } });
+    }
+  });
+
   const aiSdkStream = toAISdkStream(stream, {
     from: "agent",
     sendReasoning: true
