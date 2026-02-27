@@ -6,6 +6,7 @@ import {
   AssistantChatTransport,
   useChatRuntime
 } from "@assistant-ui/react-ai-sdk";
+import { useAssistantsApi } from "@mocean/mastra/apiClient";
 import type { ChatOnFinishCallback, UIMessage } from "ai";
 import { generateId } from "ai";
 
@@ -43,13 +44,35 @@ export function useMastraRuntime({
   const activeThreadIdRef = useRef(activeThreadId);
   activeThreadIdRef.current = activeThreadId;
 
+  const newThreadId = useRef<string | null>(null);
+
   const { refresh } = useAssistantThreadsSWR(activeAssistantId || null);
+  const { generateTitleWithAssistant } = useAssistantsApi();
 
   /**
    * 新建的对话第一次完成
    */
   const onNewThreadFirstFinish: ChatOnFinishCallback<UIMessage> = (options) => {
-    console.log(options);
+    if (!activeAssistantId || !newThreadId.current) {
+      return;
+    }
+
+    const threadId = newThreadId.current;
+    void (async () => {
+      const response = await generateTitleWithAssistant({
+        assistantId: activeAssistantId,
+        threadId
+      });
+
+      const reader = (response.body as ReadableStream<Uint8Array>).getReader();
+      const decoder = new TextDecoder();
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        // eslint-disable-next-line no-console
+        console.log(decoder.decode(value));
+      }
+    })();
   };
 
   const runtime = useChatRuntime({
@@ -70,11 +93,13 @@ export function useMastraRuntime({
 
         const { body, ...rest } = requestParams;
         if (!currentThread) {
+          newThreadId.current = generateId();
+
           return {
             ...rest,
             body: {
               ...(body || {}),
-              threadId: generateId(),
+              threadId: newThreadId.current,
               assistantId: currentAssistantId,
               messages: requestParams.messages
             }
