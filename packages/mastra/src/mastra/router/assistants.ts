@@ -15,9 +15,10 @@ import {
   createAssistant,
   deleteAssistant,
   executeChatWithAssistant,
+  generateThreadTitle,
   getAssistantById,
-  getFullAssistantById,
   getAssistants,
+  getFullAssistantById,
   getThreadsByAssistantId,
   getUIMessagesByThreadId,
   updateAssistant
@@ -317,6 +318,58 @@ const chatWithAssistantRouter = registerApiRoute(
 );
 
 /**
+ * 与助手聊天的路由处理器
+ * @description 与指定助手进行对话
+ */
+const generateTitleWithAssistantRouter = registerApiRoute(
+  assistantRoutes.generateTitleWithAssistant.path,
+  {
+    method: "POST",
+    openapi: {
+      summary: "与助手聊天",
+      tags: ["Assistants"],
+      requestBody: {
+        content: {
+          "application/json": {
+            // @ts-expect-error hono-openapi requestBody schema type doesn't support ZodSchema
+            schema:
+              assistantRoutes["generateTitleWithAssistant"]["requestSchema"]
+          }
+        }
+      },
+      responses: {
+        200: {
+          description: "与指定助手进行对话",
+          content: {
+            "application/json": {
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: z.any()
+            }
+          }
+        }
+      }
+    },
+    handler: async (c) => {
+      try {
+        const { assistantId, threadId } = assistantRoutes[
+          "generateTitleWithAssistant"
+        ]["requestSchema"].parse(await c.req.json());
+
+        return generateThreadTitle(assistantId, threadId);
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          throw new HTTPException(400, { message: error.message });
+        } else {
+          throw new HTTPException(500, {
+            message: error instanceof Error ? error.message : String(error)
+          });
+        }
+      }
+    }
+  }
+);
+
+/**
  * 获取助手聊天记录的路由处理器
  * @description 获取指定助手的所有对话线程
  */
@@ -397,5 +450,6 @@ export const assistantsRouter = [
   deleteAssistantRouter,
   chatWithAssistantRouter,
   getAssistantThreadsRouter,
-  getAssistantUIMessageByThreadIdRouter
+  getAssistantUIMessageByThreadIdRouter,
+  generateTitleWithAssistantRouter
 ];

@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
 import type { Provider } from "@mocean/mastra/prismaType";
 import { type SubmitHandler, useForm } from "react-hook-form";
@@ -69,6 +69,10 @@ export const useProviderConfig = ({
       notes: provider.notes || ""
     });
   }, [provider, reset]);
+
+  useEffect(() => {
+    updateFormDataWithProvider();
+  }, [updateFormDataWithProvider]);
 
   /**
    * 处理对话框打开状态变更

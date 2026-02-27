@@ -1,10 +1,12 @@
 "use client";
 
+import { useRef } from "react";
+
 import {
   AssistantChatTransport,
   useChatRuntime
 } from "@assistant-ui/react-ai-sdk";
-import type { UIMessage } from "ai";
+import type { ChatOnFinishCallback, UIMessage } from "ai";
 import { generateId } from "ai";
 
 import { useStore } from "@/app/store/useStore";
@@ -33,15 +35,31 @@ export function useMastraRuntime({
   api: string;
   initialMessages?: UIMessage[];
 }) {
-  const { activeThreadId: activeThread, activeAssistantId } = useStore();
+  const { activeThreadId, activeAssistantId } = useStore();
+
+  // 用 ref 保存最新值，避免 prepareSendMessagesRequest 闭包过期问题
+  const activeAssistantIdRef = useRef(activeAssistantId);
+  activeAssistantIdRef.current = activeAssistantId;
+  const activeThreadIdRef = useRef(activeThreadId);
+  activeThreadIdRef.current = activeThreadId;
 
   const { refresh } = useAssistantThreadsSWR(activeAssistantId || null);
+
+  /**
+   * 新建的对话第一次完成
+   */
+  const onNewThreadFirstFinish: ChatOnFinishCallback<UIMessage> = (options) => {
+    console.log(options);
+  };
 
   const runtime = useChatRuntime({
     transport: new AssistantChatTransport({
       api,
       prepareSendMessagesRequest: (requestParams) => {
-        if (!activeAssistantId) {
+        const currentAssistantId = activeAssistantIdRef.current;
+        const currentThread = activeThreadIdRef.current;
+
+        if (!currentAssistantId) {
           return {
             ...requestParams,
             body: {
@@ -50,16 +68,14 @@ export function useMastraRuntime({
           };
         }
 
-        console.log(requestParams.messages, requestParams.body);
-
         const { body, ...rest } = requestParams;
-        if (!activeThread) {
+        if (!currentThread) {
           return {
             ...rest,
             body: {
               ...(body || {}),
               threadId: generateId(),
-              assistantId: activeAssistantId,
+              assistantId: currentAssistantId,
               messages: requestParams.messages
             }
           };
@@ -69,20 +85,15 @@ export function useMastraRuntime({
           ...rest,
           body: {
             ...(body || {}),
-            threadId: activeThread,
-            assistantId: activeAssistantId,
+            threadId: currentThread,
+            assistantId: currentAssistantId,
             messages: requestParams.messages
           }
         };
       }
     }),
     messages: initialMessages,
-    onFinish() {
-      setTimeout(() => {
-        console.log("finish");
-        void refresh();
-      }, 5000);
-    }
+    onFinish: onNewThreadFirstFinish
   });
 
   return runtime;

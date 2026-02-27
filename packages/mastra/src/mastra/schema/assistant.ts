@@ -85,6 +85,11 @@ export const chatWithAssistantSchema = z.object({
   threadId: z.string().optional()
 });
 
+export const generateTitleSchema = z.object({
+  assistantId: z.string().min(1, "助手ID不能为空"),
+  threadId: z.string().min(1, "线程ID不能为空")
+});
+
 export type FullAssistantType = z.infer<typeof AssistantFullSchema>;
 
 export type CreateAssistantInputType = z.infer<typeof createAssistantSchema>;

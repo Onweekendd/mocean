@@ -17,6 +17,7 @@ import {
   SimpleAssistantArraySchema,
   chatWithAssistantSchema,
   createAssistantSchema,
+  generateTitleSchema,
   updateAssistantSchema
 } from "../schema/assistant";
 import {
@@ -236,6 +237,11 @@ export const assistantRoutes = {
   chatWithAssistant: {
     path: `${PREFIX}/assistants/chat`,
     requestSchema: chatWithAssistantSchema,
+    responseSchema: z.any() // SSE 流式响应
+  },
+  generateTitleWithAssistant: {
+    path: `${PREFIX}/assistants/generate-title`,
+    requestSchema: generateTitleSchema,
     responseSchema: z.any() // SSE 流式响应
   },
   getAssistantThreads: {

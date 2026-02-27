@@ -196,6 +196,27 @@ export class AssistantsApiClient extends BaseApiClient {
       messages
     });
   }
+
+  /**
+   *
+   * @param param0
+   * @param param0.assistantId - 助手的唯一标识符
+   * @param param0.threadId - 线程的唯一标识符
+   * @param param0.messages - 要发送的消息数组
+   * @returns 消息流
+   */
+  async generateTitleWithAssistant({
+    assistantId,
+    threadId
+  }: Omit<
+    z.infer<typeof assistantRoutes.generateTitleWithAssistant.requestSchema>,
+    "messages"
+  > & { messages: UIMessage[] }): Promise<Response> {
+    return this.postStream(assistantRoutes.generateTitleWithAssistant.path, {
+      assistantId,
+      threadId
+    });
+  }
 }
 
 /**
