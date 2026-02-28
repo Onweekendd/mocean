@@ -45,7 +45,7 @@ export default function Chat() {
 
   return (
     <div className="h-full flex-1">
-      <ChatView messages={(messages || []) as UIMessage[]} />
+      <ChatView key={activeThreadId ?? "new"} messages={(messages || []) as UIMessage[]} />
     </div>
   );
 }
