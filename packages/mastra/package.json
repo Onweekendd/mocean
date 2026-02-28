@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.63",
+    "@aihubmix/ai-sdk-provider": "^2.0.4",
     "@dotenvx/dotenvx": "^1.44.1",
     "@hono/standard-validator": "^0.2.2",
     "@mastra/ai-sdk": "^1.0.3",

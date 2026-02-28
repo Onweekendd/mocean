@@ -122,7 +122,7 @@ function createPrismaModel({
 }): Model & { providerId: string } {
   return {
     // 放置出现重复ID
-    id: `${providerId}&${parsedModel.name}`,
+    id: `${providerId}&${parsedModel.id}`,
     groupId: groupId,
     providerId: providerId,
     owned_by: providerId,
@@ -140,6 +140,7 @@ function createPrismaModel({
     supportsVideo: parsedModel.modalities?.input?.includes("video") || false,
     inputPricePerMillion: parsedModel.cost?.input || null,
     outputPricePerMillion: parsedModel.cost?.output || null,
+    sort: 0,
     createdAt: new Date(),
     updatedAt: new Date()
   };
