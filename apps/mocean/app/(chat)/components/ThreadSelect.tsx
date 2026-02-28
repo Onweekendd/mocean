@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 
 import { useRouter } from "next/navigation";
 
@@ -31,6 +31,15 @@ const ThreadSelect: React.FC<ThreadSelectProps> = ({ onBack }) => {
   const { threads, refresh } = useAssistantThreadsSWR(
     activeAssistantId || null
   );
+
+  const streamingTitles = useStore((s) => s.streamingTitles);
+
+  const threadsWithCreating = useMemo(() => {
+    const currentAssistantCreatingThread =
+      streamingTitles[activeAssistantId || ""] ?? [];
+
+    return [...currentAssistantCreatingThread, ...threads];
+  }, []);
 
   const { refresh: refreshUIMessage } = useAssistantUIMessageSWR(
     activeAssistantId || null,
