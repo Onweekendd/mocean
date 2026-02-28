@@ -4,7 +4,6 @@ import type { StorageThreadType } from "@mastra/core/memory";
 import type { RequestContext } from "@mastra/core/request-context";
 import type { UIMessage } from "ai";
 import { createUIMessageStreamResponse } from "ai";
-import type { Model } from "generated/prisma/client";
 import type { KnowledgeRecognition } from "generated/prisma/enums";
 import { AssistantFullSchema } from "generated/schemas/composed";
 import { AssistantSchema } from "generated/schemas/models";
@@ -12,14 +11,13 @@ import { z } from "zod";
 
 import { DynamicAgent } from "../agents/dynamicAgent";
 import type { assistantRoutes } from "../router/type";
-import { createCommonRunTime } from "../runtime/CommonRunTime";
+import { AgentTaskEnum, createCommonRunTime } from "../runtime/CommonRunTime";
 import type {
   CreateAssistantInputType,
   FullAssistantType,
   UpdateAssistantInputType
 } from "../schema/assistant";
 import { AssistantWithModelsAndSettingsSchema } from "../schema/assistant";
-import type { ProviderHierarchy } from "../schema/provider";
 import { prisma } from "./index";
 import { getProviderWithModelsById } from "./provider";
 import type { AsyncReturnType } from "./type";
@@ -255,11 +253,7 @@ const executeChatWithAssistant = async (
       thread: threadId,
       resource: assistantId
     },
-    providerOptions: {
-      openai: {
-        store: false
-      }
-    },
+    providerOptions: {},
     requestContext: createCommonRunTime({
       assistant
     })
@@ -326,56 +320,22 @@ const getUIMessagesByThreadId = async (
 };
 
 /**
- * @description 从供应商的模型列表中找到最便宜的模型
- * @param providerWithModel - 包含模型分组的供应商数据
- * @returns 最便宜的模型，如果没有找到则返回 null
+ * @description 创建标题生成的提示词
+ * @returns 标题生成的提示词
  */
-const findCheapestModel = (providerWithModel: ProviderHierarchy): Model => {
-  const allModels = providerWithModel.groups.flatMap((group) => group.models);
+const getGeneratedTitlePrompt = () => {
+  return `你是对话标题生成器。根据对话的第一条用户消息和第一条助手回复，生成一个精准的标题。
 
-  // 过滤出有价格信息的模型，按输出价格排序
-  const modelsWithPrice = allModels.filter(
-    (model) => model.outputPricePerMillion != null
-  );
-
-  if (modelsWithPrice.length === 0) {
-    return null;
-  }
-
-  // 找到输出价格最低的模型
-  return modelsWithPrice.reduce((cheapest, current) => {
-    const currentPrice = current.outputPricePerMillion ?? 0;
-    const cheapestPrice = cheapest.outputPricePerMillion ?? 0;
-    return currentPrice < cheapestPrice ? current : cheapest;
-  }) as Model;
+生成规则：
+- 核心：提炼用户的提问意图 + 助手回答的主题
+- 长度：6~15 个字（中文优先）
+- 格式：名词短语或动宾短语，不加句号
+- 技术问题：保留关键技术词（如"React Hook 闭包问题"、"Prisma 联表查询"）
+- 概念提问：点明概念和方向（如"什么是 RAG 检索增强"）
+- 任务请求：动宾结构（如"生成 Git Commit 信息"、"翻译英文合同"）
+- 不要泛化（禁止用"代码问题"、"技术讨论"、"日常对话"此类无意义标题）
+- 只输出标题本身，不加引号、不加任何解释`;
 };
-
-/**
- * @description 创建专门用于生成标题的助手配置
- * @param baseAssistant - 基础助手配置
- * @param model - 用于生成标题的模型
- * @returns 配置好标题生成提示词的助手
- */
-const createTitleGenerationAssistant = (
-  baseAssistant: FullAssistantType,
-  model: Model
-): FullAssistantType => ({
-  ...baseAssistant,
-  prompt: `你是一个专业的聊天标题生成助手。你的任务是根据用户的聊天内容生成一个简洁、准确、有吸引力的标题。
-
-请遵循以下规则：
-1. 标题长度控制在10-20个字符以内
-2. 标题要准确反映聊天的主要内容或主题
-3. 使用简洁明了的语言，避免过于复杂的词汇
-4. 如果聊天内容涉及技术问题，使用相关的技术术语
-5. 如果聊天内容涉及日常对话，使用通俗易懂的表达
-6. 标题要有一定的吸引力，但不能过于夸张
-7. 只返回标题内容，不要添加任何解释或额外文字
-
-请根据用户的聊天内容生成合适的标题。`,
-  model,
-  modelId: model.id
-});
 
 /**
  * @description 生成对话标题
@@ -396,17 +356,11 @@ const generateThreadTitle = async (assistantId: string, threadId: string) => {
     throw new Error("供应商不存在");
   }
 
-  const cheapestModel = findCheapestModel(providerWithModel);
-  if (!cheapestModel) {
-    throw new Error("没有找到可用的模型");
-  }
+  const titleGenerationAssistant = {
+    ...fullAssistant,
+    prompt: getGeneratedTitlePrompt()
+  };
 
-  const titleGenerationAssistant = createTitleGenerationAssistant(
-    fullAssistant,
-    cheapestModel
-  );
-
-  // 获取 thread 的消息用于生成标题
   const memory = await DynamicAgent.getMemory({
     requestContext: createCommonRunTime({
       assistant: titleGenerationAssistant
@@ -422,24 +376,27 @@ const generateThreadTitle = async (assistantId: string, threadId: string) => {
     throw new Error("对话中没有消息");
   }
 
-  // 转换消息格式并生成标题
-  const messages = convertMessages(threadMessages).to("AIV5.UI");
+  const recentMessages = threadMessages.slice(0, 4);
+  const messages = convertMessages(recentMessages).to("AIV5.UI");
   const requestContext = createCommonRunTime({
-    assistant: titleGenerationAssistant
+    assistant: titleGenerationAssistant,
+    task: AgentTaskEnum.GENERATE_TITLE
   });
 
-  const stream = await DynamicAgent.stream(messages, { requestContext });
+  console.log(JSON.stringify(messages, null, 2));
 
-  void stream.text.then(async (title) => {
-    const thread = await memory.getThreadById({ threadId });
-    if (thread) {
-      await memory.saveThread({ thread: { ...thread, title } });
+  const stream = await DynamicAgent.stream(messages, {
+    requestContext,
+    onFinish: async ({ text }) => {
+      const thread = await memory.getThreadById({ threadId });
+      if (thread) {
+        await memory.saveThread({ thread: { ...thread, title: text } });
+      }
     }
   });
 
   const aiSdkStream = toAISdkStream(stream, {
-    from: "agent",
-    sendReasoning: true
+    from: "agent"
   });
 
   return createUIMessageStreamResponse({

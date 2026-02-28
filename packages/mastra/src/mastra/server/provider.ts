@@ -19,11 +19,18 @@ export function createProviderService(db: PrismaClient) {
   const getProviders = async (): Promise<
     z.infer<(typeof providerRoutes)["getProviders"]["responseSchema"]>
   > => {
-    return db.provider.findMany({
-      orderBy: {
-        createdAt: "desc"
-      }
-    });
+    console.log("getProviders");
+    try {
+      return await db.provider.findMany({
+        orderBy: {
+          createdAt: "desc"
+        }
+      });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error("getProviders error:", error);
+      return [];
+    }
   };
 
   const getProvidersWithModels = async (): Promise<

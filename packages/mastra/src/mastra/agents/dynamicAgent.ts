@@ -1,9 +1,14 @@
+import { aihubmix } from "@aihubmix/ai-sdk-provider";
 import { Agent } from "@mastra/core/agent";
 import type { RequestContext } from "@mastra/core/request-context";
 import { LibSQLStore } from "@mastra/libsql";
 import { Memory } from "@mastra/memory";
 
-import type { CommonRunTimeType } from "../runtime/CommonRunTime";
+import { QUICK_MODELS } from "../constants/model";
+import {
+  AgentTaskEnum,
+  type CommonRunTimeType
+} from "../runtime/CommonRunTime";
 
 /**
  * 转换 modelId 格式
@@ -41,6 +46,14 @@ export const DynamicAgent = new Agent({
     const assistant = (requestContext as RequestContext<CommonRunTimeType>).get(
       "assistant"
     );
+
+    const task = (requestContext as RequestContext<CommonRunTimeType>).get(
+      "task"
+    );
+
+    if (task === AgentTaskEnum.GENERATE_TITLE) {
+      return aihubmix(QUICK_MODELS);
+    }
 
     const provider = assistant.provider;
 
