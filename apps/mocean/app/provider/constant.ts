@@ -1,6 +1,6 @@
-import { StaticImageData } from "next/image";
+import type { StaticImageData } from "next/image";
 
-import { ProviderType } from "@mocean/mastra/prismaType";
+import type { ProviderType } from "@mocean/mastra/prismaType";
 
 import Ai360ModelLogo from "@/assets/images/models/360.png";
 import Ai360ModelLogoDark from "@/assets/images/models/360_dark.png";
@@ -226,7 +226,7 @@ export const PROVIDER_LOGO_MAP: Record<ProviderType, StaticImageData> = {
   gpustack: GPUStackProviderLogo,
   alayanew: AlayaNewProviderLogo,
   voyageai: VoyageAIProviderLogo,
-  qiniu: QiniuProviderLogo,
+  qiniu: QiniuProviderLogo
 } as const;
 
 export function getModelLogo(modelId: keyof typeof PROVIDER_LOGO_MAP) {
@@ -246,6 +246,7 @@ export function getModelLogo(modelId: keyof typeof PROVIDER_LOGO_MAP) {
     o4: isLight ? ChatGPTo1ModelLogo : ChatGPTo1ModelLogoDark,
     "gpt-3": isLight ? ChatGPT35ModelLogo : ChatGPT35ModelLogoDark,
     "gpt-4": isLight ? ChatGPT4ModelLogo : ChatGPT4ModelLogoDark,
+    "gpt-5": isLight ? ChatGPT4ModelLogo : ChatGPT4ModelLogoDark,
     gpts: isLight ? ChatGPT4ModelLogo : ChatGPT4ModelLogoDark,
     "text-moderation": isLight ? ChatGptModelLogo : ChatGptModelLogoDakr,
     "babbage-": isLight ? ChatGptModelLogo : ChatGptModelLogoDakr,
@@ -340,7 +341,7 @@ export function getModelLogo(modelId: keyof typeof PROVIDER_LOGO_MAP) {
     perplexity: isLight ? PerplexityModelLogo : PerplexityModelLogoDark,
     sonar: isLight ? PerplexityModelLogo : PerplexityModelLogoDark,
     "bge-": BgeModelLogo,
-    "voyage-": VoyageModelLogo,
+    "voyage-": VoyageModelLogo
   };
 
   for (const key in logoMap) {

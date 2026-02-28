@@ -4,9 +4,10 @@ import { useParams } from "next/navigation";
 
 import { DndContext, DragOverlay, pointerWithin } from "@dnd-kit/core";
 import type { Provider } from "@mocean/mastra/prismaType";
-import { Database, Edit, Loader2, Plus, Search, Settings } from "lucide-react";
+import { Database, Edit, Plus, Search, Settings } from "lucide-react";
 
 import { useProviderPage } from "@/app/provider/[id]/hooks/useProviderPage";
+import { LoadingPlaceholder } from "@/components/custom/loading-placeholder";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -70,16 +71,7 @@ export default function ProviderDetailPage() {
 
   // 加载状态
   if (!provider) {
-    return (
-      <div className="flex h-full items-center justify-center p-8">
-        <div className="flex items-center space-x-2">
-          <Loader2 className="h-6 w-6 animate-spin" />
-          <span className="text-sm text-muted-foreground">
-            加载模型数据中...
-          </span>
-        </div>
-      </div>
-    );
+    return <LoadingPlaceholder text="加载模型数据中..." />;
   }
 
   // 没有模型的状态
@@ -269,9 +261,9 @@ export default function ProviderDetailPage() {
           await onDragEnd(e);
         }}
       >
-        <div className="flex-1 overflow-auto">
-          <ScrollArea className="h-full">
-            <div className="space-y-6 p-6">
+        <div className="min-h-0 flex-1 overflow-hidden">
+          <ScrollArea className="h-full p-2">
+            <div className="space-y-6 p-6 pb-8">
               {filteredModelGroups.map((group, index) => (
                 <DroppableGroup
                   key={group.groupName}

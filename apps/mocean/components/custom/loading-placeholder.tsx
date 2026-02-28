@@ -1,10 +1,14 @@
+"use client";
+
 import { Loader2 } from "lucide-react";
 
 interface LoadingPlaceholderProps {
   text?: string;
 }
 
-export function LoadingPlaceholder({ text = "加载中..." }: LoadingPlaceholderProps) {
+export function LoadingPlaceholder({
+  text = "加载中..."
+}: LoadingPlaceholderProps) {
   return (
     <div className="flex h-full items-center justify-center">
       <div className="flex items-center space-x-2">

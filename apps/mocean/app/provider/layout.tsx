@@ -25,7 +25,7 @@ export default function ProviderLayout({ children }: ProviderLayoutProps) {
   const { providers, isLoading, error } = useProviders();
 
   if (isLoading) {
-    return <LoadingPlaceholder text="加载提供商数据中..." />;
+    return <LoadingPlaceholder text="加载提供商列表中..." />;
   }
 
   if (error) {

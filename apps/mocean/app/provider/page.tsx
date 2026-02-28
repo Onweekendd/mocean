@@ -14,9 +14,7 @@ export default function ProviderPage() {
       icon={Database}
       title="选择提供商"
       description="从左侧选择一个提供商，即可查看其可用的模型列表"
-      hints={[
-        { icon: MousePointerClick, text: "点击左侧提供商卡片选择" }
-      ]}
+      hints={[{ icon: MousePointerClick, text: "点击左侧提供商卡片选择" }]}
     />
   );
 }
