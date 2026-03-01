@@ -32,14 +32,16 @@ const ThreadSelect: React.FC<ThreadSelectProps> = ({ onBack }) => {
     activeAssistantId || null
   );
 
+  console.log(threads);
+
   const streamingTitles = useStore((s) => s.streamingTitles);
 
-  const threadsWithCreating = useMemo(() => {
+  const threadsWithCreating = useMemo<StorageThreadType[]>(() => {
     const currentAssistantCreatingThread =
       streamingTitles[activeAssistantId || ""] ?? [];
 
     return [...currentAssistantCreatingThread, ...threads];
-  }, []);
+  }, [threads, streamingTitles, activeAssistantId]);
 
   const { refresh: refreshUIMessage } = useAssistantUIMessageSWR(
     activeAssistantId || null,
@@ -68,7 +70,7 @@ const ThreadSelect: React.FC<ThreadSelectProps> = ({ onBack }) => {
   return (
     <div className="h-full w-full">
       <ThreadList
-        threads={threads || []}
+        threads={threadsWithCreating}
         assistantName={assistant?.name || "助手"}
         assistantEmoji={assistant?.emoji || undefined}
         onCreateThread={onCreateThread}

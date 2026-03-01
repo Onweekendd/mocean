@@ -6,6 +6,7 @@ import {
   AssistantChatTransport,
   useChatRuntime
 } from "@assistant-ui/react-ai-sdk";
+import type { StorageThreadType } from "@mocean/mastra/apiClient";
 import { useAssistantsApi } from "@mocean/mastra/apiClient";
 import type { ChatOnFinishCallback, UIMessage } from "ai";
 import { generateId } from "ai";
@@ -23,6 +24,16 @@ export type PrepareRequestBodyReturnType = {
   requestBody: Record<string, unknown>;
   requestData: Record<string, unknown>;
 };
+
+async function* streamTitle(response: Response) {
+  const reader = (response.body as ReadableStream<Uint8Array>).getReader();
+  const decoder = new TextDecoder();
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    yield decoder.decode(value);
+  }
+}
 
 /**
  * mastra的兼容
@@ -48,29 +59,38 @@ export function useMastraRuntime({
 
   const { refresh } = useAssistantThreadsSWR(activeAssistantId || null);
   const { generateTitleWithAssistant } = useAssistantsApi();
+  const { setStreamingTitle } = useStore();
 
   /**
    * 新建的对话第一次完成
    */
-  const onNewThreadFirstFinish: ChatOnFinishCallback<UIMessage> = (options) => {
-    if (!activeAssistantId || !newThreadId.current) {
+  const onNewThreadFirstFinish: ChatOnFinishCallback<UIMessage> = (
+    _options
+  ) => {
+    if (!activeAssistantIdRef.current || !newThreadId.current) {
       return;
     }
 
     const threadId = newThreadId.current;
+    const assistantId = activeAssistantIdRef.current;
+
+    const newThread: StorageThreadType = {
+      id: threadId,
+      resourceId: assistantId,
+      title: "",
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    setStreamingTitle(assistantId, newThread);
     void (async () => {
       const response = await generateTitleWithAssistant({
-        assistantId: activeAssistantId,
+        assistantId,
         threadId
       });
 
-      const reader = (response.body as ReadableStream<Uint8Array>).getReader();
-      const decoder = new TextDecoder();
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        // eslint-disable-next-line no-console
-        console.log(decoder.decode(value));
+      for await (const chunk of streamTitle(response)) {
+        console.log(chunk);
       }
     })();
   };
