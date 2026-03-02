@@ -18,7 +18,7 @@ export default function AgentLayout({
 
   return (
     <div className="flex h-screen overflow-hidden">
-      <div className="h-full w-80 flex-shrink-0 bg-primary-light-100 dark:bg-card">
+      <div className="h-full w-80 flex-shrink-0 bg-primary-light-100">
         <AgentGroupSelect groups={groups} />
       </div>
       <div className="h-full min-w-0 flex-1 overflow-y-auto rounded-tl-lg bg-brand-main">

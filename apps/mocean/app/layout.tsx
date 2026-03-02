@@ -16,16 +16,14 @@ export default function RootLayout({
 }>) {
   return (
     <html suppressHydrationWarning>
-      <body className="flex h-screen flex-col overflow-hidden bg-primary-light-100 font-bricolage-grotesque dark:bg-background">
+      <body className="flex h-screen flex-col overflow-hidden bg-brand-main font-bricolage-grotesque">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <div className="dark:bg-card">
-            <TitleBar />
-          </div>
+          <TitleBar />
           <div className="flex min-h-0 flex-1 overflow-hidden">
             <SidebarProvider>
               <ToasterProvider>
                 <AppSidebar />
-                <main className="h-full min-h-0 flex-1 overflow-hidden">
+                <main className="h-full min-h-0 flex-1 overflow-hidden bg-brand-main">
                   {children}
                 </main>
               </ToasterProvider>

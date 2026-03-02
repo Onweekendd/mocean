@@ -95,7 +95,7 @@ export default function AppSidebar() {
   useEffect(() => setMounted(true), []);
 
   return (
-    <Sidebar className="h-full bg-primary-light-100 dark:bg-card">
+    <Sidebar className="h-full">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent className="pt-4">

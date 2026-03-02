@@ -79,7 +79,7 @@ export const AgentGroupSelect: React.FC<AgentGroupSelectProps> = ({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden pb-4">
         <ItemList
           items={groupList}
           renderItem={renderGroupItem}

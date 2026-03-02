@@ -172,7 +172,8 @@
 
     /* 品牌字体和背景色 - 暗黑模式 */
     --brand-text: 0 0% 100%;
-    --brand-main: 222 45% 11%;
+    --brand-main: 222 47% 17%;
+
 
     /* 品牌主题色 - 暗黑模式，基于 purple/violet */
     --brand-primary-50: 250 100% 98%;
@@ -210,7 +211,7 @@
     /* Figma Design Token 颜色 - 深色模式覆盖 */
     /* Primary: DEFAULT 换更亮的蓝，light/dark 对调 */
     --dt-primary: #96b6ff;
-    --dt-primary-light-100: #001f67;
+    --dt-primary-light-100: #0f1729;
     --dt-primary-light-200: #0035af;
     --dt-primary-light-300: #0440cb;
     --dt-primary-dark-100: #e9efff;

@@ -16,7 +16,7 @@ export function EmptyPlaceholder({
   icon: Icon,
   title,
   description,
-  hints,
+  hints
 }: EmptyPlaceholderProps) {
   return (
     <div className="flex h-full flex-1 items-center justify-center">
@@ -25,9 +25,7 @@ export function EmptyPlaceholder({
           <Icon className="h-8 w-8 text-[hsl(var(--brand-primary-500))]" />
         </div>
 
-        <h1 className="mb-2 text-2xl font-semibold text-foreground">
-          {title}
-        </h1>
+        <h1 className="mb-2 text-2xl font-semibold text-foreground">{title}</h1>
 
         <p className="mb-8 text-sm leading-relaxed text-muted-foreground">
           {description}

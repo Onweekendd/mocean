@@ -12,7 +12,7 @@ import { EditComposer, UserMessage } from "./thread/user-message";
 
 export const Thread: FC = () => {
   return (
-    <ThreadPrimitive.Root className="box-border flex h-full flex-col overflow-hidden bg-background">
+    <ThreadPrimitive.Root className="box-border flex h-full flex-col overflow-hidden">
       <ChatToolbar />
       <ThreadPrimitive.Viewport className="flex min-h-0 flex-1 flex-col items-center overflow-y-scroll scroll-smooth bg-inherit px-4">
         <ThreadWelcome />
