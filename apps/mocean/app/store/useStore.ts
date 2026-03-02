@@ -40,11 +40,11 @@ export type Store = {
   setActiveThreadId: (thread: string | null) => void;
 
   /**
-   * @description 流式生成中的对话标题，key 为 threadId
+   * @description 流式生成中的对话标题，key 为 assistantId
    */
   streamingTitles: Record<string, StorageThreadType[]>;
   setStreamingTitle: (assistantId: string, thread: StorageThreadType) => void;
-  clearStreamingTitle: (threadId: string) => void;
+  clearStreamingTitle: (assistantId: string) => void;
 };
 
 const useStore = create<Store>((set) => ({
@@ -70,9 +70,9 @@ const useStore = create<Store>((set) => ({
         )
       }
     })),
-  clearStreamingTitle: (threadId) =>
+  clearStreamingTitle: (assistantId) =>
     set((s) => {
-      const { [threadId]: _, ...rest } = s.streamingTitles;
+      const { [assistantId]: _, ...rest } = s.streamingTitles;
       return { streamingTitles: rest };
     })
 }));

@@ -1,6 +1,6 @@
 /// <reference lib="dom" />
 
-export const BASE_URL = "http://localhost:4111";
+export const BASE_URL = `http://localhost:${process.env.DEV_PORT || 4112}`;
 export const PREFIX = "/customApi";
 export const API_URL = `${BASE_URL}${PREFIX}`;
 

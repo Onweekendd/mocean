@@ -4,49 +4,49 @@
 export const designTokens = {
   colors: {
     primary: {
-      DEFAULT: "#2063ff",
-      "light-100": "#f8f9fc",
-      "light-200": "#e9efff",
-      "light-300": "#96b6ff",
-      "dark-100": "#0440cb",
-      "dark-200": "#0035af",
-      "dark-300": "#001f67"
+      DEFAULT: "var(--dt-primary)",
+      "light-100": "var(--dt-primary-light-100)",
+      "light-200": "var(--dt-primary-light-200)",
+      "light-300": "var(--dt-primary-light-300)",
+      "dark-100": "var(--dt-primary-dark-100)",
+      "dark-200": "var(--dt-primary-dark-200)",
+      "dark-300": "var(--dt-primary-dark-300)"
     },
     complementary: {
-      DEFAULT: "#ff62e0",
-      "light-100": "#ffddf8",
-      "light-200": "#ffc2f3",
-      "light-300": "#ffadef",
-      "dark-100": "#d246b6",
-      "dark-200": "#ad3495",
-      "dark-300": "#6f205f"
+      DEFAULT: "var(--dt-complementary)",
+      "light-100": "var(--dt-complementary-light-100)",
+      "light-200": "var(--dt-complementary-light-200)",
+      "light-300": "var(--dt-complementary-light-300)",
+      "dark-100": "var(--dt-complementary-dark-100)",
+      "dark-200": "var(--dt-complementary-dark-200)",
+      "dark-300": "var(--dt-complementary-dark-300)"
     },
     greyscale: {
-      "100": "#f3f3f3",
-      "200": "#ebebeb",
-      "300": "#dfdfdf",
-      "400": "#d0d0d0",
-      "500": "#acacac",
-      "600": "#989898",
-      "700": "#717171",
-      "800": "#515151",
-      white: "#fdfdfd",
-      black: "#272727"
+      "100": "var(--dt-greyscale-100)",
+      "200": "var(--dt-greyscale-200)",
+      "300": "var(--dt-greyscale-300)",
+      "400": "var(--dt-greyscale-400)",
+      "500": "var(--dt-greyscale-500)",
+      "600": "var(--dt-greyscale-600)",
+      "700": "var(--dt-greyscale-700)",
+      "800": "var(--dt-greyscale-800)",
+      white: "var(--dt-greyscale-white)",
+      black: "var(--dt-greyscale-black)"
     },
     success: {
-      DEFAULT: "#079944",
-      light: "#d0f0dd",
-      dark: "#035c28"
+      DEFAULT: "var(--dt-success)",
+      light: "var(--dt-success-light)",
+      dark: "var(--dt-success-dark)"
     },
     warning: {
-      DEFAULT: "#ff7c25",
-      light: "#ffe5d4",
-      dark: "#b44800"
+      DEFAULT: "var(--dt-warning)",
+      light: "var(--dt-warning-light)",
+      dark: "var(--dt-warning-dark)"
     },
     error: {
-      DEFAULT: "#ff6767",
-      light: "#ffdada",
-      dark: "#b43030"
+      DEFAULT: "var(--dt-error)",
+      light: "var(--dt-error-light)",
+      dark: "var(--dt-error-dark)"
     }
   },
 

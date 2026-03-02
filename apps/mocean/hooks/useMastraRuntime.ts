@@ -59,7 +59,7 @@ export function useMastraRuntime({
 
   const { refresh } = useAssistantThreadsSWR(activeAssistantId || null);
   const { generateTitleWithAssistant } = useAssistantsApi();
-  const { setStreamingTitle } = useStore();
+  const { setStreamingTitle, clearStreamingTitle } = useStore();
 
   /**
    * 新建的对话第一次完成
@@ -79,7 +79,10 @@ export function useMastraRuntime({
       resourceId: assistantId,
       title: "",
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      metadata: {
+        creating: true
+      }
     };
 
     setStreamingTitle(assistantId, newThread);
@@ -89,9 +92,43 @@ export function useMastraRuntime({
         threadId
       });
 
+      let accumulatedTitle = "";
       for await (const chunk of streamTitle(response)) {
-        console.log(chunk);
+        console.log("chunk", chunk);
+        for (const line of chunk.split("\n")) {
+          const payload = line.slice("data: ".length);
+          if (!line.startsWith("data: ") || payload === "[DONE]") {
+            continue;
+          }
+
+          const chunkData = JSON.parse(payload) as {
+            delta?: { title?: string };
+          };
+
+          if (chunkData.delta?.title) {
+            accumulatedTitle += chunkData.delta.title;
+            setStreamingTitle(assistantId, {
+              ...newThread,
+              title: accumulatedTitle
+            });
+          }
+        }
       }
+
+      const finalThread: StorageThreadType = {
+        ...newThread,
+        title: accumulatedTitle,
+        metadata: {}
+      };
+
+      clearStreamingTitle(assistantId);
+      await refresh(
+        (current: StorageThreadType[] = []) => [
+          finalThread,
+          ...current.filter((t) => t.id !== finalThread.id)
+        ],
+        { revalidate: true }
+      );
     })();
   };
 

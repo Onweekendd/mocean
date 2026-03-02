@@ -32,8 +32,6 @@ const ThreadSelect: React.FC<ThreadSelectProps> = ({ onBack }) => {
     activeAssistantId || null
   );
 
-  console.log(threads);
-
   const streamingTitles = useStore((s) => s.streamingTitles);
 
   const threadsWithCreating = useMemo<StorageThreadType[]>(() => {
