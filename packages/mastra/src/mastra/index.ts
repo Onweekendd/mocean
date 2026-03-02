@@ -12,6 +12,7 @@ export const mastra = new Mastra({
 
   server: {
     timeout: 30000,
+    port: process.env.DEV_PORT || 4111,
     build: {
       swaggerUI: true // Enable in production builds
     },

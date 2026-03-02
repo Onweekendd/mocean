@@ -1,13 +1,26 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
+import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
 
 import type { LucideIcon } from "lucide-react";
-import { Book, Bot, Brain, Folder, RadioTower, Wrench } from "lucide-react";
+import {
+  Book,
+  Bot,
+  Brain,
+  Folder,
+  Moon,
+  RadioTower,
+  Sun,
+  Wrench
+} from "lucide-react";
 
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
@@ -76,12 +89,16 @@ const isActiveItem = (itemUrl: string, currentPath: string): boolean => {
 
 export default function AppSidebar() {
   const pathname = usePathname();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   return (
-    <Sidebar className="mt-4 bg-primary-light-100">
+    <Sidebar className="h-full bg-primary-light-100 dark:bg-card">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupContent>
+          <SidebarGroupContent className="pt-4">
             <SidebarMenu className="space-y-6">
               {items.map((item) => {
                 const isActive = isActiveItem(item.url, pathname);
@@ -116,6 +133,30 @@ export default function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <MenuItemWithTooltip
+          title={mounted && theme === "dark" ? "切换浅色" : "切换暗黑"}
+        >
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              className="flex items-center justify-center rounded-lg transition-all duration-200 hover:scale-105"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            >
+              {mounted && theme === "dark" ? (
+                <Sun
+                  size={24}
+                  className="h-6 w-6 text-muted-foreground hover:text-foreground/90"
+                />
+              ) : (
+                <Moon
+                  size={24}
+                  className="h-6 w-6 text-muted-foreground hover:text-foreground/90"
+                />
+              )}
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </MenuItemWithTooltip>
+      </SidebarFooter>
     </Sidebar>
   );
 }

@@ -92,35 +92,77 @@
     --warning-foreground: 0 0% 98%;
     --info: 199 89% 48%;
     --info-foreground: 0 0% 98%;
+
+    /* Figma Design Token 颜色 - 浅色模式原始值 */
+    /* Primary (蓝色) */
+    --dt-primary: #2063ff;
+    --dt-primary-light-100: #f8f9fc;
+    --dt-primary-light-200: #e9efff;
+    --dt-primary-light-300: #96b6ff;
+    --dt-primary-dark-100: #0440cb;
+    --dt-primary-dark-200: #0035af;
+    --dt-primary-dark-300: #001f67;
+
+    /* Complementary (粉色) */
+    --dt-complementary: #ff62e0;
+    --dt-complementary-light-100: #ffddf8;
+    --dt-complementary-light-200: #ffc2f3;
+    --dt-complementary-light-300: #ffadef;
+    --dt-complementary-dark-100: #d246b6;
+    --dt-complementary-dark-200: #ad3495;
+    --dt-complementary-dark-300: #6f205f;
+
+    /* Greyscale */
+    --dt-greyscale-white: #fdfdfd;
+    --dt-greyscale-black: #272727;
+    --dt-greyscale-100: #f3f3f3;
+    --dt-greyscale-200: #ebebeb;
+    --dt-greyscale-300: #dfdfdf;
+    --dt-greyscale-400: #d0d0d0;
+    --dt-greyscale-500: #acacac;
+    --dt-greyscale-600: #989898;
+    --dt-greyscale-700: #717171;
+    --dt-greyscale-800: #515151;
+
+    /* Status */
+    --dt-success: #079944;
+    --dt-success-light: #d0f0dd;
+    --dt-success-dark: #035c28;
+    --dt-warning: #ff7c25;
+    --dt-warning-light: #ffe5d4;
+    --dt-warning-dark: #b44800;
+    --dt-error: #ff6767;
+    --dt-error-light: #ffdada;
+    --dt-error-dark: #b43030;
   }
 
   .dark {
-    --background: 0 0% 3.9%;
+    --background: 222 45% 11%;
     --foreground: 0 0% 98%;
 
-    --card: 0 0% 3.9%;
+    --card: 240 5% 7%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 3.9%;
+    --popover: 240 5% 7%;
     --popover-foreground: 0 0% 98%;
 
     --primary: 0 0% 98%;
     --primary-foreground: 0 0% 9%;
 
-    --secondary: 0 0% 14.9%;
+    --secondary: 222 25% 16%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 0 0% 14.9%;
+    --muted: 222 25% 16%;
     --muted-foreground: 0 0% 63.9%;
 
-    --accent: 0 0% 14.9%;
+    --accent: 222 25% 16%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
+    --border: 222 15% 20%;
+    --input: 222 15% 20%;
     --ring: 0 0% 83.1%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
@@ -130,7 +172,7 @@
 
     /* 品牌字体和背景色 - 暗黑模式 */
     --brand-text: 0 0% 100%;
-    --brand-main: 229 84% 5%;
+    --brand-main: 222 45% 11%;
 
     /* 品牌主题色 - 暗黑模式，基于 purple/violet */
     --brand-primary-50: 250 100% 98%;
@@ -164,6 +206,48 @@
     --warning-foreground: 0 0% 98%;
     --info: 199 79% 58%;
     --info-foreground: 0 0% 98%;
+
+    /* Figma Design Token 颜色 - 深色模式覆盖 */
+    /* Primary: DEFAULT 换更亮的蓝，light/dark 对调 */
+    --dt-primary: #96b6ff;
+    --dt-primary-light-100: #001f67;
+    --dt-primary-light-200: #0035af;
+    --dt-primary-light-300: #0440cb;
+    --dt-primary-dark-100: #e9efff;
+    --dt-primary-dark-200: #f8f9fc;
+    --dt-primary-dark-300: #f8f9fc;
+
+    /* Complementary: DEFAULT 换更亮的粉，light/dark 对调 */
+    --dt-complementary: #ffadef;
+    --dt-complementary-light-100: #6f205f;
+    --dt-complementary-light-200: #ad3495;
+    --dt-complementary-light-300: #d246b6;
+    --dt-complementary-dark-100: #ffc2f3;
+    --dt-complementary-dark-200: #ffddf8;
+    --dt-complementary-dark-300: #ffddf8;
+
+    /* Greyscale: 完全倒置（100↔800，white↔black） */
+    --dt-greyscale-white: #272727;
+    --dt-greyscale-black: #fdfdfd;
+    --dt-greyscale-100: #515151;
+    --dt-greyscale-200: #717171;
+    --dt-greyscale-300: #989898;
+    --dt-greyscale-400: #acacac;
+    --dt-greyscale-500: #d0d0d0;
+    --dt-greyscale-600: #dfdfdf;
+    --dt-greyscale-700: #ebebeb;
+    --dt-greyscale-800: #f3f3f3;
+
+    /* Status: DEFAULT 更亮，light/dark 对调 */
+    --dt-success: #1ab857;
+    --dt-success-light: #035c28;
+    --dt-success-dark: #d0f0dd;
+    --dt-warning: #ff9940;
+    --dt-warning-light: #b44800;
+    --dt-warning-dark: #ffe5d4;
+    --dt-error: #ff9090;
+    --dt-error-light: #b43030;
+    --dt-error-dark: #ffdada;
   }
 }
 

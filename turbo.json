@@ -8,9 +8,8 @@
       "env": [
         "PRISMA_DATABASE_URL",
         "MASTRA_DATABASE_URL",
-        "OPENAI_API_KEY",
-        "OPENAI_API_BASE_URL",
-        "OPENAI_API_MODEL"
+        "AIHUBMIX_API_KEY",
+        "DEV_PORT"
       ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
