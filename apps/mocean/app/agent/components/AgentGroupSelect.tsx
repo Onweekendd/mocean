@@ -7,6 +7,7 @@ import type { AgentGroup } from "@mocean/mastra/prismaType";
 import {
   AGENT_GROUPS,
   DEFAULT_GROUP,
+  getGroupColor,
   getGroupLabel
 } from "@/app/agent/lib/agent-groups";
 import { ItemList } from "@/components/custom/item-list";
@@ -39,25 +40,21 @@ export const AgentGroupSelect: React.FC<AgentGroupSelectProps> = ({
     return (
       <div
         key={group.id}
-        className={`cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${
-          isSelected
-            ? "border border-transparent bg-gradient-brand text-white shadow-lg"
-            : "border border-border bg-card hover:border-primary/50 hover:bg-muted/80"
+        className={`cursor-pointer duration-200 hover:-translate-y-0.5 hover:shadow-md ${
+          isSelected ? "bg-primary/5" : "hover:bg-muted/50"
         } group rounded-lg p-3`}
         onClick={() => onGroupClick(group.id)}
       >
         <div className="flex items-center space-x-3">
           <div
-            className={`flex h-8 w-8 items-center justify-center rounded-lg transition-transform duration-200 group-hover:scale-110 ${
-              isSelected
-                ? "bg-white/20 text-white"
-                : "to-brand-secondary/10 bg-gradient-to-br from-brand-primary/10 text-info"
-            } `}
+            className={`flex h-8 w-8 items-center justify-center rounded-lg group-hover:scale-110 ${getGroupColor(
+              group.name
+            )}`}
           >
             <AgentGroupIcon groupKey={group.name} size={16} strokeWidth={1.5} />
           </div>
           <span
-            className={`text-sm font-medium transition-colors ${isSelected ? "text-white" : "text-foreground group-hover:text-primary"} `}
+            className={`text-sm font-medium ${isSelected ? "text-brand-text" : "text-brand-text/70 group-hover:text-primary"} `}
           >
             {label}
           </span>
@@ -86,7 +83,7 @@ export const AgentGroupSelect: React.FC<AgentGroupSelectProps> = ({
           searchFilter={searchFilter}
           searchPlaceholder="搜索Agent分组..."
           showStats={false}
-          showSearch={true}
+          showSearch={false}
           groupName="分组"
           gridCols={{
             default: 1

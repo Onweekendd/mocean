@@ -2,7 +2,7 @@
 
 import { Image, MessageSquare, Search, Settings } from "lucide-react";
 
-import { getGroupLabel } from "@/app/agent/lib/agent-groups";
+import { getGroupColor, getGroupLabel } from "@/app/agent/lib/agent-groups";
 import {
   type AgentWithGroups,
   getAgentGroupNames
@@ -38,15 +38,15 @@ export const AgentCard: React.FC<AgentCardProps> = ({
 
   return (
     <Card
-      className={`group flex cursor-pointer flex-col transition-all duration-200 hover:-translate-y-1 hover:shadow-lg ${className}`}
+      className={`group flex cursor-pointer flex-col border-none duration-200 hover:-translate-y-1 hover:shadow-lg ${className}`}
       onClick={onCardClick}
     >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-brand text-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg text-white">
               {agent.emoji ? (
-                <span className="text-lg">{agent.emoji}</span>
+                <span className="text-2xl">{agent.emoji}</span>
               ) : (
                 <MessageSquare size={20} />
               )}
@@ -56,25 +56,6 @@ export const AgentCard: React.FC<AgentCardProps> = ({
                 {agent.name}
               </CardTitle>
             </div>
-          </div>
-
-          <div className="flex items-center space-x-1">
-            {agent.enableWebSearch && (
-              <Badge
-                variant="secondary"
-                className="flex h-6 w-6 items-center justify-center p-0"
-              >
-                <Search size={12} />
-              </Badge>
-            )}
-            {agent.enableGenerateImage && (
-              <Badge
-                variant="secondary"
-                className="flex h-6 w-6 items-center justify-center p-0"
-              >
-                <Image size={12} />
-              </Badge>
-            )}
           </div>
         </div>
       </CardHeader>
@@ -87,10 +68,11 @@ export const AgentCard: React.FC<AgentCardProps> = ({
               display: "-webkit-box",
               WebkitLineClamp: 4,
               WebkitBoxOrient: "vertical",
-              overflow: "hidden"
+              overflow: "hidden",
+              whiteSpace: "pre-line"
             }}
           >
-            {agent.description}
+            {agent.description.replace(/\\n/g, "\n")}
           </p>
         )}
 
@@ -101,7 +83,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({
                 <Badge
                   key={index}
                   variant="outline"
-                  className="px-2 py-1 text-xs"
+                  className={`border-0 px-2 py-1 text-xs ${getGroupColor(groupKey)}`}
                 >
                   {getGroupLabel(groupKey)}
                 </Badge>
@@ -118,42 +100,12 @@ export const AgentCard: React.FC<AgentCardProps> = ({
           </div>
         )}
 
-        {agent.prompt && (
-          <div className="mb-3">
-            <p className="mb-1 text-xs text-muted-foreground">提示词:</p>
-            <div className="rounded-md bg-muted/50 p-2">
-              <div
-                className="text-sm leading-[1.4]"
-                style={{
-                  display: "-webkit-box",
-                  WebkitLineClamp: 3,
-                  WebkitBoxOrient: "vertical",
-                  overflow: "hidden"
-                }}
-              >
-                {agent.prompt}
-              </div>
-            </div>
-          </div>
-        )}
-
         <div className="mt-auto flex items-center justify-between">
           <span className="text-xs text-muted-foreground">
             创建于 {formatDate(agent.createdAt)}
           </span>
 
           <div className="flex items-center space-x-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 px-2 opacity-0 transition-opacity group-hover:opacity-100"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
-              <Settings size={14} className="text-brand-primary-500" />
-            </Button>
-
             <Button
               size="sm"
               className="h-8 bg-brand-primary-500 px-3 opacity-0 transition-opacity hover:bg-brand-primary-300 group-hover:opacity-100"

@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { Filter, Search } from "lucide-react";
 
 import { AgentDetailDialog } from "@/app/agent/components/AgentDetailDialog";
+import { getGroupColor, getGroupLabel } from "@/app/agent/lib/agent-groups";
 import type { AgentWithGroups } from "@/app/agent/lib/parse-group-json";
 import { LoadingPlaceholder } from "@/components/custom/loading-placeholder";
 import { Badge } from "@/components/ui/badge";
@@ -85,11 +86,14 @@ export const AgentList: React.FC<AgentListProps> = ({
 
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Badge variant="secondary" className="font-normal">
-              {stats.group}
+            <Badge
+              variant="secondary"
+              className={`border-0 font-normal ${selectedGroup ? getGroupColor(selectedGroup) : ""}`}
+            >
+              {selectedGroup ? getGroupLabel(selectedGroup) : stats.group}
             </Badge>
             <span className="text-sm text-muted-foreground">
-              显示 {stats.filtered} 个，共 {stats.total} 个智能体
+              {stats.total} 个智能体
             </span>
           </div>
 

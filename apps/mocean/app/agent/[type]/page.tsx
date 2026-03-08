@@ -7,7 +7,6 @@ import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { AgentList } from "@/app/agent/components/AgentList";
-import { getGroupLabel } from "@/app/agent/lib/agent-groups";
 import type { AgentWithGroups } from "@/app/agent/lib/parse-group-json";
 import { useStore } from "@/app/store/useStore";
 import { useAgentGroupsSWR, useAgentsByGroupSWR } from "@/hooks/useAgentsSWR";
@@ -20,9 +19,6 @@ export default function AgentTypePage() {
 
   const { groups } = useAgentGroupsSWR();
   const currentGroup = groups.find((g) => g.id === currentGroupId);
-  const selectedGroupLabel = currentGroup
-    ? getGroupLabel(currentGroup.name)
-    : "";
 
   const { agents, isLoading, error, refresh } = useAgentsByGroupSWR(
     currentGroupId || null
@@ -98,7 +94,7 @@ export default function AgentTypePage() {
   return (
     <AgentList
       agents={agents as AgentWithGroups[]}
-      selectedGroup={selectedGroupLabel}
+      selectedGroup={currentGroup?.name ?? null}
       isLoading={isLoading}
       onCreateAssistant={onCreateAssistant}
       isCreatingAssistant={isCreatingAssistant}
