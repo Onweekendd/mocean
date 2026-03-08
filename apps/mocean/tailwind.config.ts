@@ -62,6 +62,8 @@ const config = {
         // 品牌主题色
         brand: {
           text: "hsl(var(--brand-text))",
+          "text-body": "hsl(var(--brand-text-body))",
+          "text-muted": "hsl(var(--brand-text-muted))",
           main: "hsl(var(--brand-main))",
           primary: {
             50: "hsl(var(--brand-primary-50))",

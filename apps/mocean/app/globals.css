@@ -67,7 +67,9 @@
     --chart-5: 27 87% 67%;
 
     /* 品牌字体和背景色 */
-    --brand-text: 0 0% 0%;
+    --brand-text: 0 0% 8%;
+    --brand-text-body: 0 0% 20%;
+    --brand-text-muted: 0 0% 45%;
     --brand-main: 225 40% 98%;
 
     /* 品牌主题色 - 基于 sky blue */
@@ -181,7 +183,9 @@
     --chart-5: 340 75% 55%;
 
     /* 品牌字体和背景色 - 暗黑模式 */
-    --brand-text: 0 0% 88.2%;
+    --brand-text: 0 0% 93%;
+    --brand-text-body: 0 0% 80%;
+    --brand-text-muted: 0 0% 58%;
     --brand-main: 0 0% 11.8%;
 
     /* 品牌主题色 - 暗黑模式，基于 purple/violet */

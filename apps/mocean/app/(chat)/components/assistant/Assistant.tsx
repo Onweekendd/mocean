@@ -40,10 +40,10 @@ const AssistantList: React.FC<AssistantListProps> = ({ onClick }) => {
         {/* Empty State */}
         {!isLoading && assistantList.length === 0 && (
           <div className="py-12 text-center">
-            <h3 className="mb-2 text-sm font-medium text-foreground">
+            <h3 className="text-brand-text mb-2 text-sm font-medium">
               还没有AI助手
             </h3>
-            <p className="text-[13px] text-muted-foreground">
+            <p className="text-brand-text-muted text-[13px]">
               创建你的第一个AI助手
             </p>
           </div>

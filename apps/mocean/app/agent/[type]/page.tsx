@@ -98,7 +98,7 @@ export default function AgentTypePage() {
       isLoading={isLoading}
       onCreateAssistant={onCreateAssistant}
       isCreatingAssistant={isCreatingAssistant}
-      className="h-full"
+      className="pb-16"
     />
   );
 }

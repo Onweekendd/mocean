@@ -35,7 +35,7 @@ export default function Chat() {
       <div className="flex h-full flex-1 items-center justify-center">
         <div className="rounded-xl border border-destructive bg-destructive/10 p-8 text-center">
           <p className="mb-2 font-medium text-destructive">加载失败</p>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-brand-text-muted text-sm">
             无法加载聊天记录，请稍后重试
           </p>
         </div>

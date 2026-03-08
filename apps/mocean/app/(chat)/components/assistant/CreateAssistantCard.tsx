@@ -20,10 +20,10 @@ const CreateAssistantCard: React.FC<CreateAssistantCardProps> = ({
             <Plus className="h-4 w-4" />
           </div>
           <div>
-            <h3 className="text-sm font-medium text-foreground/80 transition-colors group-hover:text-foreground">
+            <h3 className="text-brand-text text-sm font-medium transition-colors group-hover:text-brand-text">
               创建新助手
             </h3>
-            <p className="text-xs text-muted-foreground/60">
+            <p className="text-brand-text-muted text-xs">
               自定义专属AI助手
             </p>
           </div>

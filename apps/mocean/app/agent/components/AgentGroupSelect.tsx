@@ -54,7 +54,7 @@ export const AgentGroupSelect: React.FC<AgentGroupSelectProps> = ({
             <AgentGroupIcon groupKey={group.name} size={16} strokeWidth={1.5} />
           </div>
           <span
-            className={`text-sm font-medium ${isSelected ? "text-brand-text" : "text-brand-text/70 group-hover:text-primary"} `}
+            className={`text-sm font-medium ${isSelected ? "text-brand-text" : "text-brand-text-muted group-hover:text-primary"}`}
           >
             {label}
           </span>
@@ -102,9 +102,9 @@ export const AgentGroupSelect: React.FC<AgentGroupSelectProps> = ({
           <div className="flex h-4 w-4 items-center justify-center rounded-full bg-gradient-brand text-white">
             <AgentGroupIcon groupKey={currentGroup.name} size={12} />
           </div>
-          <span className="text-xs text-muted-foreground">
+          <span className="text-brand-text-muted text-xs">
             当前:{" "}
-            <span className="text-base font-medium text-foreground">
+            <span className="text-base font-medium text-brand-text">
               {getGroupLabel(currentGroup.name)}
             </span>
           </span>

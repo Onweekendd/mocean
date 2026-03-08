@@ -35,13 +35,13 @@ const AssistantCard: React.FC<AssistantCardProps> = ({
 
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <span className="truncate text-sm font-medium text-foreground">
+            <span className="text-brand-text truncate text-sm font-medium">
               {assistant.name}
             </span>
             {isActive && <Sparkles className="h-3 w-3 shrink-0 text-primary" />}
           </div>
           {assistant.description && (
-            <p className="mt-0.5 truncate text-xs text-muted-foreground">
+            <p className="text-brand-text-muted mt-0.5 truncate text-xs">
               {assistant.description}
             </p>
           )}

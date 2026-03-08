@@ -51,13 +51,13 @@ const ThreadList: React.FC<ThreadListProps> = ({
             onClick={onBack}
             className="group flex min-w-0 items-center gap-1 rounded-lg px-1 py-1.5 transition-colors duration-150 hover:bg-foreground/[0.04]"
           >
-            <ArrowLeft className="h-3.5 w-3.5 shrink-0 text-muted-foreground transition-transform duration-150 group-hover:-translate-x-0.5" />
+            <ArrowLeft className="text-brand-text-muted h-3.5 w-3.5 shrink-0 transition-transform duration-150 group-hover:-translate-x-0.5" />
             <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded text-xs">
               {assistantEmoji || (
-                <Bot className="h-3.5 w-3.5 text-muted-foreground" />
+                <Bot className="text-brand-text-muted h-3.5 w-3.5" />
               )}
             </span>
-            <span className="truncate text-[13px] font-medium text-foreground/80">
+            <span className="truncate text-[13px] font-medium text-brand-text">
               {assistantName}
             </span>
           </button>
@@ -79,9 +79,7 @@ const ThreadList: React.FC<ThreadListProps> = ({
           ) : (
             <div className="flex h-full w-full flex-col items-center justify-center py-16 text-center">
               <MessageCircle className="mb-3 h-6 w-6 text-muted-foreground/20" />
-              <p className="text-[13px] text-muted-foreground/60">
-                暂无对话记录
-              </p>
+              <p className="text-brand-text-muted text-[13px]">暂无对话记录</p>
             </div>
           )}
         </div>

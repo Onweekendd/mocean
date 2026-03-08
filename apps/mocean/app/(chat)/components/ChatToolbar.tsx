@@ -88,14 +88,14 @@ export function ChatToolbar() {
             onChange={onModelChange}
           />
         ) : (
-          <span className="text-[13px] text-muted-foreground">未选择助手</span>
+          <span className="text-brand-text-muted text-[13px]">未选择助手</span>
         )}
       </div>
 
       {/* Center: thread title */}
       {threadTitle && (
         <div className="">
-          <span className="text-[13px] text-muted-foreground">
+          <span className="text-brand-text-muted text-[13px]">
             {threadTitle}
           </span>
         </div>
@@ -105,7 +105,7 @@ export function ChatToolbar() {
       <div className="flex items-center">
         <button
           onClick={onCreateThread}
-          className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors duration-150 hover:bg-foreground/[0.04] hover:text-foreground"
+          className="text-brand-text-muted flex h-7 w-7 items-center justify-center rounded-md transition-colors duration-150 hover:bg-foreground/[0.04] hover:text-foreground"
           title="新建对话"
         >
           <MessageSquarePlus className="h-3.5 w-3.5" />

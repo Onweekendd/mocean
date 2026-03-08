@@ -38,7 +38,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({
 
   return (
     <Card
-      className={`group flex cursor-pointer flex-col border-none duration-200 hover:-translate-y-1 hover:shadow-lg ${className}`}
+      className={`group flex cursor-pointer flex-col border-none bg-primary-100 shadow-[6px_6px_8px_0px_var(--dt-primary)] transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg ${className}`}
       onClick={onCardClick}
     >
       <CardHeader className="pb-3">
@@ -52,7 +52,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({
               )}
             </div>
             <div className="flex-1">
-              <CardTitle className="text-lg font-semibold text-foreground group-hover:text-primary">
+              <CardTitle className="text-lg font-semibold text-brand-text group-hover:text-primary">
                 {agent.name}
               </CardTitle>
             </div>
@@ -63,7 +63,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({
       <CardContent className="flex flex-1 flex-col pt-0">
         {agent.description && (
           <p
-            className="mb-3 text-sm leading-relaxed text-muted-foreground"
+            className="text-brand-text-body mb-3 text-sm leading-relaxed"
             style={{
               display: "-webkit-box",
               WebkitLineClamp: 4,
@@ -91,7 +91,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({
               {groups.length > 3 && (
                 <Badge
                   variant="outline"
-                  className="px-2 py-1 text-xs text-muted-foreground"
+                  className="text-brand-text-muted px-2 py-1 text-xs"
                 >
                   +{groups.length - 3}
                 </Badge>
@@ -101,7 +101,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({
         )}
 
         <div className="mt-auto flex items-center justify-between">
-          <span className="text-xs text-muted-foreground">
+          <span className="text-brand-text-muted text-xs">
             创建于 {formatDate(agent.createdAt)}
           </span>
 
