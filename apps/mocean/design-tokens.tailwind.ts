@@ -8,6 +8,9 @@ export const designTokens = {
       "100": "hsl(var(--brand-slate-100))",
       "200": "hsl(var(--brand-slate-200))",
       "300": "hsl(var(--brand-slate-300))",
+      "400": "hsl(var(--brand-slate-400))",
+      "500": "hsl(var(--brand-slate-500))",
+      "600": "hsl(var(--brand-slate-600))",
       "700": "hsl(var(--brand-slate-700))",
       "800": "hsl(var(--brand-slate-800))",
       "900": "hsl(var(--brand-slate-900))"
