@@ -26,7 +26,7 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="relative z-10 h-full">
         <ChatConfig />
       </div>
-      <div className="h-full flex-1 overflow-hidden rounded-tl-[1rem] bg-primary-100 shadow-[inset_12px_0_10px_-6px_var(--dt-primary)]">
+      <div className="bg-brand-slate-100 h-full flex-1 overflow-hidden rounded-tl-[1rem] shadow-[inset_12px_0_10px_-6px_hsl(var(--brand-slate))]">
         {children}
       </div>
     </div>

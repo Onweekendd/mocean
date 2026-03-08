@@ -38,7 +38,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({
 
   return (
     <Card
-      className={`group flex cursor-pointer flex-col border-none bg-primary-100 shadow-[6px_6px_8px_0px_var(--dt-primary)] transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg ${className}`}
+      className={`bg-brand-slate-100 group flex cursor-pointer flex-col border-none shadow-[6px_6px_8px_0px_hsl(var(--brand-slate))] transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg ${className}`}
       onClick={onCardClick}
     >
       <CardHeader className="pb-3">

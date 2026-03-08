@@ -3,14 +3,14 @@
 
 export const designTokens = {
   colors: {
-    primary: {
-      DEFAULT: "var(--dt-primary)",
-      "100": "var(--dt-primary-100)",
-      "200": "var(--dt-primary-200)",
-      "300": "var(--dt-primary-300)",
-      "700": "var(--dt-primary-700)",
-      "800": "var(--dt-primary-800)",
-      "900": "var(--dt-primary-900)"
+    brandSlate: {
+      DEFAULT: "hsl(var(--brand-slate))",
+      "100": "hsl(var(--brand-slate-100))",
+      "200": "hsl(var(--brand-slate-200))",
+      "300": "hsl(var(--brand-slate-300))",
+      "700": "hsl(var(--brand-slate-700))",
+      "800": "hsl(var(--brand-slate-800))",
+      "900": "hsl(var(--brand-slate-900))"
     },
     complementary: {
       DEFAULT: "var(--dt-complementary)",

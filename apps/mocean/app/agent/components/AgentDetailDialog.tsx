@@ -66,7 +66,7 @@ export const AgentDetailDialog: React.FC<AgentDetailDialogProps> = ({
         {agent && (
           <>
             <div className="scrollbar-hide flex-1 space-y-4 overflow-y-auto px-6 pb-4">
-              <Card className="rounded-xl border-none bg-primary-100 shadow-[6px_6px_8px_0px_var(--dt-primary)]">
+              <Card className="bg-brand-slate-100 rounded-xl border-none shadow-[6px_6px_8px_0px_hsl(var(--brand-slate))]">
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center space-x-2">
                     <Zap className="h-4 w-4 text-brand-primary" />
@@ -116,7 +116,7 @@ export const AgentDetailDialog: React.FC<AgentDetailDialogProps> = ({
               </Card>
 
               {agent.prompt && (
-                <Card className="rounded-xl border-none bg-primary-100 shadow-[6px_6px_8px_0px_var(--dt-primary)]">
+                <Card className="bg-brand-slate-100 rounded-xl border-none shadow-[6px_6px_8px_0px_hsl(var(--brand-slate))]">
                   <CardHeader className="pb-2">
                     <CardTitle className="flex items-center space-x-2 text-base">
                       <Eye className="h-4 w-4 text-brand-primary" />

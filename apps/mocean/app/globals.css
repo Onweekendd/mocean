@@ -106,14 +106,14 @@
     --info-foreground: 0 0% 98%;
 
     /* Figma Design Token 颜色 - 浅色模式原始值 */
-    /* Primary (炭黑色) */
-    --dt-primary: #eaeaea;
-    --dt-primary-100: #ffffff;
-    --dt-primary-200: #ececec;
-    --dt-primary-300: #c4c4c4;
-    --dt-primary-700: #1e1e1e;
-    --dt-primary-800: #141414;
-    --dt-primary-900: #0a0a0a;
+    /* Brand Slate (炭黑/中性灰) */
+    --brand-slate: 0 0% 92%;
+    --brand-slate-100: 0 0% 100%;
+    --brand-slate-200: 0 0% 93%;
+    --brand-slate-300: 0 0% 77%;
+    --brand-slate-700: 0 0% 12%;
+    --brand-slate-800: 0 0% 8%;
+    --brand-slate-900: 0 0% 4%;
 
     /* Complementary (粉色) */
     --dt-complementary: #ff62e0;
@@ -222,14 +222,14 @@
     --info-foreground: 0 0% 98%;
 
     /* Figma Design Token 颜色 - 深色模式覆盖 */
-    /* Primary: DEFAULT 换亮色，100/200/300 与 700/800/900 对调 */
-    --dt-primary: #161616;
-    --dt-primary-100: #2c2c2c;
-    --dt-primary-200: #3c3c3c;
-    --dt-primary-300: #5c5c5c;
-    --dt-primary-700: #e8e8e8;
-    --dt-primary-800: #f0f0f0;
-    --dt-primary-900: #ffffff;
+    /* Brand Slate: DEFAULT 换深色，100/200/300 与 700/800/900 对调 */
+    --brand-slate: 0 0% 9%;
+    --brand-slate-100: 0 0% 17%;
+    --brand-slate-200: 0 0% 24%;
+    --brand-slate-300: 0 0% 36%;
+    --brand-slate-700: 0 0% 91%;
+    --brand-slate-800: 0 0% 94%;
+    --brand-slate-900: 0 0% 100%;
 
     /* Complementary: DEFAULT 换更亮的粉，100/200/300 与 700/800/900 对调 */
     --dt-complementary: #ffadef;

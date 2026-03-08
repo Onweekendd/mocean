@@ -24,7 +24,6 @@ const config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          ...designTokens.colors.primary,
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))"
         },
@@ -65,6 +64,9 @@ const config = {
           "text-body": "hsl(var(--brand-text-body))",
           "text-muted": "hsl(var(--brand-text-muted))",
           main: "hsl(var(--brand-main))",
+          slate: {
+            ...designTokens.colors.brandSlate
+          },
           primary: {
             50: "hsl(var(--brand-primary-50))",
             100: "hsl(var(--brand-primary-100))",
