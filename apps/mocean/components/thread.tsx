@@ -32,7 +32,7 @@ export const Thread: FC = () => {
 
       <ThreadScrollToBottom />
       <div className="flex w-full justify-center">
-        <div className="flex h-[10.5rem] w-2/3 max-w-[60rem] flex-col gap-[0.5rem] rounded-t-2xl border border-greyscale-100 bg-greyscale-white px-2 py-3 shadow-sm">
+        <div className="flex h-[10.5rem] w-2/3 flex-col gap-[0.5rem] rounded-t-2xl border border-greyscale-100 bg-greyscale-white px-2 py-3 shadow-sm">
           <Composer />
           <ComposerExtras />
         </div>

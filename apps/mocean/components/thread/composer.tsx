@@ -18,7 +18,7 @@ export const Composer: FC = () => {
           rows={2}
           autoFocus
           placeholder="有什么可以帮你的吗..."
-          className="max-h-40 flex-grow resize-none border-none bg-transparent text-sm shadow-none outline-none placeholder:text-muted-foreground focus:ring-0 focus-visible:ring-0 disabled:cursor-not-allowed"
+          className="flex-grow resize-none border-none bg-transparent text-sm shadow-none outline-none placeholder:text-muted-foreground focus:ring-0 focus-visible:ring-0 disabled:cursor-not-allowed"
         />
       </ComposerPrimitive.Input>
       <ComposerToolbar />
