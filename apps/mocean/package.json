@@ -27,7 +27,7 @@
     "@fontsource/bricolage-grotesque": "^5.2.10",
     "@fontsource/inter": "^5.2.8",
     "@fontsource/noto-sans-sc": "^5.2.9",
-    "@lobehub/icons": "^2.43.1",
+    "@lobehub/icons": "^5.0.1",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-alert-dialog": "^1.1.7",
     "@radix-ui/react-aspect-ratio": "^1.1.2",
