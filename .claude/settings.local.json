@@ -81,8 +81,5 @@
     "ask": []
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": [
-    "mastra",
-    "playwright"
-  ]
+  "enabledMcpjsonServers": ["mastra", "playwright"]
 }

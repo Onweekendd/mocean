@@ -1,6 +1,6 @@
 "use client";
 
-import { type FC, memo, useState } from "react";
+import { type FC, memo } from "react";
 
 import {
   type CodeHeaderProps,
@@ -13,6 +13,7 @@ import { CheckIcon, CopyIcon } from "lucide-react";
 import remarkGfm from "remark-gfm";
 
 import { TooltipIconButton } from "@/components/tooltip-icon-button";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { cn } from "@/lib/utils";
 
 const MarkdownTextImpl = () => {
@@ -29,9 +30,9 @@ export const MarkdownText = memo(MarkdownTextImpl);
 
 const CodeHeader: FC<CodeHeaderProps> = ({ language, code }) => {
   const { isCopied, copyToClipboard } = useCopyToClipboard();
-  const onCopy = async () => {
+  const onCopy = () => {
     if (!code || isCopied) return;
-    await copyToClipboard(code);
+    copyToClipboard(code);
   };
 
   return (
@@ -45,25 +46,6 @@ const CodeHeader: FC<CodeHeaderProps> = ({ language, code }) => {
       </TooltipIconButton>
     </div>
   );
-};
-
-const useCopyToClipboard = ({
-  copiedDuration = 3000
-}: {
-  copiedDuration?: number;
-} = {}) => {
-  const [isCopied, setIsCopied] = useState<boolean>(false);
-
-  const copyToClipboard = async (value: string) => {
-    if (!value) return;
-
-    await navigator.clipboard.writeText(value).then(() => {
-      setIsCopied(true);
-      setTimeout(() => setIsCopied(false), copiedDuration);
-    });
-  };
-
-  return { isCopied, copyToClipboard };
 };
 
 const defaultComponents = memoizeMarkdownComponents({

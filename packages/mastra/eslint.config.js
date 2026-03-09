@@ -9,7 +9,6 @@ export default [
       "prettier.config.js",
       "rollup.config.mjs",
 
-
       // 依赖目录
       "node_modules/",
 
@@ -34,8 +33,8 @@ export default [
       ".env.production",
 
       // 日志文件
-      "*.log",
-    ],
+      "*.log"
+    ]
   },
-  ...config,
+  ...config
 ];
