@@ -4,6 +4,8 @@ import useSWR, { useSWRConfig } from "swr";
 /**
  * 使用 SWR 的模型数据获取 hooks
  * @description 在前端应用层提供带缓存的数据获取功能
+ *
+ * 注意：全局已配置 defaultSWRConfig
  */
 
 // ==================== 基础版本（不包含关联信息） ====================
@@ -14,21 +16,10 @@ import useSWR, { useSWRConfig } from "swr";
 export function useModels() {
   const { getModels } = useModelsApi();
 
-  const { data, error, isLoading, mutate } = useSWR(
-    "models-base",
-    async () => {
-      const result = await getModels();
-      return result?.data || [];
-    },
-    {
-      refreshInterval: 0,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: true,
-      dedupingInterval: 60000,
-      errorRetryCount: 3,
-      errorRetryInterval: 5000
-    }
-  );
+  const { data, error, isLoading, mutate } = useSWR("models-base", async () => {
+    const result = await getModels();
+    return result?.data || [];
+  });
 
   return {
     models: data || [],
@@ -50,12 +41,6 @@ export function useModel(id: string | null) {
       if (!id) return null;
       const result = await getModelById(id);
       return result?.data || null;
-    },
-    {
-      refreshInterval: 0,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: true,
-      dedupingInterval: 60000
     }
   );
 
@@ -81,11 +66,7 @@ export function useModelsByProvider(providerId: string | null) {
       return result?.data || [];
     },
     {
-      refreshInterval: 0,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: true,
       dedupingInterval: 30000,
-      errorRetryCount: 3,
       errorRetryInterval: 3000
     }
   );
@@ -112,11 +93,7 @@ export function useModelsByGroup(group: string | null) {
       return result?.data || [];
     },
     {
-      refreshInterval: 0,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: true,
       dedupingInterval: 30000,
-      errorRetryCount: 3,
       errorRetryInterval: 3000
     }
   );
@@ -142,14 +119,6 @@ export function useModelsWithProviders() {
     async () => {
       const result = await getModelsWithProviders();
       return result?.data || [];
-    },
-    {
-      refreshInterval: 0,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: true,
-      dedupingInterval: 60000,
-      errorRetryCount: 3,
-      errorRetryInterval: 5000
     }
   );
 
@@ -173,12 +142,6 @@ export function useModelWithProviders(id: string | null) {
       if (!id) return null;
       const result = await getModelWithProvidersById(id);
       return result?.data || null;
-    },
-    {
-      refreshInterval: 0,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: true,
-      dedupingInterval: 60000
     }
   );
 
@@ -204,11 +167,7 @@ export function useModelsByProviderWithProviders(providerId: string | null) {
       return result?.data || [];
     },
     {
-      refreshInterval: 0,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: true,
       dedupingInterval: 30000,
-      errorRetryCount: 3,
       errorRetryInterval: 3000
     }
   );
@@ -235,11 +194,7 @@ export function useModelsByGroupWithProviders(group: string | null) {
       return result?.data || [];
     },
     {
-      refreshInterval: 0,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: true,
       dedupingInterval: 30000,
-      errorRetryCount: 3,
       errorRetryInterval: 3000
     }
   );

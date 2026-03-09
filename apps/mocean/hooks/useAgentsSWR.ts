@@ -19,22 +19,10 @@ import useSWR from "swr";
 export function useAgentsSWR() {
   const { getAgents } = useAgentsApi();
 
-  const { data, error, isLoading, mutate } = useSWR(
-    "agents",
-    async () => {
-      const result = await getAgents();
-      return result?.data || [];
-    },
-    {
-      // 配置选项
-      refreshInterval: 0, // 不自动刷新
-      revalidateOnFocus: false, // 焦点时不重新验证
-      revalidateOnReconnect: true, // 重连时重新验证
-      dedupingInterval: 60000, // 60秒内的重复请求会被去重
-      errorRetryCount: 3, // 错误重试次数
-      errorRetryInterval: 5000 // 重试间隔
-    }
-  );
+  const { data, error, isLoading, mutate } = useSWR("agents", async () => {
+    const result = await getAgents();
+    return result?.data || [];
+  });
 
   return {
     agents: data || [],
@@ -63,12 +51,6 @@ export function useAgentSWR(id: string | null) {
       if (!id) return null;
       const result = await getAgentById(id);
       return result?.data || null;
-    },
-    {
-      refreshInterval: 0,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: true,
-      dedupingInterval: 60000
     }
   );
 
@@ -101,12 +83,7 @@ export function useAgentsByGroupSWR(group: string | null) {
       return result?.data || [];
     },
     {
-      refreshInterval: 0,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: true,
-      dedupingInterval: 30000, // 30秒内的重复请求会被去重（分组数据更新频率适中）
-      errorRetryCount: 3,
-      errorRetryInterval: 3000
+      dedupingInterval: 30000 // 30秒内的重复请求会被去重（分组数据更新频率适中）
     }
   );
 
@@ -135,14 +112,6 @@ export function useAgentGroupsSWR() {
     async () => {
       const result = await getAgentGroups();
       return result?.data ?? [];
-    },
-    {
-      refreshInterval: 0,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: true,
-      dedupingInterval: 60000, // 60秒内的重复请求会被去重
-      errorRetryCount: 3,
-      errorRetryInterval: 5000
     }
   );
 

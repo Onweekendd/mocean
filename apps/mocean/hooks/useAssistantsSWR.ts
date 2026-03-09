@@ -4,16 +4,8 @@ import type { KeyedMutator } from "swr";
 import useSWR, { useSWRConfig } from "swr";
 
 /**
- * SWR 默认配置
+ * 注意：全局已配置 defaultSWRConfig
  */
-const defaultSWRConfig = {
-  refreshInterval: 0,
-  revalidateOnFocus: false,
-  revalidateOnReconnect: true,
-  dedupingInterval: 60000,
-  errorRetryCount: 3,
-  errorRetryInterval: 5000
-};
 
 // ==================== 基础版本（不包含关联数据）====================
 
@@ -23,14 +15,10 @@ const defaultSWRConfig = {
 export function useAssistantsSWR() {
   const { getAssistants } = useAssistantsApi();
 
-  const { data, error, isLoading, mutate } = useSWR(
-    "assistants",
-    async () => {
-      const result = await getAssistants();
-      return result?.data || [];
-    },
-    defaultSWRConfig
-  );
+  const { data, error, isLoading, mutate } = useSWR("assistants", async () => {
+    const result = await getAssistants();
+    return result?.data || [];
+  });
 
   return {
     assistants: data || [],
@@ -55,8 +43,7 @@ export function useAssistantSWR(id: string | null) {
 
       const result = await getAssistantById(id);
       return result?.data || null;
-    },
-    defaultSWRConfig
+    }
   );
 
   return {
@@ -79,8 +66,7 @@ export function useFullAssistant(id: string | null) {
       if (!id) return null;
       const result = await getFullAssistantById(id);
       return result?.data || null;
-    },
-    defaultSWRConfig
+    }
   );
 
   return {
@@ -104,8 +90,7 @@ export function useAssistantsWithModels() {
     async () => {
       const result = await getAssistants();
       return result?.data || [];
-    },
-    defaultSWRConfig
+    }
   );
 
   return {
@@ -136,10 +121,7 @@ export function useAssistantThreadsSWR(assistantId: string | null) {
 
       return result.data;
     },
-    {
-      ...defaultSWRConfig,
-      dedupingInterval: 30000 // 线程数据更新频率较高
-    }
+    { dedupingInterval: 30000 } // 线程数据更新频率较高
   );
 
   return {
@@ -171,8 +153,7 @@ export function useAssistantUIMessageSWR(
       });
 
       return result?.data || null;
-    },
-    defaultSWRConfig
+    }
   );
 
   return {

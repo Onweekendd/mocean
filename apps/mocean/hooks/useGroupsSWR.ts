@@ -4,6 +4,8 @@ import useSWR, { useSWRConfig } from "swr";
 /**
  * 使用 SWR 的分组数据获取 hooks
  * @description 在前端应用层提供带缓存的分组数据获取功能
+ *
+ * 注意：全局已配置 defaultSWRConfig
  */
 
 /**
@@ -19,14 +21,6 @@ export function useGroupsByProviderSWR(providerId: string | null) {
       if (!providerId) return [];
       const result = await getGroupsByProvider(providerId);
       return result?.data || [];
-    },
-    {
-      refreshInterval: 0,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: true,
-      dedupingInterval: 60000,
-      errorRetryCount: 3,
-      errorRetryInterval: 5000
     }
   );
 
@@ -51,12 +45,6 @@ export function useGroupSWR(id: string | null) {
       if (!id) return null;
       const result = await getGroupById(id);
       return result?.data || null;
-    },
-    {
-      refreshInterval: 0,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: true,
-      dedupingInterval: 60000
     }
   );
 

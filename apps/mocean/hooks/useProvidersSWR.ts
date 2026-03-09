@@ -3,16 +3,8 @@ import type { ProviderType } from "@mocean/mastra/prismaType";
 import useSWR, { useSWRConfig } from "swr";
 
 /**
- * SWR 默认配置
+ * 注意：全局已配置 defaultSWRConfig，此处只需配置与全局不同的部分
  */
-const defaultSWRConfig = {
-  refreshInterval: 0,
-  revalidateOnFocus: false,
-  revalidateOnReconnect: true,
-  dedupingInterval: 60000,
-  errorRetryCount: 3,
-  errorRetryInterval: 5000
-};
 
 // ==================== 基础版本（不包含关联模型）====================
 
@@ -22,14 +14,10 @@ const defaultSWRConfig = {
 export function useProviders() {
   const { getProviders } = useProvidersApi();
 
-  const { data, error, isLoading, mutate } = useSWR(
-    "providers",
-    async () => {
-      const result = await getProviders();
-      return result?.data || [];
-    },
-    defaultSWRConfig
-  );
+  const { data, error, isLoading, mutate } = useSWR("providers", async () => {
+    const result = await getProviders();
+    return result?.data || [];
+  });
 
   return {
     providers: data || [],
@@ -51,8 +39,7 @@ export function useEnabledProviders() {
       const result = await getEnabledProviders();
 
       return result?.data || [];
-    },
-    defaultSWRConfig
+    }
   );
 
   return {
@@ -75,8 +62,7 @@ export function useProvider(id: string | null) {
       if (!id) return null;
       const result = await getProviderById(id);
       return result?.data || null;
-    },
-    defaultSWRConfig
+    }
   );
 
   return {
@@ -100,10 +86,7 @@ export function useProvidersByType(type: string | null) {
       const result = await getProvidersByType(type as ProviderType);
       return result?.data || [];
     },
-    {
-      ...defaultSWRConfig,
-      dedupingInterval: 30000
-    }
+    { dedupingInterval: 30000 }
   );
 
   return {
@@ -127,8 +110,7 @@ export function useProvidersWithModels() {
     async () => {
       const result = await getProvidersWithModels();
       return result?.data || [];
-    },
-    defaultSWRConfig
+    }
   );
 
   return {
@@ -150,8 +132,7 @@ export function useEnabledProvidersWithModels() {
     async () => {
       const result = await getEnabledProvidersWithModels();
       return result?.data || [];
-    },
-    defaultSWRConfig
+    }
   );
 
   return {
@@ -174,8 +155,7 @@ export function useProviderWithModels(id: string | null) {
       if (!id) return null;
       const result = await getProviderWithModelsById(id);
       return result?.data || null;
-    },
-    defaultSWRConfig
+    }
   );
 
   return {
@@ -199,10 +179,7 @@ export function useProvidersByTypeWithModels(type: string | null) {
       const result = await getProvidersByTypeWithModels(type as ProviderType);
       return result?.data || [];
     },
-    {
-      ...defaultSWRConfig,
-      dedupingInterval: 30000
-    }
+    { dedupingInterval: 30000 }
   );
 
   return {
