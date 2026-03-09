@@ -17,7 +17,7 @@ export const UserMessage: FC = () => {
     <MessagePrimitive.Root className="grid w-full auto-rows-auto grid-cols-[minmax(72px,1fr)_auto] gap-y-2 py-4 [&:where(>*)]:col-start-2">
       <UserActionBar />
 
-      <div className="col-start-2 row-start-2 break-words rounded-3xl bg-muted px-5 py-2.5 text-foreground">
+      <div className="col-start-2 row-start-2 break-words rounded-3xl bg-brand-slate-200/60 px-5 py-2.5 text-foreground">
         <MessagePrimitive.Content />
       </div>
 

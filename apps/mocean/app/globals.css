@@ -286,4 +286,28 @@ html {
   .scrollbar-hidden::-webkit-scrollbar {
     display: none;
   }
+
+  .scrollbar-no-arrows::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-no-arrows::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-no-arrows::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--brand-slate-200));
+    border-radius: 3px;
+  }
+
+  .scrollbar-no-arrows::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--brand-slate-300));
+    border-radius: 3px;
+  }
+
+  .scrollbar-no-arrows::-webkit-scrollbar-button {
+    display: none;
+    height: 0;
+    width: 0;
+  }
 }

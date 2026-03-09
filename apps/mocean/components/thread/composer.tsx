@@ -12,7 +12,7 @@ import { CircleStopIcon } from "./shared";
 
 export const Composer: FC = () => {
   return (
-    <ComposerPrimitive.Root className="bg-brand-slate-100 flex w-full flex-col rounded-xl border border-greyscale-100 px-[0.375rem] shadow-sm transition-colors ease-in focus-within:border-ring/20">
+    <ComposerPrimitive.Root className="flex w-full flex-col rounded-xl border border-brand-slate-200 bg-brand-slate-100 px-[0.375rem] shadow-sm transition-colors ease-in focus-within:border-ring/20">
       <ComposerPrimitive.Input asChild>
         <AdvanceInput
           rows={2}

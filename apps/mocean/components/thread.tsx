@@ -14,25 +14,27 @@ export const Thread: FC = () => {
   return (
     <ThreadPrimitive.Root className="jc box-border flex h-full w-full flex-col items-center overflow-hidden">
       <ChatToolbar />
-      <ThreadPrimitive.Viewport className="scrollbar-hidden flex min-h-0 w-3/4 flex-1 flex-col items-center overflow-y-auto scroll-smooth bg-inherit px-4">
-        <ThreadWelcome />
+      <ThreadPrimitive.Viewport className="scrollbar-no-arrows mr-2 flex min-h-0 flex-1 flex-col items-center self-stretch overflow-y-auto scroll-smooth bg-inherit">
+        <div className="flex min-h-full w-3/4 flex-col items-center">
+          <ThreadWelcome />
 
-        <ThreadPrimitive.Messages
-          components={{
-            UserMessage: UserMessage,
-            EditComposer: EditComposer,
-            AssistantMessage: AssistantMessage
-          }}
-        />
+          <ThreadPrimitive.Messages
+            components={{
+              UserMessage: UserMessage,
+              EditComposer: EditComposer,
+              AssistantMessage: AssistantMessage
+            }}
+          />
 
-        <ThreadPrimitive.If empty={false}>
-          <div className="min-h-8 flex-grow" />
-        </ThreadPrimitive.If>
+          <ThreadPrimitive.If empty={false}>
+            <div className="min-h-8 flex-grow" />
+          </ThreadPrimitive.If>
+        </div>
       </ThreadPrimitive.Viewport>
 
       <ThreadScrollToBottom />
       <div className="flex w-full justify-center">
-        <div className="flex h-[10.5rem] w-2/3 flex-col gap-[0.5rem] rounded-t-2xl border border-greyscale-100 bg-greyscale-white px-2 py-3 shadow-sm">
+        <div className="flex h-[10.5rem] w-2/3 flex-col gap-[0.5rem] rounded-t-2xl border border-brand-slate-200 bg-brand-slate/30 px-2 py-3 shadow-sm">
           <Composer />
           <ComposerExtras />
         </div>
