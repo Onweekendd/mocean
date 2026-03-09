@@ -1,12 +1,13 @@
 "use client";
 
-import { type FC, memo, useState } from "react";
+import { type FC, memo } from "react";
 
 import { CheckIcon, CopyIcon } from "lucide-react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import { TooltipIconButton } from "@/components/tooltip-icon-button";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { cn } from "@/lib/utils";
 
 import "./markdown-renderer.css";
@@ -25,28 +26,6 @@ interface MarkdownRendererProps {
    */
   enableGfm?: boolean;
 }
-
-/**
- * 复制到剪贴板功能的钩子
- */
-const useCopyToClipboard = ({
-  copiedDuration = 3000
-}: {
-  copiedDuration?: number;
-} = {}) => {
-  const [isCopied, setIsCopied] = useState<boolean>(false);
-
-  const copyToClipboard = (value: string) => {
-    if (!value) return;
-
-    navigator.clipboard.writeText(value).then(() => {
-      setIsCopied(true);
-      setTimeout(() => setIsCopied(false), copiedDuration);
-    });
-  };
-
-  return { isCopied, copyToClipboard };
-};
 
 /**
  * 代码块头部组件
@@ -217,8 +196,10 @@ const createMarkdownComponents = (): Components => ({
     const codeElement = Array.isArray(children) ? children[0] : children;
     const code =
       typeof codeElement === "object" && codeElement && "props" in codeElement
-        ? String(codeElement.props.children || "")
-        : String(children || "");
+        ? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          String(codeElement.props.children || "")
+        : // eslint-disable-next-line @typescript-eslint/no-base-to-string
+          String(children || "");
 
     // 从 className 中提取语言信息
     const language = className?.replace(/language-/, "") || "";
