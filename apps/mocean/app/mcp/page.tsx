@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Search } from "lucide-react";
 
@@ -18,14 +18,19 @@ const servers = [
 ];
 
 export default function MCPServerPage() {
+  const [mounted, setMounted] = useState(false);
   const [selectedServerId, setSelectedServerId] = useState("1");
   const [addServerOpen, setAddServerOpen] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   const selectedServer = servers.find((s) => s.id === selectedServerId);
 
   const handleNewServer = () => {
     setAddServerOpen(true);
   };
+
+  if (!mounted) return null;
 
   return (
     <main className="min-h-screen bg-background">
