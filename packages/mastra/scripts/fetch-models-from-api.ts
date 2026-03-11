@@ -68,20 +68,19 @@ const POPULAR_PROVIDER_IDS = new Set([
   // 全球主流
   "openai",
   "anthropic",
-  "google",
-  "gemini",
+  "google", // 包含 Gemini 系列
   "deepseek",
   "groq",
   "mistral",
   // 网关
   "openrouter",
   // Azure & xAI
-  "azure-openai",
-  "grok", // -> xai
+  "azure",
+  "xai",
   // 中国热门
-  "dashscope", // -> alibaba (通义千问)
-  "zhipu", // -> zhipuai (智谱)
-  "moonshot", // -> moonshotai (Kimi)
+  "alibaba", // 通义千问
+  "zhipuai", // 智谱
+  "moonshotai", // Kimi
   "siliconflow", // 硅基流动
   "minimax",
   "stepfun" // 阶跃星辰
