@@ -21,7 +21,7 @@ export default function AgentLayout({
       <div className="h-full w-80 flex-shrink-0 bg-brand-main">
         <AgentGroupSelect groups={groups} />
       </div>
-      <div className="scrollbar-hide bg-brand-slate-100/80 h-full min-w-0 flex-1 overflow-y-auto rounded-tl-lg pl-4 shadow-[inset_12px_0_10px_-6px_hsl(var(--brand-slate))]">
+      <div className="scrollbar-hide h-full min-w-0 flex-1 overflow-y-auto rounded-tl-lg bg-brand-slate-100/80 pl-4 shadow-[inset_12px_0_10px_-6px_hsl(var(--brand-slate))]">
         {children}
       </div>
     </div>
