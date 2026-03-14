@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Bot,
@@ -104,6 +104,7 @@ interface ServerDetailFormProps {
 export function ServerDetailForm({
   serverName: initialName = "Cognitive Research"
 }: ServerDetailFormProps) {
+  const [mounted, setMounted] = useState(false);
   const [serverName, setServerName] = useState(initialName);
   const [serverType, setServerType] = useState("stdio");
   const [command, setCommand] = useState("node /path/to/mcp.js");
@@ -318,6 +319,10 @@ export function ServerDetailForm({
     );
   };
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const activeToolsCount = tools.filter((t) => t.enabled).length;
 
   const filteredPrompts = prompts.filter(
@@ -490,7 +495,16 @@ export function ServerDetailForm({
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-6">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        {!mounted ? (
+          <div className="flex h-96 items-center justify-center">
+            <Spinner />
+          </div>
+        ) : (
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
           <TabsList className="h-auto w-full justify-start rounded-none border-b bg-transparent p-0">
             <TabsTrigger
               value="configuration"
@@ -1070,6 +1084,7 @@ export function ServerDetailForm({
             )}
           </TabsContent>
         </Tabs>
+        )}
       </CardContent>
     </Card>
   );
