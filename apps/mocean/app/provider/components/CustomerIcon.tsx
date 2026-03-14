@@ -1,7 +1,6 @@
-import type { FC } from "react";
+import type { ReactNode } from "react";
 
 import type { StaticImageData } from "next/image";
-import Image from "next/image";
 
 import { ModelProvider, ProviderIcon } from "@lobehub/icons";
 import type { Provider, ProviderType } from "@mocean/mastra/prismaType";
@@ -25,6 +24,10 @@ const convertProviderTypeToProviderIcon = (
 ): ModelProvider | undefined => {
   const providerMap: Partial<Record<ProviderType, ModelProvider>> = {
     openai: ModelProvider.OpenAI,
+    stepfun: ModelProvider.Stepfun,
+    siliconflow: ModelProvider.SiliconCloud,
+    minimax: ModelProvider.Minimax,
+    azure: ModelProvider.Azure,
     openai_compatible: ModelProvider.OpenAI,
     anthropic: ModelProvider.Anthropic,
     google: ModelProvider.Google,
@@ -71,10 +74,10 @@ interface RenderProviderAvatarProps {
  * 渲染提供商头像
  * @param providerName - 提供商名称
  */
-export const renderProviderAvatar: FC<RenderProviderAvatarProps> = ({
+export const renderProviderAvatar = ({
   provider,
   className
-}) => {
+}: RenderProviderAvatarProps): ReactNode => {
   if (!provider) {
     return (
       <div
@@ -87,19 +90,6 @@ export const renderProviderAvatar: FC<RenderProviderAvatarProps> = ({
   }
 
   const modelProvider = convertProviderTypeToProviderIcon(provider.type);
-
-  // 如果没有映射，使用远程 SVG 图标
-  if (!modelProvider) {
-    return (
-      <Image
-        src={`https://models.dev/logos/${provider.id}.svg`}
-        alt={provider.name}
-        width={10}
-        height={10}
-        className={cn("h-4 w-4 rounded-lg", className)}
-      />
-    );
-  }
 
   return (
     <ProviderIcon

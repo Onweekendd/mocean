@@ -38,7 +38,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({
 
   return (
     <Card
-      className={`bg-brand-slate-200/30 group flex cursor-pointer flex-col border-none shadow-[6px_6px_8px_0px_hsl(var(--brand-slate))] transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg ${className}`}
+      className={`group flex cursor-pointer flex-col border-none bg-brand-slate-200/30 shadow-[6px_6px_8px_0px_hsl(var(--brand-slate))] transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg ${className}`}
       onClick={onCardClick}
     >
       <CardHeader className="pb-3">
@@ -63,7 +63,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({
       <CardContent className="flex flex-1 flex-col pt-0">
         {agent.description && (
           <p
-            className="text-brand-text-body mb-3 text-sm leading-relaxed"
+            className="mb-3 text-sm leading-relaxed text-brand-text-body"
             style={{
               display: "-webkit-box",
               WebkitLineClamp: 4,
@@ -91,7 +91,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({
               {groups.length > 3 && (
                 <Badge
                   variant="outline"
-                  className="text-brand-text-muted px-2 py-1 text-xs"
+                  className="px-2 py-1 text-xs text-brand-text-muted"
                 >
                   +{groups.length - 3}
                 </Badge>
@@ -101,7 +101,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({
         )}
 
         <div className="mt-auto flex items-center justify-between">
-          <span className="text-brand-text-muted text-xs">
+          <span className="text-xs text-brand-text-muted">
             创建于 {formatDate(agent.createdAt)}
           </span>
 

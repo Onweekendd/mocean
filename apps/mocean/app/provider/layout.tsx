@@ -48,7 +48,7 @@ export default function ProviderLayout({ children }: ProviderLayoutProps) {
   return (
     <div className="flex h-screen gap-2 overflow-hidden bg-brand-main">
       {/* 左侧提供商列表 */}
-      <div className="h-full w-80 flex-shrink-0">
+      <div className="h-full w-[18rem] flex-shrink-0">
         <ProviderSelect
           providers={providers as Provider[]}
           selectedProviderId={selectedProviderId}
