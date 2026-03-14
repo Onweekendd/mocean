@@ -61,6 +61,32 @@ type ApiModelInfo = z.infer<typeof ModelsDevModelSchema>;
 const GATEWAY_PROVIDERS = ["netlify", "openrouter", "vercel"];
 
 /**
+ * 热门供应商 ID 列表（使用 models.dev API 中的 ID）
+ * 只获取这些供应商的数据，其他供应商由用户通过 openai_compatible 自行添加
+ */
+const POPULAR_PROVIDER_IDS = new Set([
+  // 全球主流
+  "openai",
+  "anthropic",
+  "google", // 包含 Gemini 系列
+  "deepseek",
+  "groq",
+  "mistral",
+  // 网关
+  "openrouter",
+  // Azure & xAI
+  "azure",
+  "xai",
+  // 中国热门
+  "alibaba", // 通义千问
+  "zhipuai", // 智谱
+  "moonshotai", // Kimi
+  "siliconflow", // 硅基流动
+  "minimax",
+  "stepfun" // 阶跃星辰
+]);
+
+/**
  * 爬取的完整数据集合
  * @interface ScrapedData
  * @description 从 models.dev API 获取并处理后的完整数据，包括供应商、模型和元数据信息
@@ -215,6 +241,11 @@ async function fetchModelsDevData(): Promise<ScrapedData> {
       // 跳过字符串类型的值（别名或引用）
       if (typeof providerData === "string") {
         console.log(`⏭️  ${providerId}: 别名引用，跳过`);
+        continue;
+      }
+
+      // 只处理热门供应商
+      if (!POPULAR_PROVIDER_IDS.has(providerId)) {
         continue;
       }
 

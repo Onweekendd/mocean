@@ -53,7 +53,7 @@ export function DraggableModelCard({
       )}
     >
       <ModelCard
-        className="h-full w-full rounded-md bg-transparent"
+        className="h-full w-full rounded-md"
         model={model}
         onClick={onClick}
         onEdit={onEdit}

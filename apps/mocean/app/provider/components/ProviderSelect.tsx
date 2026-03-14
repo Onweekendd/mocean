@@ -43,20 +43,14 @@ export const ProviderSelect: React.FC<ProviderSelectProps> = ({
     return (
       <div
         key={provider.id}
-        className={`cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${
-          isSelected
-            ? "border border-transparent bg-gradient-brand text-white shadow-lg"
-            : "border border-border bg-card hover:border-primary/50 hover:bg-muted/80"
+        className={`cursor-pointer duration-100 hover:-translate-y-0.5 hover:bg-brand-slate-200/30 hover:shadow-md ${
+          isSelected ? "bg-brand-slate-200/50" : ""
         } group rounded-lg p-3`}
         onClick={() => handleProviderChange(provider.id)}
       >
         <div className="flex items-center space-x-3">
           <div
-            className={`flex h-8 w-8 items-center justify-center rounded-lg transition-transform duration-200 group-hover:scale-110 ${
-              isSelected
-                ? "bg-white/20 text-white"
-                : "to-brand-secondary/10 bg-gradient-to-br from-brand-primary/10"
-            } `}
+            className={`flex h-8 w-8 items-center justify-center rounded-lg group-hover:scale-110`}
           >
             {renderProviderAvatar({
               provider,
@@ -65,11 +59,11 @@ export const ProviderSelect: React.FC<ProviderSelectProps> = ({
           </div>
 
           <span
-            className={`text-sm font-medium transition-colors ${
+            className={`text-sm font-medium ${
               isSelected
-                ? "text-white"
-                : "text-foreground group-hover:text-primary"
-            } `}
+                ? "text-brand-text"
+                : "text-brand-text-muted group-hover:text-primary"
+            }`}
           >
             {provider.name}
           </span>
@@ -96,10 +90,9 @@ export const ProviderSelect: React.FC<ProviderSelectProps> = ({
         <ItemList
           items={providers}
           renderItem={renderProviderItem}
-          searchFilter={searchFilter}
           searchPlaceholder="搜索提供商名称..."
           showStats={false}
-          showSearch={true}
+          showSearch={false}
           groupName="提供商"
           gridCols={{
             default: 1
@@ -108,7 +101,7 @@ export const ProviderSelect: React.FC<ProviderSelectProps> = ({
             title: "未找到提供商",
             description: "没有找到匹配的提供商"
           }}
-          className="h-full"
+          className="h-full pb-4"
           height="h-full"
         />
       </div>
