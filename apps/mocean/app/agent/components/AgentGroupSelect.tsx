@@ -40,8 +40,8 @@ export const AgentGroupSelect: React.FC<AgentGroupSelectProps> = ({
     return (
       <div
         key={group.id}
-        className={`cursor-pointer duration-200 hover:-translate-y-0.5 hover:shadow-md ${
-          isSelected ? "bg-primary/5" : "hover:bg-muted/50"
+        className={`cursor-pointer duration-100 hover:-translate-y-0.5 hover:bg-brand-slate-200/30 hover:shadow-md ${
+          isSelected ? "bg-brand-slate-200/50" : ""
         } group rounded-lg p-3`}
         onClick={() => onGroupClick(group.id)}
       >
@@ -102,7 +102,7 @@ export const AgentGroupSelect: React.FC<AgentGroupSelectProps> = ({
           <div className="flex h-4 w-4 items-center justify-center rounded-full bg-gradient-brand text-white">
             <AgentGroupIcon groupKey={currentGroup.name} size={12} />
           </div>
-          <span className="text-brand-text-muted text-xs">
+          <span className="text-xs text-brand-text-muted">
             当前:{" "}
             <span className="text-base font-medium text-brand-text">
               {getGroupLabel(currentGroup.name)}
