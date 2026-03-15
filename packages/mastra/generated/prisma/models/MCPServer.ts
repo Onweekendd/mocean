@@ -48,6 +48,15 @@ export type MCPServerMinAggregateOutputType = {
   providerUrl: string | null
   logoUrl: string | null
   timeout: number | null
+  releaseDate: Date | null
+  isLatest: boolean | null
+  packageCanonical: string | null
+  repositoryUrl: string | null
+  repositorySource: string | null
+  repositoryId: string | null
+  status: string | null
+  lastConnectedAt: Date | null
+  errorMessage: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -66,6 +75,15 @@ export type MCPServerMaxAggregateOutputType = {
   providerUrl: string | null
   logoUrl: string | null
   timeout: number | null
+  releaseDate: Date | null
+  isLatest: boolean | null
+  packageCanonical: string | null
+  repositoryUrl: string | null
+  repositorySource: string | null
+  repositoryId: string | null
+  status: string | null
+  lastConnectedAt: Date | null
+  errorMessage: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -90,6 +108,17 @@ export type MCPServerCountAggregateOutputType = {
   logoUrl: number
   tagsJson: number
   timeout: number
+  releaseDate: number
+  isLatest: number
+  packageCanonical: number
+  packagesJson: number
+  remotesJson: number
+  repositoryUrl: number
+  repositorySource: number
+  repositoryId: number
+  status: number
+  lastConnectedAt: number
+  errorMessage: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -118,6 +147,15 @@ export type MCPServerMinAggregateInputType = {
   providerUrl?: true
   logoUrl?: true
   timeout?: true
+  releaseDate?: true
+  isLatest?: true
+  packageCanonical?: true
+  repositoryUrl?: true
+  repositorySource?: true
+  repositoryId?: true
+  status?: true
+  lastConnectedAt?: true
+  errorMessage?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -136,6 +174,15 @@ export type MCPServerMaxAggregateInputType = {
   providerUrl?: true
   logoUrl?: true
   timeout?: true
+  releaseDate?: true
+  isLatest?: true
+  packageCanonical?: true
+  repositoryUrl?: true
+  repositorySource?: true
+  repositoryId?: true
+  status?: true
+  lastConnectedAt?: true
+  errorMessage?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -160,6 +207,17 @@ export type MCPServerCountAggregateInputType = {
   logoUrl?: true
   tagsJson?: true
   timeout?: true
+  releaseDate?: true
+  isLatest?: true
+  packageCanonical?: true
+  packagesJson?: true
+  remotesJson?: true
+  repositoryUrl?: true
+  repositorySource?: true
+  repositoryId?: true
+  status?: true
+  lastConnectedAt?: true
+  errorMessage?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -271,6 +329,17 @@ export type MCPServerGroupByOutputType = {
   logoUrl: string | null
   tagsJson: runtime.JsonValue | null
   timeout: number | null
+  releaseDate: Date | null
+  isLatest: boolean
+  packageCanonical: string | null
+  packagesJson: runtime.JsonValue | null
+  remotesJson: runtime.JsonValue | null
+  repositoryUrl: string | null
+  repositorySource: string | null
+  repositoryId: string | null
+  status: string | null
+  lastConnectedAt: Date | null
+  errorMessage: string | null
   createdAt: Date
   updatedAt: Date
   _count: MCPServerCountAggregateOutputType | null
@@ -318,12 +387,22 @@ export type MCPServerWhereInput = {
   logoUrl?: Prisma.StringNullableFilter<"MCPServer"> | string | null
   tagsJson?: Prisma.JsonNullableFilter<"MCPServer">
   timeout?: Prisma.IntNullableFilter<"MCPServer"> | number | null
+  releaseDate?: Prisma.DateTimeNullableFilter<"MCPServer"> | Date | string | null
+  isLatest?: Prisma.BoolFilter<"MCPServer"> | boolean
+  packageCanonical?: Prisma.StringNullableFilter<"MCPServer"> | string | null
+  packagesJson?: Prisma.JsonNullableFilter<"MCPServer">
+  remotesJson?: Prisma.JsonNullableFilter<"MCPServer">
+  repositoryUrl?: Prisma.StringNullableFilter<"MCPServer"> | string | null
+  repositorySource?: Prisma.StringNullableFilter<"MCPServer"> | string | null
+  repositoryId?: Prisma.StringNullableFilter<"MCPServer"> | string | null
+  status?: Prisma.StringNullableFilter<"MCPServer"> | string | null
+  lastConnectedAt?: Prisma.DateTimeNullableFilter<"MCPServer"> | Date | string | null
+  errorMessage?: Prisma.StringNullableFilter<"MCPServer"> | string | null
   createdAt?: Prisma.DateTimeFilter<"MCPServer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MCPServer"> | Date | string
   tools?: Prisma.MCPToolListRelationFilter
   prompts?: Prisma.MCPPromptListRelationFilter
   assistants?: Prisma.MCPAssistantServerListRelationFilter
-  agents?: Prisma.MCPAgentServerListRelationFilter
   resources?: Prisma.MCPResourceListRelationFilter
   configSampleRelation?: Prisma.XOR<Prisma.MCPConfigSampleNullableScalarRelationFilter, Prisma.MCPConfigSampleWhereInput> | null
 }
@@ -348,12 +427,22 @@ export type MCPServerOrderByWithRelationInput = {
   logoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   tagsJson?: Prisma.SortOrderInput | Prisma.SortOrder
   timeout?: Prisma.SortOrderInput | Prisma.SortOrder
+  releaseDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  isLatest?: Prisma.SortOrder
+  packageCanonical?: Prisma.SortOrderInput | Prisma.SortOrder
+  packagesJson?: Prisma.SortOrderInput | Prisma.SortOrder
+  remotesJson?: Prisma.SortOrderInput | Prisma.SortOrder
+  repositoryUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  repositorySource?: Prisma.SortOrderInput | Prisma.SortOrder
+  repositoryId?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastConnectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tools?: Prisma.MCPToolOrderByRelationAggregateInput
   prompts?: Prisma.MCPPromptOrderByRelationAggregateInput
   assistants?: Prisma.MCPAssistantServerOrderByRelationAggregateInput
-  agents?: Prisma.MCPAgentServerOrderByRelationAggregateInput
   resources?: Prisma.MCPResourceOrderByRelationAggregateInput
   configSampleRelation?: Prisma.MCPConfigSampleOrderByWithRelationInput
 }
@@ -381,12 +470,22 @@ export type MCPServerWhereUniqueInput = Prisma.AtLeast<{
   logoUrl?: Prisma.StringNullableFilter<"MCPServer"> | string | null
   tagsJson?: Prisma.JsonNullableFilter<"MCPServer">
   timeout?: Prisma.IntNullableFilter<"MCPServer"> | number | null
+  releaseDate?: Prisma.DateTimeNullableFilter<"MCPServer"> | Date | string | null
+  isLatest?: Prisma.BoolFilter<"MCPServer"> | boolean
+  packageCanonical?: Prisma.StringNullableFilter<"MCPServer"> | string | null
+  packagesJson?: Prisma.JsonNullableFilter<"MCPServer">
+  remotesJson?: Prisma.JsonNullableFilter<"MCPServer">
+  repositoryUrl?: Prisma.StringNullableFilter<"MCPServer"> | string | null
+  repositorySource?: Prisma.StringNullableFilter<"MCPServer"> | string | null
+  repositoryId?: Prisma.StringNullableFilter<"MCPServer"> | string | null
+  status?: Prisma.StringNullableFilter<"MCPServer"> | string | null
+  lastConnectedAt?: Prisma.DateTimeNullableFilter<"MCPServer"> | Date | string | null
+  errorMessage?: Prisma.StringNullableFilter<"MCPServer"> | string | null
   createdAt?: Prisma.DateTimeFilter<"MCPServer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MCPServer"> | Date | string
   tools?: Prisma.MCPToolListRelationFilter
   prompts?: Prisma.MCPPromptListRelationFilter
   assistants?: Prisma.MCPAssistantServerListRelationFilter
-  agents?: Prisma.MCPAgentServerListRelationFilter
   resources?: Prisma.MCPResourceListRelationFilter
   configSampleRelation?: Prisma.XOR<Prisma.MCPConfigSampleNullableScalarRelationFilter, Prisma.MCPConfigSampleWhereInput> | null
 }, "id">
@@ -411,6 +510,17 @@ export type MCPServerOrderByWithAggregationInput = {
   logoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   tagsJson?: Prisma.SortOrderInput | Prisma.SortOrder
   timeout?: Prisma.SortOrderInput | Prisma.SortOrder
+  releaseDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  isLatest?: Prisma.SortOrder
+  packageCanonical?: Prisma.SortOrderInput | Prisma.SortOrder
+  packagesJson?: Prisma.SortOrderInput | Prisma.SortOrder
+  remotesJson?: Prisma.SortOrderInput | Prisma.SortOrder
+  repositoryUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  repositorySource?: Prisma.SortOrderInput | Prisma.SortOrder
+  repositoryId?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastConnectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.MCPServerCountOrderByAggregateInput
@@ -443,6 +553,17 @@ export type MCPServerScalarWhereWithAggregatesInput = {
   logoUrl?: Prisma.StringNullableWithAggregatesFilter<"MCPServer"> | string | null
   tagsJson?: Prisma.JsonNullableWithAggregatesFilter<"MCPServer">
   timeout?: Prisma.IntNullableWithAggregatesFilter<"MCPServer"> | number | null
+  releaseDate?: Prisma.DateTimeNullableWithAggregatesFilter<"MCPServer"> | Date | string | null
+  isLatest?: Prisma.BoolWithAggregatesFilter<"MCPServer"> | boolean
+  packageCanonical?: Prisma.StringNullableWithAggregatesFilter<"MCPServer"> | string | null
+  packagesJson?: Prisma.JsonNullableWithAggregatesFilter<"MCPServer">
+  remotesJson?: Prisma.JsonNullableWithAggregatesFilter<"MCPServer">
+  repositoryUrl?: Prisma.StringNullableWithAggregatesFilter<"MCPServer"> | string | null
+  repositorySource?: Prisma.StringNullableWithAggregatesFilter<"MCPServer"> | string | null
+  repositoryId?: Prisma.StringNullableWithAggregatesFilter<"MCPServer"> | string | null
+  status?: Prisma.StringNullableWithAggregatesFilter<"MCPServer"> | string | null
+  lastConnectedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"MCPServer"> | Date | string | null
+  errorMessage?: Prisma.StringNullableWithAggregatesFilter<"MCPServer"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"MCPServer"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"MCPServer"> | Date | string
 }
@@ -467,12 +588,22 @@ export type MCPServerCreateInput = {
   logoUrl?: string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: number | null
+  releaseDate?: Date | string | null
+  isLatest?: boolean
+  packageCanonical?: string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: string | null
+  repositorySource?: string | null
+  repositoryId?: string | null
+  status?: string | null
+  lastConnectedAt?: Date | string | null
+  errorMessage?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tools?: Prisma.MCPToolCreateNestedManyWithoutServerInput
   prompts?: Prisma.MCPPromptCreateNestedManyWithoutServerInput
   assistants?: Prisma.MCPAssistantServerCreateNestedManyWithoutMcpServerInput
-  agents?: Prisma.MCPAgentServerCreateNestedManyWithoutMcpServerInput
   resources?: Prisma.MCPResourceCreateNestedManyWithoutServerInput
   configSampleRelation?: Prisma.MCPConfigSampleCreateNestedOneWithoutServerInput
 }
@@ -497,12 +628,22 @@ export type MCPServerUncheckedCreateInput = {
   logoUrl?: string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: number | null
+  releaseDate?: Date | string | null
+  isLatest?: boolean
+  packageCanonical?: string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: string | null
+  repositorySource?: string | null
+  repositoryId?: string | null
+  status?: string | null
+  lastConnectedAt?: Date | string | null
+  errorMessage?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tools?: Prisma.MCPToolUncheckedCreateNestedManyWithoutServerInput
   prompts?: Prisma.MCPPromptUncheckedCreateNestedManyWithoutServerInput
   assistants?: Prisma.MCPAssistantServerUncheckedCreateNestedManyWithoutMcpServerInput
-  agents?: Prisma.MCPAgentServerUncheckedCreateNestedManyWithoutMcpServerInput
   resources?: Prisma.MCPResourceUncheckedCreateNestedManyWithoutServerInput
   configSampleRelation?: Prisma.MCPConfigSampleUncheckedCreateNestedOneWithoutServerInput
 }
@@ -527,12 +668,22 @@ export type MCPServerUpdateInput = {
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  releaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  packageCanonical?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositorySource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tools?: Prisma.MCPToolUpdateManyWithoutServerNestedInput
   prompts?: Prisma.MCPPromptUpdateManyWithoutServerNestedInput
   assistants?: Prisma.MCPAssistantServerUpdateManyWithoutMcpServerNestedInput
-  agents?: Prisma.MCPAgentServerUpdateManyWithoutMcpServerNestedInput
   resources?: Prisma.MCPResourceUpdateManyWithoutServerNestedInput
   configSampleRelation?: Prisma.MCPConfigSampleUpdateOneWithoutServerNestedInput
 }
@@ -557,12 +708,22 @@ export type MCPServerUncheckedUpdateInput = {
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  releaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  packageCanonical?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositorySource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tools?: Prisma.MCPToolUncheckedUpdateManyWithoutServerNestedInput
   prompts?: Prisma.MCPPromptUncheckedUpdateManyWithoutServerNestedInput
   assistants?: Prisma.MCPAssistantServerUncheckedUpdateManyWithoutMcpServerNestedInput
-  agents?: Prisma.MCPAgentServerUncheckedUpdateManyWithoutMcpServerNestedInput
   resources?: Prisma.MCPResourceUncheckedUpdateManyWithoutServerNestedInput
   configSampleRelation?: Prisma.MCPConfigSampleUncheckedUpdateOneWithoutServerNestedInput
 }
@@ -587,6 +748,17 @@ export type MCPServerCreateManyInput = {
   logoUrl?: string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: number | null
+  releaseDate?: Date | string | null
+  isLatest?: boolean
+  packageCanonical?: string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: string | null
+  repositorySource?: string | null
+  repositoryId?: string | null
+  status?: string | null
+  lastConnectedAt?: Date | string | null
+  errorMessage?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -611,6 +783,17 @@ export type MCPServerUpdateManyMutationInput = {
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  releaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  packageCanonical?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositorySource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -635,6 +818,17 @@ export type MCPServerUncheckedUpdateManyInput = {
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  releaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  packageCanonical?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositorySource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -659,6 +853,17 @@ export type MCPServerCountOrderByAggregateInput = {
   logoUrl?: Prisma.SortOrder
   tagsJson?: Prisma.SortOrder
   timeout?: Prisma.SortOrder
+  releaseDate?: Prisma.SortOrder
+  isLatest?: Prisma.SortOrder
+  packageCanonical?: Prisma.SortOrder
+  packagesJson?: Prisma.SortOrder
+  remotesJson?: Prisma.SortOrder
+  repositoryUrl?: Prisma.SortOrder
+  repositorySource?: Prisma.SortOrder
+  repositoryId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  lastConnectedAt?: Prisma.SortOrder
+  errorMessage?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -681,6 +886,15 @@ export type MCPServerMaxOrderByAggregateInput = {
   providerUrl?: Prisma.SortOrder
   logoUrl?: Prisma.SortOrder
   timeout?: Prisma.SortOrder
+  releaseDate?: Prisma.SortOrder
+  isLatest?: Prisma.SortOrder
+  packageCanonical?: Prisma.SortOrder
+  repositoryUrl?: Prisma.SortOrder
+  repositorySource?: Prisma.SortOrder
+  repositoryId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  lastConnectedAt?: Prisma.SortOrder
+  errorMessage?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -699,6 +913,15 @@ export type MCPServerMinOrderByAggregateInput = {
   providerUrl?: Prisma.SortOrder
   logoUrl?: Prisma.SortOrder
   timeout?: Prisma.SortOrder
+  releaseDate?: Prisma.SortOrder
+  isLatest?: Prisma.SortOrder
+  packageCanonical?: Prisma.SortOrder
+  repositoryUrl?: Prisma.SortOrder
+  repositorySource?: Prisma.SortOrder
+  repositoryId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  lastConnectedAt?: Prisma.SortOrder
+  errorMessage?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -710,6 +933,10 @@ export type MCPServerSumOrderByAggregateInput = {
 export type MCPServerScalarRelationFilter = {
   is?: Prisma.MCPServerWhereInput
   isNot?: Prisma.MCPServerWhereInput
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type MCPServerCreateNestedOneWithoutAssistantsInput = {
@@ -724,20 +951,6 @@ export type MCPServerUpdateOneRequiredWithoutAssistantsNestedInput = {
   upsert?: Prisma.MCPServerUpsertWithoutAssistantsInput
   connect?: Prisma.MCPServerWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.MCPServerUpdateToOneWithWhereWithoutAssistantsInput, Prisma.MCPServerUpdateWithoutAssistantsInput>, Prisma.MCPServerUncheckedUpdateWithoutAssistantsInput>
-}
-
-export type MCPServerCreateNestedOneWithoutAgentsInput = {
-  create?: Prisma.XOR<Prisma.MCPServerCreateWithoutAgentsInput, Prisma.MCPServerUncheckedCreateWithoutAgentsInput>
-  connectOrCreate?: Prisma.MCPServerCreateOrConnectWithoutAgentsInput
-  connect?: Prisma.MCPServerWhereUniqueInput
-}
-
-export type MCPServerUpdateOneRequiredWithoutAgentsNestedInput = {
-  create?: Prisma.XOR<Prisma.MCPServerCreateWithoutAgentsInput, Prisma.MCPServerUncheckedCreateWithoutAgentsInput>
-  connectOrCreate?: Prisma.MCPServerCreateOrConnectWithoutAgentsInput
-  upsert?: Prisma.MCPServerUpsertWithoutAgentsInput
-  connect?: Prisma.MCPServerWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.MCPServerUpdateToOneWithWhereWithoutAgentsInput, Prisma.MCPServerUpdateWithoutAgentsInput>, Prisma.MCPServerUncheckedUpdateWithoutAgentsInput>
 }
 
 export type MCPServerCreateNestedOneWithoutToolsInput = {
@@ -816,11 +1029,21 @@ export type MCPServerCreateWithoutAssistantsInput = {
   logoUrl?: string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: number | null
+  releaseDate?: Date | string | null
+  isLatest?: boolean
+  packageCanonical?: string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: string | null
+  repositorySource?: string | null
+  repositoryId?: string | null
+  status?: string | null
+  lastConnectedAt?: Date | string | null
+  errorMessage?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tools?: Prisma.MCPToolCreateNestedManyWithoutServerInput
   prompts?: Prisma.MCPPromptCreateNestedManyWithoutServerInput
-  agents?: Prisma.MCPAgentServerCreateNestedManyWithoutMcpServerInput
   resources?: Prisma.MCPResourceCreateNestedManyWithoutServerInput
   configSampleRelation?: Prisma.MCPConfigSampleCreateNestedOneWithoutServerInput
 }
@@ -845,11 +1068,21 @@ export type MCPServerUncheckedCreateWithoutAssistantsInput = {
   logoUrl?: string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: number | null
+  releaseDate?: Date | string | null
+  isLatest?: boolean
+  packageCanonical?: string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: string | null
+  repositorySource?: string | null
+  repositoryId?: string | null
+  status?: string | null
+  lastConnectedAt?: Date | string | null
+  errorMessage?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tools?: Prisma.MCPToolUncheckedCreateNestedManyWithoutServerInput
   prompts?: Prisma.MCPPromptUncheckedCreateNestedManyWithoutServerInput
-  agents?: Prisma.MCPAgentServerUncheckedCreateNestedManyWithoutMcpServerInput
   resources?: Prisma.MCPResourceUncheckedCreateNestedManyWithoutServerInput
   configSampleRelation?: Prisma.MCPConfigSampleUncheckedCreateNestedOneWithoutServerInput
 }
@@ -890,11 +1123,21 @@ export type MCPServerUpdateWithoutAssistantsInput = {
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  releaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  packageCanonical?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositorySource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tools?: Prisma.MCPToolUpdateManyWithoutServerNestedInput
   prompts?: Prisma.MCPPromptUpdateManyWithoutServerNestedInput
-  agents?: Prisma.MCPAgentServerUpdateManyWithoutMcpServerNestedInput
   resources?: Prisma.MCPResourceUpdateManyWithoutServerNestedInput
   configSampleRelation?: Prisma.MCPConfigSampleUpdateOneWithoutServerNestedInput
 }
@@ -919,143 +1162,21 @@ export type MCPServerUncheckedUpdateWithoutAssistantsInput = {
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  releaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  packageCanonical?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositorySource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tools?: Prisma.MCPToolUncheckedUpdateManyWithoutServerNestedInput
   prompts?: Prisma.MCPPromptUncheckedUpdateManyWithoutServerNestedInput
-  agents?: Prisma.MCPAgentServerUncheckedUpdateManyWithoutMcpServerNestedInput
-  resources?: Prisma.MCPResourceUncheckedUpdateManyWithoutServerNestedInput
-  configSampleRelation?: Prisma.MCPConfigSampleUncheckedUpdateOneWithoutServerNestedInput
-}
-
-export type MCPServerCreateWithoutAgentsInput = {
-  id?: string
-  name: string
-  type?: string | null
-  description?: string | null
-  baseUrl?: string | null
-  command?: string | null
-  registryUrl?: string | null
-  argsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  env?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isActive?: boolean
-  disabledToolsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  configSample?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  headers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  searchKey?: string | null
-  provider?: string | null
-  providerUrl?: string | null
-  logoUrl?: string | null
-  tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  timeout?: number | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  tools?: Prisma.MCPToolCreateNestedManyWithoutServerInput
-  prompts?: Prisma.MCPPromptCreateNestedManyWithoutServerInput
-  assistants?: Prisma.MCPAssistantServerCreateNestedManyWithoutMcpServerInput
-  resources?: Prisma.MCPResourceCreateNestedManyWithoutServerInput
-  configSampleRelation?: Prisma.MCPConfigSampleCreateNestedOneWithoutServerInput
-}
-
-export type MCPServerUncheckedCreateWithoutAgentsInput = {
-  id?: string
-  name: string
-  type?: string | null
-  description?: string | null
-  baseUrl?: string | null
-  command?: string | null
-  registryUrl?: string | null
-  argsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  env?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isActive?: boolean
-  disabledToolsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  configSample?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  headers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  searchKey?: string | null
-  provider?: string | null
-  providerUrl?: string | null
-  logoUrl?: string | null
-  tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  timeout?: number | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  tools?: Prisma.MCPToolUncheckedCreateNestedManyWithoutServerInput
-  prompts?: Prisma.MCPPromptUncheckedCreateNestedManyWithoutServerInput
-  assistants?: Prisma.MCPAssistantServerUncheckedCreateNestedManyWithoutMcpServerInput
-  resources?: Prisma.MCPResourceUncheckedCreateNestedManyWithoutServerInput
-  configSampleRelation?: Prisma.MCPConfigSampleUncheckedCreateNestedOneWithoutServerInput
-}
-
-export type MCPServerCreateOrConnectWithoutAgentsInput = {
-  where: Prisma.MCPServerWhereUniqueInput
-  create: Prisma.XOR<Prisma.MCPServerCreateWithoutAgentsInput, Prisma.MCPServerUncheckedCreateWithoutAgentsInput>
-}
-
-export type MCPServerUpsertWithoutAgentsInput = {
-  update: Prisma.XOR<Prisma.MCPServerUpdateWithoutAgentsInput, Prisma.MCPServerUncheckedUpdateWithoutAgentsInput>
-  create: Prisma.XOR<Prisma.MCPServerCreateWithoutAgentsInput, Prisma.MCPServerUncheckedCreateWithoutAgentsInput>
-  where?: Prisma.MCPServerWhereInput
-}
-
-export type MCPServerUpdateToOneWithWhereWithoutAgentsInput = {
-  where?: Prisma.MCPServerWhereInput
-  data: Prisma.XOR<Prisma.MCPServerUpdateWithoutAgentsInput, Prisma.MCPServerUncheckedUpdateWithoutAgentsInput>
-}
-
-export type MCPServerUpdateWithoutAgentsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  baseUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  command?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  registryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  argsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  env?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  disabledToolsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  configSample?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  headers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  searchKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  provider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  providerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  timeout?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  tools?: Prisma.MCPToolUpdateManyWithoutServerNestedInput
-  prompts?: Prisma.MCPPromptUpdateManyWithoutServerNestedInput
-  assistants?: Prisma.MCPAssistantServerUpdateManyWithoutMcpServerNestedInput
-  resources?: Prisma.MCPResourceUpdateManyWithoutServerNestedInput
-  configSampleRelation?: Prisma.MCPConfigSampleUpdateOneWithoutServerNestedInput
-}
-
-export type MCPServerUncheckedUpdateWithoutAgentsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  baseUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  command?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  registryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  argsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  env?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  disabledToolsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  configSample?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  headers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  searchKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  provider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  providerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  timeout?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  tools?: Prisma.MCPToolUncheckedUpdateManyWithoutServerNestedInput
-  prompts?: Prisma.MCPPromptUncheckedUpdateManyWithoutServerNestedInput
-  assistants?: Prisma.MCPAssistantServerUncheckedUpdateManyWithoutMcpServerNestedInput
   resources?: Prisma.MCPResourceUncheckedUpdateManyWithoutServerNestedInput
   configSampleRelation?: Prisma.MCPConfigSampleUncheckedUpdateOneWithoutServerNestedInput
 }
@@ -1080,11 +1201,21 @@ export type MCPServerCreateWithoutToolsInput = {
   logoUrl?: string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: number | null
+  releaseDate?: Date | string | null
+  isLatest?: boolean
+  packageCanonical?: string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: string | null
+  repositorySource?: string | null
+  repositoryId?: string | null
+  status?: string | null
+  lastConnectedAt?: Date | string | null
+  errorMessage?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   prompts?: Prisma.MCPPromptCreateNestedManyWithoutServerInput
   assistants?: Prisma.MCPAssistantServerCreateNestedManyWithoutMcpServerInput
-  agents?: Prisma.MCPAgentServerCreateNestedManyWithoutMcpServerInput
   resources?: Prisma.MCPResourceCreateNestedManyWithoutServerInput
   configSampleRelation?: Prisma.MCPConfigSampleCreateNestedOneWithoutServerInput
 }
@@ -1109,11 +1240,21 @@ export type MCPServerUncheckedCreateWithoutToolsInput = {
   logoUrl?: string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: number | null
+  releaseDate?: Date | string | null
+  isLatest?: boolean
+  packageCanonical?: string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: string | null
+  repositorySource?: string | null
+  repositoryId?: string | null
+  status?: string | null
+  lastConnectedAt?: Date | string | null
+  errorMessage?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   prompts?: Prisma.MCPPromptUncheckedCreateNestedManyWithoutServerInput
   assistants?: Prisma.MCPAssistantServerUncheckedCreateNestedManyWithoutMcpServerInput
-  agents?: Prisma.MCPAgentServerUncheckedCreateNestedManyWithoutMcpServerInput
   resources?: Prisma.MCPResourceUncheckedCreateNestedManyWithoutServerInput
   configSampleRelation?: Prisma.MCPConfigSampleUncheckedCreateNestedOneWithoutServerInput
 }
@@ -1154,11 +1295,21 @@ export type MCPServerUpdateWithoutToolsInput = {
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  releaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  packageCanonical?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositorySource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prompts?: Prisma.MCPPromptUpdateManyWithoutServerNestedInput
   assistants?: Prisma.MCPAssistantServerUpdateManyWithoutMcpServerNestedInput
-  agents?: Prisma.MCPAgentServerUpdateManyWithoutMcpServerNestedInput
   resources?: Prisma.MCPResourceUpdateManyWithoutServerNestedInput
   configSampleRelation?: Prisma.MCPConfigSampleUpdateOneWithoutServerNestedInput
 }
@@ -1183,11 +1334,21 @@ export type MCPServerUncheckedUpdateWithoutToolsInput = {
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  releaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  packageCanonical?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositorySource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prompts?: Prisma.MCPPromptUncheckedUpdateManyWithoutServerNestedInput
   assistants?: Prisma.MCPAssistantServerUncheckedUpdateManyWithoutMcpServerNestedInput
-  agents?: Prisma.MCPAgentServerUncheckedUpdateManyWithoutMcpServerNestedInput
   resources?: Prisma.MCPResourceUncheckedUpdateManyWithoutServerNestedInput
   configSampleRelation?: Prisma.MCPConfigSampleUncheckedUpdateOneWithoutServerNestedInput
 }
@@ -1212,11 +1373,21 @@ export type MCPServerCreateWithoutPromptsInput = {
   logoUrl?: string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: number | null
+  releaseDate?: Date | string | null
+  isLatest?: boolean
+  packageCanonical?: string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: string | null
+  repositorySource?: string | null
+  repositoryId?: string | null
+  status?: string | null
+  lastConnectedAt?: Date | string | null
+  errorMessage?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tools?: Prisma.MCPToolCreateNestedManyWithoutServerInput
   assistants?: Prisma.MCPAssistantServerCreateNestedManyWithoutMcpServerInput
-  agents?: Prisma.MCPAgentServerCreateNestedManyWithoutMcpServerInput
   resources?: Prisma.MCPResourceCreateNestedManyWithoutServerInput
   configSampleRelation?: Prisma.MCPConfigSampleCreateNestedOneWithoutServerInput
 }
@@ -1241,11 +1412,21 @@ export type MCPServerUncheckedCreateWithoutPromptsInput = {
   logoUrl?: string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: number | null
+  releaseDate?: Date | string | null
+  isLatest?: boolean
+  packageCanonical?: string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: string | null
+  repositorySource?: string | null
+  repositoryId?: string | null
+  status?: string | null
+  lastConnectedAt?: Date | string | null
+  errorMessage?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tools?: Prisma.MCPToolUncheckedCreateNestedManyWithoutServerInput
   assistants?: Prisma.MCPAssistantServerUncheckedCreateNestedManyWithoutMcpServerInput
-  agents?: Prisma.MCPAgentServerUncheckedCreateNestedManyWithoutMcpServerInput
   resources?: Prisma.MCPResourceUncheckedCreateNestedManyWithoutServerInput
   configSampleRelation?: Prisma.MCPConfigSampleUncheckedCreateNestedOneWithoutServerInput
 }
@@ -1286,11 +1467,21 @@ export type MCPServerUpdateWithoutPromptsInput = {
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  releaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  packageCanonical?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositorySource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tools?: Prisma.MCPToolUpdateManyWithoutServerNestedInput
   assistants?: Prisma.MCPAssistantServerUpdateManyWithoutMcpServerNestedInput
-  agents?: Prisma.MCPAgentServerUpdateManyWithoutMcpServerNestedInput
   resources?: Prisma.MCPResourceUpdateManyWithoutServerNestedInput
   configSampleRelation?: Prisma.MCPConfigSampleUpdateOneWithoutServerNestedInput
 }
@@ -1315,11 +1506,21 @@ export type MCPServerUncheckedUpdateWithoutPromptsInput = {
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  releaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  packageCanonical?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositorySource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tools?: Prisma.MCPToolUncheckedUpdateManyWithoutServerNestedInput
   assistants?: Prisma.MCPAssistantServerUncheckedUpdateManyWithoutMcpServerNestedInput
-  agents?: Prisma.MCPAgentServerUncheckedUpdateManyWithoutMcpServerNestedInput
   resources?: Prisma.MCPResourceUncheckedUpdateManyWithoutServerNestedInput
   configSampleRelation?: Prisma.MCPConfigSampleUncheckedUpdateOneWithoutServerNestedInput
 }
@@ -1344,12 +1545,22 @@ export type MCPServerCreateWithoutResourcesInput = {
   logoUrl?: string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: number | null
+  releaseDate?: Date | string | null
+  isLatest?: boolean
+  packageCanonical?: string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: string | null
+  repositorySource?: string | null
+  repositoryId?: string | null
+  status?: string | null
+  lastConnectedAt?: Date | string | null
+  errorMessage?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tools?: Prisma.MCPToolCreateNestedManyWithoutServerInput
   prompts?: Prisma.MCPPromptCreateNestedManyWithoutServerInput
   assistants?: Prisma.MCPAssistantServerCreateNestedManyWithoutMcpServerInput
-  agents?: Prisma.MCPAgentServerCreateNestedManyWithoutMcpServerInput
   configSampleRelation?: Prisma.MCPConfigSampleCreateNestedOneWithoutServerInput
 }
 
@@ -1373,12 +1584,22 @@ export type MCPServerUncheckedCreateWithoutResourcesInput = {
   logoUrl?: string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: number | null
+  releaseDate?: Date | string | null
+  isLatest?: boolean
+  packageCanonical?: string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: string | null
+  repositorySource?: string | null
+  repositoryId?: string | null
+  status?: string | null
+  lastConnectedAt?: Date | string | null
+  errorMessage?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tools?: Prisma.MCPToolUncheckedCreateNestedManyWithoutServerInput
   prompts?: Prisma.MCPPromptUncheckedCreateNestedManyWithoutServerInput
   assistants?: Prisma.MCPAssistantServerUncheckedCreateNestedManyWithoutMcpServerInput
-  agents?: Prisma.MCPAgentServerUncheckedCreateNestedManyWithoutMcpServerInput
   configSampleRelation?: Prisma.MCPConfigSampleUncheckedCreateNestedOneWithoutServerInput
 }
 
@@ -1418,12 +1639,22 @@ export type MCPServerUpdateWithoutResourcesInput = {
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  releaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  packageCanonical?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositorySource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tools?: Prisma.MCPToolUpdateManyWithoutServerNestedInput
   prompts?: Prisma.MCPPromptUpdateManyWithoutServerNestedInput
   assistants?: Prisma.MCPAssistantServerUpdateManyWithoutMcpServerNestedInput
-  agents?: Prisma.MCPAgentServerUpdateManyWithoutMcpServerNestedInput
   configSampleRelation?: Prisma.MCPConfigSampleUpdateOneWithoutServerNestedInput
 }
 
@@ -1447,12 +1678,22 @@ export type MCPServerUncheckedUpdateWithoutResourcesInput = {
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  releaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  packageCanonical?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositorySource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tools?: Prisma.MCPToolUncheckedUpdateManyWithoutServerNestedInput
   prompts?: Prisma.MCPPromptUncheckedUpdateManyWithoutServerNestedInput
   assistants?: Prisma.MCPAssistantServerUncheckedUpdateManyWithoutMcpServerNestedInput
-  agents?: Prisma.MCPAgentServerUncheckedUpdateManyWithoutMcpServerNestedInput
   configSampleRelation?: Prisma.MCPConfigSampleUncheckedUpdateOneWithoutServerNestedInput
 }
 
@@ -1476,12 +1717,22 @@ export type MCPServerCreateWithoutConfigSampleRelationInput = {
   logoUrl?: string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: number | null
+  releaseDate?: Date | string | null
+  isLatest?: boolean
+  packageCanonical?: string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: string | null
+  repositorySource?: string | null
+  repositoryId?: string | null
+  status?: string | null
+  lastConnectedAt?: Date | string | null
+  errorMessage?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tools?: Prisma.MCPToolCreateNestedManyWithoutServerInput
   prompts?: Prisma.MCPPromptCreateNestedManyWithoutServerInput
   assistants?: Prisma.MCPAssistantServerCreateNestedManyWithoutMcpServerInput
-  agents?: Prisma.MCPAgentServerCreateNestedManyWithoutMcpServerInput
   resources?: Prisma.MCPResourceCreateNestedManyWithoutServerInput
 }
 
@@ -1505,12 +1756,22 @@ export type MCPServerUncheckedCreateWithoutConfigSampleRelationInput = {
   logoUrl?: string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: number | null
+  releaseDate?: Date | string | null
+  isLatest?: boolean
+  packageCanonical?: string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: string | null
+  repositorySource?: string | null
+  repositoryId?: string | null
+  status?: string | null
+  lastConnectedAt?: Date | string | null
+  errorMessage?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tools?: Prisma.MCPToolUncheckedCreateNestedManyWithoutServerInput
   prompts?: Prisma.MCPPromptUncheckedCreateNestedManyWithoutServerInput
   assistants?: Prisma.MCPAssistantServerUncheckedCreateNestedManyWithoutMcpServerInput
-  agents?: Prisma.MCPAgentServerUncheckedCreateNestedManyWithoutMcpServerInput
   resources?: Prisma.MCPResourceUncheckedCreateNestedManyWithoutServerInput
 }
 
@@ -1550,12 +1811,22 @@ export type MCPServerUpdateWithoutConfigSampleRelationInput = {
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  releaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  packageCanonical?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositorySource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tools?: Prisma.MCPToolUpdateManyWithoutServerNestedInput
   prompts?: Prisma.MCPPromptUpdateManyWithoutServerNestedInput
   assistants?: Prisma.MCPAssistantServerUpdateManyWithoutMcpServerNestedInput
-  agents?: Prisma.MCPAgentServerUpdateManyWithoutMcpServerNestedInput
   resources?: Prisma.MCPResourceUpdateManyWithoutServerNestedInput
 }
 
@@ -1579,12 +1850,22 @@ export type MCPServerUncheckedUpdateWithoutConfigSampleRelationInput = {
   logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tagsJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   timeout?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  releaseDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLatest?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  packageCanonical?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packagesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  remotesJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  repositoryUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositorySource?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  repositoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tools?: Prisma.MCPToolUncheckedUpdateManyWithoutServerNestedInput
   prompts?: Prisma.MCPPromptUncheckedUpdateManyWithoutServerNestedInput
   assistants?: Prisma.MCPAssistantServerUncheckedUpdateManyWithoutMcpServerNestedInput
-  agents?: Prisma.MCPAgentServerUncheckedUpdateManyWithoutMcpServerNestedInput
   resources?: Prisma.MCPResourceUncheckedUpdateManyWithoutServerNestedInput
 }
 
@@ -1597,7 +1878,6 @@ export type MCPServerCountOutputType = {
   tools: number
   prompts: number
   assistants: number
-  agents: number
   resources: number
 }
 
@@ -1605,7 +1885,6 @@ export type MCPServerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   tools?: boolean | MCPServerCountOutputTypeCountToolsArgs
   prompts?: boolean | MCPServerCountOutputTypeCountPromptsArgs
   assistants?: boolean | MCPServerCountOutputTypeCountAssistantsArgs
-  agents?: boolean | MCPServerCountOutputTypeCountAgentsArgs
   resources?: boolean | MCPServerCountOutputTypeCountResourcesArgs
 }
 
@@ -1643,13 +1922,6 @@ export type MCPServerCountOutputTypeCountAssistantsArgs<ExtArgs extends runtime.
 /**
  * MCPServerCountOutputType without action
  */
-export type MCPServerCountOutputTypeCountAgentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.MCPAgentServerWhereInput
-}
-
-/**
- * MCPServerCountOutputType without action
- */
 export type MCPServerCountOutputTypeCountResourcesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.MCPResourceWhereInput
 }
@@ -1675,12 +1947,22 @@ export type MCPServerSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   logoUrl?: boolean
   tagsJson?: boolean
   timeout?: boolean
+  releaseDate?: boolean
+  isLatest?: boolean
+  packageCanonical?: boolean
+  packagesJson?: boolean
+  remotesJson?: boolean
+  repositoryUrl?: boolean
+  repositorySource?: boolean
+  repositoryId?: boolean
+  status?: boolean
+  lastConnectedAt?: boolean
+  errorMessage?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tools?: boolean | Prisma.MCPServer$toolsArgs<ExtArgs>
   prompts?: boolean | Prisma.MCPServer$promptsArgs<ExtArgs>
   assistants?: boolean | Prisma.MCPServer$assistantsArgs<ExtArgs>
-  agents?: boolean | Prisma.MCPServer$agentsArgs<ExtArgs>
   resources?: boolean | Prisma.MCPServer$resourcesArgs<ExtArgs>
   configSampleRelation?: boolean | Prisma.MCPServer$configSampleRelationArgs<ExtArgs>
   _count?: boolean | Prisma.MCPServerCountOutputTypeDefaultArgs<ExtArgs>
@@ -1706,6 +1988,17 @@ export type MCPServerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   logoUrl?: boolean
   tagsJson?: boolean
   timeout?: boolean
+  releaseDate?: boolean
+  isLatest?: boolean
+  packageCanonical?: boolean
+  packagesJson?: boolean
+  remotesJson?: boolean
+  repositoryUrl?: boolean
+  repositorySource?: boolean
+  repositoryId?: boolean
+  status?: boolean
+  lastConnectedAt?: boolean
+  errorMessage?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["mCPServer"]>
@@ -1730,6 +2023,17 @@ export type MCPServerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   logoUrl?: boolean
   tagsJson?: boolean
   timeout?: boolean
+  releaseDate?: boolean
+  isLatest?: boolean
+  packageCanonical?: boolean
+  packagesJson?: boolean
+  remotesJson?: boolean
+  repositoryUrl?: boolean
+  repositorySource?: boolean
+  repositoryId?: boolean
+  status?: boolean
+  lastConnectedAt?: boolean
+  errorMessage?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["mCPServer"]>
@@ -1754,16 +2058,26 @@ export type MCPServerSelectScalar = {
   logoUrl?: boolean
   tagsJson?: boolean
   timeout?: boolean
+  releaseDate?: boolean
+  isLatest?: boolean
+  packageCanonical?: boolean
+  packagesJson?: boolean
+  remotesJson?: boolean
+  repositoryUrl?: boolean
+  repositorySource?: boolean
+  repositoryId?: boolean
+  status?: boolean
+  lastConnectedAt?: boolean
+  errorMessage?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type MCPServerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "type" | "description" | "baseUrl" | "command" | "registryUrl" | "argsJson" | "env" | "isActive" | "disabledToolsJson" | "configSample" | "headers" | "searchKey" | "provider" | "providerUrl" | "logoUrl" | "tagsJson" | "timeout" | "createdAt" | "updatedAt", ExtArgs["result"]["mCPServer"]>
+export type MCPServerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "type" | "description" | "baseUrl" | "command" | "registryUrl" | "argsJson" | "env" | "isActive" | "disabledToolsJson" | "configSample" | "headers" | "searchKey" | "provider" | "providerUrl" | "logoUrl" | "tagsJson" | "timeout" | "releaseDate" | "isLatest" | "packageCanonical" | "packagesJson" | "remotesJson" | "repositoryUrl" | "repositorySource" | "repositoryId" | "status" | "lastConnectedAt" | "errorMessage" | "createdAt" | "updatedAt", ExtArgs["result"]["mCPServer"]>
 export type MCPServerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tools?: boolean | Prisma.MCPServer$toolsArgs<ExtArgs>
   prompts?: boolean | Prisma.MCPServer$promptsArgs<ExtArgs>
   assistants?: boolean | Prisma.MCPServer$assistantsArgs<ExtArgs>
-  agents?: boolean | Prisma.MCPServer$agentsArgs<ExtArgs>
   resources?: boolean | Prisma.MCPServer$resourcesArgs<ExtArgs>
   configSampleRelation?: boolean | Prisma.MCPServer$configSampleRelationArgs<ExtArgs>
   _count?: boolean | Prisma.MCPServerCountOutputTypeDefaultArgs<ExtArgs>
@@ -1777,7 +2091,6 @@ export type $MCPServerPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     tools: Prisma.$MCPToolPayload<ExtArgs>[]
     prompts: Prisma.$MCPPromptPayload<ExtArgs>[]
     assistants: Prisma.$MCPAssistantServerPayload<ExtArgs>[]
-    agents: Prisma.$MCPAgentServerPayload<ExtArgs>[]
     resources: Prisma.$MCPResourcePayload<ExtArgs>[]
     configSampleRelation: Prisma.$MCPConfigSamplePayload<ExtArgs> | null
   }
@@ -1801,6 +2114,17 @@ export type $MCPServerPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     logoUrl: string | null
     tagsJson: runtime.JsonValue | null
     timeout: number | null
+    releaseDate: Date | null
+    isLatest: boolean
+    packageCanonical: string | null
+    packagesJson: runtime.JsonValue | null
+    remotesJson: runtime.JsonValue | null
+    repositoryUrl: string | null
+    repositorySource: string | null
+    repositoryId: string | null
+    status: string | null
+    lastConnectedAt: Date | null
+    errorMessage: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["mCPServer"]>
@@ -2200,7 +2524,6 @@ export interface Prisma__MCPServerClient<T, Null = never, ExtArgs extends runtim
   tools<T extends Prisma.MCPServer$toolsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MCPServer$toolsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MCPToolPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   prompts<T extends Prisma.MCPServer$promptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MCPServer$promptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MCPPromptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assistants<T extends Prisma.MCPServer$assistantsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MCPServer$assistantsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MCPAssistantServerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  agents<T extends Prisma.MCPServer$agentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MCPServer$agentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MCPAgentServerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   resources<T extends Prisma.MCPServer$resourcesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MCPServer$resourcesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MCPResourcePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   configSampleRelation<T extends Prisma.MCPServer$configSampleRelationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MCPServer$configSampleRelationArgs<ExtArgs>>): Prisma.Prisma__MCPConfigSampleClient<runtime.Types.Result.GetResult<Prisma.$MCPConfigSamplePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
@@ -2251,6 +2574,17 @@ export interface MCPServerFieldRefs {
   readonly logoUrl: Prisma.FieldRef<"MCPServer", 'String'>
   readonly tagsJson: Prisma.FieldRef<"MCPServer", 'Json'>
   readonly timeout: Prisma.FieldRef<"MCPServer", 'Int'>
+  readonly releaseDate: Prisma.FieldRef<"MCPServer", 'DateTime'>
+  readonly isLatest: Prisma.FieldRef<"MCPServer", 'Boolean'>
+  readonly packageCanonical: Prisma.FieldRef<"MCPServer", 'String'>
+  readonly packagesJson: Prisma.FieldRef<"MCPServer", 'Json'>
+  readonly remotesJson: Prisma.FieldRef<"MCPServer", 'Json'>
+  readonly repositoryUrl: Prisma.FieldRef<"MCPServer", 'String'>
+  readonly repositorySource: Prisma.FieldRef<"MCPServer", 'String'>
+  readonly repositoryId: Prisma.FieldRef<"MCPServer", 'String'>
+  readonly status: Prisma.FieldRef<"MCPServer", 'String'>
+  readonly lastConnectedAt: Prisma.FieldRef<"MCPServer", 'DateTime'>
+  readonly errorMessage: Prisma.FieldRef<"MCPServer", 'String'>
   readonly createdAt: Prisma.FieldRef<"MCPServer", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"MCPServer", 'DateTime'>
 }
@@ -2708,30 +3042,6 @@ export type MCPServer$assistantsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.MCPAssistantServerScalarFieldEnum | Prisma.MCPAssistantServerScalarFieldEnum[]
-}
-
-/**
- * MCPServer.agents
- */
-export type MCPServer$agentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the MCPAgentServer
-   */
-  select?: Prisma.MCPAgentServerSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the MCPAgentServer
-   */
-  omit?: Prisma.MCPAgentServerOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.MCPAgentServerInclude<ExtArgs> | null
-  where?: Prisma.MCPAgentServerWhereInput
-  orderBy?: Prisma.MCPAgentServerOrderByWithRelationInput | Prisma.MCPAgentServerOrderByWithRelationInput[]
-  cursor?: Prisma.MCPAgentServerWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.MCPAgentServerScalarFieldEnum | Prisma.MCPAgentServerScalarFieldEnum[]
 }
 
 /**

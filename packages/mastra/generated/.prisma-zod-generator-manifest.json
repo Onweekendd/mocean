@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "generatorVersion": "1.0.0",
-  "generatedAt": "2026-03-12T02:48:46.725Z",
-  "outputPath": "C:\\mocean\\packages\\mastra\\generated",
+  "generatedAt": "2026-03-15T08:02:47.824Z",
+  "outputPath": "D:\\projects\\EaseClip\\packages\\mastra\\generated",
   "files": [
     "schemas\\enums\\TransactionIsolationLevel.schema.ts",
     "schemas\\enums\\ProviderScalarFieldEnum.schema.ts",
@@ -19,7 +19,6 @@
     "schemas\\enums\\TopicKnowledgeBaseScalarFieldEnum.schema.ts",
     "schemas\\enums\\MCPServerScalarFieldEnum.schema.ts",
     "schemas\\enums\\MCPAssistantServerScalarFieldEnum.schema.ts",
-    "schemas\\enums\\MCPAgentServerScalarFieldEnum.schema.ts",
     "schemas\\enums\\MCPToolScalarFieldEnum.schema.ts",
     "schemas\\enums\\MCPPromptScalarFieldEnum.schema.ts",
     "schemas\\enums\\MCPResourceScalarFieldEnum.schema.ts",

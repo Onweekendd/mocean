@@ -14,8 +14,6 @@ export { KnowledgeBaseFullSchema } from "./KnowledgeBase.schema";
 export type { KnowledgeBaseFullType } from "./KnowledgeBase.schema";
 export { KnowledgeItemFullSchema } from "./KnowledgeItem.schema";
 export type { KnowledgeItemFullType } from "./KnowledgeItem.schema";
-export { MCPAgentServerFullSchema } from "./MCPAgentServer.schema";
-export type { MCPAgentServerFullType } from "./MCPAgentServer.schema";
 export { MCPAssistantServerFullSchema } from "./MCPAssistantServer.schema";
 export type { MCPAssistantServerFullType } from "./MCPAssistantServer.schema";
 export { MCPConfigSampleFullSchema } from "./MCPConfigSample.schema";

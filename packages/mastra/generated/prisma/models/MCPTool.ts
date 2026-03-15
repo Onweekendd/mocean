@@ -20,14 +20,33 @@ export type MCPToolModel = runtime.Types.Result.DefaultSelection<Prisma.$MCPTool
 
 export type AggregateMCPTool = {
   _count: MCPToolCountAggregateOutputType | null
+  _avg: MCPToolAvgAggregateOutputType | null
+  _sum: MCPToolSumAggregateOutputType | null
   _min: MCPToolMinAggregateOutputType | null
   _max: MCPToolMaxAggregateOutputType | null
+}
+
+export type MCPToolAvgAggregateOutputType = {
+  callCount: number | null
+}
+
+export type MCPToolSumAggregateOutputType = {
+  callCount: number | null
 }
 
 export type MCPToolMinAggregateOutputType = {
   id: string | null
   name: string | null
   description: string | null
+  title: string | null
+  readOnlyHint: boolean | null
+  destructiveHint: boolean | null
+  idempotentHint: boolean | null
+  openWorldHint: boolean | null
+  toolType: string | null
+  isEnabled: boolean | null
+  callCount: number | null
+  lastUsedAt: Date | null
   serverId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -37,6 +56,15 @@ export type MCPToolMaxAggregateOutputType = {
   id: string | null
   name: string | null
   description: string | null
+  title: string | null
+  readOnlyHint: boolean | null
+  destructiveHint: boolean | null
+  idempotentHint: boolean | null
+  openWorldHint: boolean | null
+  toolType: string | null
+  isEnabled: boolean | null
+  callCount: number | null
+  lastUsedAt: Date | null
   serverId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -47,6 +75,17 @@ export type MCPToolCountAggregateOutputType = {
   name: number
   description: number
   inputSchema: number
+  outputSchema: number
+  title: number
+  readOnlyHint: number
+  destructiveHint: number
+  idempotentHint: number
+  openWorldHint: number
+  toolType: number
+  metaJson: number
+  isEnabled: number
+  callCount: number
+  lastUsedAt: number
   serverId: number
   createdAt: number
   updatedAt: number
@@ -54,10 +93,27 @@ export type MCPToolCountAggregateOutputType = {
 }
 
 
+export type MCPToolAvgAggregateInputType = {
+  callCount?: true
+}
+
+export type MCPToolSumAggregateInputType = {
+  callCount?: true
+}
+
 export type MCPToolMinAggregateInputType = {
   id?: true
   name?: true
   description?: true
+  title?: true
+  readOnlyHint?: true
+  destructiveHint?: true
+  idempotentHint?: true
+  openWorldHint?: true
+  toolType?: true
+  isEnabled?: true
+  callCount?: true
+  lastUsedAt?: true
   serverId?: true
   createdAt?: true
   updatedAt?: true
@@ -67,6 +123,15 @@ export type MCPToolMaxAggregateInputType = {
   id?: true
   name?: true
   description?: true
+  title?: true
+  readOnlyHint?: true
+  destructiveHint?: true
+  idempotentHint?: true
+  openWorldHint?: true
+  toolType?: true
+  isEnabled?: true
+  callCount?: true
+  lastUsedAt?: true
   serverId?: true
   createdAt?: true
   updatedAt?: true
@@ -77,6 +142,17 @@ export type MCPToolCountAggregateInputType = {
   name?: true
   description?: true
   inputSchema?: true
+  outputSchema?: true
+  title?: true
+  readOnlyHint?: true
+  destructiveHint?: true
+  idempotentHint?: true
+  openWorldHint?: true
+  toolType?: true
+  metaJson?: true
+  isEnabled?: true
+  callCount?: true
+  lastUsedAt?: true
   serverId?: true
   createdAt?: true
   updatedAt?: true
@@ -121,6 +197,18 @@ export type MCPToolAggregateArgs<ExtArgs extends runtime.Types.Extensions.Intern
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: MCPToolAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: MCPToolSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: MCPToolMinAggregateInputType
@@ -151,6 +239,8 @@ export type MCPToolGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   _count?: MCPToolCountAggregateInputType | true
+  _avg?: MCPToolAvgAggregateInputType
+  _sum?: MCPToolSumAggregateInputType
   _min?: MCPToolMinAggregateInputType
   _max?: MCPToolMaxAggregateInputType
 }
@@ -160,10 +250,23 @@ export type MCPToolGroupByOutputType = {
   name: string
   description: string | null
   inputSchema: runtime.JsonValue
+  outputSchema: runtime.JsonValue | null
+  title: string | null
+  readOnlyHint: boolean
+  destructiveHint: boolean
+  idempotentHint: boolean
+  openWorldHint: boolean
+  toolType: string | null
+  metaJson: runtime.JsonValue | null
+  isEnabled: boolean
+  callCount: number
+  lastUsedAt: Date | null
   serverId: string
   createdAt: Date
   updatedAt: Date
   _count: MCPToolCountAggregateOutputType | null
+  _avg: MCPToolAvgAggregateOutputType | null
+  _sum: MCPToolSumAggregateOutputType | null
   _min: MCPToolMinAggregateOutputType | null
   _max: MCPToolMaxAggregateOutputType | null
 }
@@ -191,6 +294,17 @@ export type MCPToolWhereInput = {
   name?: Prisma.StringFilter<"MCPTool"> | string
   description?: Prisma.StringNullableFilter<"MCPTool"> | string | null
   inputSchema?: Prisma.JsonFilter<"MCPTool">
+  outputSchema?: Prisma.JsonNullableFilter<"MCPTool">
+  title?: Prisma.StringNullableFilter<"MCPTool"> | string | null
+  readOnlyHint?: Prisma.BoolFilter<"MCPTool"> | boolean
+  destructiveHint?: Prisma.BoolFilter<"MCPTool"> | boolean
+  idempotentHint?: Prisma.BoolFilter<"MCPTool"> | boolean
+  openWorldHint?: Prisma.BoolFilter<"MCPTool"> | boolean
+  toolType?: Prisma.StringNullableFilter<"MCPTool"> | string | null
+  metaJson?: Prisma.JsonNullableFilter<"MCPTool">
+  isEnabled?: Prisma.BoolFilter<"MCPTool"> | boolean
+  callCount?: Prisma.IntFilter<"MCPTool"> | number
+  lastUsedAt?: Prisma.DateTimeNullableFilter<"MCPTool"> | Date | string | null
   serverId?: Prisma.StringFilter<"MCPTool"> | string
   createdAt?: Prisma.DateTimeFilter<"MCPTool"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MCPTool"> | Date | string
@@ -202,6 +316,17 @@ export type MCPToolOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   inputSchema?: Prisma.SortOrder
+  outputSchema?: Prisma.SortOrderInput | Prisma.SortOrder
+  title?: Prisma.SortOrderInput | Prisma.SortOrder
+  readOnlyHint?: Prisma.SortOrder
+  destructiveHint?: Prisma.SortOrder
+  idempotentHint?: Prisma.SortOrder
+  openWorldHint?: Prisma.SortOrder
+  toolType?: Prisma.SortOrderInput | Prisma.SortOrder
+  metaJson?: Prisma.SortOrderInput | Prisma.SortOrder
+  isEnabled?: Prisma.SortOrder
+  callCount?: Prisma.SortOrder
+  lastUsedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   serverId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -216,6 +341,17 @@ export type MCPToolWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"MCPTool"> | string
   description?: Prisma.StringNullableFilter<"MCPTool"> | string | null
   inputSchema?: Prisma.JsonFilter<"MCPTool">
+  outputSchema?: Prisma.JsonNullableFilter<"MCPTool">
+  title?: Prisma.StringNullableFilter<"MCPTool"> | string | null
+  readOnlyHint?: Prisma.BoolFilter<"MCPTool"> | boolean
+  destructiveHint?: Prisma.BoolFilter<"MCPTool"> | boolean
+  idempotentHint?: Prisma.BoolFilter<"MCPTool"> | boolean
+  openWorldHint?: Prisma.BoolFilter<"MCPTool"> | boolean
+  toolType?: Prisma.StringNullableFilter<"MCPTool"> | string | null
+  metaJson?: Prisma.JsonNullableFilter<"MCPTool">
+  isEnabled?: Prisma.BoolFilter<"MCPTool"> | boolean
+  callCount?: Prisma.IntFilter<"MCPTool"> | number
+  lastUsedAt?: Prisma.DateTimeNullableFilter<"MCPTool"> | Date | string | null
   serverId?: Prisma.StringFilter<"MCPTool"> | string
   createdAt?: Prisma.DateTimeFilter<"MCPTool"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MCPTool"> | Date | string
@@ -227,12 +363,25 @@ export type MCPToolOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   inputSchema?: Prisma.SortOrder
+  outputSchema?: Prisma.SortOrderInput | Prisma.SortOrder
+  title?: Prisma.SortOrderInput | Prisma.SortOrder
+  readOnlyHint?: Prisma.SortOrder
+  destructiveHint?: Prisma.SortOrder
+  idempotentHint?: Prisma.SortOrder
+  openWorldHint?: Prisma.SortOrder
+  toolType?: Prisma.SortOrderInput | Prisma.SortOrder
+  metaJson?: Prisma.SortOrderInput | Prisma.SortOrder
+  isEnabled?: Prisma.SortOrder
+  callCount?: Prisma.SortOrder
+  lastUsedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   serverId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.MCPToolCountOrderByAggregateInput
+  _avg?: Prisma.MCPToolAvgOrderByAggregateInput
   _max?: Prisma.MCPToolMaxOrderByAggregateInput
   _min?: Prisma.MCPToolMinOrderByAggregateInput
+  _sum?: Prisma.MCPToolSumOrderByAggregateInput
 }
 
 export type MCPToolScalarWhereWithAggregatesInput = {
@@ -243,6 +392,17 @@ export type MCPToolScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"MCPTool"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"MCPTool"> | string | null
   inputSchema?: Prisma.JsonWithAggregatesFilter<"MCPTool">
+  outputSchema?: Prisma.JsonNullableWithAggregatesFilter<"MCPTool">
+  title?: Prisma.StringNullableWithAggregatesFilter<"MCPTool"> | string | null
+  readOnlyHint?: Prisma.BoolWithAggregatesFilter<"MCPTool"> | boolean
+  destructiveHint?: Prisma.BoolWithAggregatesFilter<"MCPTool"> | boolean
+  idempotentHint?: Prisma.BoolWithAggregatesFilter<"MCPTool"> | boolean
+  openWorldHint?: Prisma.BoolWithAggregatesFilter<"MCPTool"> | boolean
+  toolType?: Prisma.StringNullableWithAggregatesFilter<"MCPTool"> | string | null
+  metaJson?: Prisma.JsonNullableWithAggregatesFilter<"MCPTool">
+  isEnabled?: Prisma.BoolWithAggregatesFilter<"MCPTool"> | boolean
+  callCount?: Prisma.IntWithAggregatesFilter<"MCPTool"> | number
+  lastUsedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"MCPTool"> | Date | string | null
   serverId?: Prisma.StringWithAggregatesFilter<"MCPTool"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"MCPTool"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"MCPTool"> | Date | string
@@ -253,6 +413,17 @@ export type MCPToolCreateInput = {
   name: string
   description?: string | null
   inputSchema: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  outputSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  title?: string | null
+  readOnlyHint?: boolean
+  destructiveHint?: boolean
+  idempotentHint?: boolean
+  openWorldHint?: boolean
+  toolType?: string | null
+  metaJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isEnabled?: boolean
+  callCount?: number
+  lastUsedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   server: Prisma.MCPServerCreateNestedOneWithoutToolsInput
@@ -263,6 +434,17 @@ export type MCPToolUncheckedCreateInput = {
   name: string
   description?: string | null
   inputSchema: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  outputSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  title?: string | null
+  readOnlyHint?: boolean
+  destructiveHint?: boolean
+  idempotentHint?: boolean
+  openWorldHint?: boolean
+  toolType?: string | null
+  metaJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isEnabled?: boolean
+  callCount?: number
+  lastUsedAt?: Date | string | null
   serverId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -273,6 +455,17 @@ export type MCPToolUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   inputSchema?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  outputSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readOnlyHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  destructiveHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  idempotentHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  openWorldHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  toolType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metaJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  callCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   server?: Prisma.MCPServerUpdateOneRequiredWithoutToolsNestedInput
@@ -283,6 +476,17 @@ export type MCPToolUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   inputSchema?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  outputSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readOnlyHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  destructiveHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  idempotentHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  openWorldHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  toolType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metaJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  callCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   serverId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -293,6 +497,17 @@ export type MCPToolCreateManyInput = {
   name: string
   description?: string | null
   inputSchema: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  outputSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  title?: string | null
+  readOnlyHint?: boolean
+  destructiveHint?: boolean
+  idempotentHint?: boolean
+  openWorldHint?: boolean
+  toolType?: string | null
+  metaJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isEnabled?: boolean
+  callCount?: number
+  lastUsedAt?: Date | string | null
   serverId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -303,6 +518,17 @@ export type MCPToolUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   inputSchema?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  outputSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readOnlyHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  destructiveHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  idempotentHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  openWorldHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  toolType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metaJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  callCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -312,6 +538,17 @@ export type MCPToolUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   inputSchema?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  outputSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readOnlyHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  destructiveHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  idempotentHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  openWorldHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  toolType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metaJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  callCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   serverId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -332,15 +569,39 @@ export type MCPToolCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   inputSchema?: Prisma.SortOrder
+  outputSchema?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  readOnlyHint?: Prisma.SortOrder
+  destructiveHint?: Prisma.SortOrder
+  idempotentHint?: Prisma.SortOrder
+  openWorldHint?: Prisma.SortOrder
+  toolType?: Prisma.SortOrder
+  metaJson?: Prisma.SortOrder
+  isEnabled?: Prisma.SortOrder
+  callCount?: Prisma.SortOrder
+  lastUsedAt?: Prisma.SortOrder
   serverId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type MCPToolAvgOrderByAggregateInput = {
+  callCount?: Prisma.SortOrder
 }
 
 export type MCPToolMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  readOnlyHint?: Prisma.SortOrder
+  destructiveHint?: Prisma.SortOrder
+  idempotentHint?: Prisma.SortOrder
+  openWorldHint?: Prisma.SortOrder
+  toolType?: Prisma.SortOrder
+  isEnabled?: Prisma.SortOrder
+  callCount?: Prisma.SortOrder
+  lastUsedAt?: Prisma.SortOrder
   serverId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -350,9 +611,22 @@ export type MCPToolMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  readOnlyHint?: Prisma.SortOrder
+  destructiveHint?: Prisma.SortOrder
+  idempotentHint?: Prisma.SortOrder
+  openWorldHint?: Prisma.SortOrder
+  toolType?: Prisma.SortOrder
+  isEnabled?: Prisma.SortOrder
+  callCount?: Prisma.SortOrder
+  lastUsedAt?: Prisma.SortOrder
   serverId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type MCPToolSumOrderByAggregateInput = {
+  callCount?: Prisma.SortOrder
 }
 
 export type MCPToolCreateNestedManyWithoutServerInput = {
@@ -402,6 +676,17 @@ export type MCPToolCreateWithoutServerInput = {
   name: string
   description?: string | null
   inputSchema: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  outputSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  title?: string | null
+  readOnlyHint?: boolean
+  destructiveHint?: boolean
+  idempotentHint?: boolean
+  openWorldHint?: boolean
+  toolType?: string | null
+  metaJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isEnabled?: boolean
+  callCount?: number
+  lastUsedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -411,6 +696,17 @@ export type MCPToolUncheckedCreateWithoutServerInput = {
   name: string
   description?: string | null
   inputSchema: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  outputSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  title?: string | null
+  readOnlyHint?: boolean
+  destructiveHint?: boolean
+  idempotentHint?: boolean
+  openWorldHint?: boolean
+  toolType?: string | null
+  metaJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isEnabled?: boolean
+  callCount?: number
+  lastUsedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -448,6 +744,17 @@ export type MCPToolScalarWhereInput = {
   name?: Prisma.StringFilter<"MCPTool"> | string
   description?: Prisma.StringNullableFilter<"MCPTool"> | string | null
   inputSchema?: Prisma.JsonFilter<"MCPTool">
+  outputSchema?: Prisma.JsonNullableFilter<"MCPTool">
+  title?: Prisma.StringNullableFilter<"MCPTool"> | string | null
+  readOnlyHint?: Prisma.BoolFilter<"MCPTool"> | boolean
+  destructiveHint?: Prisma.BoolFilter<"MCPTool"> | boolean
+  idempotentHint?: Prisma.BoolFilter<"MCPTool"> | boolean
+  openWorldHint?: Prisma.BoolFilter<"MCPTool"> | boolean
+  toolType?: Prisma.StringNullableFilter<"MCPTool"> | string | null
+  metaJson?: Prisma.JsonNullableFilter<"MCPTool">
+  isEnabled?: Prisma.BoolFilter<"MCPTool"> | boolean
+  callCount?: Prisma.IntFilter<"MCPTool"> | number
+  lastUsedAt?: Prisma.DateTimeNullableFilter<"MCPTool"> | Date | string | null
   serverId?: Prisma.StringFilter<"MCPTool"> | string
   createdAt?: Prisma.DateTimeFilter<"MCPTool"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MCPTool"> | Date | string
@@ -458,6 +765,17 @@ export type MCPToolCreateManyServerInput = {
   name: string
   description?: string | null
   inputSchema: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  outputSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  title?: string | null
+  readOnlyHint?: boolean
+  destructiveHint?: boolean
+  idempotentHint?: boolean
+  openWorldHint?: boolean
+  toolType?: string | null
+  metaJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isEnabled?: boolean
+  callCount?: number
+  lastUsedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -467,6 +785,17 @@ export type MCPToolUpdateWithoutServerInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   inputSchema?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  outputSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readOnlyHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  destructiveHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  idempotentHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  openWorldHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  toolType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metaJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  callCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -476,6 +805,17 @@ export type MCPToolUncheckedUpdateWithoutServerInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   inputSchema?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  outputSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readOnlyHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  destructiveHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  idempotentHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  openWorldHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  toolType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metaJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  callCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -485,6 +825,17 @@ export type MCPToolUncheckedUpdateManyWithoutServerInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   inputSchema?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  outputSchema?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readOnlyHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  destructiveHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  idempotentHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  openWorldHint?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  toolType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metaJson?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  callCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -496,6 +847,17 @@ export type MCPToolSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name?: boolean
   description?: boolean
   inputSchema?: boolean
+  outputSchema?: boolean
+  title?: boolean
+  readOnlyHint?: boolean
+  destructiveHint?: boolean
+  idempotentHint?: boolean
+  openWorldHint?: boolean
+  toolType?: boolean
+  metaJson?: boolean
+  isEnabled?: boolean
+  callCount?: boolean
+  lastUsedAt?: boolean
   serverId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -507,6 +869,17 @@ export type MCPToolSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   name?: boolean
   description?: boolean
   inputSchema?: boolean
+  outputSchema?: boolean
+  title?: boolean
+  readOnlyHint?: boolean
+  destructiveHint?: boolean
+  idempotentHint?: boolean
+  openWorldHint?: boolean
+  toolType?: boolean
+  metaJson?: boolean
+  isEnabled?: boolean
+  callCount?: boolean
+  lastUsedAt?: boolean
   serverId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -518,6 +891,17 @@ export type MCPToolSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   name?: boolean
   description?: boolean
   inputSchema?: boolean
+  outputSchema?: boolean
+  title?: boolean
+  readOnlyHint?: boolean
+  destructiveHint?: boolean
+  idempotentHint?: boolean
+  openWorldHint?: boolean
+  toolType?: boolean
+  metaJson?: boolean
+  isEnabled?: boolean
+  callCount?: boolean
+  lastUsedAt?: boolean
   serverId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -529,12 +913,23 @@ export type MCPToolSelectScalar = {
   name?: boolean
   description?: boolean
   inputSchema?: boolean
+  outputSchema?: boolean
+  title?: boolean
+  readOnlyHint?: boolean
+  destructiveHint?: boolean
+  idempotentHint?: boolean
+  openWorldHint?: boolean
+  toolType?: boolean
+  metaJson?: boolean
+  isEnabled?: boolean
+  callCount?: boolean
+  lastUsedAt?: boolean
   serverId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type MCPToolOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "inputSchema" | "serverId" | "createdAt" | "updatedAt", ExtArgs["result"]["mCPTool"]>
+export type MCPToolOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "inputSchema" | "outputSchema" | "title" | "readOnlyHint" | "destructiveHint" | "idempotentHint" | "openWorldHint" | "toolType" | "metaJson" | "isEnabled" | "callCount" | "lastUsedAt" | "serverId" | "createdAt" | "updatedAt", ExtArgs["result"]["mCPTool"]>
 export type MCPToolInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   server?: boolean | Prisma.MCPServerDefaultArgs<ExtArgs>
 }
@@ -555,6 +950,17 @@ export type $MCPToolPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     name: string
     description: string | null
     inputSchema: runtime.JsonValue
+    outputSchema: runtime.JsonValue | null
+    title: string | null
+    readOnlyHint: boolean
+    destructiveHint: boolean
+    idempotentHint: boolean
+    openWorldHint: boolean
+    toolType: string | null
+    metaJson: runtime.JsonValue | null
+    isEnabled: boolean
+    callCount: number
+    lastUsedAt: Date | null
     serverId: string
     createdAt: Date
     updatedAt: Date
@@ -986,6 +1392,17 @@ export interface MCPToolFieldRefs {
   readonly name: Prisma.FieldRef<"MCPTool", 'String'>
   readonly description: Prisma.FieldRef<"MCPTool", 'String'>
   readonly inputSchema: Prisma.FieldRef<"MCPTool", 'Json'>
+  readonly outputSchema: Prisma.FieldRef<"MCPTool", 'Json'>
+  readonly title: Prisma.FieldRef<"MCPTool", 'String'>
+  readonly readOnlyHint: Prisma.FieldRef<"MCPTool", 'Boolean'>
+  readonly destructiveHint: Prisma.FieldRef<"MCPTool", 'Boolean'>
+  readonly idempotentHint: Prisma.FieldRef<"MCPTool", 'Boolean'>
+  readonly openWorldHint: Prisma.FieldRef<"MCPTool", 'Boolean'>
+  readonly toolType: Prisma.FieldRef<"MCPTool", 'String'>
+  readonly metaJson: Prisma.FieldRef<"MCPTool", 'Json'>
+  readonly isEnabled: Prisma.FieldRef<"MCPTool", 'Boolean'>
+  readonly callCount: Prisma.FieldRef<"MCPTool", 'Int'>
+  readonly lastUsedAt: Prisma.FieldRef<"MCPTool", 'DateTime'>
   readonly serverId: Prisma.FieldRef<"MCPTool", 'String'>
   readonly createdAt: Prisma.FieldRef<"MCPTool", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"MCPTool", 'DateTime'>

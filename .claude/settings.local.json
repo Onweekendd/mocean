@@ -75,7 +75,11 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:github.com)",
       "Bash(python \"d:\\\\projects\\\\mocean\\\\.claude\\\\skills\\\\skill-creator\\\\scripts\\\\init_skill.py\" mocean-add-api-route --path \"d:\\\\projects\\\\mocean\\\\.claude\\\\skills\")",
-      "Bash(PYTHONIOENCODING=utf-8 python \"d:\\\\projects\\\\mocean\\\\.claude\\\\skills\\\\skill-creator\\\\scripts\\\\init_skill.py\" mocean-add-api-route --path \"d:\\\\projects\\\\mocean\\\\.claude\\\\skills\")"
+      "Bash(PYTHONIOENCODING=utf-8 python \"d:\\\\projects\\\\mocean\\\\.claude\\\\skills\\\\skill-creator\\\\scripts\\\\init_skill.py\" mocean-add-api-route --path \"d:\\\\projects\\\\mocean\\\\.claude\\\\skills\")",
+      "mcp__mastra__getMastraHelp",
+      "Bash(pnpm --filter mastra test:run -- --testPathPattern=\"__tests__/unit\")",
+      "Bash(pnpm --filter mastra test:run -- --testPathPattern=\"__tests__/unit/schema/mcp\")",
+      "Bash(pnpm --filter mastra test:run -- --testPathPattern=\"__tests__/unit/\\(schema|server\\)/mcp\")"
     ],
     "deny": [],
     "ask": []
