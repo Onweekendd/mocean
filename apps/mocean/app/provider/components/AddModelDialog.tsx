@@ -27,6 +27,23 @@ import { Textarea } from "@/components/ui/textarea";
 import { type AddModelProps, MODEL_TYPES, useAddModel } from "./useAddModel";
 
 /**
+ * 获取模型类型对应的颜色类
+ */
+const getModelTypeColor = (type: string) => {
+  const colorMap: Record<string, string> = {
+    text: "bg-gray-500/10 text-gray-600 dark:bg-gray-500/20 dark:text-gray-400",
+    vision: "bg-brand-primary/10 text-brand-primary dark:bg-brand-primary/20",
+    embedding: "bg-success/10 text-success dark:bg-success/20",
+    reasoning: "bg-warning/10 text-warning dark:bg-warning/20",
+    function_calling:
+      "bg-destructive/10 text-destructive dark:bg-destructive/20",
+    web_search:
+      "bg-brand-secondary-400/10 text-brand-secondary-700 dark:bg-brand-secondary-400/20"
+  };
+  return colorMap[type] ?? "bg-muted text-muted-foreground";
+};
+
+/**
  * 添加模型对话框属性
  */
 export type AddModelDialogProps = AddModelProps;
@@ -63,12 +80,13 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = (props) => {
     toggleType,
     removeType,
     onSubmit,
-    handleOpenChange
+    handleOpenChange,
+    errors
   } = useAddModel(props);
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-h-[80vh] max-w-lg overflow-y-auto">
+      <DialogContent className="max-h-[100vh] max-w-lg overflow-y-auto bg-brand-slate-100">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>添加模型</DialogTitle>
@@ -80,22 +98,26 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = (props) => {
           <div className="space-y-4 py-4">
             {/* 模型名称 */}
             <div className="space-y-2">
-              <Label htmlFor="name">模型名称 *</Label>
+              <Label htmlFor="name">模型名称</Label>
               <Input
                 id="name"
-                {...register("name")}
+                {...register("name", { required: "请输入模型名称" })}
                 value={formData.name}
                 onChange={(e) => setValue("name", e.target.value)}
                 placeholder="如：GPT-4 Turbo"
-                required
-                className="focus-visible:ring-brand-primary-500"
+                className="border border-brandSlate-300 focus-visible:shadow-md focus-visible:ring-brand-primary-500"
               />
+              {errors.name?.message && (
+                <p className="text-xs text-red-600 dark:text-red-400">
+                  {errors.name.message}
+                </p>
+              )}
             </div>
 
             {/* 模型ID */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="modelId">模型ID *</Label>
+                <Label htmlFor="modelId">模型ID</Label>
                 <Button
                   type="button"
                   variant="ghost"
@@ -108,18 +130,22 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = (props) => {
               </div>
               <Input
                 id="modelId"
-                {...register("id")}
+                {...register("id", { required: "请输入模型ID" })}
                 value={formData.id}
                 onChange={(e) => setValue("id", e.target.value)}
                 placeholder="如：gpt-4-turbo"
-                required
-                className="focus-visible:ring-brand-primary-500"
+                className="border border-brandSlate-300 focus-visible:shadow-md focus-visible:ring-brand-primary-500"
               />
+              {errors.id?.message && (
+                <p className="text-xs text-red-600 dark:text-red-400">
+                  {errors.id?.message}
+                </p>
+              )}
             </div>
 
             {/* 模型分组 */}
             <div className="space-y-2">
-              <Label htmlFor="group">模型分组 *</Label>
+              <Label htmlFor="group">模型分组</Label>
               {groupsLoading ? (
                 <div className="flex h-10 items-center justify-center rounded-md border">
                   <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
@@ -129,7 +155,7 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = (props) => {
                   value={formData.groupId}
                   onValueChange={(value) => setValue("groupId", value)}
                 >
-                  <SelectTrigger className="focus:ring-brand-primary-500">
+                  <SelectTrigger className="border border-brandSlate-300 focus-visible:shadow-md focus-visible:ring-brand-primary-500">
                     <SelectValue placeholder="选择分组" />
                   </SelectTrigger>
                   <SelectContent>
@@ -149,7 +175,7 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = (props) => {
 
             {/* 模型类型 */}
             <div className="space-y-2">
-              <Label>模型类型 *</Label>
+              <Label>模型类型</Label>
               <div className="space-y-2">
                 {/* 选中的类型 */}
                 {formData.types.length > 0 && (
@@ -161,8 +187,8 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = (props) => {
                       return (
                         <Badge
                           key={type}
-                          variant="secondary"
-                          className="text-xs"
+                          variant="outline"
+                          className={`border-0 px-2 py-0.5 text-xs ${getModelTypeColor(type)}`}
                         >
                           {typeInfo?.label || type}
                           <X
@@ -206,20 +232,6 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = (props) => {
               </div>
             </div>
 
-            {/* 拥有者 */}
-            <div className="space-y-2">
-              <Label htmlFor="ownedBy">模型拥有者</Label>
-              <Input
-                id="ownedBy"
-                {...register("ownedBy")}
-                value={formData.ownedBy}
-                onChange={(e) => setValue("ownedBy", e.target.value)}
-                placeholder="如：OpenAI, Anthropic"
-                className="focus-visible:ring-brand-primary-500"
-              />
-            </div>
-
-            {/* 模型描述 */}
             <div className="space-y-2">
               <Label htmlFor="description">模型描述</Label>
               <Textarea
@@ -229,7 +241,7 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = (props) => {
                 onChange={(e) => setValue("description", e.target.value)}
                 placeholder="描述模型的特点和用途..."
                 rows={3}
-                className="focus-visible:ring-brand-primary-500"
+                className="border border-brandSlate-300 focus-visible:shadow-md focus-visible:ring-brand-primary-500"
               />
             </div>
           </div>
@@ -240,6 +252,7 @@ export const AddModelDialog: React.FC<AddModelDialogProps> = (props) => {
               variant="outline"
               onClick={() => handleOpenChange(false)}
               disabled={isSubmitting}
+              className="bg-brand-slate-200/20 hover:bg-brand-slate-200/60"
             >
               取消
             </Button>

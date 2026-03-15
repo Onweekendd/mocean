@@ -51,10 +51,13 @@ export function DroppableGroup({
       <Collapsible defaultOpen={true}>
         <div className="space-y-4">
           {/* 分组标题和操作区域 */}
-          <div className="flex items-center justify-between rounded-lg p-3 transition-colors hover:bg-muted/50">
+          <div className="flex items-center justify-between rounded-lg p-3 transition-colors hover:bg-brand-slate-200/40">
             <CollapsibleTrigger className="flex flex-1 items-center space-x-3">
               <h3 className="text-lg font-semibold">{group.groupName}</h3>
-              <Badge variant="secondary" className="text-xs">
+              <Badge
+                variant="secondary"
+                className="bg-brand-slate-200 text-xs hover:bg-brandSlate-200"
+              >
                 {group.count} 个模型
               </Badge>
             </CollapsibleTrigger>
@@ -67,7 +70,7 @@ export function DroppableGroup({
                   e.stopPropagation();
                   onAddModel(group.groupName);
                 }}
-                className="h-8 px-2"
+                className="h-8 bg-brand-slate-200/20 px-2 hover:bg-brand-slate-200/60"
                 title="添加模型到此分组"
               >
                 <Plus className="h-4 w-4" />
