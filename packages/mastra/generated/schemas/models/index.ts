@@ -17,7 +17,6 @@ export { KnowledgeItemSchema } from './KnowledgeItem.schema';
 export { TopicKnowledgeBaseSchema } from './TopicKnowledgeBase.schema';
 export { MCPServerSchema } from './MCPServer.schema';
 export { MCPAssistantServerSchema } from './MCPAssistantServer.schema';
-export { MCPAgentServerSchema } from './MCPAgentServer.schema';
 export { MCPToolSchema } from './MCPTool.schema';
 export { MCPPromptSchema } from './MCPPrompt.schema';
 export { MCPResourceSchema } from './MCPResource.schema';

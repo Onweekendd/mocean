@@ -242,7 +242,6 @@ export type AgentWhereInput = {
   settings?: Prisma.XOR<Prisma.AssistantSettingsNullableScalarRelationFilter, Prisma.AssistantSettingsWhereInput> | null
   topics?: Prisma.TopicListRelationFilter
   knowledgeBases?: Prisma.KnowledgeBaseListRelationFilter
-  mcpServers?: Prisma.MCPAgentServerListRelationFilter
 }
 
 export type AgentOrderByWithRelationInput = {
@@ -262,7 +261,6 @@ export type AgentOrderByWithRelationInput = {
   settings?: Prisma.AssistantSettingsOrderByWithRelationInput
   topics?: Prisma.TopicOrderByRelationAggregateInput
   knowledgeBases?: Prisma.KnowledgeBaseOrderByRelationAggregateInput
-  mcpServers?: Prisma.MCPAgentServerOrderByRelationAggregateInput
 }
 
 export type AgentWhereUniqueInput = Prisma.AtLeast<{
@@ -285,7 +283,6 @@ export type AgentWhereUniqueInput = Prisma.AtLeast<{
   settings?: Prisma.XOR<Prisma.AssistantSettingsNullableScalarRelationFilter, Prisma.AssistantSettingsWhereInput> | null
   topics?: Prisma.TopicListRelationFilter
   knowledgeBases?: Prisma.KnowledgeBaseListRelationFilter
-  mcpServers?: Prisma.MCPAgentServerListRelationFilter
 }, "id">
 
 export type AgentOrderByWithAggregationInput = {
@@ -341,7 +338,6 @@ export type AgentCreateInput = {
   settings?: Prisma.AssistantSettingsCreateNestedOneWithoutAgentInput
   topics?: Prisma.TopicCreateNestedManyWithoutAgentInput
   knowledgeBases?: Prisma.KnowledgeBaseCreateNestedManyWithoutAgentsInput
-  mcpServers?: Prisma.MCPAgentServerCreateNestedManyWithoutAgentInput
 }
 
 export type AgentUncheckedCreateInput = {
@@ -361,7 +357,6 @@ export type AgentUncheckedCreateInput = {
   settings?: Prisma.AssistantSettingsUncheckedCreateNestedOneWithoutAgentInput
   topics?: Prisma.TopicUncheckedCreateNestedManyWithoutAgentInput
   knowledgeBases?: Prisma.KnowledgeBaseUncheckedCreateNestedManyWithoutAgentsInput
-  mcpServers?: Prisma.MCPAgentServerUncheckedCreateNestedManyWithoutAgentInput
 }
 
 export type AgentUpdateInput = {
@@ -381,7 +376,6 @@ export type AgentUpdateInput = {
   settings?: Prisma.AssistantSettingsUpdateOneWithoutAgentNestedInput
   topics?: Prisma.TopicUpdateManyWithoutAgentNestedInput
   knowledgeBases?: Prisma.KnowledgeBaseUpdateManyWithoutAgentsNestedInput
-  mcpServers?: Prisma.MCPAgentServerUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentUncheckedUpdateInput = {
@@ -401,7 +395,6 @@ export type AgentUncheckedUpdateInput = {
   settings?: Prisma.AssistantSettingsUncheckedUpdateOneWithoutAgentNestedInput
   topics?: Prisma.TopicUncheckedUpdateManyWithoutAgentNestedInput
   knowledgeBases?: Prisma.KnowledgeBaseUncheckedUpdateManyWithoutAgentsNestedInput
-  mcpServers?: Prisma.MCPAgentServerUncheckedUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentCreateManyInput = {
@@ -598,20 +591,6 @@ export type AgentUncheckedUpdateManyWithoutKnowledgeBasesNestedInput = {
   deleteMany?: Prisma.AgentScalarWhereInput | Prisma.AgentScalarWhereInput[]
 }
 
-export type AgentCreateNestedOneWithoutMcpServersInput = {
-  create?: Prisma.XOR<Prisma.AgentCreateWithoutMcpServersInput, Prisma.AgentUncheckedCreateWithoutMcpServersInput>
-  connectOrCreate?: Prisma.AgentCreateOrConnectWithoutMcpServersInput
-  connect?: Prisma.AgentWhereUniqueInput
-}
-
-export type AgentUpdateOneRequiredWithoutMcpServersNestedInput = {
-  create?: Prisma.XOR<Prisma.AgentCreateWithoutMcpServersInput, Prisma.AgentUncheckedCreateWithoutMcpServersInput>
-  connectOrCreate?: Prisma.AgentCreateOrConnectWithoutMcpServersInput
-  upsert?: Prisma.AgentUpsertWithoutMcpServersInput
-  connect?: Prisma.AgentWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.AgentUpdateToOneWithWhereWithoutMcpServersInput, Prisma.AgentUpdateWithoutMcpServersInput>, Prisma.AgentUncheckedUpdateWithoutMcpServersInput>
-}
-
 export type AgentCreateWithoutGroupsInput = {
   id?: string
   name: string
@@ -628,7 +607,6 @@ export type AgentCreateWithoutGroupsInput = {
   settings?: Prisma.AssistantSettingsCreateNestedOneWithoutAgentInput
   topics?: Prisma.TopicCreateNestedManyWithoutAgentInput
   knowledgeBases?: Prisma.KnowledgeBaseCreateNestedManyWithoutAgentsInput
-  mcpServers?: Prisma.MCPAgentServerCreateNestedManyWithoutAgentInput
 }
 
 export type AgentUncheckedCreateWithoutGroupsInput = {
@@ -647,7 +625,6 @@ export type AgentUncheckedCreateWithoutGroupsInput = {
   settings?: Prisma.AssistantSettingsUncheckedCreateNestedOneWithoutAgentInput
   topics?: Prisma.TopicUncheckedCreateNestedManyWithoutAgentInput
   knowledgeBases?: Prisma.KnowledgeBaseUncheckedCreateNestedManyWithoutAgentsInput
-  mcpServers?: Prisma.MCPAgentServerUncheckedCreateNestedManyWithoutAgentInput
 }
 
 export type AgentCreateOrConnectWithoutGroupsInput = {
@@ -682,7 +659,6 @@ export type AgentUpdateWithoutGroupsInput = {
   settings?: Prisma.AssistantSettingsUpdateOneWithoutAgentNestedInput
   topics?: Prisma.TopicUpdateManyWithoutAgentNestedInput
   knowledgeBases?: Prisma.KnowledgeBaseUpdateManyWithoutAgentsNestedInput
-  mcpServers?: Prisma.MCPAgentServerUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentUncheckedUpdateWithoutGroupsInput = {
@@ -701,7 +677,6 @@ export type AgentUncheckedUpdateWithoutGroupsInput = {
   settings?: Prisma.AssistantSettingsUncheckedUpdateOneWithoutAgentNestedInput
   topics?: Prisma.TopicUncheckedUpdateManyWithoutAgentNestedInput
   knowledgeBases?: Prisma.KnowledgeBaseUncheckedUpdateManyWithoutAgentsNestedInput
-  mcpServers?: Prisma.MCPAgentServerUncheckedUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentCreateWithoutTopicsInput = {
@@ -720,7 +695,6 @@ export type AgentCreateWithoutTopicsInput = {
   groups?: Prisma.AgentAgentGroupCreateNestedManyWithoutAgentInput
   settings?: Prisma.AssistantSettingsCreateNestedOneWithoutAgentInput
   knowledgeBases?: Prisma.KnowledgeBaseCreateNestedManyWithoutAgentsInput
-  mcpServers?: Prisma.MCPAgentServerCreateNestedManyWithoutAgentInput
 }
 
 export type AgentUncheckedCreateWithoutTopicsInput = {
@@ -739,7 +713,6 @@ export type AgentUncheckedCreateWithoutTopicsInput = {
   groups?: Prisma.AgentAgentGroupUncheckedCreateNestedManyWithoutAgentInput
   settings?: Prisma.AssistantSettingsUncheckedCreateNestedOneWithoutAgentInput
   knowledgeBases?: Prisma.KnowledgeBaseUncheckedCreateNestedManyWithoutAgentsInput
-  mcpServers?: Prisma.MCPAgentServerUncheckedCreateNestedManyWithoutAgentInput
 }
 
 export type AgentCreateOrConnectWithoutTopicsInput = {
@@ -774,7 +747,6 @@ export type AgentUpdateWithoutTopicsInput = {
   groups?: Prisma.AgentAgentGroupUpdateManyWithoutAgentNestedInput
   settings?: Prisma.AssistantSettingsUpdateOneWithoutAgentNestedInput
   knowledgeBases?: Prisma.KnowledgeBaseUpdateManyWithoutAgentsNestedInput
-  mcpServers?: Prisma.MCPAgentServerUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentUncheckedUpdateWithoutTopicsInput = {
@@ -793,7 +765,6 @@ export type AgentUncheckedUpdateWithoutTopicsInput = {
   groups?: Prisma.AgentAgentGroupUncheckedUpdateManyWithoutAgentNestedInput
   settings?: Prisma.AssistantSettingsUncheckedUpdateOneWithoutAgentNestedInput
   knowledgeBases?: Prisma.KnowledgeBaseUncheckedUpdateManyWithoutAgentsNestedInput
-  mcpServers?: Prisma.MCPAgentServerUncheckedUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentCreateWithoutSettingsInput = {
@@ -812,7 +783,6 @@ export type AgentCreateWithoutSettingsInput = {
   groups?: Prisma.AgentAgentGroupCreateNestedManyWithoutAgentInput
   topics?: Prisma.TopicCreateNestedManyWithoutAgentInput
   knowledgeBases?: Prisma.KnowledgeBaseCreateNestedManyWithoutAgentsInput
-  mcpServers?: Prisma.MCPAgentServerCreateNestedManyWithoutAgentInput
 }
 
 export type AgentUncheckedCreateWithoutSettingsInput = {
@@ -831,7 +801,6 @@ export type AgentUncheckedCreateWithoutSettingsInput = {
   groups?: Prisma.AgentAgentGroupUncheckedCreateNestedManyWithoutAgentInput
   topics?: Prisma.TopicUncheckedCreateNestedManyWithoutAgentInput
   knowledgeBases?: Prisma.KnowledgeBaseUncheckedCreateNestedManyWithoutAgentsInput
-  mcpServers?: Prisma.MCPAgentServerUncheckedCreateNestedManyWithoutAgentInput
 }
 
 export type AgentCreateOrConnectWithoutSettingsInput = {
@@ -866,7 +835,6 @@ export type AgentUpdateWithoutSettingsInput = {
   groups?: Prisma.AgentAgentGroupUpdateManyWithoutAgentNestedInput
   topics?: Prisma.TopicUpdateManyWithoutAgentNestedInput
   knowledgeBases?: Prisma.KnowledgeBaseUpdateManyWithoutAgentsNestedInput
-  mcpServers?: Prisma.MCPAgentServerUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentUncheckedUpdateWithoutSettingsInput = {
@@ -885,7 +853,6 @@ export type AgentUncheckedUpdateWithoutSettingsInput = {
   groups?: Prisma.AgentAgentGroupUncheckedUpdateManyWithoutAgentNestedInput
   topics?: Prisma.TopicUncheckedUpdateManyWithoutAgentNestedInput
   knowledgeBases?: Prisma.KnowledgeBaseUncheckedUpdateManyWithoutAgentsNestedInput
-  mcpServers?: Prisma.MCPAgentServerUncheckedUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentCreateWithoutKnowledgeBasesInput = {
@@ -904,7 +871,6 @@ export type AgentCreateWithoutKnowledgeBasesInput = {
   groups?: Prisma.AgentAgentGroupCreateNestedManyWithoutAgentInput
   settings?: Prisma.AssistantSettingsCreateNestedOneWithoutAgentInput
   topics?: Prisma.TopicCreateNestedManyWithoutAgentInput
-  mcpServers?: Prisma.MCPAgentServerCreateNestedManyWithoutAgentInput
 }
 
 export type AgentUncheckedCreateWithoutKnowledgeBasesInput = {
@@ -923,7 +889,6 @@ export type AgentUncheckedCreateWithoutKnowledgeBasesInput = {
   groups?: Prisma.AgentAgentGroupUncheckedCreateNestedManyWithoutAgentInput
   settings?: Prisma.AssistantSettingsUncheckedCreateNestedOneWithoutAgentInput
   topics?: Prisma.TopicUncheckedCreateNestedManyWithoutAgentInput
-  mcpServers?: Prisma.MCPAgentServerUncheckedCreateNestedManyWithoutAgentInput
 }
 
 export type AgentCreateOrConnectWithoutKnowledgeBasesInput = {
@@ -965,98 +930,6 @@ export type AgentScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Agent"> | Date | string
 }
 
-export type AgentCreateWithoutMcpServersInput = {
-  id?: string
-  name: string
-  prompt: string
-  type?: string
-  emoji?: string | null
-  description?: string | null
-  enableWebSearch?: boolean
-  webSearchProviderId?: string | null
-  enableGenerateImage?: boolean
-  knowledgeRecognition?: $Enums.KnowledgeRecognition | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  groups?: Prisma.AgentAgentGroupCreateNestedManyWithoutAgentInput
-  settings?: Prisma.AssistantSettingsCreateNestedOneWithoutAgentInput
-  topics?: Prisma.TopicCreateNestedManyWithoutAgentInput
-  knowledgeBases?: Prisma.KnowledgeBaseCreateNestedManyWithoutAgentsInput
-}
-
-export type AgentUncheckedCreateWithoutMcpServersInput = {
-  id?: string
-  name: string
-  prompt: string
-  type?: string
-  emoji?: string | null
-  description?: string | null
-  enableWebSearch?: boolean
-  webSearchProviderId?: string | null
-  enableGenerateImage?: boolean
-  knowledgeRecognition?: $Enums.KnowledgeRecognition | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  groups?: Prisma.AgentAgentGroupUncheckedCreateNestedManyWithoutAgentInput
-  settings?: Prisma.AssistantSettingsUncheckedCreateNestedOneWithoutAgentInput
-  topics?: Prisma.TopicUncheckedCreateNestedManyWithoutAgentInput
-  knowledgeBases?: Prisma.KnowledgeBaseUncheckedCreateNestedManyWithoutAgentsInput
-}
-
-export type AgentCreateOrConnectWithoutMcpServersInput = {
-  where: Prisma.AgentWhereUniqueInput
-  create: Prisma.XOR<Prisma.AgentCreateWithoutMcpServersInput, Prisma.AgentUncheckedCreateWithoutMcpServersInput>
-}
-
-export type AgentUpsertWithoutMcpServersInput = {
-  update: Prisma.XOR<Prisma.AgentUpdateWithoutMcpServersInput, Prisma.AgentUncheckedUpdateWithoutMcpServersInput>
-  create: Prisma.XOR<Prisma.AgentCreateWithoutMcpServersInput, Prisma.AgentUncheckedCreateWithoutMcpServersInput>
-  where?: Prisma.AgentWhereInput
-}
-
-export type AgentUpdateToOneWithWhereWithoutMcpServersInput = {
-  where?: Prisma.AgentWhereInput
-  data: Prisma.XOR<Prisma.AgentUpdateWithoutMcpServersInput, Prisma.AgentUncheckedUpdateWithoutMcpServersInput>
-}
-
-export type AgentUpdateWithoutMcpServersInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  prompt?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  emoji?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enableWebSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  webSearchProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enableGenerateImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  knowledgeRecognition?: Prisma.NullableEnumKnowledgeRecognitionFieldUpdateOperationsInput | $Enums.KnowledgeRecognition | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  groups?: Prisma.AgentAgentGroupUpdateManyWithoutAgentNestedInput
-  settings?: Prisma.AssistantSettingsUpdateOneWithoutAgentNestedInput
-  topics?: Prisma.TopicUpdateManyWithoutAgentNestedInput
-  knowledgeBases?: Prisma.KnowledgeBaseUpdateManyWithoutAgentsNestedInput
-}
-
-export type AgentUncheckedUpdateWithoutMcpServersInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  prompt?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  emoji?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enableWebSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  webSearchProviderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enableGenerateImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  knowledgeRecognition?: Prisma.NullableEnumKnowledgeRecognitionFieldUpdateOperationsInput | $Enums.KnowledgeRecognition | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  groups?: Prisma.AgentAgentGroupUncheckedUpdateManyWithoutAgentNestedInput
-  settings?: Prisma.AssistantSettingsUncheckedUpdateOneWithoutAgentNestedInput
-  topics?: Prisma.TopicUncheckedUpdateManyWithoutAgentNestedInput
-  knowledgeBases?: Prisma.KnowledgeBaseUncheckedUpdateManyWithoutAgentsNestedInput
-}
-
 export type AgentUpdateWithoutKnowledgeBasesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1073,7 +946,6 @@ export type AgentUpdateWithoutKnowledgeBasesInput = {
   groups?: Prisma.AgentAgentGroupUpdateManyWithoutAgentNestedInput
   settings?: Prisma.AssistantSettingsUpdateOneWithoutAgentNestedInput
   topics?: Prisma.TopicUpdateManyWithoutAgentNestedInput
-  mcpServers?: Prisma.MCPAgentServerUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentUncheckedUpdateWithoutKnowledgeBasesInput = {
@@ -1092,7 +964,6 @@ export type AgentUncheckedUpdateWithoutKnowledgeBasesInput = {
   groups?: Prisma.AgentAgentGroupUncheckedUpdateManyWithoutAgentNestedInput
   settings?: Prisma.AssistantSettingsUncheckedUpdateOneWithoutAgentNestedInput
   topics?: Prisma.TopicUncheckedUpdateManyWithoutAgentNestedInput
-  mcpServers?: Prisma.MCPAgentServerUncheckedUpdateManyWithoutAgentNestedInput
 }
 
 export type AgentUncheckedUpdateManyWithoutKnowledgeBasesInput = {
@@ -1119,14 +990,12 @@ export type AgentCountOutputType = {
   groups: number
   topics: number
   knowledgeBases: number
-  mcpServers: number
 }
 
 export type AgentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   groups?: boolean | AgentCountOutputTypeCountGroupsArgs
   topics?: boolean | AgentCountOutputTypeCountTopicsArgs
   knowledgeBases?: boolean | AgentCountOutputTypeCountKnowledgeBasesArgs
-  mcpServers?: boolean | AgentCountOutputTypeCountMcpServersArgs
 }
 
 /**
@@ -1160,13 +1029,6 @@ export type AgentCountOutputTypeCountKnowledgeBasesArgs<ExtArgs extends runtime.
   where?: Prisma.KnowledgeBaseWhereInput
 }
 
-/**
- * AgentCountOutputType without action
- */
-export type AgentCountOutputTypeCountMcpServersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.MCPAgentServerWhereInput
-}
-
 
 export type AgentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1185,7 +1047,6 @@ export type AgentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   settings?: boolean | Prisma.Agent$settingsArgs<ExtArgs>
   topics?: boolean | Prisma.Agent$topicsArgs<ExtArgs>
   knowledgeBases?: boolean | Prisma.Agent$knowledgeBasesArgs<ExtArgs>
-  mcpServers?: boolean | Prisma.Agent$mcpServersArgs<ExtArgs>
   _count?: boolean | Prisma.AgentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["agent"]>
 
@@ -1240,7 +1101,6 @@ export type AgentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   settings?: boolean | Prisma.Agent$settingsArgs<ExtArgs>
   topics?: boolean | Prisma.Agent$topicsArgs<ExtArgs>
   knowledgeBases?: boolean | Prisma.Agent$knowledgeBasesArgs<ExtArgs>
-  mcpServers?: boolean | Prisma.Agent$mcpServersArgs<ExtArgs>
   _count?: boolean | Prisma.AgentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AgentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1253,7 +1113,6 @@ export type $AgentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     settings: Prisma.$AssistantSettingsPayload<ExtArgs> | null
     topics: Prisma.$TopicPayload<ExtArgs>[]
     knowledgeBases: Prisma.$KnowledgeBasePayload<ExtArgs>[]
-    mcpServers: Prisma.$MCPAgentServerPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1666,7 +1525,6 @@ export interface Prisma__AgentClient<T, Null = never, ExtArgs extends runtime.Ty
   settings<T extends Prisma.Agent$settingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agent$settingsArgs<ExtArgs>>): Prisma.Prisma__AssistantSettingsClient<runtime.Types.Result.GetResult<Prisma.$AssistantSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   topics<T extends Prisma.Agent$topicsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agent$topicsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TopicPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   knowledgeBases<T extends Prisma.Agent$knowledgeBasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agent$knowledgeBasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KnowledgeBasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  mcpServers<T extends Prisma.Agent$mcpServersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agent$mcpServersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MCPAgentServerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2182,30 +2040,6 @@ export type Agent$knowledgeBasesArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.KnowledgeBaseScalarFieldEnum | Prisma.KnowledgeBaseScalarFieldEnum[]
-}
-
-/**
- * Agent.mcpServers
- */
-export type Agent$mcpServersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the MCPAgentServer
-   */
-  select?: Prisma.MCPAgentServerSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the MCPAgentServer
-   */
-  omit?: Prisma.MCPAgentServerOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.MCPAgentServerInclude<ExtArgs> | null
-  where?: Prisma.MCPAgentServerWhereInput
-  orderBy?: Prisma.MCPAgentServerOrderByWithRelationInput | Prisma.MCPAgentServerOrderByWithRelationInput[]
-  cursor?: Prisma.MCPAgentServerWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.MCPAgentServerScalarFieldEnum | Prisma.MCPAgentServerScalarFieldEnum[]
 }
 
 /**

@@ -88,11 +88,6 @@ export type MCPServer = Prisma.MCPServerModel
  */
 export type MCPAssistantServer = Prisma.MCPAssistantServerModel
 /**
- * Model MCPAgentServer
- * 
- */
-export type MCPAgentServer = Prisma.MCPAgentServerModel
-/**
  * Model MCPTool
  * 
  */

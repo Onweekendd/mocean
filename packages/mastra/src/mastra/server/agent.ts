@@ -1,8 +1,9 @@
+import type z from "zod";
+
+import type { agentRoutes } from "../router/type";
 import type { CreateAgentInput, UpdateAgentInput } from "../schema/agent";
 import { prisma } from "./index";
-import type { agentRoutes } from "../router/type";
 import type { AsyncReturnType } from "./type";
-import type z from "zod";
 
 // Agent 查询时统一 include groups 关系的配置
 const agentGroupsInclude = {
@@ -45,9 +46,9 @@ const getAgents = async (): Promise<
  * @returns 代理对象，如果不存在则返回null
  */
 
-const getAgentById = async (id: string): Promise<
-  z.infer<(typeof agentRoutes)["getAgentById"]["responseSchema"]>
-> => {
+const getAgentById = async (
+  id: string
+): Promise<z.infer<(typeof agentRoutes)["getAgentById"]["responseSchema"]>> => {
   const agent = await prisma.agent.findUnique({
     where: {
       id
@@ -73,7 +74,9 @@ const getAgentById = async (id: string): Promise<
  * @description 通过 AgentGroup.id 关联查询属于该分组的所有代理
  * @param groupId - 分组ID（AgentGroup.id）
  */
-const getAgentByGroup = async (groupId: string): Promise<
+const getAgentByGroup = async (
+  groupId: string
+): Promise<
   z.infer<(typeof agentRoutes)["getAgentByGroup"]["responseSchema"]>
 > => {
   const agents = await prisma.agent.findMany({
@@ -115,9 +118,9 @@ const getAgentGroups = async (): Promise<
  * @returns 新创建的代理对象，包含生成的ID和时间戳
  */
 
-const createAgent = async (agent: CreateAgentInput): Promise<
-  z.infer<(typeof agentRoutes)["createAgent"]["responseSchema"]>
-> => {
+const createAgent = async (
+  agent: CreateAgentInput
+): Promise<z.infer<(typeof agentRoutes)["createAgent"]["responseSchema"]>> => {
   const newAgent = await prisma.agent.create({
     data: {
       ...agent,
@@ -144,9 +147,10 @@ const createAgent = async (agent: CreateAgentInput): Promise<
  * @returns 更新后的代理对象
  */
 
-const updateAgent = async (id: string, agent: UpdateAgentInput): Promise<
-  z.infer<(typeof agentRoutes)["updateAgent"]["responseSchema"]>
-> => {
+const updateAgent = async (
+  id: string,
+  agent: UpdateAgentInput
+): Promise<z.infer<(typeof agentRoutes)["updateAgent"]["responseSchema"]>> => {
   const updatedAgent = await prisma.agent.update({
     where: {
       id
@@ -174,9 +178,9 @@ const updateAgent = async (id: string, agent: UpdateAgentInput): Promise<
  * @returns 被删除的代理对象
  */
 
-const deleteAgent = async (id: string): Promise<
-  z.infer<(typeof agentRoutes)["deleteAgent"]["responseSchema"]>
-> => {
+const deleteAgent = async (
+  id: string
+): Promise<z.infer<(typeof agentRoutes)["deleteAgent"]["responseSchema"]>> => {
   const deletedAgent = await prisma.agent.delete({
     where: {
       id

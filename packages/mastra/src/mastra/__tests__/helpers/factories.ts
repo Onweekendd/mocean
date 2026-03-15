@@ -191,3 +191,70 @@ export const agentFactory = {
     });
   }
 };
+
+/**
+ * MCPServer 数据工厂
+ */
+export const mcpServerFactory = {
+  build: (
+    overrides?: Partial<
+      Parameters<PrismaClient["mCPServer"]["create"]>[0]["data"]
+    >
+  ) => ({
+    name: "Test MCP Server",
+    type: "stdio",
+    description: "Test MCP server",
+    command: "npx",
+    argsJson: ["-y", "@test/mcp-server"],
+    isActive: true,
+    ...overrides
+  }),
+
+  create: async (
+    prisma: PrismaClient,
+    overrides?: Partial<
+      Parameters<PrismaClient["mCPServer"]["create"]>[0]["data"]
+    >
+  ) => {
+    const data = mcpServerFactory.build(overrides);
+    return prisma.mCPServer.create({
+      data,
+      include: {
+        tools: true,
+        prompts: true,
+        resources: true,
+        configSampleRelation: true
+      }
+    });
+  }
+};
+
+/**
+ * MCPTool 数据工厂
+ */
+export const mcpToolFactory = {
+  build: (
+    serverId: string,
+    overrides?: Partial<
+      Parameters<PrismaClient["mCPTool"]["create"]>[0]["data"]
+    >
+  ) => ({
+    name: "test_tool",
+    description: "A test tool",
+    inputSchema: { type: "object", properties: {} },
+    isEnabled: true,
+    serverId,
+    ...overrides
+  }),
+
+  create: async (
+    prisma: PrismaClient,
+    serverId: string,
+    overrides?: Partial<
+      Parameters<PrismaClient["mCPTool"]["create"]>[0]["data"]
+    >
+  ) => {
+    const data = mcpToolFactory.build(serverId, overrides);
+    return prisma.mCPTool.create({ data });
+  }
+};

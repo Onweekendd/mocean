@@ -1,6 +1,7 @@
 import { agentsRouter } from "./agents";
 import { assistantsRouter } from "./assistants";
 import { groupsRouter } from "./groups";
+import { mcpRouter } from "./mcp";
 import { modelsRouter } from "./models";
 import { providersRouter } from "./providers";
 
@@ -9,7 +10,8 @@ const apiRoutes = [
   ...assistantsRouter,
   ...providersRouter,
   ...modelsRouter,
-  ...groupsRouter
+  ...groupsRouter,
+  ...mcpRouter
 ];
 
 export { apiRoutes };

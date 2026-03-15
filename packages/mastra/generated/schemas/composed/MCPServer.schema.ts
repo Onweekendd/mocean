@@ -6,7 +6,6 @@
 import z from "zod";
 import { MCPServerSchema } from "../models/MCPServer.schema";
 import { MCPAssistantServerSchema } from "../models/MCPAssistantServer.schema";
-import { MCPAgentServerSchema } from "../models/MCPAgentServer.schema";
 import { MCPConfigSampleSchema } from "../models/MCPConfigSample.schema";
 import { MCPPromptSchema } from "../models/MCPPrompt.schema";
 import { MCPResourceSchema } from "../models/MCPResource.schema";
@@ -14,7 +13,6 @@ import { MCPToolSchema } from "../models/MCPTool.schema";
 
 export const MCPServerFullSchema = MCPServerSchema.extend({
   assistants: z.array(MCPAssistantServerSchema),
-  agents: z.array(MCPAgentServerSchema),
   configSampleRelation: MCPConfigSampleSchema.nullish(),
   prompts: z.array(MCPPromptSchema),
   resources: z.array(MCPResourceSchema),

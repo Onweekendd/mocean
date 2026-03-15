@@ -207,7 +207,6 @@ model Agent {
   settings       AssistantSettings?
   topics         Topic[]
   knowledgeBases KnowledgeBase[]
-  mcpServers     MCPAgentServer[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -402,11 +401,29 @@ model MCPServer {
   tagsJson          Json? // 存储String[]
   timeout           Int? // 请求超时时间(秒)
 
+  // 版本和发布信息
+  releaseDate       DateTime? // 发布日期
+  isLatest          Boolean   @default(true) // 是否最新版本
+
+  // 打包信息
+  packageCanonical  String? // 'npm' | 'docker' | 'pypi' | 'crates'
+  packagesJson      Json? // PackageInfo[]
+  remotesJson       Json? // RemoteInfo[]
+
+  // 仓库信息
+  repositoryUrl     String? // 仓库 URL
+  repositorySource  String? // 'github' | 'gitlab'
+  repositoryId      String? // 仓库唯一标识
+
+  // 连接状态
+  status            String? // 'connected' | 'disconnected' | 'error'
+  lastConnectedAt   DateTime? // 最后连接时间
+  errorMessage      String? // 错误信息
+
   // 关系
   tools                MCPTool[]
   prompts              MCPPrompt[]
   assistants           MCPAssistantServer[]
-  agents               MCPAgentServer[]
   resources            MCPResource[]
   configSampleRelation MCPConfigSample?
 
@@ -424,22 +441,29 @@ model MCPAssistantServer {
   @@id([assistantId, mcpServerId])
 }
 
-// Agent和MCPServer的多对多关系
-model MCPAgentServer {
-  agent       Agent     @relation(fields: [agentId], references: [id])
-  agentId     String
-  mcpServer   MCPServer @relation(fields: [mcpServerId], references: [id])
-  mcpServerId String
-
-  @@id([agentId, mcpServerId])
-}
-
 // MCP工具
 model MCPTool {
   id          String  @id @default(uuid())
   name        String
   description String?
   inputSchema Json // MCPToolInputSchema
+  outputSchema Json? // 输出 schema
+
+  // MCP 协议注解
+  title            String? // 显示标题
+  readOnlyHint     Boolean @default(false) // 只读提示
+  destructiveHint  Boolean @default(true) // 破坏性操作提示
+  idempotentHint   Boolean @default(false) // 幂等性提示
+  openWorldHint    Boolean @default(true) // 开放世界提示
+
+  // 工具类型和元数据
+  toolType    String? // 'agent' | 'workflow' | null
+  metaJson    Json? // 自定义元数据
+
+  // 使用统计
+  isEnabled   Boolean  @default(true) // 是否启用
+  callCount   Int      @default(0) // 调用次数
+  lastUsedAt  DateTime? // 最后使用时间
 
   // 关系
   server   MCPServer @relation(fields: [serverId], references: [id])

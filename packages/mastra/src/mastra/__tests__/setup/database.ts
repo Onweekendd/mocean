@@ -131,7 +131,6 @@ export async function clearTestDatabase(): Promise<void> {
   // 1. 联表 & 叶子表
   await prisma.topicKnowledgeBase.deleteMany();
   await prisma.mCPAssistantServer.deleteMany();
-  await prisma.mCPAgentServer.deleteMany();
   await prisma.agentAgentGroup.deleteMany();
   await prisma.knowledgeItem.deleteMany();
   await prisma.mCPTool.deleteMany();

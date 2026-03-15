@@ -36,6 +36,13 @@ import {
   updateModelSchema
 } from "../schema/model";
 import {
+  McpServerDetailSchema,
+  McpServerListSchema,
+  McpToolResponseSchema,
+  createMcpServerSchema,
+  updateMcpServerSchema
+} from "../schema/mcp";
+import {
   ProviderHierarchyArraySchema,
   ProviderHierarchySchema,
   SimpleProvidersArraySchema,
@@ -284,5 +291,38 @@ export const agentRoutes = {
   getAgentByGroup: {
     path: `${PREFIX}/agents/group/:groupId`,
     responseSchema: AgentsResponseSchema.nullable()
+  }
+} as const;
+
+export const mcpRoutes = {
+  getMcpServers: {
+    path: `${PREFIX}/mcp/servers`,
+    responseSchema: McpServerListSchema
+  },
+  getMcpServerById: {
+    path: `${PREFIX}/mcp/servers/:id`,
+    responseSchema: McpServerDetailSchema.nullable()
+  },
+  createMcpServer: {
+    path: `${PREFIX}/mcp/servers`,
+    requestSchema: createMcpServerSchema,
+    responseSchema: McpServerDetailSchema
+  },
+  updateMcpServer: {
+    path: `${PREFIX}/mcp/servers/:id`,
+    requestSchema: updateMcpServerSchema,
+    responseSchema: McpServerDetailSchema
+  },
+  deleteMcpServer: {
+    path: `${PREFIX}/mcp/servers/:id`,
+    responseSchema: McpServerListSchema.element
+  },
+  toggleMcpServer: {
+    path: `${PREFIX}/mcp/servers/:id/toggle`,
+    responseSchema: McpServerDetailSchema
+  },
+  toggleMcpTool: {
+    path: `${PREFIX}/mcp/servers/:id/tools/:toolName/toggle`,
+    responseSchema: McpToolResponseSchema
   }
 } as const;

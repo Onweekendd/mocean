@@ -65,7 +65,6 @@ export const ModelName = {
   TopicKnowledgeBase: 'TopicKnowledgeBase',
   MCPServer: 'MCPServer',
   MCPAssistantServer: 'MCPAssistantServer',
-  MCPAgentServer: 'MCPAgentServer',
   MCPTool: 'MCPTool',
   MCPPrompt: 'MCPPrompt',
   MCPResource: 'MCPResource',
@@ -309,6 +308,17 @@ export const MCPServerScalarFieldEnum = {
   logoUrl: 'logoUrl',
   tagsJson: 'tagsJson',
   timeout: 'timeout',
+  releaseDate: 'releaseDate',
+  isLatest: 'isLatest',
+  packageCanonical: 'packageCanonical',
+  packagesJson: 'packagesJson',
+  remotesJson: 'remotesJson',
+  repositoryUrl: 'repositoryUrl',
+  repositorySource: 'repositorySource',
+  repositoryId: 'repositoryId',
+  status: 'status',
+  lastConnectedAt: 'lastConnectedAt',
+  errorMessage: 'errorMessage',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -324,19 +334,22 @@ export const MCPAssistantServerScalarFieldEnum = {
 export type MCPAssistantServerScalarFieldEnum = (typeof MCPAssistantServerScalarFieldEnum)[keyof typeof MCPAssistantServerScalarFieldEnum]
 
 
-export const MCPAgentServerScalarFieldEnum = {
-  agentId: 'agentId',
-  mcpServerId: 'mcpServerId'
-} as const
-
-export type MCPAgentServerScalarFieldEnum = (typeof MCPAgentServerScalarFieldEnum)[keyof typeof MCPAgentServerScalarFieldEnum]
-
-
 export const MCPToolScalarFieldEnum = {
   id: 'id',
   name: 'name',
   description: 'description',
   inputSchema: 'inputSchema',
+  outputSchema: 'outputSchema',
+  title: 'title',
+  readOnlyHint: 'readOnlyHint',
+  destructiveHint: 'destructiveHint',
+  idempotentHint: 'idempotentHint',
+  openWorldHint: 'openWorldHint',
+  toolType: 'toolType',
+  metaJson: 'metaJson',
+  isEnabled: 'isEnabled',
+  callCount: 'callCount',
+  lastUsedAt: 'lastUsedAt',
   serverId: 'serverId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

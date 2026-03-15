@@ -398,7 +398,6 @@ export const ModelName = {
   TopicKnowledgeBase: 'TopicKnowledgeBase',
   MCPServer: 'MCPServer',
   MCPAssistantServer: 'MCPAssistantServer',
-  MCPAgentServer: 'MCPAgentServer',
   MCPTool: 'MCPTool',
   MCPPrompt: 'MCPPrompt',
   MCPResource: 'MCPResource',
@@ -420,7 +419,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "provider" | "assistant" | "agent" | "agentGroup" | "agentAgentGroup" | "topic" | "fileType" | "model" | "assistantSettings" | "knowledgeBase" | "knowledgeItem" | "topicKnowledgeBase" | "mCPServer" | "mCPAssistantServer" | "mCPAgentServer" | "mCPTool" | "mCPPrompt" | "mCPResource" | "mCPConfigSample" | "quickPhrase" | "group"
+    modelProps: "provider" | "assistant" | "agent" | "agentGroup" | "agentAgentGroup" | "topic" | "fileType" | "model" | "assistantSettings" | "knowledgeBase" | "knowledgeItem" | "topicKnowledgeBase" | "mCPServer" | "mCPAssistantServer" | "mCPTool" | "mCPPrompt" | "mCPResource" | "mCPConfigSample" | "quickPhrase" | "group"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1460,80 +1459,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    MCPAgentServer: {
-      payload: Prisma.$MCPAgentServerPayload<ExtArgs>
-      fields: Prisma.MCPAgentServerFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.MCPAgentServerFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$MCPAgentServerPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.MCPAgentServerFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$MCPAgentServerPayload>
-        }
-        findFirst: {
-          args: Prisma.MCPAgentServerFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$MCPAgentServerPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.MCPAgentServerFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$MCPAgentServerPayload>
-        }
-        findMany: {
-          args: Prisma.MCPAgentServerFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$MCPAgentServerPayload>[]
-        }
-        create: {
-          args: Prisma.MCPAgentServerCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$MCPAgentServerPayload>
-        }
-        createMany: {
-          args: Prisma.MCPAgentServerCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.MCPAgentServerCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$MCPAgentServerPayload>[]
-        }
-        delete: {
-          args: Prisma.MCPAgentServerDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$MCPAgentServerPayload>
-        }
-        update: {
-          args: Prisma.MCPAgentServerUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$MCPAgentServerPayload>
-        }
-        deleteMany: {
-          args: Prisma.MCPAgentServerDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.MCPAgentServerUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.MCPAgentServerUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$MCPAgentServerPayload>[]
-        }
-        upsert: {
-          args: Prisma.MCPAgentServerUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$MCPAgentServerPayload>
-        }
-        aggregate: {
-          args: Prisma.MCPAgentServerAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateMCPAgentServer>
-        }
-        groupBy: {
-          args: Prisma.MCPAgentServerGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.MCPAgentServerGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.MCPAgentServerCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.MCPAgentServerCountAggregateOutputType> | number
-        }
-      }
-    }
     MCPTool: {
       payload: Prisma.$MCPToolPayload<ExtArgs>
       fields: Prisma.MCPToolFieldRefs
@@ -2236,6 +2161,17 @@ export const MCPServerScalarFieldEnum = {
   logoUrl: 'logoUrl',
   tagsJson: 'tagsJson',
   timeout: 'timeout',
+  releaseDate: 'releaseDate',
+  isLatest: 'isLatest',
+  packageCanonical: 'packageCanonical',
+  packagesJson: 'packagesJson',
+  remotesJson: 'remotesJson',
+  repositoryUrl: 'repositoryUrl',
+  repositorySource: 'repositorySource',
+  repositoryId: 'repositoryId',
+  status: 'status',
+  lastConnectedAt: 'lastConnectedAt',
+  errorMessage: 'errorMessage',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2251,19 +2187,22 @@ export const MCPAssistantServerScalarFieldEnum = {
 export type MCPAssistantServerScalarFieldEnum = (typeof MCPAssistantServerScalarFieldEnum)[keyof typeof MCPAssistantServerScalarFieldEnum]
 
 
-export const MCPAgentServerScalarFieldEnum = {
-  agentId: 'agentId',
-  mcpServerId: 'mcpServerId'
-} as const
-
-export type MCPAgentServerScalarFieldEnum = (typeof MCPAgentServerScalarFieldEnum)[keyof typeof MCPAgentServerScalarFieldEnum]
-
-
 export const MCPToolScalarFieldEnum = {
   id: 'id',
   name: 'name',
   description: 'description',
   inputSchema: 'inputSchema',
+  outputSchema: 'outputSchema',
+  title: 'title',
+  readOnlyHint: 'readOnlyHint',
+  destructiveHint: 'destructiveHint',
+  idempotentHint: 'idempotentHint',
+  openWorldHint: 'openWorldHint',
+  toolType: 'toolType',
+  metaJson: 'metaJson',
+  isEnabled: 'isEnabled',
+  callCount: 'callCount',
+  lastUsedAt: 'lastUsedAt',
   serverId: 'serverId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -2562,7 +2501,6 @@ export type GlobalOmitConfig = {
   topicKnowledgeBase?: Prisma.TopicKnowledgeBaseOmit
   mCPServer?: Prisma.MCPServerOmit
   mCPAssistantServer?: Prisma.MCPAssistantServerOmit
-  mCPAgentServer?: Prisma.MCPAgentServerOmit
   mCPTool?: Prisma.MCPToolOmit
   mCPPrompt?: Prisma.MCPPromptOmit
   mCPResource?: Prisma.MCPResourceOmit
