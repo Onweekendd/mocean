@@ -247,7 +247,7 @@ const getAgentByGroupRouter = registerApiRoute(
           content: {
             "application/json": {
               // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: AgentsResponseSchema.nullable()
+              schema: AgentsResponseSchema
             }
           }
         }
@@ -255,12 +255,9 @@ const getAgentByGroupRouter = registerApiRoute(
     },
     handler: async (c) => {
       const params = groupParamSchema.parse({
-        groupId: c.req.param("groupId")
+        group: c.req.param("group")
       });
-      const agents = await getAgentByGroup(params.groupId);
-      if (!agents) {
-        throw new HTTPException(404, { message: "分组不存在" });
-      }
+      const agents = await getAgentByGroup(params.group);
       return c.json(agents, 200);
     }
   }

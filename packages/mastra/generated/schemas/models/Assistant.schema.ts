@@ -1,5 +1,11 @@
 import * as z from 'zod';
 import { KnowledgeRecognitionSchema } from '../enums/KnowledgeRecognition.schema';
+import { AssistantSettingsSchema } from './AssistantSettings.schema';
+import { KnowledgeBaseSchema } from './KnowledgeBase.schema';
+import { MCPAssistantServerSchema } from './MCPAssistantServer.schema';
+import { ModelSchema } from './Model.schema';
+import { ProviderSchema } from './Provider.schema';
+import { TopicSchema } from './Topic.schema';
 
 export const AssistantSchema = z.object({
   id: z.string(),
@@ -12,11 +18,14 @@ export const AssistantSchema = z.object({
   webSearchProviderId: z.string().nullish(),
   enableGenerateImage: z.boolean(),
   knowledgeRecognition: KnowledgeRecognitionSchema.nullish(),
-
+  model: z.lazy(() => ModelSchema).nullish(),
   modelId: z.string().nullish(),
-
+  provider: z.lazy(() => ProviderSchema).nullish(),
   providerId: z.string().nullish(),
-
+  settings: z.lazy(() => AssistantSettingsSchema).nullish(),
+  topics: z.array(z.lazy(() => TopicSchema)),
+  knowledgeBases: z.array(z.lazy(() => KnowledgeBaseSchema)),
+  mcpServers: z.array(z.lazy(() => MCPAssistantServerSchema)),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

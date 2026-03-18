@@ -36,7 +36,7 @@ export function createProviderService(db: PrismaClient) {
   const getProvidersWithModels = async (): Promise<
     z.infer<(typeof providerRoutes)["getProvidersWithModels"]["responseSchema"]>
   > => {
-    return db.provider.findMany({
+    const providers = await db.provider.findMany({
       include: {
         groups: {
           include: {
@@ -48,6 +48,14 @@ export function createProviderService(db: PrismaClient) {
         createdAt: "desc"
       }
     });
+
+    return providers.map((provider) => ({
+      ...provider,
+      models: provider.groups.flatMap((group) => group.models),
+      _count: {
+        models: provider.groups.reduce((sum, group) => sum + group.models.length, 0)
+      }
+    }));
   };
 
   const getProviderById = async (
@@ -84,7 +92,13 @@ export function createProviderService(db: PrismaClient) {
 
     if (!provider) return null;
 
-    return provider;
+    return {
+      ...provider,
+      models: provider.groups.flatMap((group) => group.models),
+      _count: {
+        models: provider.groups.reduce((sum, group) => sum + group.models.length, 0)
+      }
+    };
   };
 
   const getProvidersByType = async (
@@ -106,7 +120,7 @@ export function createProviderService(db: PrismaClient) {
       (typeof providerRoutes)["getProvidersByTypeWithModels"]["responseSchema"]
     >
   > => {
-    return db.provider.findMany({
+    const providers = await db.provider.findMany({
       where: {
         type
       },
@@ -118,6 +132,14 @@ export function createProviderService(db: PrismaClient) {
         }
       }
     });
+
+    return providers.map((provider) => ({
+      ...provider,
+      models: provider.groups.flatMap((group) => group.models),
+      _count: {
+        models: provider.groups.reduce((sum, group) => sum + group.models.length, 0)
+      }
+    }));
   };
 
   const getEnabledProviders = async (): Promise<
@@ -148,7 +170,13 @@ export function createProviderService(db: PrismaClient) {
       }
     });
 
-    return providers;
+    return providers.map((provider) => ({
+      ...provider,
+      models: provider.groups.flatMap((group) => group.models),
+      _count: {
+        models: provider.groups.reduce((sum, group) => sum + group.models.length, 0)
+      }
+    }));
   };
 
   const getProvidersByModel = async (
@@ -178,7 +206,7 @@ export function createProviderService(db: PrismaClient) {
       (typeof providerRoutes)["getProvidersByModelWithModels"]["responseSchema"]
     >
   > => {
-    return db.provider.findMany({
+    const providers = await db.provider.findMany({
       where: {
         groups: {
           some: {
@@ -198,6 +226,14 @@ export function createProviderService(db: PrismaClient) {
         }
       }
     });
+
+    return providers.map((provider) => ({
+      ...provider,
+      models: provider.groups.flatMap((group) => group.models),
+      _count: {
+        models: provider.groups.reduce((sum, group) => sum + group.models.length, 0)
+      }
+    }));
   };
 
   const createProvider = async (

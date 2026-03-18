@@ -30,9 +30,7 @@ const getAgents = async (): Promise<
 
       topics: true,
 
-      knowledgeBases: true,
-
-      mcpServers: true
+      knowledgeBases: true
     }
   });
 
@@ -60,9 +58,7 @@ const getAgentById = async (
 
       topics: true,
 
-      knowledgeBases: true,
-
-      mcpServers: true
+      knowledgeBases: true
     }
   });
 
@@ -70,12 +66,12 @@ const getAgentById = async (
 };
 
 /**
- * 根据分组ID获取代理列表
- * @description 通过 AgentGroup.id 关联查询属于该分组的所有代理
- * @param groupId - 分组ID（AgentGroup.id）
+ * 根据分组名称获取代理列表
+ * @description 通过 AgentGroup.name 关联查询属于该分组的所有代理
+ * @param groupName - 分组名称（AgentGroup.name）
  */
 const getAgentByGroup = async (
-  groupId: string
+  groupName: string
 ): Promise<
   z.infer<(typeof agentRoutes)["getAgentByGroup"]["responseSchema"]>
 > => {
@@ -83,12 +79,19 @@ const getAgentByGroup = async (
     where: {
       groups: {
         some: {
-          agentGroupId: groupId
+          agentGroup: {
+            name: groupName
+          }
         }
       }
     },
     include: {
-      ...agentGroupsInclude
+      groups: {
+        select: {
+          agentGroup: { select: { id: true, name: true, label: true } }
+        }
+      },
+      settings: true
     }
   });
 
@@ -96,19 +99,24 @@ const getAgentByGroup = async (
 };
 
 /**
- * 获取所有有关联代理的分组
- * @description 从 AgentGroup 表中查询所有至少有一个关联代理的分组
- * @returns 分组数组
+ * 获取所有有关联代理的分组名称
+ * @description 从 AgentGroup 表中查询所有至少有一个关联代理的分组的名称
+ * @returns 分组名称数组
  */
 const getAgentGroups = async (): Promise<
   z.infer<(typeof agentRoutes)["getAgentGroups"]["responseSchema"]>
 > => {
-  return prisma.agentGroup.findMany({
+  const groups = await prisma.agentGroup.findMany({
     where: {
       agents: { some: {} }
     },
-    orderBy: { name: "asc" }
+    orderBy: { name: "asc" },
+    select: {
+      name: true
+    }
   });
+
+  return groups.map((g) => g.name);
 };
 
 /**

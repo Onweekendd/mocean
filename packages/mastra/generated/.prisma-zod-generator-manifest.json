@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "generatorVersion": "1.0.0",
-  "generatedAt": "2026-03-15T08:02:47.824Z",
-  "outputPath": "D:\\projects\\EaseClip\\packages\\mastra\\generated",
+  "generatedAt": "2026-03-18T14:49:24.219Z",
+  "outputPath": "D:\\projects\\mocean\\packages\\mastra\\generated",
   "files": [
     "schemas\\enums\\TransactionIsolationLevel.schema.ts",
     "schemas\\enums\\ProviderScalarFieldEnum.schema.ts",

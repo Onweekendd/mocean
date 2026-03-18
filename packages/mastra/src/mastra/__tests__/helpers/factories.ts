@@ -185,8 +185,7 @@ export const agentFactory = {
         },
         settings: true,
         topics: true,
-        knowledgeBases: true,
-        mcpServers: true
+        knowledgeBases: true
       }
     });
   }

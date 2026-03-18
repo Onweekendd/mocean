@@ -89,11 +89,17 @@ const getAssistantById = async (
   const assistant = await prisma.assistant.findUnique({
     where: {
       id
+    },
+    include: {
+      model: true,
+      provider: true,
+      settings: true,
+      topics: true,
+      knowledgeBases: true,
+      mcpServers: true
     }
   });
-  return assistant
-    ? AssistantWithModelsAndSettingsSchema.parse(assistant)
-    : null;
+  return assistant as z.infer<(typeof assistantRoutes)["getAssistantById"]["responseSchema"]> | null;
 };
 
 /**

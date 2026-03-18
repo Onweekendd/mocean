@@ -289,8 +289,8 @@ export const agentRoutes = {
     responseSchema: AgentResponseSchema
   },
   getAgentByGroup: {
-    path: `${PREFIX}/agents/group/:groupId`,
-    responseSchema: AgentsResponseSchema.nullable()
+    path: `${PREFIX}/agents/group/:group`,
+    responseSchema: AgentsResponseSchema
   }
 } as const;
 
