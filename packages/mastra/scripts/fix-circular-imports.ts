@@ -214,11 +214,11 @@ function extractCircularFields(
 
 const JSON_SCHEMA_DEFINITION = `
 // JSON value schema for Prisma Json fields
-type JsonValue = string | number | boolean | null | JsonObject | JsonArray;
-interface JsonObject {
+export type JsonValue = string | number | boolean | null | JsonObject | JsonArray;
+export interface JsonObject {
   [key: string]: JsonValue;
 }
-interface JsonArray extends Array<JsonValue> {}
+export interface JsonArray extends Array<JsonValue> {}
 
 const literalSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
 const JsonValueSchema: z.ZodType<JsonValue> = z.lazy(() =>
