@@ -2,17 +2,20 @@ import { registerApiRoute } from "@mastra/core/server";
 import { HTTPException } from "hono/http-exception";
 import { z } from "zod";
 
-import { mcpRoutes } from "./type";
-import { mcpServerIdParamSchema, mcpToolToggleParamSchema } from "../schema/mcp";
 import {
-  getMcpServers,
-  getMcpServerById,
+  mcpServerIdParamSchema,
+  mcpToolToggleParamSchema
+} from "../schema/mcp";
+import {
   createMcpServer,
-  updateMcpServer,
   deleteMcpServer,
+  getMcpServerById,
+  getMcpServers,
   toggleMcpServer,
-  toggleMcpTool
+  toggleMcpTool,
+  updateMcpServer
 } from "../server/mcp";
+import { mcpRoutes } from "./type";
 
 const getMcpServersRouter = registerApiRoute(mcpRoutes.getMcpServers.path, {
   method: "GET",
@@ -64,183 +67,168 @@ const getMcpServerByIdRouter = registerApiRoute(
   }
 );
 
-const createMcpServerRouter = registerApiRoute(
-  mcpRoutes.createMcpServer.path,
-  {
-    method: "POST",
-    openapi: {
-      summary: "创建 MCP 服务器",
-      tags: ["MCP"],
-      requestBody: {
+const createMcpServerRouter = registerApiRoute(mcpRoutes.createMcpServer.path, {
+  method: "POST",
+  openapi: {
+    summary: "创建 MCP 服务器",
+    tags: ["MCP"],
+    requestBody: {
+      content: {
+        "application/json": {
+          // @ts-expect-error hono-openapi requestBody schema type doesn't support ZodSchema
+          schema: mcpRoutes["createMcpServer"]["requestSchema"]
+        }
+      }
+    },
+    responses: {
+      201: {
+        description: "创建成功",
         content: {
           "application/json": {
-            // @ts-expect-error hono-openapi requestBody schema type doesn't support ZodSchema
-            schema: mcpRoutes["createMcpServer"]["requestSchema"]
+            // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+            schema: mcpRoutes["createMcpServer"]["responseSchema"]
           }
         }
-      },
-      responses: {
-        201: {
-          description: "创建成功",
-          content: {
-            "application/json": {
-              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: mcpRoutes["createMcpServer"]["responseSchema"]
-            }
-          }
+      }
+    }
+  },
+  handler: async (c) => {
+    try {
+      const body = mcpRoutes["createMcpServer"]["requestSchema"].parse(
+        await c.req.json()
+      );
+      return c.json(await createMcpServer(body), 201);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        throw new HTTPException(400, { message: error.message });
+      }
+      throw new HTTPException(500, {
+        message: error instanceof Error ? error.message : String(error)
+      });
+    }
+  }
+});
+
+const updateMcpServerRouter = registerApiRoute(mcpRoutes.updateMcpServer.path, {
+  method: "PUT",
+  openapi: {
+    summary: "更新 MCP 服务器",
+    tags: ["MCP"],
+    requestBody: {
+      content: {
+        "application/json": {
+          // @ts-expect-error hono-openapi requestBody schema type doesn't support ZodSchema
+          schema: mcpRoutes["updateMcpServer"]["requestSchema"]
         }
       }
     },
-    handler: async (c) => {
-      try {
-        const body = mcpRoutes["createMcpServer"]["requestSchema"].parse(
-          await c.req.json()
-        );
-        return c.json(await createMcpServer(body), 201);
-      } catch (error) {
-        if (error instanceof z.ZodError) {
-          throw new HTTPException(400, { message: error.message });
-        }
-        throw new HTTPException(500, {
-          message: error instanceof Error ? error.message : String(error)
-        });
-      }
-    }
-  }
-);
-
-const updateMcpServerRouter = registerApiRoute(
-  mcpRoutes.updateMcpServer.path,
-  {
-    method: "PUT",
-    openapi: {
-      summary: "更新 MCP 服务器",
-      tags: ["MCP"],
-      requestBody: {
+    responses: {
+      200: {
+        description: "更新成功",
         content: {
           "application/json": {
-            // @ts-expect-error hono-openapi requestBody schema type doesn't support ZodSchema
-            schema: mcpRoutes["updateMcpServer"]["requestSchema"]
+            // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+            schema: mcpRoutes["updateMcpServer"]["responseSchema"]
           }
         }
-      },
-      responses: {
-        200: {
-          description: "更新成功",
-          content: {
-            "application/json": {
-              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: mcpRoutes["updateMcpServer"]["responseSchema"]
-            }
-          }
-        }
-      }
-    },
-    handler: async (c) => {
-      const { id } = mcpServerIdParamSchema.parse({
-        id: c.req.param("id")
-      });
-      try {
-        const body = mcpRoutes["updateMcpServer"]["requestSchema"].parse(
-          await c.req.json()
-        );
-        return c.json(await updateMcpServer(id, body), 200);
-      } catch (error) {
-        if (error instanceof z.ZodError) {
-          throw new HTTPException(400, { message: error.message });
-        }
-        throw new HTTPException(500, {
-          message: error instanceof Error ? error.message : String(error)
-        });
       }
     }
+  },
+  handler: async (c) => {
+    const { id } = mcpServerIdParamSchema.parse({
+      id: c.req.param("id")
+    });
+    try {
+      const body = mcpRoutes["updateMcpServer"]["requestSchema"].parse(
+        await c.req.json()
+      );
+      return c.json(await updateMcpServer(id, body), 200);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        throw new HTTPException(400, { message: error.message });
+      }
+      throw new HTTPException(500, {
+        message: error instanceof Error ? error.message : String(error)
+      });
+    }
   }
-);
+});
 
-const deleteMcpServerRouter = registerApiRoute(
-  mcpRoutes.deleteMcpServer.path,
-  {
-    method: "DELETE",
-    openapi: {
-      summary: "删除 MCP 服务器",
-      tags: ["MCP"],
-      responses: {
-        200: {
-          description: "删除成功",
-          content: {
-            "application/json": {
-              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: mcpRoutes["deleteMcpServer"]["responseSchema"]
-            }
+const deleteMcpServerRouter = registerApiRoute(mcpRoutes.deleteMcpServer.path, {
+  method: "DELETE",
+  openapi: {
+    summary: "删除 MCP 服务器",
+    tags: ["MCP"],
+    responses: {
+      200: {
+        description: "删除成功",
+        content: {
+          "application/json": {
+            // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+            schema: mcpRoutes["deleteMcpServer"]["responseSchema"]
           }
         }
       }
-    },
-    handler: async (c) => {
-      const { id } = mcpServerIdParamSchema.parse({
-        id: c.req.param("id")
-      });
-      return c.json(await deleteMcpServer(id), 200);
     }
+  },
+  handler: async (c) => {
+    const { id } = mcpServerIdParamSchema.parse({
+      id: c.req.param("id")
+    });
+    return c.json(await deleteMcpServer(id), 200);
   }
-);
+});
 
-const toggleMcpServerRouter = registerApiRoute(
-  mcpRoutes.toggleMcpServer.path,
-  {
-    method: "PUT",
-    openapi: {
-      summary: "切换 MCP 服务器启用状态",
-      tags: ["MCP"],
-      responses: {
-        200: {
-          description: "切换成功",
-          content: {
-            "application/json": {
-              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: mcpRoutes["toggleMcpServer"]["responseSchema"]
-            }
+const toggleMcpServerRouter = registerApiRoute(mcpRoutes.toggleMcpServer.path, {
+  method: "PUT",
+  openapi: {
+    summary: "切换 MCP 服务器启用状态",
+    tags: ["MCP"],
+    responses: {
+      200: {
+        description: "切换成功",
+        content: {
+          "application/json": {
+            // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+            schema: mcpRoutes["toggleMcpServer"]["responseSchema"]
           }
         }
       }
-    },
-    handler: async (c) => {
-      const { id } = mcpServerIdParamSchema.parse({
-        id: c.req.param("id")
-      });
-      return c.json(await toggleMcpServer(id), 200);
     }
+  },
+  handler: async (c) => {
+    const { id } = mcpServerIdParamSchema.parse({
+      id: c.req.param("id")
+    });
+    return c.json(await toggleMcpServer(id), 200);
   }
-);
+});
 
-const toggleMcpToolRouter = registerApiRoute(
-  mcpRoutes.toggleMcpTool.path,
-  {
-    method: "PUT",
-    openapi: {
-      summary: "切换 MCP 工具启用状态",
-      tags: ["MCP"],
-      responses: {
-        200: {
-          description: "切换成功",
-          content: {
-            "application/json": {
-              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
-              schema: mcpRoutes["toggleMcpTool"]["responseSchema"]
-            }
+const toggleMcpToolRouter = registerApiRoute(mcpRoutes.toggleMcpTool.path, {
+  method: "PUT",
+  openapi: {
+    summary: "切换 MCP 工具启用状态",
+    tags: ["MCP"],
+    responses: {
+      200: {
+        description: "切换成功",
+        content: {
+          "application/json": {
+            // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+            schema: mcpRoutes["toggleMcpTool"]["responseSchema"]
           }
         }
       }
-    },
-    handler: async (c) => {
-      const { id, toolName } = mcpToolToggleParamSchema.parse({
-        id: c.req.param("id"),
-        toolName: c.req.param("toolName")
-      });
-      return c.json(await toggleMcpTool(id, toolName), 200);
     }
+  },
+  handler: async (c) => {
+    const { id, toolName } = mcpToolToggleParamSchema.parse({
+      id: c.req.param("id"),
+      toolName: c.req.param("toolName")
+    });
+    return c.json(await toggleMcpTool(id, toolName), 200);
   }
-);
+});
 
 export const mcpRouter = [
   getMcpServersRouter,

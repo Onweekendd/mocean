@@ -1,7 +1,4 @@
 import * as z from 'zod';
-import { AssistantSchema } from './Assistant.schema';
-import { GroupSchema } from './Group.schema';
-import { KnowledgeBaseSchema } from './KnowledgeBase.schema';
 
 export const ModelSchema = z.object({
   id: z.string(),
@@ -21,9 +18,7 @@ export const ModelSchema = z.object({
   inputPricePerMillion: z.number().nullish(),
   outputPricePerMillion: z.number().nullish(),
   groupId: z.string(),
-  group: z.lazy(() => GroupSchema),
-  assistants: z.array(z.lazy(() => AssistantSchema)),
-  rerankFor: z.array(z.lazy(() => KnowledgeBaseSchema)),
+
   createdAt: z.date(),
   updatedAt: z.date(),
 });

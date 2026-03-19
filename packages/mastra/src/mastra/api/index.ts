@@ -62,12 +62,7 @@ export {
 } from "./models-client";
 
 // MCP相关API
-export {
-  McpApiClient,
-  mcpApi,
-  mcpApiMethods,
-  useMcpApi
-} from "./mcp-client";
+export { McpApiClient, mcpApi, mcpApiMethods, useMcpApi } from "./mcp-client";
 
 /**
  * 所有API方法的统一导出

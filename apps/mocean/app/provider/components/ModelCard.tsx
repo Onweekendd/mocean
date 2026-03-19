@@ -40,8 +40,7 @@ const getModelTypeColor = (type: string) => {
     vision: "bg-brand-primary/10 text-brand-primary dark:bg-brand-primary/20",
     embedding: "bg-success/10 text-success dark:bg-success/20",
     reasoning: "bg-warning/10 text-warning dark:bg-warning/20",
-    function_calling:
-      "bg-destructive/10 text-destructive dark:bg-destructive/20",
+    function_calling: "bg-red-500/10 text-red-500 dark:bg-red-500/20",
     web_search:
       "bg-brand-secondary-400/10 text-brand-secondary-700 dark:bg-brand-secondary-400/20",
     audio: "bg-purple-500/10 text-purple-600 dark:bg-purple-500/20",

@@ -1,7 +1,9 @@
 import { useCallback, useEffect } from "react";
 
 import type { Provider } from "@mocean/mastra/prismaType";
-import { type SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useProviderActions } from "@/hooks/useProvidersSWR";
 
@@ -31,6 +33,27 @@ export type ProviderConfigFormData = {
 };
 
 /**
+ * 供应商配置表单验证 Schema
+ */
+export const providerConfigSchema = z.object({
+  name: z
+    .string()
+    .min(1, "供应商名称不能为空")
+    .trim()
+    .min(1, "供应商名称不能为空"),
+  apiKey: z.string().trim().optional(),
+  apiHost: z
+    .string()
+    .min(1, "API 接口地址不能为空")
+    .url("请输入有效的 URL")
+    .or(z.literal(""))
+    .transform((val) => val.trim())
+    .refine((val) => val !== "", { message: "API 接口地址不能为空" }),
+  enabled: z.boolean(),
+  notes: z.string().optional()
+});
+
+/**
  * 供应商配置表单 Hook
  * @param provider 供应商数据
  * @returns 表单方法和状态
@@ -43,14 +66,8 @@ export const useProviderConfig = ({
 }: ProviderConfigDialogProps) => {
   const { update } = useProviderActions(onSuccess);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    control,
-    formState: { isSubmitting },
-    watch
-  } = useForm<ProviderConfigFormData>({
+  const form = useForm<ProviderConfigFormData>({
+    resolver: zodResolver(providerConfigSchema),
     defaultValues: {
       name: provider.name,
       apiKey: provider.apiKey,
@@ -60,15 +77,17 @@ export const useProviderConfig = ({
     }
   });
 
+  const { formState } = form;
+
   const updateFormDataWithProvider = useCallback(() => {
-    reset({
+    form.reset({
       name: provider.name,
       apiKey: provider.apiKey,
       apiHost: provider.apiHost,
       enabled: provider.enabled,
       notes: provider.notes || ""
     });
-  }, [provider, reset]);
+  }, [provider, form]);
 
   useEffect(() => {
     updateFormDataWithProvider();
@@ -91,16 +110,16 @@ export const useProviderConfig = ({
   /**
    * 处理表单提交
    */
-  const onSubmit: SubmitHandler<ProviderConfigFormData> = useCallback(
+  const onSubmit = useCallback(
     async (data: ProviderConfigFormData) => {
       try {
         const updateData = {
           id: provider.id,
           name: data.name.trim(),
-          apiKey: data.apiKey.trim(),
+          apiKey: data.apiKey?.trim() || "",
           apiHost: data.apiHost.trim(),
           enabled: data.enabled,
-          notes: data.notes.trim() || null
+          notes: data.notes?.trim() || null
         };
 
         await update(provider.id, updateData);
@@ -114,16 +133,11 @@ export const useProviderConfig = ({
   );
 
   return {
-    isSubmitting,
+    isSubmitting: formState.isSubmitting,
     provider,
     open,
-    control,
-
-    register,
-    handleSubmit,
-    reset,
-    watch,
-    onSubmit,
-    onDialogOpenChange
+    form,
+    onDialogOpenChange,
+    onSubmit
   };
 };

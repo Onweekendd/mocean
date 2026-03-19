@@ -1,7 +1,5 @@
 import * as z from 'zod';
 import { ProviderTypeSchema } from '../enums/ProviderType.schema';
-import { AssistantSchema } from './Assistant.schema';
-import { GroupSchema } from './Group.schema';
 
 export const ProviderSchema = z.object({
   id: z.string(),
@@ -17,10 +15,10 @@ export const ProviderSchema = z.object({
   isGateway: z.boolean(),
   modelCount: z.number().int().nullish(),
   docsUrl: z.string().nullish(),
-  groups: z.array(z.lazy(() => GroupSchema)),
+
   createdAt: z.date(),
   updatedAt: z.date(),
-  Assistant: z.array(z.lazy(() => AssistantSchema)),
+
 });
 
 export type ProviderType = z.infer<typeof ProviderSchema>;

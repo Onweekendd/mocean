@@ -1,5 +1,4 @@
 import * as z from 'zod';
-import { MCPServerSchema } from './MCPServer.schema';
 
 export const MCPResourceSchema = z.object({
   id: z.string(),
@@ -10,7 +9,7 @@ export const MCPResourceSchema = z.object({
   size: z.number().int().nullish(),
   text: z.string().nullish(),
   blob: z.string().nullish(),
-  server: z.lazy(() => MCPServerSchema),
+
   serverId: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
