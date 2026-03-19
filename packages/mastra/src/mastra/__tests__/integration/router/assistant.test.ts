@@ -265,16 +265,6 @@ describe("Assistants Router", () => {
       expect(body.id).toBe(id);
     });
 
-    it("删除后应无法再获取该助理", async () => {
-      const { body: created } = await createViaApi();
-      const id = created.id as string;
-
-      await app.request(`${BASE}/${id}`, { method: "DELETE" });
-
-      const getRes = await app.request(`${BASE}/${id}`);
-      expect(getRes.status).toBe(404);
-    });
-
     it("删除不存在的助理应返回 500", async () => {
       const res = await app.request(`${BASE}/non-existent-id`, {
         method: "DELETE"

@@ -67,7 +67,7 @@ export const useAddModel = ({
     watch,
     setValue,
     reset,
-    formState: { isSubmitting }
+    formState: { isSubmitting, errors }
   } = useForm<ModelAddForm>({
     defaultValues: {
       name: "",
@@ -76,7 +76,8 @@ export const useAddModel = ({
       description: "",
       ownedBy: "",
       types: []
-    }
+    },
+    mode: "onBlur"
   });
 
   const formData = watch();
@@ -205,6 +206,7 @@ export const useAddModel = ({
     toggleType,
     removeType,
     onSubmit,
-    handleOpenChange
+    handleOpenChange,
+    errors
   };
 };

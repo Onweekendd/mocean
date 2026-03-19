@@ -9,14 +9,12 @@ import { AgentAgentGroupSchema } from "../models/AgentAgentGroup.schema";
 import { AssistantSettingsSchema } from "../models/AssistantSettings.schema";
 import { KnowledgeBaseSchema } from "../models/KnowledgeBase.schema";
 import { TopicSchema } from "../models/Topic.schema";
-import { MCPAgentServerSchema } from "../models/MCPAgentServer.schema";
 
 export const AgentFullSchema = AgentSchema.extend({
   groups: z.array(AgentAgentGroupSchema),
   settings: AssistantSettingsSchema.nullish(),
   knowledgeBases: z.array(KnowledgeBaseSchema),
   topics: z.array(TopicSchema),
-  mcpServers: z.array(MCPAgentServerSchema),
 });
 
 export type AgentFullType = z.infer<typeof AgentFullSchema>;

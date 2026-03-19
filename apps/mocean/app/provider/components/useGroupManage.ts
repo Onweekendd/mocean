@@ -2,6 +2,8 @@ import { useCallback, useReducer } from "react";
 
 import type { Group } from "@mocean/mastra/prismaType";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useGroupActions } from "@/hooks/useGroupsSWR";
 
@@ -24,6 +26,17 @@ export interface GroupManageDialogProps {
 export interface GroupConfigFormData {
   groupName: string;
 }
+
+/**
+ * 分组配置表单验证 Schema
+ */
+export const groupConfigSchema = z.object({
+  groupName: z
+    .string()
+    .min(1, "分组名称不能为空")
+    .trim()
+    .min(1, "分组名称不能为空")
+});
 
 /**
  * 对话框状态（使用判别联合类型）
@@ -94,6 +107,7 @@ export const useGroupManage = ({
 
   // 表单管理
   const form = useForm<GroupConfigFormData>({
+    resolver: zodResolver(groupConfigSchema),
     defaultValues: {
       groupName: ""
     }

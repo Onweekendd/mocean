@@ -210,6 +210,22 @@ function extractCircularFields(
   return fields;
 }
 
+// ─── JSON Schema 定义 ────────────────────────────────────────────────────────
+
+const JSON_SCHEMA_DEFINITION = `
+// JSON value schema for Prisma Json fields
+export type JsonValue = string | number | boolean | null | JsonObject | JsonArray;
+export interface JsonObject {
+  [key: string]: JsonValue;
+}
+export interface JsonArray extends Array<JsonValue> {}
+
+const literalSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
+const JsonValueSchema: z.ZodType<JsonValue> = z.lazy(() =>
+  z.union([literalSchema, z.array(JsonValueSchema), z.record(z.string(), JsonValueSchema)])
+);
+`;
+
 // ─── BASE schema 生成 ────────────────────────────────────────────────────────
 
 function createBaseSchema(
@@ -243,6 +259,22 @@ function createBaseSchema(
         ? `import { ${others.join(", ")} } from './${modelName}.schema';\n`
         : "";
     });
+  }
+
+  // 替换 z.unknown() 为 JsonValueSchema（针对 Prisma Json 字段）
+  const hasUnknown = content.includes("z.unknown()");
+  if (hasUnknown) {
+    content = content.replace(/z\.unknown\(\)/g, "JsonValueSchema");
+
+    // 在最后一个 import 语句后添加 JSON schema 定义
+    const lastImportMatch = content.match(/^import[^\n]+\n(?!import)/m);
+    if (lastImportMatch && lastImportMatch.index !== undefined) {
+      const insertPos = lastImportMatch.index + lastImportMatch[0].length;
+      content =
+        content.slice(0, insertPos) +
+        JSON_SCHEMA_DEFINITION +
+        content.slice(insertPos);
+    }
   }
 
   // 清理旧 _registry 痕迹

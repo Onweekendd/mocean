@@ -1,6 +1,7 @@
 import { agentsApiMethods, useAgentsApi } from "./agents-client";
 import { assistantsApiMethods, useAssistantsApi } from "./assistants-client";
 import { groupsApiMethods, useGroupsApi } from "./groups-client";
+import { mcpApiMethods, useMcpApi } from "./mcp-client";
 import { modelsApiMethods, useModelsApi } from "./models-client";
 import { providersApiMethods, useProvidersApi } from "./providers-client";
 
@@ -60,6 +61,9 @@ export {
   useModelsApi
 } from "./models-client";
 
+// MCP相关API
+export { McpApiClient, mcpApi, mcpApiMethods, useMcpApi } from "./mcp-client";
+
 /**
  * 所有API方法的统一导出
  * @description 方便前端一次性导入所有API方法
@@ -69,7 +73,8 @@ export const api = {
   assistants: assistantsApiMethods,
   groups: groupsApiMethods,
   providers: providersApiMethods,
-  models: modelsApiMethods
+  models: modelsApiMethods,
+  mcp: mcpApiMethods
 };
 
 /**
@@ -81,5 +86,6 @@ export const useApi = () => ({
   assistants: useAssistantsApi(),
   groups: useGroupsApi(),
   providers: useProvidersApi(),
-  models: useModelsApi()
+  models: useModelsApi(),
+  mcp: useMcpApi()
 });

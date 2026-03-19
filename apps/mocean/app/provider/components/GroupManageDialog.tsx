@@ -101,7 +101,7 @@ export const GroupManageDialog: React.FC<GroupManageDialogProps> = ({
   return (
     <>
       <Dialog open={open} onOpenChange={handleDialogOpenChange}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md bg-brand-slate-100">
           <DialogHeader>
             <DialogTitle>{getDialogTitle()}</DialogTitle>
             <DialogDescription>{getDialogDescription()}</DialogDescription>
@@ -125,7 +125,7 @@ export const GroupManageDialog: React.FC<GroupManageDialogProps> = ({
                       variant="outline"
                       size="sm"
                       onClick={actions.startAdd}
-                      className="text-brand-primary-500 hover:bg-brand-primary-50"
+                      className="border border-brand-primary-500 bg-brand-primary-500/10 text-brand-primary-600/80"
                     >
                       <Plus className="mr-2 h-4 w-4" />
                       新建分组
@@ -189,24 +189,15 @@ export const GroupManageDialog: React.FC<GroupManageDialogProps> = ({
                   <FormField
                     control={form.control}
                     name="groupName"
-                    rules={{
-                      required: "分组名称不能为空",
-                      validate: (value) => {
-                        if (!value.trim()) {
-                          return "分组名称不能为空";
-                        }
-                        return true;
-                      }
-                    }}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>分组名称 *</FormLabel>
+                        <FormLabel>分组名称</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             placeholder="请输入分组名称"
                             autoFocus
-                            className="border-brand-primary-500/30 focus:border-brand-primary-500 focus-visible:ring-brand-primary-500"
+                            className="border border-brandSlate-300 focus-visible:shadow-md focus-visible:ring-brand-primary-500"
                           />
                         </FormControl>
                         <FormMessage />
@@ -238,6 +229,7 @@ export const GroupManageDialog: React.FC<GroupManageDialogProps> = ({
                   variant="outline"
                   onClick={actions.cancel}
                   disabled={form.formState.isSubmitting}
+                  className="bg-brand-slate-200/20 hover:bg-brand-slate-200/60"
                 >
                   取消
                 </Button>

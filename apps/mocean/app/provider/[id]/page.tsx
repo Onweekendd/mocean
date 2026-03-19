@@ -185,13 +185,14 @@ export default function ProviderDetailPage() {
                 <h1 className="text-lg font-semibold">{provider?.name}</h1>
                 <div className="flex items-center space-x-1">
                   <Switch
-                    className="data-[state=checked]:bg-brand-primary"
+                    thumbClassName="bg-white"
+                    className="bg-brand-slate-200 data-[state=checked]:bg-brand-primary-500"
                     checked={provider?.enabled}
                     onCheckedChange={onToggleEnabled}
                   />
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground dark:text-gray-400">
                 共 {models.length} 个模型，{modelGroups.length} 个分组
               </p>
             </div>
@@ -202,6 +203,7 @@ export default function ProviderDetailPage() {
             {/* 分组管理按钮 */}
             <Button
               variant="outline"
+              className="bg-brand-slate-200/20 hover:bg-brand-slate-200/60"
               size="sm"
               onClick={() =>
                 dispatchDialog({ type: "groupManage", payload: true })
@@ -214,6 +216,7 @@ export default function ProviderDetailPage() {
             {/* 配置按钮 */}
             <Button
               variant="outline"
+              className="bg-brand-slate-200/20 hover:bg-brand-slate-200/60"
               size="sm"
               onClick={() => dispatchDialog({ type: "config", payload: true })}
             >
@@ -231,7 +234,7 @@ export default function ProviderDetailPage() {
               placeholder="搜索该供应商的所有模型..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="border border-brandSlate-300 pl-10 focus-visible:shadow-md focus-visible:ring-brand-primary-500"
             />
           </div>
           {searchTerm && (

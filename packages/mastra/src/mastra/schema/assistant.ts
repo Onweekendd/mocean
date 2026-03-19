@@ -16,7 +16,7 @@ export { AssistantSchema, AssistantFullSchema };
 // Assistants 列表 Response Schema
 export const SimpleAssistantArraySchema = z.array(AssistantSchema);
 
-// 带 model、settings 的 Assistant Response Schema
+// 带 model、settings 和关联字段的 Assistant Response Schema
 export const AssistantWithModelsAndSettingsSchema = AssistantSchema.pick({
   id: true,
   name: true,
@@ -34,7 +34,10 @@ export const AssistantWithModelsAndSettingsSchema = AssistantSchema.pick({
   updatedAt: true
 }).extend({
   model: ModelSchema.partial().nullish(),
-  settings: AssistantSettingsSchema.partial().nullish()
+  settings: AssistantSettingsSchema.partial().nullish(),
+  topics: z.array(z.any()).nullish(),
+  knowledgeBases: z.array(z.any()).nullish(),
+  mcpServers: z.array(z.any()).nullish()
 });
 
 /**
