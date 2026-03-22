@@ -1987,10 +1987,6 @@ export const AgentScalarFieldEnum = {
   type: 'type',
   emoji: 'emoji',
   description: 'description',
-  enableWebSearch: 'enableWebSearch',
-  webSearchProviderId: 'webSearchProviderId',
-  enableGenerateImage: 'enableGenerateImage',
-  knowledgeRecognition: 'knowledgeRecognition',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2088,7 +2084,6 @@ export const AssistantSettingsScalarFieldEnum = {
   qwenThinkMode: 'qwenThinkMode',
   toolUseMode: 'toolUseMode',
   assistantId: 'assistantId',
-  agentId: 'agentId',
   defaultModelId: 'defaultModelId'
 } as const
 

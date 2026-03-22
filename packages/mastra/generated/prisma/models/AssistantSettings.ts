@@ -53,7 +53,6 @@ export type AssistantSettingsMinAggregateOutputType = {
   qwenThinkMode: boolean | null
   toolUseMode: string | null
   assistantId: string | null
-  agentId: string | null
   defaultModelId: string | null
 }
 
@@ -70,7 +69,6 @@ export type AssistantSettingsMaxAggregateOutputType = {
   qwenThinkMode: boolean | null
   toolUseMode: string | null
   assistantId: string | null
-  agentId: string | null
   defaultModelId: string | null
 }
 
@@ -88,7 +86,6 @@ export type AssistantSettingsCountAggregateOutputType = {
   qwenThinkMode: number
   toolUseMode: number
   assistantId: number
-  agentId: number
   defaultModelId: number
   _all: number
 }
@@ -121,7 +118,6 @@ export type AssistantSettingsMinAggregateInputType = {
   qwenThinkMode?: true
   toolUseMode?: true
   assistantId?: true
-  agentId?: true
   defaultModelId?: true
 }
 
@@ -138,7 +134,6 @@ export type AssistantSettingsMaxAggregateInputType = {
   qwenThinkMode?: true
   toolUseMode?: true
   assistantId?: true
-  agentId?: true
   defaultModelId?: true
 }
 
@@ -156,7 +151,6 @@ export type AssistantSettingsCountAggregateInputType = {
   qwenThinkMode?: true
   toolUseMode?: true
   assistantId?: true
-  agentId?: true
   defaultModelId?: true
   _all?: true
 }
@@ -261,7 +255,6 @@ export type AssistantSettingsGroupByOutputType = {
   qwenThinkMode: boolean | null
   toolUseMode: string | null
   assistantId: string | null
-  agentId: string | null
   defaultModelId: string | null
   _count: AssistantSettingsCountAggregateOutputType | null
   _avg: AssistantSettingsAvgAggregateOutputType | null
@@ -302,10 +295,8 @@ export type AssistantSettingsWhereInput = {
   qwenThinkMode?: Prisma.BoolNullableFilter<"AssistantSettings"> | boolean | null
   toolUseMode?: Prisma.StringNullableFilter<"AssistantSettings"> | string | null
   assistantId?: Prisma.StringNullableFilter<"AssistantSettings"> | string | null
-  agentId?: Prisma.StringNullableFilter<"AssistantSettings"> | string | null
   defaultModelId?: Prisma.StringNullableFilter<"AssistantSettings"> | string | null
   assistant?: Prisma.XOR<Prisma.AssistantNullableScalarRelationFilter, Prisma.AssistantWhereInput> | null
-  agent?: Prisma.XOR<Prisma.AgentNullableScalarRelationFilter, Prisma.AgentWhereInput> | null
 }
 
 export type AssistantSettingsOrderByWithRelationInput = {
@@ -322,16 +313,13 @@ export type AssistantSettingsOrderByWithRelationInput = {
   qwenThinkMode?: Prisma.SortOrderInput | Prisma.SortOrder
   toolUseMode?: Prisma.SortOrderInput | Prisma.SortOrder
   assistantId?: Prisma.SortOrderInput | Prisma.SortOrder
-  agentId?: Prisma.SortOrderInput | Prisma.SortOrder
   defaultModelId?: Prisma.SortOrderInput | Prisma.SortOrder
   assistant?: Prisma.AssistantOrderByWithRelationInput
-  agent?: Prisma.AgentOrderByWithRelationInput
 }
 
 export type AssistantSettingsWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   assistantId?: string
-  agentId?: string
   AND?: Prisma.AssistantSettingsWhereInput | Prisma.AssistantSettingsWhereInput[]
   OR?: Prisma.AssistantSettingsWhereInput[]
   NOT?: Prisma.AssistantSettingsWhereInput | Prisma.AssistantSettingsWhereInput[]
@@ -348,8 +336,7 @@ export type AssistantSettingsWhereUniqueInput = Prisma.AtLeast<{
   toolUseMode?: Prisma.StringNullableFilter<"AssistantSettings"> | string | null
   defaultModelId?: Prisma.StringNullableFilter<"AssistantSettings"> | string | null
   assistant?: Prisma.XOR<Prisma.AssistantNullableScalarRelationFilter, Prisma.AssistantWhereInput> | null
-  agent?: Prisma.XOR<Prisma.AgentNullableScalarRelationFilter, Prisma.AgentWhereInput> | null
-}, "id" | "assistantId" | "agentId">
+}, "id" | "assistantId">
 
 export type AssistantSettingsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -365,7 +352,6 @@ export type AssistantSettingsOrderByWithAggregationInput = {
   qwenThinkMode?: Prisma.SortOrderInput | Prisma.SortOrder
   toolUseMode?: Prisma.SortOrderInput | Prisma.SortOrder
   assistantId?: Prisma.SortOrderInput | Prisma.SortOrder
-  agentId?: Prisma.SortOrderInput | Prisma.SortOrder
   defaultModelId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.AssistantSettingsCountOrderByAggregateInput
   _avg?: Prisma.AssistantSettingsAvgOrderByAggregateInput
@@ -391,7 +377,6 @@ export type AssistantSettingsScalarWhereWithAggregatesInput = {
   qwenThinkMode?: Prisma.BoolNullableWithAggregatesFilter<"AssistantSettings"> | boolean | null
   toolUseMode?: Prisma.StringNullableWithAggregatesFilter<"AssistantSettings"> | string | null
   assistantId?: Prisma.StringNullableWithAggregatesFilter<"AssistantSettings"> | string | null
-  agentId?: Prisma.StringNullableWithAggregatesFilter<"AssistantSettings"> | string | null
   defaultModelId?: Prisma.StringNullableWithAggregatesFilter<"AssistantSettings"> | string | null
 }
 
@@ -410,7 +395,6 @@ export type AssistantSettingsCreateInput = {
   toolUseMode?: string | null
   defaultModelId?: string | null
   assistant?: Prisma.AssistantCreateNestedOneWithoutSettingsInput
-  agent?: Prisma.AgentCreateNestedOneWithoutSettingsInput
 }
 
 export type AssistantSettingsUncheckedCreateInput = {
@@ -427,7 +411,6 @@ export type AssistantSettingsUncheckedCreateInput = {
   qwenThinkMode?: boolean | null
   toolUseMode?: string | null
   assistantId?: string | null
-  agentId?: string | null
   defaultModelId?: string | null
 }
 
@@ -446,7 +429,6 @@ export type AssistantSettingsUpdateInput = {
   toolUseMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assistant?: Prisma.AssistantUpdateOneWithoutSettingsNestedInput
-  agent?: Prisma.AgentUpdateOneWithoutSettingsNestedInput
 }
 
 export type AssistantSettingsUncheckedUpdateInput = {
@@ -463,7 +445,6 @@ export type AssistantSettingsUncheckedUpdateInput = {
   qwenThinkMode?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   toolUseMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assistantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  agentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -481,7 +462,6 @@ export type AssistantSettingsCreateManyInput = {
   qwenThinkMode?: boolean | null
   toolUseMode?: string | null
   assistantId?: string | null
-  agentId?: string | null
   defaultModelId?: string | null
 }
 
@@ -515,7 +495,6 @@ export type AssistantSettingsUncheckedUpdateManyInput = {
   qwenThinkMode?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   toolUseMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assistantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  agentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -538,7 +517,6 @@ export type AssistantSettingsCountOrderByAggregateInput = {
   qwenThinkMode?: Prisma.SortOrder
   toolUseMode?: Prisma.SortOrder
   assistantId?: Prisma.SortOrder
-  agentId?: Prisma.SortOrder
   defaultModelId?: Prisma.SortOrder
 }
 
@@ -562,7 +540,6 @@ export type AssistantSettingsMaxOrderByAggregateInput = {
   qwenThinkMode?: Prisma.SortOrder
   toolUseMode?: Prisma.SortOrder
   assistantId?: Prisma.SortOrder
-  agentId?: Prisma.SortOrder
   defaultModelId?: Prisma.SortOrder
 }
 
@@ -579,7 +556,6 @@ export type AssistantSettingsMinOrderByAggregateInput = {
   qwenThinkMode?: Prisma.SortOrder
   toolUseMode?: Prisma.SortOrder
   assistantId?: Prisma.SortOrder
-  agentId?: Prisma.SortOrder
   defaultModelId?: Prisma.SortOrder
 }
 
@@ -622,38 +598,6 @@ export type AssistantSettingsUncheckedUpdateOneWithoutAssistantNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AssistantSettingsUpdateToOneWithWhereWithoutAssistantInput, Prisma.AssistantSettingsUpdateWithoutAssistantInput>, Prisma.AssistantSettingsUncheckedUpdateWithoutAssistantInput>
 }
 
-export type AssistantSettingsCreateNestedOneWithoutAgentInput = {
-  create?: Prisma.XOR<Prisma.AssistantSettingsCreateWithoutAgentInput, Prisma.AssistantSettingsUncheckedCreateWithoutAgentInput>
-  connectOrCreate?: Prisma.AssistantSettingsCreateOrConnectWithoutAgentInput
-  connect?: Prisma.AssistantSettingsWhereUniqueInput
-}
-
-export type AssistantSettingsUncheckedCreateNestedOneWithoutAgentInput = {
-  create?: Prisma.XOR<Prisma.AssistantSettingsCreateWithoutAgentInput, Prisma.AssistantSettingsUncheckedCreateWithoutAgentInput>
-  connectOrCreate?: Prisma.AssistantSettingsCreateOrConnectWithoutAgentInput
-  connect?: Prisma.AssistantSettingsWhereUniqueInput
-}
-
-export type AssistantSettingsUpdateOneWithoutAgentNestedInput = {
-  create?: Prisma.XOR<Prisma.AssistantSettingsCreateWithoutAgentInput, Prisma.AssistantSettingsUncheckedCreateWithoutAgentInput>
-  connectOrCreate?: Prisma.AssistantSettingsCreateOrConnectWithoutAgentInput
-  upsert?: Prisma.AssistantSettingsUpsertWithoutAgentInput
-  disconnect?: Prisma.AssistantSettingsWhereInput | boolean
-  delete?: Prisma.AssistantSettingsWhereInput | boolean
-  connect?: Prisma.AssistantSettingsWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.AssistantSettingsUpdateToOneWithWhereWithoutAgentInput, Prisma.AssistantSettingsUpdateWithoutAgentInput>, Prisma.AssistantSettingsUncheckedUpdateWithoutAgentInput>
-}
-
-export type AssistantSettingsUncheckedUpdateOneWithoutAgentNestedInput = {
-  create?: Prisma.XOR<Prisma.AssistantSettingsCreateWithoutAgentInput, Prisma.AssistantSettingsUncheckedCreateWithoutAgentInput>
-  connectOrCreate?: Prisma.AssistantSettingsCreateOrConnectWithoutAgentInput
-  upsert?: Prisma.AssistantSettingsUpsertWithoutAgentInput
-  disconnect?: Prisma.AssistantSettingsWhereInput | boolean
-  delete?: Prisma.AssistantSettingsWhereInput | boolean
-  connect?: Prisma.AssistantSettingsWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.AssistantSettingsUpdateToOneWithWhereWithoutAgentInput, Prisma.AssistantSettingsUpdateWithoutAgentInput>, Prisma.AssistantSettingsUncheckedUpdateWithoutAgentInput>
-}
-
 export type FloatFieldUpdateOperationsInput = {
   set?: number
   increment?: number
@@ -680,7 +624,6 @@ export type AssistantSettingsCreateWithoutAssistantInput = {
   qwenThinkMode?: boolean | null
   toolUseMode?: string | null
   defaultModelId?: string | null
-  agent?: Prisma.AgentCreateNestedOneWithoutSettingsInput
 }
 
 export type AssistantSettingsUncheckedCreateWithoutAssistantInput = {
@@ -696,7 +639,6 @@ export type AssistantSettingsUncheckedCreateWithoutAssistantInput = {
   reasoning_effort?: string | null
   qwenThinkMode?: boolean | null
   toolUseMode?: string | null
-  agentId?: string | null
   defaultModelId?: string | null
 }
 
@@ -730,7 +672,6 @@ export type AssistantSettingsUpdateWithoutAssistantInput = {
   qwenThinkMode?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   toolUseMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  agent?: Prisma.AgentUpdateOneWithoutSettingsNestedInput
 }
 
 export type AssistantSettingsUncheckedUpdateWithoutAssistantInput = {
@@ -746,91 +687,6 @@ export type AssistantSettingsUncheckedUpdateWithoutAssistantInput = {
   reasoning_effort?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qwenThinkMode?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   toolUseMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  agentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  defaultModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-}
-
-export type AssistantSettingsCreateWithoutAgentInput = {
-  id?: string
-  contextCount: number
-  temperature: number
-  topP: number
-  maxTokens?: number | null
-  enableMaxTokens?: boolean
-  streamOutput?: boolean
-  hideMessages?: boolean
-  customParameters?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  reasoning_effort?: string | null
-  qwenThinkMode?: boolean | null
-  toolUseMode?: string | null
-  defaultModelId?: string | null
-  assistant?: Prisma.AssistantCreateNestedOneWithoutSettingsInput
-}
-
-export type AssistantSettingsUncheckedCreateWithoutAgentInput = {
-  id?: string
-  contextCount: number
-  temperature: number
-  topP: number
-  maxTokens?: number | null
-  enableMaxTokens?: boolean
-  streamOutput?: boolean
-  hideMessages?: boolean
-  customParameters?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  reasoning_effort?: string | null
-  qwenThinkMode?: boolean | null
-  toolUseMode?: string | null
-  assistantId?: string | null
-  defaultModelId?: string | null
-}
-
-export type AssistantSettingsCreateOrConnectWithoutAgentInput = {
-  where: Prisma.AssistantSettingsWhereUniqueInput
-  create: Prisma.XOR<Prisma.AssistantSettingsCreateWithoutAgentInput, Prisma.AssistantSettingsUncheckedCreateWithoutAgentInput>
-}
-
-export type AssistantSettingsUpsertWithoutAgentInput = {
-  update: Prisma.XOR<Prisma.AssistantSettingsUpdateWithoutAgentInput, Prisma.AssistantSettingsUncheckedUpdateWithoutAgentInput>
-  create: Prisma.XOR<Prisma.AssistantSettingsCreateWithoutAgentInput, Prisma.AssistantSettingsUncheckedCreateWithoutAgentInput>
-  where?: Prisma.AssistantSettingsWhereInput
-}
-
-export type AssistantSettingsUpdateToOneWithWhereWithoutAgentInput = {
-  where?: Prisma.AssistantSettingsWhereInput
-  data: Prisma.XOR<Prisma.AssistantSettingsUpdateWithoutAgentInput, Prisma.AssistantSettingsUncheckedUpdateWithoutAgentInput>
-}
-
-export type AssistantSettingsUpdateWithoutAgentInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  contextCount?: Prisma.IntFieldUpdateOperationsInput | number
-  temperature?: Prisma.FloatFieldUpdateOperationsInput | number
-  topP?: Prisma.FloatFieldUpdateOperationsInput | number
-  maxTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  enableMaxTokens?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  streamOutput?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hideMessages?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  customParameters?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  reasoning_effort?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  qwenThinkMode?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  toolUseMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  defaultModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  assistant?: Prisma.AssistantUpdateOneWithoutSettingsNestedInput
-}
-
-export type AssistantSettingsUncheckedUpdateWithoutAgentInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  contextCount?: Prisma.IntFieldUpdateOperationsInput | number
-  temperature?: Prisma.FloatFieldUpdateOperationsInput | number
-  topP?: Prisma.FloatFieldUpdateOperationsInput | number
-  maxTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  enableMaxTokens?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  streamOutput?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hideMessages?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  customParameters?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  reasoning_effort?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  qwenThinkMode?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  toolUseMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  assistantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -850,10 +706,8 @@ export type AssistantSettingsSelect<ExtArgs extends runtime.Types.Extensions.Int
   qwenThinkMode?: boolean
   toolUseMode?: boolean
   assistantId?: boolean
-  agentId?: boolean
   defaultModelId?: boolean
   assistant?: boolean | Prisma.AssistantSettings$assistantArgs<ExtArgs>
-  agent?: boolean | Prisma.AssistantSettings$agentArgs<ExtArgs>
 }, ExtArgs["result"]["assistantSettings"]>
 
 export type AssistantSettingsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -870,10 +724,8 @@ export type AssistantSettingsSelectCreateManyAndReturn<ExtArgs extends runtime.T
   qwenThinkMode?: boolean
   toolUseMode?: boolean
   assistantId?: boolean
-  agentId?: boolean
   defaultModelId?: boolean
   assistant?: boolean | Prisma.AssistantSettings$assistantArgs<ExtArgs>
-  agent?: boolean | Prisma.AssistantSettings$agentArgs<ExtArgs>
 }, ExtArgs["result"]["assistantSettings"]>
 
 export type AssistantSettingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -890,10 +742,8 @@ export type AssistantSettingsSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   qwenThinkMode?: boolean
   toolUseMode?: boolean
   assistantId?: boolean
-  agentId?: boolean
   defaultModelId?: boolean
   assistant?: boolean | Prisma.AssistantSettings$assistantArgs<ExtArgs>
-  agent?: boolean | Prisma.AssistantSettings$agentArgs<ExtArgs>
 }, ExtArgs["result"]["assistantSettings"]>
 
 export type AssistantSettingsSelectScalar = {
@@ -910,29 +760,24 @@ export type AssistantSettingsSelectScalar = {
   qwenThinkMode?: boolean
   toolUseMode?: boolean
   assistantId?: boolean
-  agentId?: boolean
   defaultModelId?: boolean
 }
 
-export type AssistantSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "contextCount" | "temperature" | "topP" | "maxTokens" | "enableMaxTokens" | "streamOutput" | "hideMessages" | "customParameters" | "reasoning_effort" | "qwenThinkMode" | "toolUseMode" | "assistantId" | "agentId" | "defaultModelId", ExtArgs["result"]["assistantSettings"]>
+export type AssistantSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "contextCount" | "temperature" | "topP" | "maxTokens" | "enableMaxTokens" | "streamOutput" | "hideMessages" | "customParameters" | "reasoning_effort" | "qwenThinkMode" | "toolUseMode" | "assistantId" | "defaultModelId", ExtArgs["result"]["assistantSettings"]>
 export type AssistantSettingsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assistant?: boolean | Prisma.AssistantSettings$assistantArgs<ExtArgs>
-  agent?: boolean | Prisma.AssistantSettings$agentArgs<ExtArgs>
 }
 export type AssistantSettingsIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assistant?: boolean | Prisma.AssistantSettings$assistantArgs<ExtArgs>
-  agent?: boolean | Prisma.AssistantSettings$agentArgs<ExtArgs>
 }
 export type AssistantSettingsIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assistant?: boolean | Prisma.AssistantSettings$assistantArgs<ExtArgs>
-  agent?: boolean | Prisma.AssistantSettings$agentArgs<ExtArgs>
 }
 
 export type $AssistantSettingsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "AssistantSettings"
   objects: {
     assistant: Prisma.$AssistantPayload<ExtArgs> | null
-    agent: Prisma.$AgentPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -948,7 +793,6 @@ export type $AssistantSettingsPayload<ExtArgs extends runtime.Types.Extensions.I
     qwenThinkMode: boolean | null
     toolUseMode: string | null
     assistantId: string | null
-    agentId: string | null
     defaultModelId: string | null
   }, ExtArgs["result"]["assistantSettings"]>
   composites: {}
@@ -1345,7 +1189,6 @@ readonly fields: AssistantSettingsFieldRefs;
 export interface Prisma__AssistantSettingsClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   assistant<T extends Prisma.AssistantSettings$assistantArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AssistantSettings$assistantArgs<ExtArgs>>): Prisma.Prisma__AssistantClient<runtime.Types.Result.GetResult<Prisma.$AssistantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  agent<T extends Prisma.AssistantSettings$agentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AssistantSettings$agentArgs<ExtArgs>>): Prisma.Prisma__AgentClient<runtime.Types.Result.GetResult<Prisma.$AgentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1388,7 +1231,6 @@ export interface AssistantSettingsFieldRefs {
   readonly qwenThinkMode: Prisma.FieldRef<"AssistantSettings", 'Boolean'>
   readonly toolUseMode: Prisma.FieldRef<"AssistantSettings", 'String'>
   readonly assistantId: Prisma.FieldRef<"AssistantSettings", 'String'>
-  readonly agentId: Prisma.FieldRef<"AssistantSettings", 'String'>
   readonly defaultModelId: Prisma.FieldRef<"AssistantSettings", 'String'>
 }
     
@@ -1800,25 +1642,6 @@ export type AssistantSettings$assistantArgs<ExtArgs extends runtime.Types.Extens
    */
   include?: Prisma.AssistantInclude<ExtArgs> | null
   where?: Prisma.AssistantWhereInput
-}
-
-/**
- * AssistantSettings.agent
- */
-export type AssistantSettings$agentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Agent
-   */
-  select?: Prisma.AgentSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Agent
-   */
-  omit?: Prisma.AgentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AgentInclude<ExtArgs> | null
-  where?: Prisma.AgentWhereInput
 }
 
 /**

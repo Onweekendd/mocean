@@ -301,7 +301,6 @@ export type KnowledgeBaseWhereInput = {
   created_at?: Prisma.DateTimeFilter<"KnowledgeBase"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"KnowledgeBase"> | Date | string
   assistants?: Prisma.AssistantListRelationFilter
-  agents?: Prisma.AgentListRelationFilter
   rerankModel?: Prisma.XOR<Prisma.ModelNullableScalarRelationFilter, Prisma.ModelWhereInput> | null
   items?: Prisma.KnowledgeItemListRelationFilter
   topics?: Prisma.TopicKnowledgeBaseListRelationFilter
@@ -322,7 +321,6 @@ export type KnowledgeBaseOrderByWithRelationInput = {
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   assistants?: Prisma.AssistantOrderByRelationAggregateInput
-  agents?: Prisma.AgentOrderByRelationAggregateInput
   rerankModel?: Prisma.ModelOrderByWithRelationInput
   items?: Prisma.KnowledgeItemOrderByRelationAggregateInput
   topics?: Prisma.TopicKnowledgeBaseOrderByRelationAggregateInput
@@ -346,7 +344,6 @@ export type KnowledgeBaseWhereUniqueInput = Prisma.AtLeast<{
   created_at?: Prisma.DateTimeFilter<"KnowledgeBase"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"KnowledgeBase"> | Date | string
   assistants?: Prisma.AssistantListRelationFilter
-  agents?: Prisma.AgentListRelationFilter
   rerankModel?: Prisma.XOR<Prisma.ModelNullableScalarRelationFilter, Prisma.ModelWhereInput> | null
   items?: Prisma.KnowledgeItemListRelationFilter
   topics?: Prisma.TopicKnowledgeBaseListRelationFilter
@@ -406,7 +403,6 @@ export type KnowledgeBaseCreateInput = {
   created_at?: Date | string
   updated_at?: Date | string
   assistants?: Prisma.AssistantCreateNestedManyWithoutKnowledgeBasesInput
-  agents?: Prisma.AgentCreateNestedManyWithoutKnowledgeBasesInput
   rerankModel?: Prisma.ModelCreateNestedOneWithoutRerankForInput
   items?: Prisma.KnowledgeItemCreateNestedManyWithoutKnowledgeBaseInput
   topics?: Prisma.TopicKnowledgeBaseCreateNestedManyWithoutKnowledgeBaseInput
@@ -427,7 +423,6 @@ export type KnowledgeBaseUncheckedCreateInput = {
   created_at?: Date | string
   updated_at?: Date | string
   assistants?: Prisma.AssistantUncheckedCreateNestedManyWithoutKnowledgeBasesInput
-  agents?: Prisma.AgentUncheckedCreateNestedManyWithoutKnowledgeBasesInput
   items?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutKnowledgeBaseInput
   topics?: Prisma.TopicKnowledgeBaseUncheckedCreateNestedManyWithoutKnowledgeBaseInput
 }
@@ -446,7 +441,6 @@ export type KnowledgeBaseUpdateInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assistants?: Prisma.AssistantUpdateManyWithoutKnowledgeBasesNestedInput
-  agents?: Prisma.AgentUpdateManyWithoutKnowledgeBasesNestedInput
   rerankModel?: Prisma.ModelUpdateOneWithoutRerankForNestedInput
   items?: Prisma.KnowledgeItemUpdateManyWithoutKnowledgeBaseNestedInput
   topics?: Prisma.TopicKnowledgeBaseUpdateManyWithoutKnowledgeBaseNestedInput
@@ -467,7 +461,6 @@ export type KnowledgeBaseUncheckedUpdateInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assistants?: Prisma.AssistantUncheckedUpdateManyWithoutKnowledgeBasesNestedInput
-  agents?: Prisma.AgentUncheckedUpdateManyWithoutKnowledgeBasesNestedInput
   items?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutKnowledgeBaseNestedInput
   topics?: Prisma.TopicKnowledgeBaseUncheckedUpdateManyWithoutKnowledgeBaseNestedInput
 }
@@ -638,44 +631,6 @@ export type KnowledgeBaseUncheckedUpdateManyWithoutAssistantsNestedInput = {
   deleteMany?: Prisma.KnowledgeBaseScalarWhereInput | Prisma.KnowledgeBaseScalarWhereInput[]
 }
 
-export type KnowledgeBaseCreateNestedManyWithoutAgentsInput = {
-  create?: Prisma.XOR<Prisma.KnowledgeBaseCreateWithoutAgentsInput, Prisma.KnowledgeBaseUncheckedCreateWithoutAgentsInput> | Prisma.KnowledgeBaseCreateWithoutAgentsInput[] | Prisma.KnowledgeBaseUncheckedCreateWithoutAgentsInput[]
-  connectOrCreate?: Prisma.KnowledgeBaseCreateOrConnectWithoutAgentsInput | Prisma.KnowledgeBaseCreateOrConnectWithoutAgentsInput[]
-  connect?: Prisma.KnowledgeBaseWhereUniqueInput | Prisma.KnowledgeBaseWhereUniqueInput[]
-}
-
-export type KnowledgeBaseUncheckedCreateNestedManyWithoutAgentsInput = {
-  create?: Prisma.XOR<Prisma.KnowledgeBaseCreateWithoutAgentsInput, Prisma.KnowledgeBaseUncheckedCreateWithoutAgentsInput> | Prisma.KnowledgeBaseCreateWithoutAgentsInput[] | Prisma.KnowledgeBaseUncheckedCreateWithoutAgentsInput[]
-  connectOrCreate?: Prisma.KnowledgeBaseCreateOrConnectWithoutAgentsInput | Prisma.KnowledgeBaseCreateOrConnectWithoutAgentsInput[]
-  connect?: Prisma.KnowledgeBaseWhereUniqueInput | Prisma.KnowledgeBaseWhereUniqueInput[]
-}
-
-export type KnowledgeBaseUpdateManyWithoutAgentsNestedInput = {
-  create?: Prisma.XOR<Prisma.KnowledgeBaseCreateWithoutAgentsInput, Prisma.KnowledgeBaseUncheckedCreateWithoutAgentsInput> | Prisma.KnowledgeBaseCreateWithoutAgentsInput[] | Prisma.KnowledgeBaseUncheckedCreateWithoutAgentsInput[]
-  connectOrCreate?: Prisma.KnowledgeBaseCreateOrConnectWithoutAgentsInput | Prisma.KnowledgeBaseCreateOrConnectWithoutAgentsInput[]
-  upsert?: Prisma.KnowledgeBaseUpsertWithWhereUniqueWithoutAgentsInput | Prisma.KnowledgeBaseUpsertWithWhereUniqueWithoutAgentsInput[]
-  set?: Prisma.KnowledgeBaseWhereUniqueInput | Prisma.KnowledgeBaseWhereUniqueInput[]
-  disconnect?: Prisma.KnowledgeBaseWhereUniqueInput | Prisma.KnowledgeBaseWhereUniqueInput[]
-  delete?: Prisma.KnowledgeBaseWhereUniqueInput | Prisma.KnowledgeBaseWhereUniqueInput[]
-  connect?: Prisma.KnowledgeBaseWhereUniqueInput | Prisma.KnowledgeBaseWhereUniqueInput[]
-  update?: Prisma.KnowledgeBaseUpdateWithWhereUniqueWithoutAgentsInput | Prisma.KnowledgeBaseUpdateWithWhereUniqueWithoutAgentsInput[]
-  updateMany?: Prisma.KnowledgeBaseUpdateManyWithWhereWithoutAgentsInput | Prisma.KnowledgeBaseUpdateManyWithWhereWithoutAgentsInput[]
-  deleteMany?: Prisma.KnowledgeBaseScalarWhereInput | Prisma.KnowledgeBaseScalarWhereInput[]
-}
-
-export type KnowledgeBaseUncheckedUpdateManyWithoutAgentsNestedInput = {
-  create?: Prisma.XOR<Prisma.KnowledgeBaseCreateWithoutAgentsInput, Prisma.KnowledgeBaseUncheckedCreateWithoutAgentsInput> | Prisma.KnowledgeBaseCreateWithoutAgentsInput[] | Prisma.KnowledgeBaseUncheckedCreateWithoutAgentsInput[]
-  connectOrCreate?: Prisma.KnowledgeBaseCreateOrConnectWithoutAgentsInput | Prisma.KnowledgeBaseCreateOrConnectWithoutAgentsInput[]
-  upsert?: Prisma.KnowledgeBaseUpsertWithWhereUniqueWithoutAgentsInput | Prisma.KnowledgeBaseUpsertWithWhereUniqueWithoutAgentsInput[]
-  set?: Prisma.KnowledgeBaseWhereUniqueInput | Prisma.KnowledgeBaseWhereUniqueInput[]
-  disconnect?: Prisma.KnowledgeBaseWhereUniqueInput | Prisma.KnowledgeBaseWhereUniqueInput[]
-  delete?: Prisma.KnowledgeBaseWhereUniqueInput | Prisma.KnowledgeBaseWhereUniqueInput[]
-  connect?: Prisma.KnowledgeBaseWhereUniqueInput | Prisma.KnowledgeBaseWhereUniqueInput[]
-  update?: Prisma.KnowledgeBaseUpdateWithWhereUniqueWithoutAgentsInput | Prisma.KnowledgeBaseUpdateWithWhereUniqueWithoutAgentsInput[]
-  updateMany?: Prisma.KnowledgeBaseUpdateManyWithWhereWithoutAgentsInput | Prisma.KnowledgeBaseUpdateManyWithWhereWithoutAgentsInput[]
-  deleteMany?: Prisma.KnowledgeBaseScalarWhereInput | Prisma.KnowledgeBaseScalarWhereInput[]
-}
-
 export type KnowledgeBaseCreateNestedManyWithoutRerankModelInput = {
   create?: Prisma.XOR<Prisma.KnowledgeBaseCreateWithoutRerankModelInput, Prisma.KnowledgeBaseUncheckedCreateWithoutRerankModelInput> | Prisma.KnowledgeBaseCreateWithoutRerankModelInput[] | Prisma.KnowledgeBaseUncheckedCreateWithoutRerankModelInput[]
   connectOrCreate?: Prisma.KnowledgeBaseCreateOrConnectWithoutRerankModelInput | Prisma.KnowledgeBaseCreateOrConnectWithoutRerankModelInput[]
@@ -759,7 +714,6 @@ export type KnowledgeBaseCreateWithoutAssistantsInput = {
   modelId: string
   created_at?: Date | string
   updated_at?: Date | string
-  agents?: Prisma.AgentCreateNestedManyWithoutKnowledgeBasesInput
   rerankModel?: Prisma.ModelCreateNestedOneWithoutRerankForInput
   items?: Prisma.KnowledgeItemCreateNestedManyWithoutKnowledgeBaseInput
   topics?: Prisma.TopicKnowledgeBaseCreateNestedManyWithoutKnowledgeBaseInput
@@ -779,7 +733,6 @@ export type KnowledgeBaseUncheckedCreateWithoutAssistantsInput = {
   rerankModelId?: string | null
   created_at?: Date | string
   updated_at?: Date | string
-  agents?: Prisma.AgentUncheckedCreateNestedManyWithoutKnowledgeBasesInput
   items?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutKnowledgeBaseInput
   topics?: Prisma.TopicKnowledgeBaseUncheckedCreateNestedManyWithoutKnowledgeBaseInput
 }
@@ -824,65 +777,6 @@ export type KnowledgeBaseScalarWhereInput = {
   updated_at?: Prisma.DateTimeFilter<"KnowledgeBase"> | Date | string
 }
 
-export type KnowledgeBaseCreateWithoutAgentsInput = {
-  id?: string
-  name: string
-  dimensions: number
-  description?: string | null
-  documentCount?: number | null
-  chunkSize?: number | null
-  chunkOverlap?: number | null
-  threshold?: number | null
-  version: number
-  modelId: string
-  created_at?: Date | string
-  updated_at?: Date | string
-  assistants?: Prisma.AssistantCreateNestedManyWithoutKnowledgeBasesInput
-  rerankModel?: Prisma.ModelCreateNestedOneWithoutRerankForInput
-  items?: Prisma.KnowledgeItemCreateNestedManyWithoutKnowledgeBaseInput
-  topics?: Prisma.TopicKnowledgeBaseCreateNestedManyWithoutKnowledgeBaseInput
-}
-
-export type KnowledgeBaseUncheckedCreateWithoutAgentsInput = {
-  id?: string
-  name: string
-  dimensions: number
-  description?: string | null
-  documentCount?: number | null
-  chunkSize?: number | null
-  chunkOverlap?: number | null
-  threshold?: number | null
-  version: number
-  modelId: string
-  rerankModelId?: string | null
-  created_at?: Date | string
-  updated_at?: Date | string
-  assistants?: Prisma.AssistantUncheckedCreateNestedManyWithoutKnowledgeBasesInput
-  items?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutKnowledgeBaseInput
-  topics?: Prisma.TopicKnowledgeBaseUncheckedCreateNestedManyWithoutKnowledgeBaseInput
-}
-
-export type KnowledgeBaseCreateOrConnectWithoutAgentsInput = {
-  where: Prisma.KnowledgeBaseWhereUniqueInput
-  create: Prisma.XOR<Prisma.KnowledgeBaseCreateWithoutAgentsInput, Prisma.KnowledgeBaseUncheckedCreateWithoutAgentsInput>
-}
-
-export type KnowledgeBaseUpsertWithWhereUniqueWithoutAgentsInput = {
-  where: Prisma.KnowledgeBaseWhereUniqueInput
-  update: Prisma.XOR<Prisma.KnowledgeBaseUpdateWithoutAgentsInput, Prisma.KnowledgeBaseUncheckedUpdateWithoutAgentsInput>
-  create: Prisma.XOR<Prisma.KnowledgeBaseCreateWithoutAgentsInput, Prisma.KnowledgeBaseUncheckedCreateWithoutAgentsInput>
-}
-
-export type KnowledgeBaseUpdateWithWhereUniqueWithoutAgentsInput = {
-  where: Prisma.KnowledgeBaseWhereUniqueInput
-  data: Prisma.XOR<Prisma.KnowledgeBaseUpdateWithoutAgentsInput, Prisma.KnowledgeBaseUncheckedUpdateWithoutAgentsInput>
-}
-
-export type KnowledgeBaseUpdateManyWithWhereWithoutAgentsInput = {
-  where: Prisma.KnowledgeBaseScalarWhereInput
-  data: Prisma.XOR<Prisma.KnowledgeBaseUpdateManyMutationInput, Prisma.KnowledgeBaseUncheckedUpdateManyWithoutAgentsInput>
-}
-
 export type KnowledgeBaseCreateWithoutRerankModelInput = {
   id?: string
   name: string
@@ -897,7 +791,6 @@ export type KnowledgeBaseCreateWithoutRerankModelInput = {
   created_at?: Date | string
   updated_at?: Date | string
   assistants?: Prisma.AssistantCreateNestedManyWithoutKnowledgeBasesInput
-  agents?: Prisma.AgentCreateNestedManyWithoutKnowledgeBasesInput
   items?: Prisma.KnowledgeItemCreateNestedManyWithoutKnowledgeBaseInput
   topics?: Prisma.TopicKnowledgeBaseCreateNestedManyWithoutKnowledgeBaseInput
 }
@@ -916,7 +809,6 @@ export type KnowledgeBaseUncheckedCreateWithoutRerankModelInput = {
   created_at?: Date | string
   updated_at?: Date | string
   assistants?: Prisma.AssistantUncheckedCreateNestedManyWithoutKnowledgeBasesInput
-  agents?: Prisma.AgentUncheckedCreateNestedManyWithoutKnowledgeBasesInput
   items?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutKnowledgeBaseInput
   topics?: Prisma.TopicKnowledgeBaseUncheckedCreateNestedManyWithoutKnowledgeBaseInput
 }
@@ -960,7 +852,6 @@ export type KnowledgeBaseCreateWithoutItemsInput = {
   created_at?: Date | string
   updated_at?: Date | string
   assistants?: Prisma.AssistantCreateNestedManyWithoutKnowledgeBasesInput
-  agents?: Prisma.AgentCreateNestedManyWithoutKnowledgeBasesInput
   rerankModel?: Prisma.ModelCreateNestedOneWithoutRerankForInput
   topics?: Prisma.TopicKnowledgeBaseCreateNestedManyWithoutKnowledgeBaseInput
 }
@@ -980,7 +871,6 @@ export type KnowledgeBaseUncheckedCreateWithoutItemsInput = {
   created_at?: Date | string
   updated_at?: Date | string
   assistants?: Prisma.AssistantUncheckedCreateNestedManyWithoutKnowledgeBasesInput
-  agents?: Prisma.AgentUncheckedCreateNestedManyWithoutKnowledgeBasesInput
   topics?: Prisma.TopicKnowledgeBaseUncheckedCreateNestedManyWithoutKnowledgeBaseInput
 }
 
@@ -1014,7 +904,6 @@ export type KnowledgeBaseUpdateWithoutItemsInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assistants?: Prisma.AssistantUpdateManyWithoutKnowledgeBasesNestedInput
-  agents?: Prisma.AgentUpdateManyWithoutKnowledgeBasesNestedInput
   rerankModel?: Prisma.ModelUpdateOneWithoutRerankForNestedInput
   topics?: Prisma.TopicKnowledgeBaseUpdateManyWithoutKnowledgeBaseNestedInput
 }
@@ -1034,7 +923,6 @@ export type KnowledgeBaseUncheckedUpdateWithoutItemsInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assistants?: Prisma.AssistantUncheckedUpdateManyWithoutKnowledgeBasesNestedInput
-  agents?: Prisma.AgentUncheckedUpdateManyWithoutKnowledgeBasesNestedInput
   topics?: Prisma.TopicKnowledgeBaseUncheckedUpdateManyWithoutKnowledgeBaseNestedInput
 }
 
@@ -1052,7 +940,6 @@ export type KnowledgeBaseCreateWithoutTopicsInput = {
   created_at?: Date | string
   updated_at?: Date | string
   assistants?: Prisma.AssistantCreateNestedManyWithoutKnowledgeBasesInput
-  agents?: Prisma.AgentCreateNestedManyWithoutKnowledgeBasesInput
   rerankModel?: Prisma.ModelCreateNestedOneWithoutRerankForInput
   items?: Prisma.KnowledgeItemCreateNestedManyWithoutKnowledgeBaseInput
 }
@@ -1072,7 +959,6 @@ export type KnowledgeBaseUncheckedCreateWithoutTopicsInput = {
   created_at?: Date | string
   updated_at?: Date | string
   assistants?: Prisma.AssistantUncheckedCreateNestedManyWithoutKnowledgeBasesInput
-  agents?: Prisma.AgentUncheckedCreateNestedManyWithoutKnowledgeBasesInput
   items?: Prisma.KnowledgeItemUncheckedCreateNestedManyWithoutKnowledgeBaseInput
 }
 
@@ -1106,7 +992,6 @@ export type KnowledgeBaseUpdateWithoutTopicsInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assistants?: Prisma.AssistantUpdateManyWithoutKnowledgeBasesNestedInput
-  agents?: Prisma.AgentUpdateManyWithoutKnowledgeBasesNestedInput
   rerankModel?: Prisma.ModelUpdateOneWithoutRerankForNestedInput
   items?: Prisma.KnowledgeItemUpdateManyWithoutKnowledgeBaseNestedInput
 }
@@ -1126,7 +1011,6 @@ export type KnowledgeBaseUncheckedUpdateWithoutTopicsInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assistants?: Prisma.AssistantUncheckedUpdateManyWithoutKnowledgeBasesNestedInput
-  agents?: Prisma.AgentUncheckedUpdateManyWithoutKnowledgeBasesNestedInput
   items?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutKnowledgeBaseNestedInput
 }
 
@@ -1143,7 +1027,6 @@ export type KnowledgeBaseUpdateWithoutAssistantsInput = {
   modelId?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  agents?: Prisma.AgentUpdateManyWithoutKnowledgeBasesNestedInput
   rerankModel?: Prisma.ModelUpdateOneWithoutRerankForNestedInput
   items?: Prisma.KnowledgeItemUpdateManyWithoutKnowledgeBaseNestedInput
   topics?: Prisma.TopicKnowledgeBaseUpdateManyWithoutKnowledgeBaseNestedInput
@@ -1163,66 +1046,11 @@ export type KnowledgeBaseUncheckedUpdateWithoutAssistantsInput = {
   rerankModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  agents?: Prisma.AgentUncheckedUpdateManyWithoutKnowledgeBasesNestedInput
   items?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutKnowledgeBaseNestedInput
   topics?: Prisma.TopicKnowledgeBaseUncheckedUpdateManyWithoutKnowledgeBaseNestedInput
 }
 
 export type KnowledgeBaseUncheckedUpdateManyWithoutAssistantsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  dimensions?: Prisma.IntFieldUpdateOperationsInput | number
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  documentCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  chunkSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  chunkOverlap?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  threshold?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  version?: Prisma.IntFieldUpdateOperationsInput | number
-  modelId?: Prisma.StringFieldUpdateOperationsInput | string
-  rerankModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type KnowledgeBaseUpdateWithoutAgentsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  dimensions?: Prisma.IntFieldUpdateOperationsInput | number
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  documentCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  chunkSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  chunkOverlap?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  threshold?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  version?: Prisma.IntFieldUpdateOperationsInput | number
-  modelId?: Prisma.StringFieldUpdateOperationsInput | string
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  assistants?: Prisma.AssistantUpdateManyWithoutKnowledgeBasesNestedInput
-  rerankModel?: Prisma.ModelUpdateOneWithoutRerankForNestedInput
-  items?: Prisma.KnowledgeItemUpdateManyWithoutKnowledgeBaseNestedInput
-  topics?: Prisma.TopicKnowledgeBaseUpdateManyWithoutKnowledgeBaseNestedInput
-}
-
-export type KnowledgeBaseUncheckedUpdateWithoutAgentsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  dimensions?: Prisma.IntFieldUpdateOperationsInput | number
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  documentCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  chunkSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  chunkOverlap?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  threshold?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  version?: Prisma.IntFieldUpdateOperationsInput | number
-  modelId?: Prisma.StringFieldUpdateOperationsInput | string
-  rerankModelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  assistants?: Prisma.AssistantUncheckedUpdateManyWithoutKnowledgeBasesNestedInput
-  items?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutKnowledgeBaseNestedInput
-  topics?: Prisma.TopicKnowledgeBaseUncheckedUpdateManyWithoutKnowledgeBaseNestedInput
-}
-
-export type KnowledgeBaseUncheckedUpdateManyWithoutAgentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   dimensions?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1267,7 +1095,6 @@ export type KnowledgeBaseUpdateWithoutRerankModelInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assistants?: Prisma.AssistantUpdateManyWithoutKnowledgeBasesNestedInput
-  agents?: Prisma.AgentUpdateManyWithoutKnowledgeBasesNestedInput
   items?: Prisma.KnowledgeItemUpdateManyWithoutKnowledgeBaseNestedInput
   topics?: Prisma.TopicKnowledgeBaseUpdateManyWithoutKnowledgeBaseNestedInput
 }
@@ -1286,7 +1113,6 @@ export type KnowledgeBaseUncheckedUpdateWithoutRerankModelInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assistants?: Prisma.AssistantUncheckedUpdateManyWithoutKnowledgeBasesNestedInput
-  agents?: Prisma.AgentUncheckedUpdateManyWithoutKnowledgeBasesNestedInput
   items?: Prisma.KnowledgeItemUncheckedUpdateManyWithoutKnowledgeBaseNestedInput
   topics?: Prisma.TopicKnowledgeBaseUncheckedUpdateManyWithoutKnowledgeBaseNestedInput
 }
@@ -1313,14 +1139,12 @@ export type KnowledgeBaseUncheckedUpdateManyWithoutRerankModelInput = {
 
 export type KnowledgeBaseCountOutputType = {
   assistants: number
-  agents: number
   items: number
   topics: number
 }
 
 export type KnowledgeBaseCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assistants?: boolean | KnowledgeBaseCountOutputTypeCountAssistantsArgs
-  agents?: boolean | KnowledgeBaseCountOutputTypeCountAgentsArgs
   items?: boolean | KnowledgeBaseCountOutputTypeCountItemsArgs
   topics?: boolean | KnowledgeBaseCountOutputTypeCountTopicsArgs
 }
@@ -1340,13 +1164,6 @@ export type KnowledgeBaseCountOutputTypeDefaultArgs<ExtArgs extends runtime.Type
  */
 export type KnowledgeBaseCountOutputTypeCountAssistantsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.AssistantWhereInput
-}
-
-/**
- * KnowledgeBaseCountOutputType without action
- */
-export type KnowledgeBaseCountOutputTypeCountAgentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AgentWhereInput
 }
 
 /**
@@ -1379,7 +1196,6 @@ export type KnowledgeBaseSelect<ExtArgs extends runtime.Types.Extensions.Interna
   created_at?: boolean
   updated_at?: boolean
   assistants?: boolean | Prisma.KnowledgeBase$assistantsArgs<ExtArgs>
-  agents?: boolean | Prisma.KnowledgeBase$agentsArgs<ExtArgs>
   rerankModel?: boolean | Prisma.KnowledgeBase$rerankModelArgs<ExtArgs>
   items?: boolean | Prisma.KnowledgeBase$itemsArgs<ExtArgs>
   topics?: boolean | Prisma.KnowledgeBase$topicsArgs<ExtArgs>
@@ -1439,7 +1255,6 @@ export type KnowledgeBaseSelectScalar = {
 export type KnowledgeBaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "dimensions" | "description" | "documentCount" | "chunkSize" | "chunkOverlap" | "threshold" | "version" | "modelId" | "rerankModelId" | "created_at" | "updated_at", ExtArgs["result"]["knowledgeBase"]>
 export type KnowledgeBaseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assistants?: boolean | Prisma.KnowledgeBase$assistantsArgs<ExtArgs>
-  agents?: boolean | Prisma.KnowledgeBase$agentsArgs<ExtArgs>
   rerankModel?: boolean | Prisma.KnowledgeBase$rerankModelArgs<ExtArgs>
   items?: boolean | Prisma.KnowledgeBase$itemsArgs<ExtArgs>
   topics?: boolean | Prisma.KnowledgeBase$topicsArgs<ExtArgs>
@@ -1456,7 +1271,6 @@ export type $KnowledgeBasePayload<ExtArgs extends runtime.Types.Extensions.Inter
   name: "KnowledgeBase"
   objects: {
     assistants: Prisma.$AssistantPayload<ExtArgs>[]
-    agents: Prisma.$AgentPayload<ExtArgs>[]
     rerankModel: Prisma.$ModelPayload<ExtArgs> | null
     items: Prisma.$KnowledgeItemPayload<ExtArgs>[]
     topics: Prisma.$TopicKnowledgeBasePayload<ExtArgs>[]
@@ -1870,7 +1684,6 @@ readonly fields: KnowledgeBaseFieldRefs;
 export interface Prisma__KnowledgeBaseClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   assistants<T extends Prisma.KnowledgeBase$assistantsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.KnowledgeBase$assistantsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssistantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  agents<T extends Prisma.KnowledgeBase$agentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.KnowledgeBase$agentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AgentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   rerankModel<T extends Prisma.KnowledgeBase$rerankModelArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.KnowledgeBase$rerankModelArgs<ExtArgs>>): Prisma.Prisma__ModelClient<runtime.Types.Result.GetResult<Prisma.$ModelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   items<T extends Prisma.KnowledgeBase$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.KnowledgeBase$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KnowledgeItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   topics<T extends Prisma.KnowledgeBase$topicsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.KnowledgeBase$topicsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TopicKnowledgeBasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2331,30 +2144,6 @@ export type KnowledgeBase$assistantsArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.AssistantScalarFieldEnum | Prisma.AssistantScalarFieldEnum[]
-}
-
-/**
- * KnowledgeBase.agents
- */
-export type KnowledgeBase$agentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Agent
-   */
-  select?: Prisma.AgentSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Agent
-   */
-  omit?: Prisma.AgentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AgentInclude<ExtArgs> | null
-  where?: Prisma.AgentWhereInput
-  orderBy?: Prisma.AgentOrderByWithRelationInput | Prisma.AgentOrderByWithRelationInput[]
-  cursor?: Prisma.AgentWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.AgentScalarFieldEnum | Prisma.AgentScalarFieldEnum[]
 }
 
 /**
