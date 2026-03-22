@@ -82,7 +82,11 @@
       "Bash(pnpm --filter mastra test:run -- --testPathPattern=\"__tests__/unit/\\(schema|server\\)/mcp\")",
       "Bash(python scripts/init_skill.py mocean-testing --path 'd:\\\\projects\\\\mocean\\\\.claude\\\\skills')",
       "Bash(PYTHONIOENCODING=utf-8 python scripts/init_skill.py mocean-testing --path 'd:\\\\projects\\\\mocean\\\\.claude\\\\skills')",
-      "Bash(pnpm build:*)"
+      "Bash(pnpm build:*)",
+      "Bash(pnpm prisma:*)",
+      "Bash(pnpm test:run agent)",
+      "Bash(pnpm import-agents:*)",
+      "Bash(dotenvx run -- npx tsx -e \":*)"
     ],
     "deny": [],
     "ask": []
