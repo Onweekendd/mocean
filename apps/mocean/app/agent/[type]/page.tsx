@@ -41,10 +41,8 @@ export default function AgentTypePage() {
         type: agent.type || "default",
         emoji: agent.emoji || "🤖",
         description: agent.description || `基于智能体 ${agent.name} 创建的助手`,
-        enableWebSearch: agent.enableWebSearch ?? false,
-        webSearchProviderId: agent.webSearchProviderId ?? null,
-        enableGenerateImage: agent.enableGenerateImage ?? false,
-        knowledgeRecognition: agent.knowledgeRecognition ?? "off"
+        enableWebSearch: false,
+        enableGenerateImage: false
       });
 
       if (result?.data) {
