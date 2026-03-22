@@ -5,11 +5,9 @@
  */
 import z from "zod";
 import { AssistantSettingsSchema } from "../models/AssistantSettings.schema";
-import { AgentSchema } from "../models/Agent.schema";
 import { AssistantSchema } from "../models/Assistant.schema";
 
 export const AssistantSettingsFullSchema = AssistantSettingsSchema.extend({
-  agent: AgentSchema.nullish(),
   assistant: AssistantSchema.nullish(),
 });
 

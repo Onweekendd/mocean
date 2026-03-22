@@ -1,3 +1,10 @@
+// JSON 类型重新导出，确保在类型定义文件中被正确导出
+export type {
+  JsonValue,
+  JsonObject,
+  JsonArray
+} from "../json-types";
+
 export { AgentFullSchema } from "./Agent.schema";
 export type { AgentFullType } from "./Agent.schema";
 export { AgentAgentGroupFullSchema } from "./AgentAgentGroup.schema";

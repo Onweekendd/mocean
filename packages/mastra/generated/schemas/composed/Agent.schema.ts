@@ -6,14 +6,10 @@
 import z from "zod";
 import { AgentSchema } from "../models/Agent.schema";
 import { AgentAgentGroupSchema } from "../models/AgentAgentGroup.schema";
-import { AssistantSettingsSchema } from "../models/AssistantSettings.schema";
-import { KnowledgeBaseSchema } from "../models/KnowledgeBase.schema";
 import { TopicSchema } from "../models/Topic.schema";
 
 export const AgentFullSchema = AgentSchema.extend({
   groups: z.array(AgentAgentGroupSchema),
-  settings: AssistantSettingsSchema.nullish(),
-  knowledgeBases: z.array(KnowledgeBaseSchema),
   topics: z.array(TopicSchema),
 });
 

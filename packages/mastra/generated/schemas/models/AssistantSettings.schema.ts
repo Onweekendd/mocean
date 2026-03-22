@@ -1,16 +1,5 @@
+import { JsonValueSchema } from '@mocean/mastra/json-types';
 import * as z from 'zod';
-
-// JSON value schema for Prisma Json fields
-export type JsonValue = string | number | boolean | null | JsonObject | JsonArray;
-export interface JsonObject {
-  [key: string]: JsonValue;
-}
-export interface JsonArray extends Array<JsonValue> {}
-
-const literalSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
-const JsonValueSchema: z.ZodType<JsonValue> = z.lazy(() =>
-  z.union([literalSchema, z.array(JsonValueSchema), z.record(z.string(), JsonValueSchema)])
-);
 
 export const AssistantSettingsSchema = z.object({
   id: z.string(),
@@ -27,8 +16,6 @@ export const AssistantSettingsSchema = z.object({
   toolUseMode: z.string().nullish(),
 
   assistantId: z.string().nullish(),
-
-  agentId: z.string().nullish(),
   defaultModelId: z.string().nullish(),
 });
 
