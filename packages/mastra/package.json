@@ -31,6 +31,9 @@
     "./apiClient": {
       "import": "./dist/apiClient.js",
       "types": "./dist/apiClient.d.ts"
+    },
+    "./json-types": {
+      "types": "./generated/schemas/json-types.ts"
     }
   },
   "keywords": [],
