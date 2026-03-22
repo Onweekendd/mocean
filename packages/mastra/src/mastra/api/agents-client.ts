@@ -103,7 +103,7 @@ export class AgentsApiClient extends BaseApiClient {
   > {
     return this.get<
       z.infer<(typeof agentRoutes)["getAgentByGroup"]["responseSchema"]>
-    >(agentRoutes.getAgentByGroup.path.replace(":groupId", groupId));
+    >(agentRoutes.getAgentByGroup.path.replace(":group", groupId));
   }
 
   /**

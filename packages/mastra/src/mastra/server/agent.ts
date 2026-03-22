@@ -26,11 +26,8 @@ const getAgents = async (): Promise<
   const agents = await prisma.agent.findMany({
     include: {
       ...agentGroupsInclude,
-      settings: true,
 
-      topics: true,
-
-      knowledgeBases: true
+      topics: true
     }
   });
 
@@ -54,11 +51,8 @@ const getAgentById = async (
 
     include: {
       ...agentGroupsInclude,
-      settings: true,
 
-      topics: true,
-
-      knowledgeBases: true
+      topics: true
     }
   });
 
@@ -71,7 +65,7 @@ const getAgentById = async (
  * @param groupName - 分组名称（AgentGroup.name）
  */
 const getAgentByGroup = async (
-  groupName: string
+  groupId: string
 ): Promise<
   z.infer<(typeof agentRoutes)["getAgentByGroup"]["responseSchema"]>
 > => {
@@ -80,7 +74,7 @@ const getAgentByGroup = async (
       groups: {
         some: {
           agentGroup: {
-            name: groupName
+            id: groupId
           }
         }
       }
@@ -90,8 +84,7 @@ const getAgentByGroup = async (
         select: {
           agentGroup: { select: { id: true, name: true, label: true } }
         }
-      },
-      settings: true
+      }
     }
   });
 
@@ -99,9 +92,9 @@ const getAgentByGroup = async (
 };
 
 /**
- * 获取所有有关联代理的分组名称
- * @description 从 AgentGroup 表中查询所有至少有一个关联代理的分组的名称
- * @returns 分组名称数组
+ * 获取所有有关联代理的分组
+ * @description 从 AgentGroup 表中查询所有至少有一个关联代理的分组
+ * @returns 分组对象数组
  */
 const getAgentGroups = async (): Promise<
   z.infer<(typeof agentRoutes)["getAgentGroups"]["responseSchema"]>
@@ -110,13 +103,10 @@ const getAgentGroups = async (): Promise<
     where: {
       agents: { some: {} }
     },
-    orderBy: { name: "asc" },
-    select: {
-      name: true
-    }
+    orderBy: { name: "asc" }
   });
 
-  return groups.map((g) => g.name);
+  return groups;
 };
 
 /**
@@ -140,7 +130,7 @@ const createAgent = async (
 
     include: {
       ...agentGroupsInclude,
-      settings: true
+      topics: true
     }
   });
 
@@ -172,7 +162,7 @@ const updateAgent = async (
 
     include: {
       ...agentGroupsInclude,
-      settings: true
+      topics: true
     }
   });
 
@@ -212,8 +202,7 @@ const getAgentWithSettingsByAgentId = async (agentId: string) => {
     },
 
     include: {
-      ...agentGroupsInclude,
-      settings: true
+      ...agentGroupsInclude
     }
   });
 
