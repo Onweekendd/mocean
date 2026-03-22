@@ -23,8 +23,6 @@ describe("Agent Schema Validation", () => {
     it("应填充默认值", () => {
       const result = createAgentSchema.parse(validData);
       expect(result.type).toBe("agent");
-      expect(result.enableWebSearch).toBe(false);
-      expect(result.enableGenerateImage).toBe(false);
     });
 
     it("name 为空字符串时应失败", () => {
@@ -66,9 +64,6 @@ describe("Agent Schema Validation", () => {
         ...validData,
         emoji: "🤖",
         description: "A helpful agent",
-        enableWebSearch: true,
-        enableGenerateImage: true,
-        knowledgeRecognition: "on",
         type: "custom"
       });
       expect(result.success).toBe(true);
@@ -100,7 +95,6 @@ describe("Agent Schema Validation", () => {
         name: "Updated",
         prompt: "New prompt",
         description: "New desc",
-        enableWebSearch: true,
         type: "agent"
       });
       expect(result.success).toBe(true);
@@ -109,7 +103,6 @@ describe("Agent Schema Validation", () => {
           name: "Updated",
           prompt: "New prompt",
           description: "New desc",
-          enableWebSearch: true,
           type: "agent"
         });
       }
