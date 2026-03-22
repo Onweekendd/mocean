@@ -212,16 +212,29 @@ function extractCircularFields(
 
 // ─── JSON Schema 定义 ────────────────────────────────────────────────────────
 
-const JSON_SCHEMA_DEFINITION = `
-// JSON value schema for Prisma Json fields
+// 生成的 json-types.ts 文件内容
+const JSON_TYPES_FILE_CONTENT = `/**
+ * 统一的 JSON 类型定义
+ * 为 Prisma Json 字段提供类型支持
+ *
+ * @warning 此文件由 scripts/fix-circular-imports.ts 自动生成
+ * 请勿手动编辑 - 重新运行 'pnpm generate' 来更新
+ */
+
+import { z } from "zod";
+
+// JSON value 类型
 export type JsonValue = string | number | boolean | null | JsonObject | JsonArray;
+
 export interface JsonObject {
   [key: string]: JsonValue;
 }
+
 export interface JsonArray extends Array<JsonValue> {}
 
+// Zod schema for JSON values
 const literalSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
-const JsonValueSchema: z.ZodType<JsonValue> = z.lazy(() =>
+export const JsonValueSchema: z.ZodType<JsonValue> = z.lazy(() =>
   z.union([literalSchema, z.array(JsonValueSchema), z.record(z.string(), JsonValueSchema)])
 );
 `;
@@ -266,14 +279,20 @@ function createBaseSchema(
   if (hasUnknown) {
     content = content.replace(/z\.unknown\(\)/g, "JsonValueSchema");
 
-    // 在最后一个 import 语句后添加 JSON schema 定义
-    const lastImportMatch = content.match(/^import[^\n]+\n(?!import)/m);
-    if (lastImportMatch && lastImportMatch.index !== undefined) {
-      const insertPos = lastImportMatch.index + lastImportMatch[0].length;
-      content =
-        content.slice(0, insertPos) +
-        JSON_SCHEMA_DEFINITION +
-        content.slice(insertPos);
+    // 检查是否已经导入了 JsonValueSchema
+    const hasJsonImport = content.includes("from '@mocean/mastra/json-types'") ||
+                          content.includes('from "@mocean/mastra/json-types"');
+
+    // 在第一个 import 语句前添加 json-types 导入
+    if (!hasJsonImport) {
+      const firstImportMatch = content.match(/^import/m);
+      if (firstImportMatch && firstImportMatch.index !== undefined) {
+        const insertPos = firstImportMatch.index;
+        content =
+          content.slice(0, insertPos) +
+          `import { JsonValueSchema } from '@mocean/mastra/json-types';\n` +
+          content.slice(insertPos);
+      }
     }
   }
 
@@ -338,13 +357,17 @@ export type ${fullTypeName} = z.infer<typeof ${fullSchemaName}>;
 // ─── Barrel 生成 ─────────────────────────────────────────────────────────────
 
 function generateComposedBarrel(modelNames: string[]): string {
+  const modelExports = modelNames
+    .map(
+      (m) =>
+        `export { ${m}FullSchema } from "./${m}.schema";\nexport type { ${m}FullType } from "./${m}.schema";`
+    )
+    .join("\n");
+
   return (
-    modelNames
-      .map(
-        (m) =>
-          `export { ${m}FullSchema } from "./${m}.schema";\nexport type { ${m}FullType } from "./${m}.schema";`
-      )
-      .join("\n") + "\n"
+    `// JSON 类型重新导出，确保在类型定义文件中被正确导出\nexport type {\n  JsonValue,\n  JsonObject,\n  JsonArray\n} from "../json-types";\n\n` +
+    modelExports +
+    "\n"
   );
 }
 
@@ -353,6 +376,11 @@ function generateComposedBarrel(modelNames: string[]): string {
 function main() {
   const schemaFiles = getSchemaFiles();
   console.log(`Found ${schemaFiles.length} schema files`);
+
+  // 1. 生成统一的 json-types.ts 文件
+  const jsonTypesPath = join(process.cwd(), "generated", "schemas", "json-types.ts");
+  writeFileSync(jsonTypesPath, JSON_TYPES_FILE_CONTENT, "utf-8");
+  console.log("\n📄 Generated: generated/schemas/json-types.ts");
 
   const files: FileInfo[] = schemaFiles.map((filePath) => {
     const content = readFileSync(filePath, "utf-8");
