@@ -30,7 +30,12 @@ export const ProviderSelect: React.FC<ProviderSelectProps> = ({
    * @param providerId - 选中的提供商ID
    */
   const handleProviderChange = (providerId: string) => {
-    router.push(`/provider/${providerId}`);
+    // 如果点击已选中的提供商，则取消选中
+    if (selectedProviderId === providerId) {
+      router.push("/provider");
+    } else {
+      router.push(`/provider/${providerId}`);
+    }
   };
 
   /**

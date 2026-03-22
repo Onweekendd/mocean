@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -20,32 +22,43 @@ interface Server {
 interface ServerSidebarProps {
   servers: Server[];
   selectedId: string;
-  onSelectServer: (id: string) => void;
-  onNewServer: () => void;
+  onNewServer?: () => void;
 }
 
 export function ServerSidebar({
   servers,
   selectedId,
-  onSelectServer,
   onNewServer
 }: ServerSidebarProps) {
+  const router = useRouter();
+
+  const handleServerSelect = (serverId: string) => {
+    // 如果点击已选中的服务器，则取消选中
+    if (selectedId === serverId) {
+      router.push("/mcp");
+    } else {
+      router.push(`/mcp/${serverId}`);
+    }
+  };
+
   return (
-    <aside className="flex w-[260px] shrink-0 flex-col rounded-lg bg-muted/50 p-4">
-      <Button
-        variant="outline"
-        className="mb-4 w-full justify-center"
-        onClick={onNewServer}
-      >
-        <Plus className="mr-2 h-4 w-4" />
-        New Server
-      </Button>
+    <aside className="flex h-full w-[18rem] shrink-0 flex-col bg-brand-main p-4">
+      {onNewServer && (
+        <Button
+          variant="outline"
+          className="mb-4 w-full justify-center"
+          onClick={onNewServer}
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          New Server
+        </Button>
+      )}
 
       <div className="flex flex-1 flex-col gap-2 overflow-y-auto">
         {servers.map((server) => (
           <button
             key={server.id}
-            onClick={() => onSelectServer(server.id)}
+            onClick={() => handleServerSelect(server.id)}
             className={cn(
               "flex w-full items-center gap-3 rounded-md px-3 py-3 text-left transition-colors",
               selectedId === server.id

@@ -60,9 +60,16 @@ const ThreadSelect: React.FC<ThreadSelectProps> = ({ onBack }) => {
   }, [activeAssistantId, refreshUIMessage, router, setActiveThread]);
 
   const onThreadClick = (thread: StorageThreadType) => {
-    setActiveThread(thread.id);
-    void refreshUIMessage();
-    router.replace(`/${activeAssistantId}/${thread.id}`);
+    // 如果点击已选中的会话，则取消选中
+    if (activeThread === thread.id) {
+      setActiveThread(null);
+      void refreshUIMessage();
+      router.push(`/${activeAssistantId}`);
+    } else {
+      setActiveThread(thread.id);
+      void refreshUIMessage();
+      router.replace(`/${activeAssistantId}/${thread.id}`);
+    }
   };
 
   return (
