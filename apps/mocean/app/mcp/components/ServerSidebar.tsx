@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import { useRouter } from "next/navigation";
 
 import { Plus } from "lucide-react";
@@ -12,6 +14,8 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
+import { AddServerDialog } from "./AddServerDialog";
+
 interface Server {
   id: string;
   name: string;
@@ -22,15 +26,12 @@ interface Server {
 interface ServerSidebarProps {
   servers: Server[];
   selectedId: string;
-  onNewServer?: () => void;
 }
 
-export function ServerSidebar({
-  servers,
-  selectedId,
-  onNewServer
-}: ServerSidebarProps) {
+export function ServerSidebar({ servers, selectedId }: ServerSidebarProps) {
   const router = useRouter();
+
+  const [open, setOpen] = useState<boolean>(false);
 
   const handleServerSelect = (serverId: string) => {
     // 如果点击已选中的服务器，则取消选中
@@ -43,16 +44,14 @@ export function ServerSidebar({
 
   return (
     <aside className="flex h-full w-[18rem] shrink-0 flex-col bg-brand-main p-4">
-      {onNewServer && (
-        <Button
-          variant="outline"
-          className="mb-4 w-full justify-center"
-          onClick={onNewServer}
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          New Server
-        </Button>
-      )}
+      <Button
+        variant="ghost"
+        className="mb-4 flex w-full items-center justify-start rounded-md border border-dashed text-brand-text/60"
+        onClick={() => setOpen(true)}
+      >
+        <Plus className="mr-1 h-4 w-4" />
+        新增服务
+      </Button>
 
       <div className="flex flex-1 flex-col gap-2 overflow-y-auto">
         {servers.map((server) => (
@@ -88,6 +87,7 @@ export function ServerSidebar({
           </button>
         ))}
       </div>
+      <AddServerDialog open={open} onOpenChange={setOpen} />
     </aside>
   );
 }
