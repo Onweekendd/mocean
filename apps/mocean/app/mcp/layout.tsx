@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 
-import { ServerSidebar } from "./components/server-sidebar";
+import { ServerSidebar } from "./components/ServerSidebar";
 
 const servers = [
   { id: "1", name: "Cognitive Research", type: "stdio" as const, active: true },

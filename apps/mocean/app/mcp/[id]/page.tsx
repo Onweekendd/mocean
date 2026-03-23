@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 
-import { ServerDetailForm } from "../components/server-detail-form";
+import { ServerDetailForm } from "../components/ServerDetailForm";
 
 const servers = [
   { id: "1", name: "Cognitive Research", type: "stdio" as const, active: true },
