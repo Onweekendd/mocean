@@ -30,7 +30,12 @@ export const AgentGroupSelect: React.FC<AgentGroupSelectProps> = ({
   const groupList = groups.filter((g) => AGENT_GROUPS[g.name]);
 
   const onGroupClick = (groupId: string) => {
-    router.push(`/agent/${groupId}`);
+    // 如果点击已选中的分组，则取消选中
+    if (currentGroupId === groupId) {
+      router.push("/agent");
+    } else {
+      router.push(`/agent/${groupId}`);
+    }
   };
 
   const renderGroupItem = (group: AgentGroup) => {

@@ -18,7 +18,8 @@
     "types": ["node"],
     "lib": ["ES2023", "DOM"],
     "paths": {
-      "generated/*": ["./generated/*"]
+      "generated/*": ["./generated/*"],
+      "@mocean/mastra/json-types": ["./generated/schemas/json-types.ts"]
     }
   },
   "include": [

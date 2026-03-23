@@ -163,10 +163,6 @@ class AgentsImporter {
                 type: "agent",
                 emoji: agent.emoji || null,
                 description: agent.description || null,
-                enableWebSearch: false,
-                webSearchProviderId: null,
-                enableGenerateImage: false,
-                knowledgeRecognition: "off",
                 groups: {
                   create: groupIds.map((agentGroupId) => ({ agentGroupId }))
                 }

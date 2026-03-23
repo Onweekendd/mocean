@@ -5,14 +5,12 @@
  */
 import z from "zod";
 import { KnowledgeBaseSchema } from "../models/KnowledgeBase.schema";
-import { AgentSchema } from "../models/Agent.schema";
 import { AssistantSchema } from "../models/Assistant.schema";
 import { KnowledgeItemSchema } from "../models/KnowledgeItem.schema";
 import { ModelSchema } from "../models/Model.schema";
 import { TopicKnowledgeBaseSchema } from "../models/TopicKnowledgeBase.schema";
 
 export const KnowledgeBaseFullSchema = KnowledgeBaseSchema.extend({
-  agents: z.array(AgentSchema),
   assistants: z.array(AssistantSchema),
   items: z.array(KnowledgeItemSchema),
   rerankModel: ModelSchema.nullish(),

@@ -28,9 +28,6 @@ describe("Agents Router", () => {
       type: "agent",
       emoji: "🤖",
       description: "A test agent",
-      enableWebSearch: false,
-      enableGenerateImage: false,
-      knowledgeRecognition: "off",
       ...overrides
     };
   }
@@ -138,11 +135,11 @@ describe("Agents Router", () => {
       const res = await app.request(`${BASE}/groups`);
       expect(res.status).toBe(200);
 
-      const body = (await res.json()) as string[];
+      const body = (await res.json()) as Array<{ name: string }>;
       expect(body).toHaveLength(3);
-      expect(body).toContain("featured");
-      expect(body).toContain("tools");
-      expect(body).toContain("programming");
+      expect(body.map((g) => g.name)).toContain("featured");
+      expect(body.map((g) => g.name)).toContain("tools");
+      expect(body.map((g) => g.name)).toContain("programming");
     });
 
     it("应正确返回单个分组的名称", async () => {
@@ -151,8 +148,8 @@ describe("Agents Router", () => {
       const res = await app.request(`${BASE}/groups`);
       expect(res.status).toBe(200);
 
-      const body = (await res.json()) as string[];
-      expect(body).toContain("writing");
+      const body = (await res.json()) as Array<{ name: string }>;
+      expect(body.map((g) => g.name)).toContain("writing");
     });
   });
 
@@ -168,7 +165,7 @@ describe("Agents Router", () => {
       const body = (await res.json()) as Record<string, unknown>;
       expect(body.id).toBe(id);
       expect(body.name).toBe("Test Agent");
-      expect(body).toHaveProperty("settings");
+      expect(body).toHaveProperty("topics");
     });
 
     it("不存在的 ID 应返回 404", async () => {
@@ -230,19 +227,13 @@ describe("Agents Router", () => {
     it("应接受可选字段", async () => {
       const { res, body } = await createViaApi({
         emoji: "🎨",
-        description: "Creative agent",
-        enableWebSearch: true,
-        enableGenerateImage: true,
-        knowledgeRecognition: "on"
+        description: "Creative agent"
       });
 
       expect(res.status).toBe(201);
       expect(body).toMatchObject({
         emoji: "🎨",
-        description: "Creative agent",
-        enableWebSearch: true,
-        enableGenerateImage: true,
-        knowledgeRecognition: "on"
+        description: "Creative agent"
       });
     });
   });
@@ -273,8 +264,7 @@ describe("Agents Router", () => {
         body: JSON.stringify({
           name: "New Name",
           prompt: "New prompt",
-          description: "New description",
-          enableWebSearch: true
+          description: "New description"
         }),
         headers: { "Content-Type": "application/json" }
       });
@@ -284,8 +274,7 @@ describe("Agents Router", () => {
       expect(body).toMatchObject({
         name: "New Name",
         prompt: "New prompt",
-        description: "New description",
-        enableWebSearch: true
+        description: "New description"
       });
     });
   });

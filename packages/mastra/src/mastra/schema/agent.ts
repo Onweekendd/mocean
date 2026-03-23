@@ -2,6 +2,7 @@
  * Response Schemas
  * 用于 Router 的响应类型验证
  */
+import { AgentFullSchema } from "generated/schemas/composed";
 import { AgentGroupSchema, AgentSchema } from "generated/schemas/models";
 import z from "zod";
 
@@ -13,10 +14,6 @@ export const AgentResponseSchema = AgentSchema.pick({
   type: true,
   emoji: true,
   description: true,
-  enableWebSearch: true,
-  webSearchProviderId: true,
-  enableGenerateImage: true,
-  knowledgeRecognition: true,
   createdAt: true,
   updatedAt: true
 });
@@ -25,31 +22,7 @@ export const AgentResponseSchema = AgentSchema.pick({
 export const AgentsResponseSchema = z.array(AgentResponseSchema);
 
 // 带 settings 的 Agent Response Schema
-export const AgentWithSettingsResponseSchema = AgentSchema.pick({
-  id: true,
-  name: true,
-  prompt: true,
-  type: true,
-  emoji: true,
-  description: true,
-  enableWebSearch: true,
-  webSearchProviderId: true,
-  enableGenerateImage: true,
-  knowledgeRecognition: true,
-  createdAt: true,
-  updatedAt: true
-}).extend({
-  settings: z.array(
-    z.object({
-      id: z.string(),
-      agentId: z.string(),
-      key: z.string(),
-      value: z.string(),
-      createdAt: z.date(),
-      updatedAt: z.date()
-    })
-  )
-});
+export const AgentWithSettingsResponseSchema = AgentFullSchema;
 
 /**
  * 代理相关的zod校验schemas
@@ -61,17 +34,11 @@ export const createAgentSchema = AgentSchema.pick({
   prompt: true,
   type: true,
   emoji: true,
-  description: true,
-  enableWebSearch: true,
-  webSearchProviderId: true,
-  enableGenerateImage: true,
-  knowledgeRecognition: true
+  description: true
 }).extend({
   name: z.string().min(1, "代理名称不能为空"),
   prompt: z.string().min(1, "提示词不能为空"),
-  type: z.string().optional().default("agent"),
-  enableWebSearch: z.boolean().optional().default(false),
-  enableGenerateImage: z.boolean().optional().default(false)
+  type: z.string().optional().default("agent")
 });
 
 export const updateAgentSchema = AgentSchema.pick({
@@ -79,11 +46,7 @@ export const updateAgentSchema = AgentSchema.pick({
   prompt: true,
   type: true,
   emoji: true,
-  description: true,
-  enableWebSearch: true,
-  webSearchProviderId: true,
-  enableGenerateImage: true,
-  knowledgeRecognition: true
+  description: true
 }).partial();
 
 export const idParamSchema = z.object({
@@ -94,8 +57,8 @@ export const groupParamSchema = z.object({
   group: z.string().min(1, "分组不能为空")
 });
 
-// Agent 分组列表 Response Schema - 返回分组名称数组
-export const AgentGroupsResponseSchema = z.array(z.string());
+// Agent 分组列表 Response Schema - 返回分组对象数组
+export const AgentGroupsResponseSchema = z.array(AgentGroupSchema);
 
 // zod类型推导
 

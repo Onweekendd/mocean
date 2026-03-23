@@ -37,13 +37,22 @@ const ChatConfig: React.FC = () => {
 
   const onAssistantSelect = useCallback(
     (assistant: Assistant) => {
-      setActiveThread(null);
-      setActiveAssistantId(assistant.id);
-      setIsAnimating(true);
-      setView("threads");
-      router.push(`/${assistant.id}`);
+      // 如果点击已选中的助手，则取消选中
+      if (activeAssistantId === assistant.id) {
+        setActiveThread(null);
+        setActiveAssistantId(null);
+        setIsAnimating(true);
+        setView("assistants");
+        router.push("/");
+      } else {
+        setActiveThread(null);
+        setActiveAssistantId(assistant.id);
+        setIsAnimating(true);
+        setView("threads");
+        router.push(`/${assistant.id}`);
+      }
     },
-    [router, setActiveAssistantId, setActiveThread]
+    [router, setActiveAssistantId, setActiveThread, activeAssistantId]
   );
 
   const onBack = useCallback(() => {

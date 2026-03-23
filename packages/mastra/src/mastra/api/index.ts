@@ -5,6 +5,13 @@ import { mcpApiMethods, useMcpApi } from "./mcp-client";
 import { modelsApiMethods, useModelsApi } from "./models-client";
 import { providersApiMethods, useProvidersApi } from "./providers-client";
 
+// 显式导入并重新导出 JSON 类型，确保它们在类型定义文件中被正确导出
+export type {
+  JsonObject,
+  JsonArray,
+  JsonValue
+} from "@mocean/mastra/json-types";
+
 export { API_URL } from "./base-client";
 
 export { type StorageThreadType } from "@mastra/core/memory";

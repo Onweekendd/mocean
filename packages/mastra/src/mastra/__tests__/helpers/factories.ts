@@ -164,9 +164,6 @@ export const agentFactory = {
     type: "agent",
     emoji: "🤖",
     description: "Test agent description",
-    enableWebSearch: false,
-    enableGenerateImage: false,
-    knowledgeRecognition: "off",
     ...overrides
   }),
 
@@ -183,9 +180,7 @@ export const agentFactory = {
             agentGroup: { select: { id: true, name: true, label: true } }
           }
         },
-        settings: true,
-        topics: true,
-        knowledgeBases: true
+        topics: true
       }
     });
   }
