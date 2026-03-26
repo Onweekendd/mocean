@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 
+import { ModelProvider, ProviderIcon } from "@lobehub/icons";
 import type { Model } from "@mocean/mastra/prismaType";
 import {
   Brain,
@@ -20,7 +21,53 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { getModelLogo } from "../constant";
+const convertProviderTypeToProviderIcon = (
+  providerType: string | undefined
+): ModelProvider | undefined => {
+  if (!providerType) return undefined;
+
+  const providerMap: Partial<Record<string, ModelProvider>> = {
+    openai: ModelProvider.OpenAI,
+    stepfun: ModelProvider.Stepfun,
+    siliconflow: ModelProvider.SiliconCloud,
+    minimax: ModelProvider.Minimax,
+    azure: ModelProvider.Azure,
+    openai_compatible: ModelProvider.OpenAI,
+    anthropic: ModelProvider.Anthropic,
+    google: ModelProvider.Google,
+    gemini: ModelProvider.Google,
+    qwenlm: ModelProvider.Qwen,
+    azure_openai: ModelProvider.Azure,
+    deepseek: ModelProvider.DeepSeek,
+    groq: ModelProvider.Groq,
+    mistral: ModelProvider.Mistral,
+    xai_cn: ModelProvider.XAI,
+    xai: ModelProvider.XAI,
+    alibaba: ModelProvider.Qwen,
+    alibaba_cn: ModelProvider.Qwen,
+    cerebras: ModelProvider.Cerebras,
+    fastrouter: ModelProvider.OpenRouter,
+    fireworks_ai: ModelProvider.FireworksAI,
+    github_models: ModelProvider.Github,
+    huggingface: ModelProvider.HuggingFace,
+    llama: ModelProvider.Ollama,
+    lmstudio: ModelProvider.LmStudio,
+    modelscope: ModelProvider.ModelScope,
+    moonshotai: ModelProvider.Moonshot,
+    moonshotai_cn: ModelProvider.Moonshot,
+    nebius: ModelProvider.Nebius,
+    nvidia: ModelProvider.Nvidia,
+    perplexity: ModelProvider.Perplexity,
+    togetherai: ModelProvider.TogetherAI,
+    upstage: ModelProvider.Upstage,
+    zhipuai: ModelProvider.ZhiPu,
+    zhipuai_coding_plan: ModelProvider.ZhiPu,
+    openrouter: ModelProvider.OpenRouter,
+    vercel: ModelProvider.Vercel
+  };
+
+  return providerMap[providerType];
+};
 
 const MODEL_TYPE_ICONS = {
   text: Brain,
@@ -92,8 +139,6 @@ export const ModelCard: React.FC<ModelCardProps> = ({
   onDelete,
   className = ""
 }) => {
-  const modelLogo = getModelLogo(model.id as keyof typeof getModelLogo);
-
   const modelTypes: string[] = [];
   if (model.supportsTools) modelTypes.push("function_calling");
   if (model.supportsReasoning) modelTypes.push("reasoning");
@@ -105,17 +150,22 @@ export const ModelCard: React.FC<ModelCardProps> = ({
   if (modelTypes.length === 0) modelTypes.push("text");
 
   const renderAvatar = () => {
-    if (modelLogo) {
+    // 从 model.id 中提取 providerId (格式: ${providerId}&${modelId})
+    const providerId = model.id.split("&")[0];
+    const modelProvider = convertProviderTypeToProviderIcon(providerId);
+
+    if (modelProvider) {
       return (
-        <Image
-          src={modelLogo}
-          alt={model.name}
-          width={40}
-          height={40}
+        <ProviderIcon
+          size={40}
+          type="color"
+          provider={modelProvider}
           className="rounded-lg"
         />
       );
     }
+
+    // 如果没有找到对应的提供商图标，使用默认头像
     return (
       <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-brand text-sm text-white">
         {model.name.charAt(0).toUpperCase()}

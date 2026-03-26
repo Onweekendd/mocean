@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
-  Bot,
   CheckCircle2,
   ChevronRight,
   Copy,
@@ -24,9 +23,10 @@ import {
   Trash2,
   Wifi,
   Wrench,
-  X,
   XCircle
 } from "lucide-react";
+
+import type { MCPServerFullType } from "@mocean/mastra/schemas";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -43,6 +43,11 @@ import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import { useMcpServerActions } from "@/hooks/useMcpSWR";
+
+// ==================== 类型定义 ====================
+
+type McpServerDetail = Omit<MCPServerFullType, "assistants">;
 
 interface ArgumentRow {
   id: string;
@@ -56,19 +61,19 @@ interface EnvVarRow {
   value: string;
 }
 
+interface Tool {
+  id: string;
+  icon: "terminal" | "chip" | "plug";
+  name: string;
+  description: string;
+  enabled: boolean;
+}
+
 interface Prompt {
   id: string;
   name: string;
   description: string;
   params: string;
-}
-
-interface AssignmentItem {
-  id: string;
-  initials: string;
-  name: string;
-  description: string;
-  color: string;
 }
 
 interface Resource {
@@ -81,13 +86,11 @@ interface Resource {
   iconType: "json" | "svg" | "js" | "sqlite" | "schema";
 }
 
-interface Tool {
-  id: string;
-  icon: "terminal" | "chip" | "plug";
-  name: string;
-  description: string;
-  enabled: boolean;
+interface ServerDetailFormProps {
+  server: McpServerDetail;
 }
+
+// ==================== 工具函数 ====================
 
 const toolIconMap = {
   terminal: Terminal,
@@ -97,31 +100,52 @@ const toolIconMap = {
 
 type ConnectionStatus = "idle" | "loading" | "success" | "error";
 
-interface ServerDetailFormProps {
-  serverName?: string;
-}
+const parseJsonToRows = (json: unknown): ArgumentRow[] => {
+  if (!json || typeof json !== "object" || Array.isArray(json)) {
+    return [{ id: "1", key: "", value: "" }];
+  }
+  return Object.entries(json as Record<string, string>).map(([k, v], i) => ({
+    id: String(i + 1),
+    key: k,
+    value: String(v)
+  }));
+};
 
-export function ServerDetailForm({
-  serverName: initialName = "Cognitive Research"
-}: ServerDetailFormProps) {
+const mimeToIconType = (mime?: string | null): Resource["iconType"] => {
+  if (!mime) return "json";
+  if (mime.includes("svg")) return "svg";
+  if (mime.includes("javascript")) return "js";
+  if (mime.includes("sqlite")) return "sqlite";
+  if (mime.includes("schema")) return "schema";
+  return "json";
+};
+
+const formatFileSize = (bytes?: number | null): string => {
+  if (!bytes) return "—";
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+};
+
+// ==================== 主组件 ====================
+
+export function ServerDetailForm({ server }: ServerDetailFormProps) {
   const [mounted, setMounted] = useState(false);
-  const [serverName, setServerName] = useState(initialName);
-  const [serverType, setServerType] = useState("stdio");
-  const [command, setCommand] = useState("node /path/to/mcp.js");
-  const [baseUrl, setBaseUrl] = useState("");
-  const [enabled, setEnabled] = useState(true);
+  const [serverName, setServerName] = useState(server.name);
+  const [serverType, setServerType] = useState(server.type ?? "stdio");
+  const [command, setCommand] = useState(server.command ?? "");
+  const [baseUrl, setBaseUrl] = useState(server.baseUrl ?? "");
+  const [enabled, setEnabled] = useState(server.isActive);
   const [connectionStatus, setConnectionStatus] =
     useState<ConnectionStatus>("idle");
   const [activeTab, setActiveTab] = useState("configuration");
 
-  const [args, setArgs] = useState<ArgumentRow[]>([
-    { id: "1", key: "--config", value: "/conf/research.json" },
-    { id: "2", key: "--log-level", value: "debug" }
-  ]);
-
-  const [envVars, setEnvVars] = useState<EnvVarRow[]>([
-    { id: "1", key: "", value: "" }
-  ]);
+  const [args, setArgs] = useState<ArgumentRow[]>(() =>
+    parseJsonToRows(server.argsJson)
+  );
+  const [envVars, setEnvVars] = useState<EnvVarRow[]>(() =>
+    parseJsonToRows(server.env)
+  );
 
   const [promptSearch, setPromptSearch] = useState("");
   const [resourceSearch, setResourceSearch] = useState("");
@@ -130,198 +154,92 @@ export function ServerDetailForm({
     "assistants" | "agents"
   >("assistants");
 
-  const [prompts] = useState<Prompt[]>([
-    {
-      id: "1",
-      name: "research-query",
-      params: "3 params",
-      description:
-        "Generate structured research queries based on topic and depth"
-    },
-    {
-      id: "2",
-      name: "summarize-content",
-      params: "1 param",
-      description: "Summarize long-form content into key bullet points"
-    },
-    {
-      id: "3",
-      name: "extract-entities",
-      params: "2 params",
-      description: "Extract named entities from unstructured text"
-    },
-    {
-      id: "4",
-      name: "compare-sources",
-      params: "4 params",
-      description: "Compare multiple research sources and highlight differences"
-    },
-    {
-      id: "5",
-      name: "generate-outline",
-      params: "2 params",
-      description: "Create a structured outline for research documents"
-    }
-  ]);
+  // ---- 从 server prop 派生的关联数据 ----
 
-  const [assignedAssistants] = useState<AssignmentItem[]>([
-    {
-      id: "1",
-      initials: "GA",
-      name: "General Assistant",
-      description: "Default research assistant",
-      color: "bg-purple-500"
-    },
-    {
-      id: "2",
-      initials: "WR",
-      name: "Writing Research",
-      description: "Specialized in academic writing",
-      color: "bg-blue-500"
-    }
-  ]);
+  const [tools, setTools] = useState<Tool[]>(() =>
+    (server.tools ?? []).map((t) => ({
+      id: t.id,
+      icon: "terminal" as const,
+      name: t.name,
+      description: t.description ?? "",
+      enabled: t.isEnabled
+    }))
+  );
 
-  const [availableAssistants] = useState<AssignmentItem[]>([
-    {
-      id: "3",
-      initials: "CA",
-      name: "Code Assistant",
-      description: "Programming and development tasks",
-      color: "bg-gray-400"
-    },
-    {
-      id: "4",
-      initials: "DA",
-      name: "Data Analyst",
-      description: "Data analysis and visualization",
-      color: "bg-gray-400"
-    }
-  ]);
+  const prompts = useMemo<Prompt[]>(
+    () =>
+      (server.prompts ?? []).map((p) => ({
+        id: p.id,
+        name: p.name,
+        description: p.description ?? "",
+        params: Array.isArray(p.arguments)
+          ? `${p.arguments.length} params`
+          : "0 params"
+      })),
+    [server.prompts]
+  );
 
-  const [assignedAgents] = useState<AssignmentItem[]>([
-    {
-      id: "1",
-      initials: "RA",
-      name: "Research Agent",
-      description: "Autonomous research operations",
-      color: "bg-emerald-500"
-    }
-  ]);
+  const resources = useMemo<Resource[]>(
+    () =>
+      (server.resources ?? []).map((r) => ({
+        id: r.id,
+        name: r.name,
+        mime: r.mimeType ?? "",
+        uri: r.uri,
+        size: formatFileSize(r.size),
+        updated: r.updatedAt
+          ? new Date(r.updatedAt).toLocaleDateString("zh-CN")
+          : "—",
+        iconType: mimeToIconType(r.mimeType ?? undefined)
+      })),
+    [server.resources]
+  );
 
-  const [availableAgents] = useState<AssignmentItem[]>([
-    {
-      id: "2",
-      initials: "AA",
-      name: "Automation Agent",
-      description: "Task automation and workflows",
-      color: "bg-gray-400"
-    },
-    {
-      id: "3",
-      initials: "MA",
-      name: "Monitor Agent",
-      description: "System monitoring and alerts",
-      color: "bg-gray-400"
-    }
-  ]);
+  // Assignments 暂无 API 支持，留空
+  const assignedAssistants: never[] = [];
+  const availableAssistants: never[] = [];
+  const assignedAgents: never[] = [];
+  const availableAgents: never[] = [];
 
-  const [resources] = useState<Resource[]>([
-    {
-      id: "1",
-      name: "Research Database",
-      mime: "application/json",
-      uri: "resource://cognitive/database/main",
-      size: "2.4 MB",
-      updated: "2 hours ago",
-      iconType: "json"
-    },
-    {
-      id: "2",
-      name: "Chart Templates",
-      mime: "image/svg+xml",
-      uri: "resource://cognitive/templates/charts",
-      size: "856 KB",
-      updated: "1 day ago",
-      iconType: "svg"
-    },
-    {
-      id: "3",
-      name: "Analysis Scripts",
-      mime: "text/javascript",
-      uri: "resource://cognitive/scripts/analysis",
-      size: "124 KB",
-      updated: "3 days ago",
-      iconType: "js"
-    },
-    {
-      id: "4",
-      name: "Citation Index",
-      mime: "application/sqlite",
-      uri: "resource://cognitive/index/citations",
-      size: "18.2 MB",
-      updated: "5 days ago",
-      iconType: "sqlite"
-    },
-    {
-      id: "5",
-      name: "Config Schema",
-      mime: "application/schema+json",
-      uri: "resource://cognitive/schema/config",
-      size: "12 KB",
-      updated: "1 week ago",
-      iconType: "schema"
-    }
-  ]);
-
-  const [tools, setTools] = useState<Tool[]>([
-    {
-      id: "1",
-      icon: "terminal",
-      name: "simulate-researcher",
-      description: "Simulate research cognitive researcher",
-      enabled: true
-    },
-    {
-      id: "2",
-      icon: "chip",
-      name: "analyze-data",
-      description: "Analyze process analytical data streams for deep insights",
-      enabled: true
-    },
-    {
-      id: "3",
-      icon: "plug",
-      name: "get-concept",
-      description: "Retrieve conceptual definitions and relationships",
-      enabled: false
-    },
-    {
-      id: "4",
-      icon: "terminal",
-      name: "generate-report",
-      description: "Generate comprehensive research reports",
-      enabled: true
-    },
-    {
-      id: "5",
-      icon: "chip",
-      name: "extract-keywords",
-      description: "Extract key terms and phrases from text",
-      enabled: true
-    }
-  ]);
-
-  const toggleTool = (id: string) => {
+  // ---- 同步 server prop 变化到表单（切换 server 时重置） ----
+  useEffect(() => {
+    setServerName(server.name);
+    setServerType(server.type ?? "stdio");
+    setCommand(server.command ?? "");
+    setBaseUrl(server.baseUrl ?? "");
+    setEnabled(server.isActive);
+    setArgs(parseJsonToRows(server.argsJson));
+    setEnvVars(parseJsonToRows(server.env));
     setTools(
-      tools.map((tool) =>
-        tool.id === id ? { ...tool, enabled: !tool.enabled } : tool
-      )
+      (server.tools ?? []).map((t) => ({
+        id: t.id,
+        icon: "terminal" as const,
+        name: t.name,
+        description: t.description ?? "",
+        enabled: t.isEnabled
+      }))
     );
-  };
+  }, [server.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // ---- Actions ----
+
+  const { toggleTool: apiToggleTool } = useMcpServerActions();
+
+  const toggleTool = async (toolId: string) => {
+    const tool = tools.find((t) => t.id === toolId);
+    if (!tool) return;
+    // 乐观更新 UI
+    setTools((prev) =>
+      prev.map((t) => (t.id === toolId ? { ...t, enabled: !t.enabled } : t))
+    );
+    await apiToggleTool(server.id, tool.name);
+  };
+
+  // ---- 计算值 ----
 
   const activeToolsCount = tools.filter((t) => t.enabled).length;
 
@@ -357,7 +275,11 @@ export function ServerDetailForm({
       case "sqlite":
         return { icon: Database, bg: "bg-orange-50", color: "text-orange-500" };
       default:
-        return { icon: FileText, bg: "bg-gray-50", color: "text-gray-500" };
+        return {
+          icon: FileText,
+          bg: "bg-brand-secondary-50",
+          color: "text-brand-secondary-500"
+        };
     }
   };
 
@@ -408,11 +330,15 @@ export function ServerDetailForm({
     );
   };
 
+  // ==================== 渲染 ====================
+
   return (
     <Card className="flex-1">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>MCP Server Detail: {serverName}</CardTitle>
+          <CardTitle className="text-brand-text">
+            MCP Server Detail: {serverName}
+          </CardTitle>
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               <Switch
@@ -471,7 +397,7 @@ export function ServerDetailForm({
             </div>
             <div>
               <p className="text-sm font-medium">{activeToolsCount}</p>
-              <p className="text-xs text-muted-foreground">active tools</p>
+              <p className="text-xs text-brand-text-muted">active tools</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -480,7 +406,7 @@ export function ServerDetailForm({
             </div>
             <div>
               <p className="text-sm font-medium">{prompts.length}</p>
-              <p className="text-xs text-muted-foreground">prompts</p>
+              <p className="text-xs text-brand-text-muted">prompts</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -489,11 +415,12 @@ export function ServerDetailForm({
             </div>
             <div>
               <p className="text-sm font-medium">{resources.length}</p>
-              <p className="text-xs text-muted-foreground">resources</p>
+              <p className="text-xs text-brand-text-muted">resources</p>
             </div>
           </div>
         </div>
       </CardHeader>
+
       <CardContent className="flex flex-col gap-6">
         {!mounted ? (
           <div className="flex h-96 items-center justify-center">
@@ -506,43 +433,30 @@ export function ServerDetailForm({
             className="w-full"
           >
             <TabsList className="h-auto w-full justify-start rounded-none border-b bg-transparent p-0">
-              <TabsTrigger
-                value="configuration"
-                className="rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none"
-              >
-                Configuration
-              </TabsTrigger>
-              <TabsTrigger
-                value="tools"
-                className="rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none"
-              >
-                Tools
-              </TabsTrigger>
-              <TabsTrigger
-                value="prompts"
-                className="rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none"
-              >
-                Prompts
-              </TabsTrigger>
-              <TabsTrigger
-                value="resources"
-                className="rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none"
-              >
-                Resources
-              </TabsTrigger>
-              <TabsTrigger
-                value="assignments"
-                className="rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none"
-              >
-                Assignments
-              </TabsTrigger>
+              {(
+                [
+                  ["configuration", "Configuration"],
+                  ["tools", "Tools"],
+                  ["prompts", "Prompts"],
+                  ["resources", "Resources"],
+                  ["assignments", "Assignments"]
+                ] as const
+              ).map(([value, label]) => (
+                <TabsTrigger
+                  key={value}
+                  value={value}
+                  className="rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+                >
+                  {label}
+                </TabsTrigger>
+              ))}
             </TabsList>
 
+            {/* ---- Configuration Tab ---- */}
             <TabsContent
               value="configuration"
               className="mt-6 flex flex-col gap-6"
             >
-              {/* Row 1: Server Name + Type */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="server-name">Server Name</Label>
@@ -570,7 +484,6 @@ export function ServerDetailForm({
                 </div>
               </div>
 
-              {/* Row 2: Command */}
               <div className="flex flex-col gap-2">
                 <Label htmlFor="command">Command</Label>
                 <Input
@@ -580,7 +493,6 @@ export function ServerDetailForm({
                 />
               </div>
 
-              {/* Conditional: Base URL (only for sse and streamableHttp) */}
               {showBaseUrl && (
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="base-url">Base URL</Label>
@@ -593,10 +505,10 @@ export function ServerDetailForm({
                 </div>
               )}
 
-              {/* Arguments Section */}
+              {/* Arguments */}
               <div className="flex flex-col gap-3">
                 <Label>Arguments</Label>
-                <div className="grid grid-cols-[auto_1fr_1fr_auto] gap-2 text-sm text-muted-foreground">
+                <div className="grid grid-cols-[auto_1fr_1fr_auto] gap-2 text-sm text-brand-text-muted">
                   <span />
                   <span>Key</span>
                   <span>Value</span>
@@ -607,7 +519,7 @@ export function ServerDetailForm({
                     key={arg.id}
                     className="group grid grid-cols-[auto_1fr_1fr_auto] items-center gap-2"
                   >
-                    <GripVertical className="h-4 w-4 cursor-grab text-muted-foreground" />
+                    <GripVertical className="h-4 w-4 cursor-grab text-brand-secondary-400" />
                     <Input
                       value={arg.key}
                       onChange={(e) =>
@@ -624,9 +536,9 @@ export function ServerDetailForm({
                     />
                     <Button
                       variant="ghost"
-                      size="icon-sm"
+                      size="icon"
                       onClick={() => removeArgument(arg.id)}
-                      className="text-muted-foreground hover:text-destructive"
+                      className="text-brand-secondary-400 hover:text-destructive"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -635,17 +547,17 @@ export function ServerDetailForm({
                 <Button
                   variant="ghost"
                   onClick={addArgument}
-                  className="w-fit text-muted-foreground"
+                  className="w-fit text-brand-text-muted"
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   Add New Argument
                 </Button>
               </div>
 
-              {/* Environment Variables Section */}
+              {/* Environment Variables */}
               <div className="flex flex-col gap-3">
                 <Label>Environment Variables</Label>
-                <div className="grid grid-cols-[auto_1fr_1fr_auto] gap-2 text-sm text-muted-foreground">
+                <div className="grid grid-cols-[auto_1fr_1fr_auto] gap-2 text-sm text-brand-text-muted">
                   <span />
                   <span>Key</span>
                   <span>Value</span>
@@ -656,7 +568,7 @@ export function ServerDetailForm({
                     key={env.id}
                     className="group grid grid-cols-[auto_1fr_1fr_auto] items-center gap-2"
                   >
-                    <GripVertical className="h-4 w-4 cursor-grab text-muted-foreground" />
+                    <GripVertical className="h-4 w-4 cursor-grab text-brand-secondary-400" />
                     <Input
                       value={env.key}
                       onChange={(e) =>
@@ -673,9 +585,9 @@ export function ServerDetailForm({
                     />
                     <Button
                       variant="ghost"
-                      size="icon-sm"
+                      size="icon"
                       onClick={() => removeEnvVar(env.id)}
-                      className="text-muted-foreground hover:text-destructive"
+                      className="text-brand-secondary-400 hover:text-destructive"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -684,14 +596,13 @@ export function ServerDetailForm({
                 <Button
                   variant="ghost"
                   onClick={addEnvVar}
-                  className="w-fit text-muted-foreground"
+                  className="w-fit text-brand-text-muted"
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   Add New Environment Variable
                 </Button>
               </div>
 
-              {/* Bottom action bar */}
               <div className="flex justify-end border-t pt-4">
                 <Button className="bg-primary hover:bg-primary/90">
                   <Settings className="mr-2 h-4 w-4" />
@@ -700,43 +611,50 @@ export function ServerDetailForm({
               </div>
             </TabsContent>
 
+            {/* ---- Tools Tab ---- */}
             <TabsContent value="tools" className="mt-6">
-              {/* Tool list */}
               <div className="flex flex-col gap-3">
-                {tools.map((tool) => {
-                  const Icon = toolIconMap[tool.icon];
-                  return (
-                    <div
-                      key={tool.id}
-                      className={cn(
-                        "flex items-start justify-between gap-4 rounded-lg border p-4 transition-colors",
-                        !tool.enabled && "bg-muted/50 opacity-50"
-                      )}
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                          <Icon className="h-5 w-5" />
-                        </div>
-                        <div className="flex flex-col gap-1">
-                          <span className="text-sm font-semibold">
-                            {tool.name}
-                          </span>
-                          <p className="line-clamp-2 text-xs text-muted-foreground">
-                            {tool.description}
-                          </p>
-                        </div>
-                      </div>
-                      <Switch
-                        checked={tool.enabled}
-                        onCheckedChange={() => toggleTool(tool.id)}
-                        className="shrink-0 data-[state=checked]:bg-blue-500"
-                      />
+                {tools.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
+                      <Wrench className="h-8 w-8 text-brand-secondary-400" />
                     </div>
-                  );
-                })}
+                    <p className="text-brand-text-muted">暂无工具数据</p>
+                  </div>
+                ) : (
+                  tools.map((tool) => {
+                    const Icon = toolIconMap[tool.icon];
+                    return (
+                      <div
+                        key={tool.id}
+                        className={cn(
+                          "flex items-start justify-between gap-4 rounded-lg border p-4 transition-colors",
+                          !tool.enabled && "bg-muted/50 opacity-50"
+                        )}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                            <Icon className="h-5 w-5" />
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <span className="text-sm font-semibold text-brand-text">
+                              {tool.name}
+                            </span>
+                            <p className="line-clamp-2 text-xs text-brand-text-muted">
+                              {tool.description}
+                            </p>
+                          </div>
+                        </div>
+                        <Switch
+                          checked={tool.enabled}
+                          onCheckedChange={() => toggleTool(tool.id)}
+                          className="shrink-0 data-[state=checked]:bg-blue-500"
+                        />
+                      </div>
+                    );
+                  })
+                )}
               </div>
-
-              {/* Export Config button */}
               <div className="mt-6 flex justify-end border-t pt-6">
                 <Button variant="outline">
                   <Download className="mr-2 h-4 w-4" />
@@ -745,11 +663,11 @@ export function ServerDetailForm({
               </div>
             </TabsContent>
 
+            {/* ---- Prompts Tab ---- */}
             <TabsContent value="prompts" className="mt-6">
-              {/* Search bar and count */}
               <div className="mb-4 flex items-center justify-between gap-4">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-brand-secondary-400" />
                   <Input
                     placeholder="Search prompts..."
                     value={promptSearch}
@@ -757,12 +675,11 @@ export function ServerDetailForm({
                     className="pl-9"
                   />
                 </div>
-                <span className="whitespace-nowrap text-sm text-muted-foreground">
+                <span className="whitespace-nowrap text-sm text-brand-text-muted">
                   {prompts.length} prompts total
                 </span>
               </div>
 
-              {/* Prompt list */}
               <div className="flex flex-col gap-2">
                 {filteredPrompts.length > 0 ? (
                   filteredPrompts.map((prompt) => (
@@ -775,26 +692,26 @@ export function ServerDetailForm({
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium">
+                          <span className="text-sm font-medium text-brand-text">
                             {prompt.name}
                           </span>
                           <span className="rounded-full border border-blue-200 px-2 py-0.5 text-xs text-blue-600">
                             {prompt.params}
                           </span>
                         </div>
-                        <p className="truncate text-sm text-muted-foreground">
+                        <p className="truncate text-sm text-brand-text-muted">
                           {prompt.description}
                         </p>
                       </div>
-                      <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+                      <ChevronRight className="h-4 w-4 shrink-0 text-brand-secondary-400" />
                     </div>
                   ))
                 ) : (
                   <div className="flex flex-col items-center justify-center py-12 text-center">
                     <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-                      <MessageSquare className="h-8 w-8 text-muted-foreground" />
+                      <MessageSquare className="h-8 w-8 text-brand-secondary-400" />
                     </div>
-                    <p className="mb-4 text-muted-foreground">
+                    <p className="mb-4 text-brand-text-muted">
                       No prompts available. Connect to the server to load
                       prompts.
                     </p>
@@ -806,11 +723,11 @@ export function ServerDetailForm({
               </div>
             </TabsContent>
 
+            {/* ---- Resources Tab ---- */}
             <TabsContent value="resources" className="mt-6">
-              {/* Top bar: Search + Filter + Count */}
               <div className="mb-4 flex items-center gap-4">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-brand-secondary-400" />
                   <Input
                     placeholder="Search resources..."
                     value={resourceSearch}
@@ -833,20 +750,16 @@ export function ServerDetailForm({
                     <SelectItem value="database">Database</SelectItem>
                   </SelectContent>
                 </Select>
-                <span className="whitespace-nowrap text-sm text-muted-foreground">
+                <span className="whitespace-nowrap text-sm text-brand-text-muted">
                   {resources.length} resources
                 </span>
               </div>
 
-              {/* Resource list */}
               <div className="flex flex-col gap-2">
                 {filteredResources.length > 0 ? (
                   filteredResources.map((resource) => {
-                    const {
-                      icon: Icon,
-                      bg,
-                      color
-                    } = getResourceIcon(resource.iconType);
+                    const { icon: Icon, bg, color } =
+                      getResourceIcon(resource.iconType);
                     return (
                       <div
                         key={resource.id}
@@ -859,17 +772,17 @@ export function ServerDetailForm({
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="mb-0.5 flex items-center gap-2">
-                            <span className="text-sm font-medium">
+                            <span className="text-sm font-medium text-brand-text">
                               {resource.name}
                             </span>
-                            <span className="rounded bg-gray-100 px-2 py-0.5 font-mono text-xs text-gray-600">
+                            <span className="rounded bg-brand-secondary-100 px-2 py-0.5 font-mono text-xs text-brand-secondary-600">
                               {resource.mime}
                             </span>
                           </div>
-                          <p className="mb-1 truncate font-mono text-sm text-gray-400">
+                          <p className="mb-1 truncate font-mono text-sm text-brand-secondary-400">
                             {resource.uri}
                           </p>
-                          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                          <div className="flex items-center gap-4 text-xs text-brand-text-muted">
                             <span>{resource.size}</span>
                             <span>{resource.updated}</span>
                           </div>
@@ -880,8 +793,8 @@ export function ServerDetailForm({
                           </Button>
                           <Button
                             variant="ghost"
-                            size="icon-sm"
-                            className="text-muted-foreground hover:text-foreground"
+                            size="icon"
+                            className="text-brand-secondary-400 hover:text-foreground"
                             onClick={() =>
                               navigator.clipboard.writeText(resource.uri)
                             }
@@ -895,10 +808,12 @@ export function ServerDetailForm({
                 ) : (
                   <div className="flex flex-col items-center justify-center py-12 text-center">
                     <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-                      <FolderOpen className="h-8 w-8 text-muted-foreground" />
+                      <FolderOpen className="h-8 w-8 text-brand-secondary-400" />
                     </div>
-                    <p className="mb-1 font-medium">No resources available</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="mb-1 font-medium text-brand-text">
+                      No resources available
+                    </p>
+                    <p className="text-sm text-brand-text-muted">
                       Resources will appear after a successful connection test
                     </p>
                   </div>
@@ -906,15 +821,15 @@ export function ServerDetailForm({
               </div>
             </TabsContent>
 
+            {/* ---- Assignments Tab ---- */}
             <TabsContent value="assignments" className="mt-6">
-              {/* Sub-tabs (pill style) */}
               <div className="mb-6 inline-flex items-center gap-1 rounded-full bg-muted p-1">
                 <button
                   onClick={() => setAssignmentSubTab("assistants")}
                   className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
                     assignmentSubTab === "assistants"
                       ? "bg-card text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
+                      : "text-brand-text-muted hover:text-foreground"
                   }`}
                 >
                   Assistants ({assignedAssistants.length})
@@ -924,7 +839,7 @@ export function ServerDetailForm({
                   className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
                     assignmentSubTab === "agents"
                       ? "bg-card text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
+                      : "text-brand-text-muted hover:text-foreground"
                   }`}
                 >
                   Agents ({assignedAgents.length})
@@ -933,156 +848,62 @@ export function ServerDetailForm({
 
               {assignmentSubTab === "assistants" && (
                 <div className="flex flex-col gap-6">
-                  {/* Assigned Assistants */}
                   <div>
-                    <p className="mb-3 text-xs uppercase tracking-wide text-muted-foreground">
+                    <p className="mb-3 text-xs uppercase tracking-wide text-brand-text-muted">
                       Assigned Assistants
                     </p>
-                    <div className="flex flex-col gap-2">
-                      {assignedAssistants.map((item) => (
-                        <div
-                          key={item.id}
-                          className="flex items-center gap-3 rounded-md border bg-card p-3"
-                        >
-                          <div
-                            className={`h-8 w-8 rounded-full ${item.color} flex items-center justify-center text-xs font-bold text-white`}
-                          >
-                            {item.initials}
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium">{item.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {item.description}
-                            </p>
-                          </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="border-red-200 text-red-500 hover:bg-red-50 hover:text-red-600"
-                          >
-                            <X className="mr-1 h-3 w-3" />
-                            Remove
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
+                    {assignedAssistants.length === 0 ? (
+                      <p className="text-sm text-brand-text-muted">
+                        暂无分配的 Assistant
+                      </p>
+                    ) : null}
                   </div>
 
-                  {/* Divider */}
                   <div className="border-t" />
 
-                  {/* Available Assistants */}
                   <div>
-                    <p className="mb-1 text-xs uppercase tracking-wide text-muted-foreground">
+                    <p className="mb-1 text-xs uppercase tracking-wide text-brand-text-muted">
                       Available Assistants
                     </p>
-                    <p className="mb-3 text-sm text-muted-foreground">
+                    <p className="mb-3 text-sm text-brand-text-muted">
                       Add this MCP server to more assistants
                     </p>
-                    <div className="flex flex-col gap-2">
-                      {availableAssistants.map((item) => (
-                        <div
-                          key={item.id}
-                          className="flex items-center gap-3 rounded-md border bg-card p-3"
-                        >
-                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-xs font-bold text-gray-500">
-                            {item.initials}
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium">{item.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {item.description}
-                            </p>
-                          </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="border-blue-200 text-blue-500 hover:bg-blue-50 hover:text-blue-600"
-                          >
-                            <Plus className="mr-1 h-3 w-3" />
-                            Assign
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
+                    {availableAssistants.length === 0 ? (
+                      <p className="text-sm text-brand-text-muted">
+                        暂无可分配的 Assistant（功能待实现）
+                      </p>
+                    ) : null}
                   </div>
                 </div>
               )}
 
               {assignmentSubTab === "agents" && (
                 <div className="flex flex-col gap-6">
-                  {/* Assigned Agents */}
                   <div>
-                    <p className="mb-3 text-xs uppercase tracking-wide text-muted-foreground">
+                    <p className="mb-3 text-xs uppercase tracking-wide text-brand-text-muted">
                       Assigned Agents
                     </p>
-                    <div className="flex flex-col gap-2">
-                      {assignedAgents.map((item) => (
-                        <div
-                          key={item.id}
-                          className="flex items-center gap-3 rounded-md border bg-card p-3"
-                        >
-                          <div
-                            className={`h-8 w-8 rounded-full ${item.color} flex items-center justify-center`}
-                          >
-                            <Bot className="h-4 w-4 text-white" />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium">{item.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {item.description}
-                            </p>
-                          </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="border-red-200 text-red-500 hover:bg-red-50 hover:text-red-600"
-                          >
-                            <X className="mr-1 h-3 w-3" />
-                            Remove
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
+                    {assignedAgents.length === 0 ? (
+                      <p className="text-sm text-brand-text-muted">
+                        暂无分配的 Agent
+                      </p>
+                    ) : null}
                   </div>
 
-                  {/* Divider */}
                   <div className="border-t" />
 
-                  {/* Available Agents */}
                   <div>
-                    <p className="mb-1 text-xs uppercase tracking-wide text-muted-foreground">
+                    <p className="mb-1 text-xs uppercase tracking-wide text-brand-text-muted">
                       Available Agents
                     </p>
-                    <p className="mb-3 text-sm text-muted-foreground">
+                    <p className="mb-3 text-sm text-brand-text-muted">
                       Add this MCP server to more agents
                     </p>
-                    <div className="flex flex-col gap-2">
-                      {availableAgents.map((item) => (
-                        <div
-                          key={item.id}
-                          className="flex items-center gap-3 rounded-md border bg-card p-3"
-                        >
-                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200">
-                            <Bot className="h-4 w-4 text-gray-500" />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium">{item.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {item.description}
-                            </p>
-                          </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="border-blue-200 text-blue-500 hover:bg-blue-50 hover:text-blue-600"
-                          >
-                            <Plus className="mr-1 h-3 w-3" />
-                            Assign
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
+                    {availableAgents.length === 0 ? (
+                      <p className="text-sm text-brand-text-muted">
+                        暂无可分配的 Agent（功能待实现）
+                      </p>
+                    ) : null}
                   </div>
                 </div>
               )}

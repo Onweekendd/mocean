@@ -2,14 +2,9 @@
 
 import { useParams } from "next/navigation";
 
-import { ServerSidebar } from "./components/ServerSidebar";
+import { useMcpServers } from "@/hooks/useMcpSWR";
 
-const servers = [
-  { id: "1", name: "Cognitive Research", type: "stdio" as const, active: true },
-  { id: "2", name: "Browser Automation", type: "sse" as const, active: true },
-  { id: "3", name: "File System", type: "stdio" as const, active: false },
-  { id: "4", name: "Database Query", type: "stdio" as const, active: true }
-];
+import { ServerSidebar } from "./components/ServerSidebar";
 
 interface MCPLayoutProps {
   children: React.ReactNode;
@@ -23,11 +18,22 @@ export default function MCPLayout({ children }: MCPLayoutProps) {
   const params = useParams();
   const selectedServerId = typeof params.id === "string" ? params.id : null;
 
+  const { mcpServers, isLoading } = useMcpServers();
+
   return (
     <div className="flex h-screen gap-2 overflow-hidden bg-brand-main">
       {/* 左侧服务器列表 */}
       <div className="h-full w-[18rem] flex-shrink-0">
-        <ServerSidebar servers={servers} selectedId={selectedServerId || ""} />
+        <ServerSidebar
+          servers={mcpServers.map((s) => ({
+            id: s.id,
+            name: s.name,
+            type: s.type ?? "stdio",
+            active: s.isActive
+          }))}
+          selectedId={selectedServerId || ""}
+          isLoading={isLoading}
+        />
       </div>
 
       {/* 右侧内容区域 */}

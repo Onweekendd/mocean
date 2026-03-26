@@ -2,10 +2,7 @@
 import type { z } from "zod";
 
 import { mcpRoutes } from "../router/type";
-import type {
-  CreateMcpServerInput,
-  UpdateMcpServerInput
-} from "../schema/mcp";
+import type { CreateMcpServerInput, UpdateMcpServerInput } from "../schema/mcp";
 import type { ApiClientConfig, ApiResponse } from "./base-client";
 import { BaseApiClient } from "./base-client";
 
@@ -17,16 +14,16 @@ export class McpApiClient extends BaseApiClient {
   }
 
   async getMcpServers(): Promise<
-    ApiResponse<
-      z.infer<(typeof mcpRoutes)["getMcpServers"]["responseSchema"]>
-    >
+    ApiResponse<z.infer<(typeof mcpRoutes)["getMcpServers"]["responseSchema"]>>
   > {
     return this.get<
       z.infer<(typeof mcpRoutes)["getMcpServers"]["responseSchema"]>
     >(mcpRoutes.getMcpServers.path);
   }
 
-  async getMcpServerById(id: string): Promise<
+  async getMcpServerById(
+    id: string
+  ): Promise<
     ApiResponse<
       z.infer<(typeof mcpRoutes)["getMcpServerById"]["responseSchema"]>
     >
@@ -36,7 +33,9 @@ export class McpApiClient extends BaseApiClient {
     >(mcpRoutes.getMcpServerById.path.replace(":id", id));
   }
 
-  async createMcpServer(data: CreateMcpServerInput): Promise<
+  async createMcpServer(
+    data: CreateMcpServerInput
+  ): Promise<
     ApiResponse<
       z.infer<(typeof mcpRoutes)["createMcpServer"]["responseSchema"]>
     >
@@ -46,7 +45,10 @@ export class McpApiClient extends BaseApiClient {
     >(mcpRoutes.createMcpServer.path, data);
   }
 
-  async updateMcpServer(id: string, data: UpdateMcpServerInput): Promise<
+  async updateMcpServer(
+    id: string,
+    data: UpdateMcpServerInput
+  ): Promise<
     ApiResponse<
       z.infer<(typeof mcpRoutes)["updateMcpServer"]["responseSchema"]>
     >
@@ -56,7 +58,9 @@ export class McpApiClient extends BaseApiClient {
     >(mcpRoutes.updateMcpServer.path.replace(":id", id), data);
   }
 
-  async deleteMcpServer(id: string): Promise<
+  async deleteMcpServer(
+    id: string
+  ): Promise<
     ApiResponse<
       z.infer<(typeof mcpRoutes)["deleteMcpServer"]["responseSchema"]>
     >
@@ -66,7 +70,9 @@ export class McpApiClient extends BaseApiClient {
     >(mcpRoutes.deleteMcpServer.path.replace(":id", id));
   }
 
-  async toggleMcpServer(id: string): Promise<
+  async toggleMcpServer(
+    id: string
+  ): Promise<
     ApiResponse<
       z.infer<(typeof mcpRoutes)["toggleMcpServer"]["responseSchema"]>
     >
@@ -76,10 +82,11 @@ export class McpApiClient extends BaseApiClient {
     >(mcpRoutes.toggleMcpServer.path.replace(":id", id), {});
   }
 
-  async toggleMcpTool(id: string, toolName: string): Promise<
-    ApiResponse<
-      z.infer<(typeof mcpRoutes)["toggleMcpTool"]["responseSchema"]>
-    >
+  async toggleMcpTool(
+    id: string,
+    toolName: string
+  ): Promise<
+    ApiResponse<z.infer<(typeof mcpRoutes)["toggleMcpTool"]["responseSchema"]>>
   > {
     return this.put<
       z.infer<(typeof mcpRoutes)["toggleMcpTool"]["responseSchema"]>
@@ -99,8 +106,7 @@ export const mcpApi = new McpApiClient();
 export const mcpApiMethods = {
   getMcpServers: () => mcpApi.getMcpServers(),
   getMcpServerById: (id: string) => mcpApi.getMcpServerById(id),
-  createMcpServer: (data: CreateMcpServerInput) =>
-    mcpApi.createMcpServer(data),
+  createMcpServer: (data: CreateMcpServerInput) => mcpApi.createMcpServer(data),
   updateMcpServer: (id: string, data: UpdateMcpServerInput) =>
     mcpApi.updateMcpServer(id, data),
   deleteMcpServer: (id: string) => mcpApi.deleteMcpServer(id),
@@ -126,12 +132,26 @@ export type UseMcpApiReturn = Pick<
 
 export const useMcpApi = (): UseMcpApiReturn => {
   return {
-    getMcpServers: mcpApi.getMcpServers.bind(mcpApi) as UseMcpApiReturn["getMcpServers"],
-    getMcpServerById: mcpApi.getMcpServerById.bind(mcpApi) as UseMcpApiReturn["getMcpServerById"],
-    createMcpServer: mcpApi.createMcpServer.bind(mcpApi) as UseMcpApiReturn["createMcpServer"],
-    updateMcpServer: mcpApi.updateMcpServer.bind(mcpApi) as UseMcpApiReturn["updateMcpServer"],
-    deleteMcpServer: mcpApi.deleteMcpServer.bind(mcpApi) as UseMcpApiReturn["deleteMcpServer"],
-    toggleMcpServer: mcpApi.toggleMcpServer.bind(mcpApi) as UseMcpApiReturn["toggleMcpServer"],
-    toggleMcpTool: mcpApi.toggleMcpTool.bind(mcpApi) as UseMcpApiReturn["toggleMcpTool"]
+    getMcpServers: mcpApi.getMcpServers.bind(
+      mcpApi
+    ) as UseMcpApiReturn["getMcpServers"],
+    getMcpServerById: mcpApi.getMcpServerById.bind(
+      mcpApi
+    ) as UseMcpApiReturn["getMcpServerById"],
+    createMcpServer: mcpApi.createMcpServer.bind(
+      mcpApi
+    ) as UseMcpApiReturn["createMcpServer"],
+    updateMcpServer: mcpApi.updateMcpServer.bind(
+      mcpApi
+    ) as UseMcpApiReturn["updateMcpServer"],
+    deleteMcpServer: mcpApi.deleteMcpServer.bind(
+      mcpApi
+    ) as UseMcpApiReturn["deleteMcpServer"],
+    toggleMcpServer: mcpApi.toggleMcpServer.bind(
+      mcpApi
+    ) as UseMcpApiReturn["toggleMcpServer"],
+    toggleMcpTool: mcpApi.toggleMcpTool.bind(
+      mcpApi
+    ) as UseMcpApiReturn["toggleMcpTool"]
   };
 };

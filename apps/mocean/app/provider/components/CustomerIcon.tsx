@@ -1,23 +1,9 @@
 import type { ReactNode } from "react";
 
-import type { StaticImageData } from "next/image";
-
 import { ModelProvider, ProviderIcon } from "@lobehub/icons";
 import type { Provider, ProviderType } from "@mocean/mastra/prismaType";
 
 import { cn } from "@/lib/utils";
-
-import { PROVIDER_LOGO_MAP } from "../constant";
-
-/**
- * 根据提供商类型获取图标
- * @param providerName - 提供商名称
- */
-export const getProviderIcon = (providerName: string): StaticImageData => {
-  const logo =
-    PROVIDER_LOGO_MAP[providerName as keyof typeof PROVIDER_LOGO_MAP];
-  return logo;
-};
 
 const convertProviderTypeToProviderIcon = (
   providerType: ProviderType
