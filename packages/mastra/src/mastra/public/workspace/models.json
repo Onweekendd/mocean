@@ -1,0 +1,36 @@
+{
+  "models": [
+    {
+      "id": "gpt-4",
+      "name": "GPT-4",
+      "provider": "openai",
+      "endpoint": "https://api.openai.com/v1/chat/completions",
+      "maxTokens": 8192,
+      "costPer1kTokens": {
+        "input": 0.03,
+        "output": 0.06
+      },
+      "capabilities": ["vision", "reasoning", "function_calling"]
+    },
+    {
+      "id": "gpt-4-turbo",
+      "name": "GPT-4 Turbo",
+      "provider": "openai",
+      "endpoint": "https://api.openai.com/v1/chat/completions",
+      "maxTokens": 128000,
+      "costPer1kTokens": {
+        "input": 0.01,
+        "output": 0.03
+      },
+      "capabilities": ["vision", "reasoning", "function_calling"]
+    },
+    {
+      "id": "claude-3-opus",
+      "name": "Claude 3 Opus",
+      "provider": "anthropic",
+      "endpoint": "https://api.anthropic.com/v1/messages",
+      "maxTokens": 200000,
+      "capabilities": ["reasoning", "function_calling"]
+    }
+  ]
+}

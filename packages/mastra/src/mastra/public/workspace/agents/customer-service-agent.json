@@ -1,0 +1,30 @@
+{
+  "id": "customer-service-agent",
+  "name": "Customer Service Assistant",
+  "version": "2.1.0",
+  "description": "Handles customer inquiries, order tracking, and issue resolution",
+  "model": "gpt-4",
+  "temperature": 0.7,
+  "maxTokens": 2048,
+  "systemPrompt": "You are a helpful customer service representative for Mocean. Your goal is to resolve customer issues efficiently and maintain a positive relationship.",
+  "tools": [
+    "search-orders",
+    "check-inventory",
+    "create-ticket",
+    "send-email"
+  ],
+  "capabilities": {
+    "multiLanguage": true,
+    "sentimentAnalysis": true,
+    "escalation": true
+  },
+  "routing": {
+    "fallbackAgent": "escalation-agent",
+    "condition": "sentiment < -0.5 || issue_complexity > 8"
+  },
+  "memory": {
+    "enabled": true,
+    "contextWindow": 20,
+    "persistenceKey": "customer-service-history"
+  }
+}

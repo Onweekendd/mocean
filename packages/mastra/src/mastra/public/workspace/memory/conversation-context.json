@@ -1,0 +1,32 @@
+{
+  "type": "conversation_memory",
+  "id": "conversation-context",
+  "name": "Active Conversation Context",
+  "description": "Short-term context for current conversations",
+  "retention": {
+    "strategy": "sliding_window",
+    "windowSize": 20,
+    "ttl": 3600
+  },
+  "structure": {
+    "conversationId": "string",
+    "customerId": "string",
+    "messages": [
+      {
+        "role": "user|assistant",
+        "content": "string",
+        "timestamp": "date-time",
+        "metadata": {
+          "sentiment": "number",
+          "intent": "string",
+          "entities": "object"
+        }
+      }
+    ],
+    "context": {
+      "currentIssue": "string",
+      "relatedOrders": ["string"],
+      "escalationFlag": "boolean"
+    }
+  }
+}

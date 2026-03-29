@@ -1,0 +1,37 @@
+{
+  "id": "create-ticket",
+  "name": "Create Support Ticket",
+  "version": "1.0.0",
+  "category": "ticketing",
+  "description": "Create a new customer support ticket in the system",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "customerId": { "type": "string" },
+      "title": { "type": "string", "minLength": 5 },
+      "description": { "type": "string", "minLength": 20 },
+      "priority": {
+        "type": "string",
+        "enum": ["low", "medium", "high", "critical"]
+      },
+      "category": {
+        "type": "string",
+        "enum": ["billing", "shipping", "product_quality", "account", "other"]
+      },
+      "attachments": {
+        "type": "array",
+        "items": { "type": "string", "format": "uri" }
+      }
+    },
+    "required": ["customerId", "title", "description", "priority"]
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "ticketId": { "type": "string" },
+      "status": { "type": "string" },
+      "createdAt": { "type": "string", "format": "date-time" },
+      "assignedTo": { "type": "string" }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "type": "knowledge_base",
+  "id": "customer-profiles",
+  "name": "Customer Profiles & History",
+  "description": "Long-term customer memory and interaction history",
+  "schema": {
+    "customerId": "string",
+    "name": "string",
+    "tier": "enum:bronze|silver|gold|platinum",
+    "lifetime_value": "number",
+    "preferred_language": "string",
+    "communication_preferences": {
+      "email": "boolean",
+      "sms": "boolean",
+      "whatsapp": "boolean"
+    },
+    "interaction_history": {
+      "total_interactions": "number",
+      "last_contact": "date",
+      "avg_satisfaction": "number"
+    },
+    "issues": [
+      {
+        "id": "string",
+        "type": "string",
+        "status": "string",
+        "resolved_at": "date"
+      }
+    ]
+  },
+  "persistence": {
+    "storage": "database",
+    "table": "customer_profiles",
+    "ttl": null
+  },
+  "indexing": ["customerId", "tier", "last_contact"]
+}

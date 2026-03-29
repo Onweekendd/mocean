@@ -1,0 +1,38 @@
+{
+  "id": "data-analysis-flow",
+  "name": "Daily Analytics Workflow",
+  "version": "1.0.0",
+  "description": "Scheduled daily data analysis and reporting",
+  "schedule": "0 0 * * *",
+  "trigger": "scheduled",
+  "steps": [
+    {
+      "id": "fetch_data",
+      "name": "Fetch Latest Data",
+      "type": "action",
+      "action": "query_database",
+      "query": "SELECT * FROM orders WHERE created_at > NOW() - INTERVAL 1 DAY"
+    },
+    {
+      "id": "analyze",
+      "name": "Run Analytics",
+      "type": "agent_action",
+      "agent": "analytics-agent",
+      "actions": ["calculate_metrics", "identify_trends"]
+    },
+    {
+      "id": "generate_report",
+      "name": "Generate Report",
+      "type": "action",
+      "action": "create_pdf_report",
+      "template": "daily_summary"
+    },
+    {
+      "id": "distribute",
+      "name": "Distribute to Stakeholders",
+      "type": "action",
+      "action": "send_email",
+      "recipients": ["manager@mocean.ai", "analytics@mocean.ai"]
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "analytics-agent",
+  "name": "Analytics & Insights Agent",
+  "version": "1.5.0",
+  "description": "Analyzes customer data and generates business insights",
+  "model": "gpt-4",
+  "temperature": 0.5,
+  "schedule": "0 0 * * *",
+  "tools": [
+    "query-database",
+    "generate-report",
+    "create-visualization",
+    "send-dashboard-update"
+  ],
+  "dataAccess": {
+    "databases": ["analytics_db", "crm_db"],
+    "tables": ["customers", "orders", "interactions"]
+  }
+}

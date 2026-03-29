@@ -1,0 +1,33 @@
+{
+  "id": "database-integration",
+  "name": "PostgreSQL Database",
+  "type": "persistence",
+  "version": "1.0.0",
+  "description": "Primary data storage and retrieval",
+  "config": {
+    "host": "${DB_HOST}",
+    "port": 5432,
+    "database": "${DB_NAME}",
+    "user": "${DB_USER}",
+    "password": "${DB_PASSWORD}",
+    "ssl": true
+  },
+  "tables": {
+    "customers": {
+      "columns": ["id", "email", "name", "tier", "created_at"],
+      "permissions": ["read", "write"]
+    },
+    "orders": {
+      "columns": ["id", "customer_id", "status", "total", "created_at"],
+      "permissions": ["read"]
+    },
+    "support_tickets": {
+      "columns": ["id", "customer_id", "title", "status", "assigned_to"],
+      "permissions": ["read", "write"]
+    }
+  },
+  "poolConfig": {
+    "min": 2,
+    "max": 10
+  }
+}
