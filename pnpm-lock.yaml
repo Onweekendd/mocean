@@ -62,6 +62,9 @@ importers:
       '@lobehub/ui':
         specifier: ^5.5.0
         version: 5.5.0(@lobehub/fluent-emoji@2.0.0(@babel/core@7.28.5)(@types/mdast@4.0.4)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(antd@6.3.2(date-fns@4.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(framer-motion@12.35.2(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(micromark-util-types@2.0.2)(micromark@4.0.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@lobehub/icons@5.0.1)(@types/mdast@4.0.4)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(antd@6.3.2(date-fns@4.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(micromark-util-types@2.0.2)(micromark@4.0.2)(motion@12.35.2(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@mastra/client-js':
+        specifier: ^1.10.0
+        version: 1.10.0(@hono/standard-validator@0.2.2(@standard-schema/spec@1.1.0)(hono@4.12.8))(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.5.4))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6))(@standard-community/standard-openapi@0.2.9(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.5.4))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6))(@standard-schema/spec@1.1.0)(effect@3.18.4)(openapi-types@12.1.3)(valibot@1.2.0(typescript@5.5.4))(zod@4.3.6))(@types/json-schema@7.0.15)(openapi-types@12.1.3)(zod@4.3.6)
       '@radix-ui/react-accordion':
         specifier: ^1.2.3
         version: 1.2.12(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -2069,8 +2072,20 @@ packages:
       '@mastra/core': '>=1.5.0-0 <2.0.0-0'
       zod: ^3.25.0 || ^4.0.0
 
+  '@mastra/client-js@1.10.0':
+    resolution: {integrity: sha512-RoTco32kU75fWhGeygJlOL7XDpKVKzKEX2egN1hwCDCMjIQMAe3VkFzMozX4v2TefUonGc3QPlsms1ACXWR3RQ==}
+    engines: {node: '>=22.13.0'}
+    peerDependencies:
+      zod: ^3.25.0 || ^4.0.0
+
   '@mastra/core@1.14.0':
     resolution: {integrity: sha512-iP2D5g9QxEEVf2ie1l2xGmZrVOnaRTtehJj4W29AQ6BTZR6p3sfW7hP9vs5CcsBj0NSFBgiMGjfi6RihLZ1soA==}
+    engines: {node: '>=22.13.0'}
+    peerDependencies:
+      zod: ^3.25.0 || ^4.0.0
+
+  '@mastra/core@1.16.0':
+    resolution: {integrity: sha512-8CuVN1/oIByJMydOkQwBSEa8jGHEUNg5EMB4ydovGbqDg1tSfIbVIO1EDOMXK6sS6RllkFbC+jsNuw6AP5o0Eg==}
     engines: {node: '>=22.13.0'}
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
@@ -2110,6 +2125,12 @@ packages:
 
   '@mastra/schema-compat@1.2.5':
     resolution: {integrity: sha512-j2Y6eX8H0xOJ8EzH9Fpf2WZZEku2isyJY3VX6OS/3wmXilUz7qD/nfNW57rZ2ozJzHV43offb2lglhV6u++Vpw==}
+    engines: {node: '>=22.13.0'}
+    peerDependencies:
+      zod: ^3.25.0 || ^4.0.0
+
+  '@mastra/schema-compat@1.2.7':
+    resolution: {integrity: sha512-t63E0f5HcH8neXPfs3D5x4qqQM6Pf/pbhFUVk0cTC0bFo6609sT/+189I+2HY4sbAF3uzurOgy2fXIS4vfMkOA==}
     engines: {node: '>=22.13.0'}
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
@@ -9123,6 +9144,13 @@ snapshots:
       eventsource-parser: 3.0.6
       zod: 4.1.12
 
+  '@ai-sdk/provider-utils@3.0.20(zod@4.3.6)':
+    dependencies:
+      '@ai-sdk/provider': 2.0.1
+      '@standard-schema/spec': 1.1.0
+      eventsource-parser: 3.0.6
+      zod: 4.3.6
+
   '@ai-sdk/provider-utils@4.0.0(zod@3.25.76)':
     dependencies:
       '@ai-sdk/provider': 3.0.0
@@ -9136,6 +9164,13 @@ snapshots:
       '@standard-schema/spec': 1.1.0
       eventsource-parser: 3.0.6
       zod: 4.1.12
+
+  '@ai-sdk/provider-utils@4.0.0(zod@4.3.6)':
+    dependencies:
+      '@ai-sdk/provider': 3.0.0
+      '@standard-schema/spec': 1.1.0
+      eventsource-parser: 3.0.6
+      zod: 4.3.6
 
   '@ai-sdk/provider-utils@4.0.16(zod@3.25.76)':
     dependencies:
@@ -10372,6 +10407,12 @@ snapshots:
       '@standard-schema/spec': 1.1.0
       hono: 4.11.8
 
+  '@hono/standard-validator@0.2.2(@standard-schema/spec@1.1.0)(hono@4.12.8)':
+    dependencies:
+      '@standard-schema/spec': 1.1.0
+      hono: 4.12.8
+    optional: true
+
   '@hookform/resolvers@5.2.2(react-hook-form@7.69.0(react@19.2.4))':
     dependencies:
       '@standard-schema/utils': 0.3.0
@@ -10840,6 +10881,25 @@ snapshots:
       '@mastra/core': 1.14.0(@hono/standard-validator@0.2.2(@standard-schema/spec@1.1.0)(hono@4.11.8))(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.9.3))(zod-to-json-schema@3.25.1(zod@4.1.12))(zod@4.1.12))(@standard-community/standard-openapi@0.2.9(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.9.3))(zod-to-json-schema@3.25.1(zod@4.1.12))(zod@4.1.12))(@standard-schema/spec@1.1.0)(effect@3.18.4)(openapi-types@12.1.3)(valibot@1.2.0(typescript@5.9.3))(zod@4.1.12))(@types/json-schema@7.0.15)(openapi-types@12.1.3)(zod@4.1.12)
       zod: 4.1.12
 
+  '@mastra/client-js@1.10.0(@hono/standard-validator@0.2.2(@standard-schema/spec@1.1.0)(hono@4.12.8))(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.5.4))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6))(@standard-community/standard-openapi@0.2.9(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.5.4))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6))(@standard-schema/spec@1.1.0)(effect@3.18.4)(openapi-types@12.1.3)(valibot@1.2.0(typescript@5.5.4))(zod@4.3.6))(@types/json-schema@7.0.15)(openapi-types@12.1.3)(zod@4.3.6)':
+    dependencies:
+      '@ai-sdk/ui-utils': 1.2.11(zod@4.3.6)
+      '@lukeed/uuid': 2.0.1
+      '@mastra/core': 1.16.0(@hono/standard-validator@0.2.2(@standard-schema/spec@1.1.0)(hono@4.12.8))(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.5.4))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6))(@standard-community/standard-openapi@0.2.9(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.5.4))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6))(@standard-schema/spec@1.1.0)(effect@3.18.4)(openapi-types@12.1.3)(valibot@1.2.0(typescript@5.5.4))(zod@4.3.6))(@types/json-schema@7.0.15)(openapi-types@12.1.3)(zod@4.3.6)
+      '@mastra/schema-compat': 1.2.7(zod@4.3.6)
+      json-schema: 0.4.0
+      zod: 4.3.6
+    transitivePeerDependencies:
+      - '@cfworker/json-schema'
+      - '@hono/standard-validator'
+      - '@standard-community/standard-json'
+      - '@standard-community/standard-openapi'
+      - '@types/json-schema'
+      - bufferutil
+      - openapi-types
+      - supports-color
+      - utf-8-validate
+
   '@mastra/core@1.14.0(@hono/standard-validator@0.2.2(@standard-schema/spec@1.1.0)(hono@4.11.8))(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.9.3))(zod-to-json-schema@3.25.1(zod@4.1.12))(zod@4.1.12))(@standard-community/standard-openapi@0.2.9(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.9.3))(zod-to-json-schema@3.25.1(zod@4.1.12))(zod@4.1.12))(@standard-schema/spec@1.1.0)(effect@3.18.4)(openapi-types@12.1.3)(valibot@1.2.0(typescript@5.9.3))(zod@4.1.12))(@types/json-schema@7.0.15)(openapi-types@12.1.3)(zod@4.1.12)':
     dependencies:
       '@a2a-js/sdk': 0.2.5
@@ -10871,6 +10931,48 @@ snapshots:
       ws: 8.19.0
       xxhash-wasm: 1.1.0
       zod: 4.1.12
+    transitivePeerDependencies:
+      - '@cfworker/json-schema'
+      - '@hono/standard-validator'
+      - '@standard-community/standard-json'
+      - '@standard-community/standard-openapi'
+      - '@types/json-schema'
+      - bufferutil
+      - openapi-types
+      - supports-color
+      - utf-8-validate
+
+  '@mastra/core@1.16.0(@hono/standard-validator@0.2.2(@standard-schema/spec@1.1.0)(hono@4.12.8))(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.5.4))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6))(@standard-community/standard-openapi@0.2.9(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.5.4))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6))(@standard-schema/spec@1.1.0)(effect@3.18.4)(openapi-types@12.1.3)(valibot@1.2.0(typescript@5.5.4))(zod@4.3.6))(@types/json-schema@7.0.15)(openapi-types@12.1.3)(zod@4.3.6)':
+    dependencies:
+      '@a2a-js/sdk': 0.2.5
+      '@ai-sdk/provider-utils-v5': '@ai-sdk/provider-utils@3.0.20(zod@4.3.6)'
+      '@ai-sdk/provider-utils-v6': '@ai-sdk/provider-utils@4.0.0(zod@4.3.6)'
+      '@ai-sdk/provider-v5': '@ai-sdk/provider@2.0.1'
+      '@ai-sdk/provider-v6': '@ai-sdk/provider@3.0.5'
+      '@ai-sdk/ui-utils-v5': '@ai-sdk/ui-utils@1.2.11(zod@4.3.6)'
+      '@isaacs/ttlcache': 2.1.4
+      '@lukeed/uuid': 2.0.1
+      '@mastra/schema-compat': 1.2.7(zod@4.3.6)
+      '@modelcontextprotocol/sdk': 1.27.1(zod@4.3.6)
+      '@sindresorhus/slugify': 2.2.1
+      '@standard-schema/spec': 1.1.0
+      ajv: 8.18.0
+      dotenv: 17.3.1
+      execa: 9.6.1
+      gray-matter: 4.0.3
+      hono: 4.12.8
+      hono-openapi: 1.3.0(@hono/standard-validator@0.2.2(@standard-schema/spec@1.1.0)(hono@4.12.8))(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.5.4))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6))(@standard-community/standard-openapi@0.2.9(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.5.4))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6))(@standard-schema/spec@1.1.0)(effect@3.18.4)(openapi-types@12.1.3)(valibot@1.2.0(typescript@5.5.4))(zod@4.3.6))(@types/json-schema@7.0.15)(hono@4.12.8)(openapi-types@12.1.3)
+      ignore: 7.0.5
+      js-tiktoken: 1.0.21
+      json-schema: 0.4.0
+      lru-cache: 11.2.7
+      p-map: 7.0.4
+      p-retry: 7.1.1
+      picomatch: 4.0.3
+      radash: 12.1.1
+      ws: 8.19.0
+      xxhash-wasm: 1.1.0
+      zod: 4.3.6
     transitivePeerDependencies:
       - '@cfworker/json-schema'
       - '@hono/standard-validator'
@@ -10968,6 +11070,14 @@ snapshots:
       zod-from-json-schema-v3: zod-from-json-schema@0.0.5
       zod-to-json-schema: 3.25.1(zod@4.1.12)
 
+  '@mastra/schema-compat@1.2.7(zod@4.3.6)':
+    dependencies:
+      json-schema-to-zod: 2.7.0
+      zod: 4.3.6
+      zod-from-json-schema: 0.5.2
+      zod-from-json-schema-v3: zod-from-json-schema@0.0.5
+      zod-to-json-schema: 3.25.1(zod@4.3.6)
+
   '@mastra/server@1.14.0(@mastra/core@1.14.0(@hono/standard-validator@0.2.2(@standard-schema/spec@1.1.0)(hono@4.11.8))(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.9.3))(zod-to-json-schema@3.25.1(zod@4.1.12))(zod@4.1.12))(@standard-community/standard-openapi@0.2.9(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.9.3))(zod-to-json-schema@3.25.1(zod@4.1.12))(zod@4.1.12))(@standard-schema/spec@1.1.0)(effect@3.18.4)(openapi-types@12.1.3)(valibot@1.2.0(typescript@5.9.3))(zod@4.1.12))(@types/json-schema@7.0.15)(openapi-types@12.1.3)(zod@4.1.12))(zod@4.1.12)':
     dependencies:
       '@mastra/core': 1.14.0(@hono/standard-validator@0.2.2(@standard-schema/spec@1.1.0)(hono@4.11.8))(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.9.3))(zod-to-json-schema@3.25.1(zod@4.1.12))(zod@4.1.12))(@standard-community/standard-openapi@0.2.9(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.9.3))(zod-to-json-schema@3.25.1(zod@4.1.12))(zod@4.1.12))(@standard-schema/spec@1.1.0)(effect@3.18.4)(openapi-types@12.1.3)(valibot@1.2.0(typescript@5.9.3))(zod@4.1.12))(@types/json-schema@7.0.15)(openapi-types@12.1.3)(zod@4.1.12)
@@ -11055,6 +11165,28 @@ snapshots:
       raw-body: 3.0.1
       zod: 4.1.12
       zod-to-json-schema: 3.25.1(zod@4.1.12)
+    transitivePeerDependencies:
+      - supports-color
+
+  '@modelcontextprotocol/sdk@1.27.1(zod@4.3.6)':
+    dependencies:
+      '@hono/node-server': 1.19.9(hono@4.12.8)
+      ajv: 8.18.0
+      ajv-formats: 3.0.1(ajv@8.18.0)
+      content-type: 1.0.5
+      cors: 2.8.6
+      cross-spawn: 7.0.6
+      eventsource: 3.0.7
+      eventsource-parser: 3.0.6
+      express: 5.2.1
+      express-rate-limit: 8.3.1(express@5.2.1)
+      hono: 4.12.8
+      jose: 6.1.3
+      json-schema-typed: 8.0.2
+      pkce-challenge: 5.0.1
+      raw-body: 3.0.1
+      zod: 4.3.6
+      zod-to-json-schema: 3.25.1(zod@4.3.6)
     transitivePeerDependencies:
       - supports-color
 
@@ -12638,6 +12770,17 @@ snapshots:
       on-change: 4.0.2
       semver-compare: 1.0.0
 
+  '@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.5.4))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6)':
+    dependencies:
+      '@standard-schema/spec': 1.1.0
+      '@types/json-schema': 7.0.15
+      quansync: 0.2.11
+    optionalDependencies:
+      effect: 3.18.4
+      valibot: 1.2.0(typescript@5.5.4)
+      zod: 4.3.6
+      zod-to-json-schema: 3.25.1(zod@4.3.6)
+
   '@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.9.3))(zod-to-json-schema@3.25.1(zod@4.1.12))(zod@4.1.12)':
     dependencies:
       '@standard-schema/spec': 1.1.0
@@ -12648,6 +12791,16 @@ snapshots:
       valibot: 1.2.0(typescript@5.9.3)
       zod: 4.1.12
       zod-to-json-schema: 3.25.1(zod@4.1.12)
+
+  '@standard-community/standard-openapi@0.2.9(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.5.4))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6))(@standard-schema/spec@1.1.0)(effect@3.18.4)(openapi-types@12.1.3)(valibot@1.2.0(typescript@5.5.4))(zod@4.3.6)':
+    dependencies:
+      '@standard-community/standard-json': 0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.5.4))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6)
+      '@standard-schema/spec': 1.1.0
+      openapi-types: 12.1.3
+    optionalDependencies:
+      effect: 3.18.4
+      valibot: 1.2.0(typescript@5.5.4)
+      zod: 4.3.6
 
   '@standard-community/standard-openapi@0.2.9(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.9.3))(zod-to-json-schema@3.25.1(zod@4.1.12))(zod@4.1.12))(@standard-schema/spec@1.1.0)(effect@3.18.4)(openapi-types@12.1.3)(valibot@1.2.0(typescript@5.9.3))(zod@4.1.12)':
     dependencies:
@@ -15351,6 +15504,16 @@ snapshots:
       openapi-types: 12.1.3
     optionalDependencies:
       '@hono/standard-validator': 0.2.2(@standard-schema/spec@1.1.0)(hono@4.11.8)
+      hono: 4.12.8
+
+  hono-openapi@1.3.0(@hono/standard-validator@0.2.2(@standard-schema/spec@1.1.0)(hono@4.12.8))(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.5.4))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6))(@standard-community/standard-openapi@0.2.9(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.5.4))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6))(@standard-schema/spec@1.1.0)(effect@3.18.4)(openapi-types@12.1.3)(valibot@1.2.0(typescript@5.5.4))(zod@4.3.6))(@types/json-schema@7.0.15)(hono@4.12.8)(openapi-types@12.1.3):
+    dependencies:
+      '@standard-community/standard-json': 0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.5.4))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6)
+      '@standard-community/standard-openapi': 0.2.9(@standard-community/standard-json@0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(effect@3.18.4)(quansync@0.2.11)(valibot@1.2.0(typescript@5.5.4))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6))(@standard-schema/spec@1.1.0)(effect@3.18.4)(openapi-types@12.1.3)(valibot@1.2.0(typescript@5.5.4))(zod@4.3.6)
+      '@types/json-schema': 7.0.15
+      openapi-types: 12.1.3
+    optionalDependencies:
+      '@hono/standard-validator': 0.2.2(@standard-schema/spec@1.1.0)(hono@4.12.8)
       hono: 4.12.8
 
   hono@4.11.4: {}
@@ -18715,6 +18878,11 @@ snapshots:
   uuid@13.0.0: {}
 
   v8n@1.5.1: {}
+
+  valibot@1.2.0(typescript@5.5.4):
+    optionalDependencies:
+      typescript: 5.5.4
+    optional: true
 
   valibot@1.2.0(typescript@5.9.3):
     optionalDependencies:

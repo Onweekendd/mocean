@@ -2,12 +2,12 @@
 
 import { memo } from "react";
 
-import Image from "next/image";
-
 import type { Model, Provider } from "@mocean/mastra/prismaType";
 
-import { renderProviderAvatar as RenderProviderAvatar } from "@/app/provider/components/CustomerIcon";
-import { getModelLogo } from "@/app/provider/constant";
+import {
+  renderModelAvatar,
+  renderProviderAvatar as RenderProviderAvatar
+} from "@/app/provider/components/CustomerIcon";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -114,17 +114,11 @@ const ModelSelectorComponent = ({
                               }
                             >
                               <div className="h-4 w-4 shrink-0">
-                                <Image
-                                  src={
-                                    getModelLogo(
-                                      model.id as keyof typeof getModelLogo
-                                    ) ?? ""
-                                  }
-                                  alt={model.name}
-                                  width={14}
-                                  height={14}
-                                  className="h-full w-full object-contain"
-                                />
+                                {renderModelAvatar({
+                                  modelId: model.id,
+                                  modelName: model.name,
+                                  size: 14
+                                })}
                               </div>
                               <span className="truncate text-[13px]">
                                 {model.name}

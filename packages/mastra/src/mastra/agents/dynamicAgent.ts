@@ -67,6 +67,12 @@ export const DynamicAgent = new Agent({
         throw new Error("Provider not configured");
       }
 
+      console.log("DynamicAgent model config:", {
+        url: provider.apiHost,
+        apiKey: provider.apiKey,
+        id: normalizeModelId(model.id)
+      });
+
       return {
         url: provider.apiHost,
         apiKey: provider.apiKey,

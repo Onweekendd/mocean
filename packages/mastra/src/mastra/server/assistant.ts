@@ -99,7 +99,9 @@ const getAssistantById = async (
       mcpServers: true
     }
   });
-  return assistant as z.infer<(typeof assistantRoutes)["getAssistantById"]["responseSchema"]> | null;
+  return assistant as z.infer<
+    (typeof assistantRoutes)["getAssistantById"]["responseSchema"]
+  > | null;
 };
 
 /**
@@ -259,10 +261,17 @@ const executeChatWithAssistant = async (
       thread: threadId,
       resource: assistantId
     },
-    providerOptions: {},
+    providerOptions: {
+      openai: {
+        reasoningEffort: "low"
+      }
+    },
     requestContext: createCommonRunTime({
       assistant
-    })
+    }),
+    modelSettings: {
+      temperature: 1
+    }
   });
 
   const aiSdkStream = toAISdkStream(stream, {

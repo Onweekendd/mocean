@@ -8,6 +8,7 @@
       "env": [
         "PRISMA_DATABASE_URL",
         "MASTRA_DATABASE_URL",
+        "MASTRA_WORKSPACE_PATH",
         "AIHUBMIX_API_KEY",
         "DEV_PORT"
       ],

@@ -4,15 +4,18 @@ import { PinoLogger } from "@mastra/loggers";
 
 import { DynamicAgent } from "./agents/dynamicAgent";
 import { apiRoutes } from "./router";
+import { workspace } from "./workspace";
 
 export const mastra = new Mastra({
   agents: {
     DynamicAgent
   },
 
+  workspace,
+
   server: {
     timeout: 30000,
-    port: process.env.DEV_PORT || 4111,
+    port: Number(process.env.DEV_PORT) || 4111,
     build: {
       swaggerUI: true // Enable in production builds
     },

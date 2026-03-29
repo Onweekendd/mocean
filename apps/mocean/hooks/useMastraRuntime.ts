@@ -14,6 +14,7 @@ import { generateId } from "ai";
 import { useStore } from "@/app/store/useStore";
 
 import { useAssistantThreadsSWR } from "./useAssistantsSWR";
+import { useMastraClient } from "./useMastraClient";
 
 // 提取 experimental_prepareRequestBody 返回值类型
 export type PrepareRequestBodyReturnType = {
@@ -56,80 +57,81 @@ export function useMastraRuntime({
   activeThreadIdRef.current = activeThreadId;
 
   const newThreadId = useRef<string | null>(null);
+  const hasCreatedThread = useRef<string | null>(null);
 
   const { refresh } = useAssistantThreadsSWR(activeAssistantId || null);
   const { generateTitleWithAssistant } = useAssistantsApi();
   const { setStreamingTitle, clearStreamingTitle } = useStore();
+  const { mastraClient } = useMastraClient();
 
   /**
    * 新建的对话第一次完成
    */
-  const onNewThreadFirstFinish: ChatOnFinishCallback<UIMessage> = (
-    _options
-  ) => {
+  const onNewThreadFirstFinish = async (
+    _options: Parameters<ChatOnFinishCallback<UIMessage>>[0]
+  ): Promise<void> => {
     if (!activeAssistantIdRef.current || !newThreadId.current) {
       return;
     }
 
+    // 同一个 thread 只处理一次
+    if (hasCreatedThread.current === newThreadId.current) {
+      return;
+    }
+    hasCreatedThread.current = newThreadId.current;
+
     const threadId = newThreadId.current;
     const assistantId = activeAssistantIdRef.current;
 
-    const newThread: StorageThreadType = {
-      id: threadId,
+    const newThread = await mastraClient.createMemoryThread({
       resourceId: assistantId,
-      title: "",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      metadata: {
-        creating: true
-      }
-    };
+      threadId,
+      agentId: ""
+    });
 
     setStreamingTitle(assistantId, newThread);
-    void (async () => {
-      const response = await generateTitleWithAssistant({
-        assistantId,
-        threadId
-      });
 
-      let accumulatedTitle = "";
-      for await (const chunk of streamTitle(response)) {
-        console.log("chunk", chunk);
-        for (const line of chunk.split("\n")) {
-          const payload = line.slice("data: ".length);
-          if (!line.startsWith("data: ") || payload === "[DONE]") {
-            continue;
-          }
+    const response = await generateTitleWithAssistant({
+      assistantId,
+      threadId
+    });
 
-          const chunkData = JSON.parse(payload) as {
-            delta?: { title?: string };
-          };
+    let accumulatedTitle = "";
+    for await (const chunk of streamTitle(response)) {
+      for (const line of chunk.split("\n")) {
+        const payload = line.slice("data: ".length);
+        if (!line.startsWith("data: ") || payload === "[DONE]") {
+          continue;
+        }
 
-          if (chunkData.delta?.title) {
-            accumulatedTitle += chunkData.delta.title;
-            setStreamingTitle(assistantId, {
-              ...newThread,
-              title: accumulatedTitle
-            });
-          }
+        const chunkData = JSON.parse(payload) as {
+          delta?: { title?: string };
+        };
+
+        if (chunkData.delta?.title) {
+          accumulatedTitle += chunkData.delta.title;
+          setStreamingTitle(assistantId, {
+            ...newThread,
+            title: accumulatedTitle
+          });
         }
       }
+    }
 
-      const finalThread: StorageThreadType = {
-        ...newThread,
-        title: accumulatedTitle,
-        metadata: {}
-      };
+    const finalThread: StorageThreadType = {
+      ...newThread,
+      title: accumulatedTitle,
+      metadata: {}
+    };
 
-      clearStreamingTitle(assistantId);
-      await refresh(
-        (current: StorageThreadType[] = []) => [
-          finalThread,
-          ...current.filter((t) => t.id !== finalThread.id)
-        ],
-        { revalidate: true }
-      );
-    })();
+    clearStreamingTitle(assistantId);
+    await refresh(
+      (current: StorageThreadType[] = []) => [
+        finalThread,
+        ...current.filter((t) => t.id !== finalThread.id)
+      ],
+      { revalidate: true }
+    );
   };
 
   const runtime = useChatRuntime({
@@ -175,7 +177,7 @@ export function useMastraRuntime({
       }
     }),
     messages: initialMessages,
-    onFinish: onNewThreadFirstFinish
+    onFinish: (...args) => void onNewThreadFirstFinish(...args)
   });
 
   return runtime;
