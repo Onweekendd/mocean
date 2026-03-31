@@ -60,14 +60,14 @@ export function AddServerDialog({ open, onOpenChange }: AddServerDialogProps) {
     envVars,
     showBaseUrl,
     showCommand,
-    handleAddArg,
-    handleRemoveArg,
-    handleArgChange,
-    handleAddEnvVar,
-    handleRemoveEnvVar,
-    handleEnvVarChange,
+    onAddArg,
+    onRemoveArg,
+    onArgChange,
+    onAddEnvVar,
+    onRemoveEnvVar,
+    onEnvVarChange,
     togglePasswordVisibility,
-    handleSubmit
+    onSubmit
   } = useAddServerForm({ onOpenChange });
 
   return (
@@ -94,10 +94,10 @@ export function AddServerDialog({ open, onOpenChange }: AddServerDialogProps) {
                   }}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Server Name</FormLabel>
+                      <FormLabel>服务名称</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="e.g. My Research Server"
+                          placeholder="例如：我的研究服务"
                           {...field}
                           className={cn(
                             errors.serverName &&
@@ -118,7 +118,7 @@ export function AddServerDialog({ open, onOpenChange }: AddServerDialogProps) {
                   name="serverType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Type</FormLabel>
+                      <FormLabel>类型</FormLabel>
                       <Select
                         value={field.value}
                         onValueChange={field.onChange}
@@ -162,10 +162,10 @@ export function AddServerDialog({ open, onOpenChange }: AddServerDialogProps) {
                   }}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Command</FormLabel>
+                      <FormLabel>命令</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="e.g. node /path/to/mcp-server.js"
+                          placeholder="例如：node /path/to/mcp-server.js"
                           {...field}
                           className={cn(
                             errors.command &&
@@ -174,7 +174,7 @@ export function AddServerDialog({ open, onOpenChange }: AddServerDialogProps) {
                         />
                       </FormControl>
                       <p className="text-xs text-muted-foreground">
-                        The executable command to start the MCP server
+                        MCP 服务的可执行命令
                       </p>
                       {errors.command?.message && (
                         <p className="text-xs text-red-600 dark:text-red-400">
@@ -196,10 +196,10 @@ export function AddServerDialog({ open, onOpenChange }: AddServerDialogProps) {
                   }}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Base URL</FormLabel>
+                      <FormLabel>服务地址</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="e.g. https://your-mcp-server.com/sse"
+                          placeholder="例如：https://your-mcp-server.com/sse"
                           {...field}
                           className={cn(
                             errors.baseUrl &&
@@ -208,7 +208,7 @@ export function AddServerDialog({ open, onOpenChange }: AddServerDialogProps) {
                         />
                       </FormControl>
                       <p className="text-xs text-muted-foreground">
-                        The SSE endpoint URL of the MCP server
+                        MCP 服务的 SSE 端点地址
                       </p>
                       {errors.baseUrl?.message && (
                         <p className="text-xs text-red-600 dark:text-red-400">
@@ -222,10 +222,10 @@ export function AddServerDialog({ open, onOpenChange }: AddServerDialogProps) {
 
               {/* Row 4: Arguments */}
               <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">Arguments</span>
+                <div className="flex items-center gap-1">
+                  <span className="font-medium">参数</span>
                   <span className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
-                    Optional
+                    可选
                   </span>
                 </div>
                 <div className="overflow-hidden rounded-md border">
@@ -242,10 +242,10 @@ export function AddServerDialog({ open, onOpenChange }: AddServerDialogProps) {
                     >
                       <GripVertical className="h-4 w-4 cursor-grab text-muted-foreground" />
                       <Input
-                        placeholder="KEY"
+                        placeholder="key"
                         value={arg.key}
                         onChange={(e) =>
-                          handleArgChange(arg.id, "key", e.target.value)
+                          onArgChange(arg.id, "key", e.target.value)
                         }
                         className="h-8 text-sm"
                       />
@@ -253,7 +253,7 @@ export function AddServerDialog({ open, onOpenChange }: AddServerDialogProps) {
                         placeholder="value"
                         value={arg.value}
                         onChange={(e) =>
-                          handleArgChange(arg.id, "value", e.target.value)
+                          onArgChange(arg.id, "value", e.target.value)
                         }
                         className="h-8 text-sm"
                       />
@@ -261,7 +261,7 @@ export function AddServerDialog({ open, onOpenChange }: AddServerDialogProps) {
                         variant="ghost"
                         size="icon"
                         className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                        onClick={() => handleRemoveArg(arg.id)}
+                        onClick={() => onRemoveArg(arg.id)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -272,21 +272,19 @@ export function AddServerDialog({ open, onOpenChange }: AddServerDialogProps) {
                   variant="ghost"
                   size="sm"
                   className="w-fit text-muted-foreground"
-                  onClick={handleAddArg}
+                  onClick={onAddArg}
                 >
                   <Plus className="mr-1 h-4 w-4" />
-                  Add Argument
+                  添加参数
                 </Button>
               </div>
 
               {/* Row 5: Environment Variables */}
               <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">
-                    Environment Variables
-                  </span>
+                <div className="flex items-center gap-1">
+                  <span className="font-medium">环境变量</span>
                   <span className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
-                    Optional
+                    可选
                   </span>
                 </div>
                 <div className="overflow-hidden rounded-md border">
@@ -301,10 +299,10 @@ export function AddServerDialog({ open, onOpenChange }: AddServerDialogProps) {
                       className="grid grid-cols-[1fr_1fr_auto] items-center gap-2 border-t px-3 py-2"
                     >
                       <Input
-                        placeholder="KEY"
+                        placeholder="key"
                         value={envVar.key}
                         onChange={(e) =>
-                          handleEnvVarChange(envVar.id, "key", e.target.value)
+                          onEnvVarChange(envVar.id, "key", e.target.value)
                         }
                         className="h-8 text-sm"
                       />
@@ -314,7 +312,7 @@ export function AddServerDialog({ open, onOpenChange }: AddServerDialogProps) {
                           type={showPassword[envVar.id] ? "text" : "password"}
                           value={envVar.value}
                           onChange={(e) =>
-                            handleEnvVarChange(
+                            onEnvVarChange(
                               envVar.id,
                               "value",
                               e.target.value
@@ -339,7 +337,7 @@ export function AddServerDialog({ open, onOpenChange }: AddServerDialogProps) {
                         variant="ghost"
                         size="icon"
                         className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                        onClick={() => handleRemoveEnvVar(envVar.id)}
+                        onClick={() => onRemoveEnvVar(envVar.id)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -350,10 +348,10 @@ export function AddServerDialog({ open, onOpenChange }: AddServerDialogProps) {
                   variant="ghost"
                   size="sm"
                   className="w-fit text-muted-foreground"
-                  onClick={handleAddEnvVar}
+                  onClick={onAddEnvVar}
                 >
                   <Plus className="mr-1 h-4 w-4" />
-                  Add Environment Variable
+                  添加环境变量
                 </Button>
               </div>
 
@@ -366,7 +364,7 @@ export function AddServerDialog({ open, onOpenChange }: AddServerDialogProps) {
                       advancedOpen && "rotate-90"
                     )}
                   />
-                  Advanced Settings
+                  高级设置
                 </CollapsibleTrigger>
                 <CollapsibleContent className="pt-4">
                   <div className="flex flex-col gap-4 pl-6">
@@ -375,7 +373,7 @@ export function AddServerDialog({ open, onOpenChange }: AddServerDialogProps) {
                       name="timeout"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Timeout (seconds)</FormLabel>
+                          <FormLabel>超时时间（秒）</FormLabel>
                           <FormControl>
                             <Input type="number" className="w-32" {...field} />
                           </FormControl>
@@ -387,10 +385,10 @@ export function AddServerDialog({ open, onOpenChange }: AddServerDialogProps) {
                       name="tags"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Tags</FormLabel>
+                          <FormLabel>标签</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="e.g. search, browser (comma separated)"
+                              placeholder="例如：搜索、浏览器（逗号分隔）"
                               {...field}
                             />
                           </FormControl>
@@ -407,11 +405,14 @@ export function AddServerDialog({ open, onOpenChange }: AddServerDialogProps) {
         {/* Fixed Bottom Action Bar */}
         <div className="flex shrink-0 items-center justify-between border-t bg-background px-6 py-4">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            取消
           </Button>
-          <Button onClick={handleSubmit}>
+          <Button
+            onClick={onSubmit}
+            className=": :hover:bg-brand-primary-600 :focus-visible:ring-brand-primary-600 bg-brand-primary-500"
+          >
             <Plus className="mr-1 h-4 w-4" />
-            Create Server
+            添加服务
           </Button>
         </div>
       </DialogContent>

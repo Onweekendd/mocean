@@ -187,6 +187,27 @@ export const agentFactory = {
 };
 
 /**
+ * AgentGroup 数据工厂
+ */
+export const agentGroupFactory = {
+  build: (
+    overrides?: Record<string, unknown>
+  ) => ({
+    name: `test-group-${Date.now()}`,
+    label: "测试分组",
+    ...overrides
+  }),
+
+  create: async (
+    prisma: PrismaClient,
+    overrides?: Record<string, unknown>
+  ) => {
+    const data = agentGroupFactory.build(overrides);
+    return prisma.agentGroup.create({ data });
+  }
+};
+
+/**
  * MCPServer 数据工厂
  */
 export const mcpServerFactory = {

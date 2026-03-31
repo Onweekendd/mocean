@@ -3,11 +3,15 @@ import { z } from "zod";
 
 import { PREFIX } from "../api/base-client";
 import {
+  AgentGroupResponseSchema,
   AgentGroupsResponseSchema,
   AgentResponseSchema,
   AgentWithSettingsResponseSchema,
   AgentsResponseSchema,
+  agentGroupRelationSchema,
+  createAgentGroupSchema,
   createAgentSchema,
+  updateAgentGroupSchema,
   updateAgentSchema
 } from "../schema/agent";
 import {
@@ -270,6 +274,20 @@ export const agentRoutes = {
     path: `${PREFIX}/agents/groups`,
     responseSchema: AgentGroupsResponseSchema
   },
+  createAgentGroup: {
+    path: `${PREFIX}/agents/groups`,
+    requestSchema: createAgentGroupSchema,
+    responseSchema: AgentGroupResponseSchema
+  },
+  updateAgentGroup: {
+    path: `${PREFIX}/agents/groups/:id`,
+    requestSchema: updateAgentGroupSchema,
+    responseSchema: AgentGroupResponseSchema
+  },
+  deleteAgentGroup: {
+    path: `${PREFIX}/agents/groups/:id`,
+    responseSchema: AgentGroupResponseSchema
+  },
   getAgentById: {
     path: `${PREFIX}/agents/:id`,
     responseSchema: AgentWithSettingsResponseSchema.nullable()
@@ -291,6 +309,16 @@ export const agentRoutes = {
   getAgentByGroup: {
     path: `${PREFIX}/agents/group/:group`,
     responseSchema: AgentsResponseSchema
+  },
+  addAgentToGroup: {
+    path: `${PREFIX}/agents/group-relations`,
+    requestSchema: agentGroupRelationSchema,
+    responseSchema: AgentWithSettingsResponseSchema
+  },
+  removeAgentFromGroup: {
+    path: `${PREFIX}/agents/group-relations`,
+    requestSchema: agentGroupRelationSchema,
+    responseSchema: AgentWithSettingsResponseSchema
   }
 } as const;
 

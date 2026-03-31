@@ -2,6 +2,8 @@ import { useState } from "react";
 
 import { useForm } from "react-hook-form";
 
+import { useMcpServerActions } from "./useMcpSWR";
+
 interface KeyValuePair {
   id: string;
   key: string;
@@ -26,6 +28,7 @@ interface UseAddServerFormProps {
 export function useAddServerForm({ onOpenChange }: UseAddServerFormProps) {
   const [showPassword, setShowPassword] = useState<Record<string, boolean>>({});
   const [advancedOpen, setAdvancedOpen] = useState(false);
+  const { create } = useMcpServerActions();
 
   const form = useForm<FormData>({
     defaultValues: {
@@ -33,11 +36,8 @@ export function useAddServerForm({ onOpenChange }: UseAddServerFormProps) {
       serverType: "stdio",
       command: "",
       baseUrl: "",
-      args: [
-        { id: "1", key: "--config", value: "/conf/research.json" },
-        { id: "2", key: "", value: "" }
-      ],
-      envVars: [{ id: "1", key: "API_KEY", value: "sk-xxxxx" }],
+      args: [],
+      envVars: [],
       timeout: "30",
       tags: ""
     },
@@ -51,32 +51,28 @@ export function useAddServerForm({ onOpenChange }: UseAddServerFormProps) {
   const showBaseUrl = serverType === "sse" || serverType === "streamableHttp";
   const showCommand = serverType === "stdio";
 
-  // Validation function for serverName
   const validateServerName = (value: string) => {
     if (!value.trim()) {
-      return "Server name is required";
+      return "请输入服务名称";
     }
     return true;
   };
 
-  // Validation function for command
   const validateCommand = (value: string) => {
     if (serverType === "stdio" && !value.trim()) {
-      return "Command is required for stdio type";
+      return "stdio 类型必须填写命令";
     }
     return true;
   };
 
-  // Validation function for baseUrl
   const validateBaseUrl = (value: string) => {
     if (showBaseUrl && !value.trim()) {
-      return "Base URL is required for this server type";
+      return "此服务类型必须填写服务地址";
     }
     return true;
   };
 
-  // Args handlers
-  const handleAddArg = () => {
+  const onAddArg = () => {
     const currentArgs = form.getValues("args");
     form.setValue("args", [
       ...currentArgs,
@@ -84,7 +80,7 @@ export function useAddServerForm({ onOpenChange }: UseAddServerFormProps) {
     ]);
   };
 
-  const handleRemoveArg = (id: string) => {
+  const onRemoveArg = (id: string) => {
     const currentArgs = form.getValues("args");
     form.setValue(
       "args",
@@ -92,11 +88,7 @@ export function useAddServerForm({ onOpenChange }: UseAddServerFormProps) {
     );
   };
 
-  const handleArgChange = (
-    id: string,
-    field: "key" | "value",
-    value: string
-  ) => {
+  const onArgChange = (id: string, field: "key" | "value", value: string) => {
     const currentArgs = form.getValues("args");
     form.setValue(
       "args",
@@ -106,8 +98,7 @@ export function useAddServerForm({ onOpenChange }: UseAddServerFormProps) {
     );
   };
 
-  // Env vars handlers
-  const handleAddEnvVar = () => {
+  const onAddEnvVar = () => {
     const currentEnvVars = form.getValues("envVars");
     form.setValue("envVars", [
       ...currentEnvVars,
@@ -115,7 +106,7 @@ export function useAddServerForm({ onOpenChange }: UseAddServerFormProps) {
     ]);
   };
 
-  const handleRemoveEnvVar = (id: string) => {
+  const onRemoveEnvVar = (id: string) => {
     const currentEnvVars = form.getValues("envVars");
     form.setValue(
       "envVars",
@@ -123,7 +114,7 @@ export function useAddServerForm({ onOpenChange }: UseAddServerFormProps) {
     );
   };
 
-  const handleEnvVarChange = (
+  const onEnvVarChange = (
     id: string,
     field: "key" | "value",
     value: string
@@ -139,14 +130,14 @@ export function useAddServerForm({ onOpenChange }: UseAddServerFormProps) {
     setShowPassword((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const handleSubmit = () => {
+  const onSubmit = async () => {
     const values = form.getValues();
 
     // Validate server name
     if (!values.serverName.trim()) {
       form.setError("serverName", {
         type: "required",
-        message: "Server name is required"
+        message: "请输入服务名称"
       });
       return;
     }
@@ -155,7 +146,7 @@ export function useAddServerForm({ onOpenChange }: UseAddServerFormProps) {
     if (values.serverType === "stdio" && !values.command.trim()) {
       form.setError("command", {
         type: "required",
-        message: "Command is required for stdio type"
+        message: "stdio 类型必须填写命令"
       });
       return;
     }
@@ -167,12 +158,43 @@ export function useAddServerForm({ onOpenChange }: UseAddServerFormProps) {
     ) {
       form.setError("baseUrl", {
         type: "required",
-        message: "Base URL is required for this server type"
+        message: "此服务类型必须填写服务地址"
       });
       return;
     }
 
-    // All validations passed
+    // Convert args to JSON object
+    const argsObj: Record<string, string> = {};
+    for (const arg of values.args) {
+      if (arg.key.trim()) {
+        argsObj[arg.key] = arg.value;
+      }
+    }
+
+    // Convert envVars to JSON object
+    const envObj: Record<string, string> = {};
+    for (const envVar of values.envVars) {
+      if (envVar.key.trim()) {
+        envObj[envVar.key] = envVar.value;
+      }
+    }
+
+    await create({
+      name: values.serverName.trim(),
+      type: values.serverType,
+      command: values.command.trim() || undefined,
+      baseUrl: values.baseUrl.trim() || undefined,
+      argsJson: Object.keys(argsObj).length > 0 ? argsObj : undefined,
+      env: Object.keys(envObj).length > 0 ? envObj : undefined,
+      tagsJson: values.tags.trim()
+        ? values.tags
+            .split(",")
+            .map((t) => t.trim())
+            .filter(Boolean)
+        : undefined,
+      timeout: values.timeout ? parseInt(values.timeout, 10) : undefined
+    });
+
     onOpenChange(false);
   };
 
@@ -196,14 +218,14 @@ export function useAddServerForm({ onOpenChange }: UseAddServerFormProps) {
     showBaseUrl,
     showCommand,
     // Handlers
-    handleAddArg,
-    handleRemoveArg,
-    handleArgChange,
-    handleAddEnvVar,
-    handleRemoveEnvVar,
-    handleEnvVarChange,
+    onAddArg,
+    onRemoveArg,
+    onArgChange,
+    onAddEnvVar,
+    onRemoveEnvVar,
+    onEnvVarChange,
     togglePasswordVisibility,
-    handleSubmit
+    onSubmit
   };
 }
 

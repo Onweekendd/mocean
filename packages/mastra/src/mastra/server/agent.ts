@@ -1,7 +1,12 @@
 import type z from "zod";
 
 import type { agentRoutes } from "../router/type";
-import type { CreateAgentInput, UpdateAgentInput } from "../schema/agent";
+import type {
+  CreateAgentGroupInput,
+  CreateAgentInput,
+  UpdateAgentGroupInput,
+  UpdateAgentInput
+} from "../schema/agent";
 import { prisma } from "./index";
 import type { AsyncReturnType } from "./type";
 
@@ -209,6 +214,128 @@ const getAgentWithSettingsByAgentId = async (agentId: string) => {
   return agent;
 };
 
+// ─── AgentGroup CRUD ────────────────────────────────
+
+/**
+ * 创建新的智能体分组
+ * @param input - 包含分组名称和标签的对象
+ */
+const createAgentGroup = async (
+  input: CreateAgentGroupInput
+): Promise<
+  z.infer<(typeof agentRoutes)["createAgentGroup"]["responseSchema"]>
+> => {
+  return prisma.agentGroup.create({
+    data: {
+      ...input,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+  });
+};
+
+/**
+ * 更新智能体分组信息
+ * @param id - 分组ID
+ * @param input - 包含更新信息的对象
+ */
+const updateAgentGroup = async (
+  id: string,
+  input: UpdateAgentGroupInput
+): Promise<
+  z.infer<(typeof agentRoutes)["updateAgentGroup"]["responseSchema"]>
+> => {
+  const data = Object.fromEntries(
+    Object.entries(input).filter(([_, v]) => v !== undefined)
+  );
+  return prisma.agentGroup.update({
+    where: { id },
+    data: { ...data, updatedAt: new Date() }
+  });
+};
+
+/**
+ * 删除智能体分组
+ * @param id - 分组ID
+ * @throws 如果分组下还有智能体，拒绝删除
+ */
+const deleteAgentGroup = async (
+  id: string
+): Promise<
+  z.infer<(typeof agentRoutes)["deleteAgentGroup"]["responseSchema"]>
+> => {
+  const group = await prisma.agentGroup.findUnique({
+    where: { id },
+    include: { agents: { take: 1 } }
+  });
+
+  if (!group) {
+    throw new Error("分组不存在");
+  }
+
+  if (group.agents.length > 0) {
+    throw new Error("该分组下还有智能体，无法删除");
+  }
+
+  return prisma.agentGroup.delete({ where: { id } });
+};
+
+// ─── Agent-Group 关系管理 ────────────────────────────
+
+/**
+ * 将智能体添加到分组
+ * @param agentId - 智能体ID
+ * @param groupId - 分组ID
+ */
+const addAgentToGroup = async (
+  agentId: string,
+  groupId: string
+): Promise<
+  z.infer<(typeof agentRoutes)["addAgentToGroup"]["responseSchema"]>
+> => {
+  const agent = await prisma.agent.findUnique({ where: { id: agentId } });
+  if (!agent) {
+    throw new Error("智能体不存在");
+  }
+
+  const group = await prisma.agentGroup.findUnique({
+    where: { id: groupId }
+  });
+  if (!group) {
+    throw new Error("分组不存在");
+  }
+
+  await prisma.agentAgentGroup.create({
+    data: { agentId, agentGroupId: groupId }
+  });
+
+  return prisma.agent.findUnique({
+    where: { id: agentId },
+    include: { ...agentGroupsInclude, topics: true }
+  });
+};
+
+/**
+ * 将智能体从分组中移除
+ * @param agentId - 智能体ID
+ * @param groupId - 分组ID
+ */
+const removeAgentFromGroup = async (
+  agentId: string,
+  groupId: string
+): Promise<
+  z.infer<(typeof agentRoutes)["removeAgentFromGroup"]["responseSchema"]>
+> => {
+  await prisma.agentAgentGroup.delete({
+    where: { agentId_agentGroupId: { agentId, agentGroupId: groupId } }
+  });
+
+  return prisma.agent.findUnique({
+    where: { id: agentId },
+    include: { ...agentGroupsInclude, topics: true }
+  });
+};
+
 /**
  * Prisma 数据库操作返回类型
  */
@@ -227,7 +354,7 @@ export type AgentsByGroupResult = AsyncReturnType<typeof getAgentByGroup>;
 
 export type AgentGroupsResult = Awaited<ReturnType<typeof getAgentGroups>>;
 
-export type { CreateAgentInput };
+export type { CreateAgentInput, CreateAgentGroupInput, UpdateAgentGroupInput };
 
 export {
   getAgents,
@@ -237,5 +364,10 @@ export {
   createAgent,
   updateAgent,
   deleteAgent,
-  getAgentWithSettingsByAgentId
+  getAgentWithSettingsByAgentId,
+  createAgentGroup,
+  updateAgentGroup,
+  deleteAgentGroup,
+  addAgentToGroup,
+  removeAgentFromGroup
 };

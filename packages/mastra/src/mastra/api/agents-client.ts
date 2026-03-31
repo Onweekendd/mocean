@@ -2,7 +2,12 @@
 import type { z } from "zod";
 
 import { agentRoutes } from "../router/type";
-import type { CreateAgentInput, UpdateAgentInput } from "../schema/agent";
+import type {
+  CreateAgentGroupInput,
+  CreateAgentInput,
+  UpdateAgentGroupInput,
+  UpdateAgentInput
+} from "../schema/agent";
 import type { ApiClientConfig, ApiResponse } from "./base-client";
 import { BaseApiClient } from "./base-client";
 
@@ -119,6 +124,84 @@ export class AgentsApiClient extends BaseApiClient {
       z.infer<(typeof agentRoutes)["getAgentGroups"]["responseSchema"]>
     >(agentRoutes.getAgentGroups.path);
   }
+
+  /**
+   * 创建智能体分组
+   */
+  async createAgentGroup(
+    data: CreateAgentGroupInput
+  ): Promise<
+    ApiResponse<
+      z.infer<(typeof agentRoutes)["createAgentGroup"]["responseSchema"]>
+    >
+  > {
+    return this.post<
+      z.infer<(typeof agentRoutes)["createAgentGroup"]["responseSchema"]>
+    >(agentRoutes.createAgentGroup.path, data);
+  }
+
+  /**
+   * 更新智能体分组
+   */
+  async updateAgentGroup(
+    id: string,
+    data: UpdateAgentGroupInput
+  ): Promise<
+    ApiResponse<
+      z.infer<(typeof agentRoutes)["updateAgentGroup"]["responseSchema"]>
+    >
+  > {
+    return this.put<
+      z.infer<(typeof agentRoutes)["updateAgentGroup"]["responseSchema"]>
+    >(agentRoutes.updateAgentGroup.path.replace(":id", id), data);
+  }
+
+  /**
+   * 删除智能体分组
+   */
+  async deleteAgentGroup(
+    id: string
+  ): Promise<
+    ApiResponse<
+      z.infer<(typeof agentRoutes)["deleteAgentGroup"]["responseSchema"]>
+    >
+  > {
+    return this.delete<
+      z.infer<(typeof agentRoutes)["deleteAgentGroup"]["responseSchema"]>
+    >(agentRoutes.deleteAgentGroup.path.replace(":id", id));
+  }
+
+  /**
+   * 将智能体添加到分组
+   */
+  async addAgentToGroup(
+    agentId: string,
+    groupId: string
+  ): Promise<
+    ApiResponse<
+      z.infer<(typeof agentRoutes)["addAgentToGroup"]["responseSchema"]>
+    >
+  > {
+    return this.post<
+      z.infer<(typeof agentRoutes)["addAgentToGroup"]["responseSchema"]>
+    >(agentRoutes.addAgentToGroup.path, { agentId, groupId });
+  }
+
+  /**
+   * 将智能体从分组中移除
+   */
+  async removeAgentFromGroup(
+    agentId: string,
+    groupId: string
+  ): Promise<
+    ApiResponse<
+      z.infer<(typeof agentRoutes)["removeAgentFromGroup"]["responseSchema"]>
+    >
+  > {
+    return this.delete<
+      z.infer<(typeof agentRoutes)["removeAgentFromGroup"]["responseSchema"]>
+    >(agentRoutes.removeAgentFromGroup.path, { agentId, groupId });
+  }
 }
 
 /**
@@ -134,11 +217,20 @@ export const agentsApiMethods = {
   getAgents: () => agentsApi.getAgents(),
   getAgentById: (id: string) => agentsApi.getAgentById(id),
   getAgentGroups: () => agentsApi.getAgentGroups(),
+  createAgentGroup: (data: CreateAgentGroupInput) =>
+    agentsApi.createAgentGroup(data),
+  updateAgentGroup: (id: string, data: UpdateAgentGroupInput) =>
+    agentsApi.updateAgentGroup(id, data),
+  deleteAgentGroup: (id: string) => agentsApi.deleteAgentGroup(id),
   createAgent: (agent: CreateAgentInput) => agentsApi.createAgent(agent),
   updateAgent: (id: string, agent: UpdateAgentInput) =>
     agentsApi.updateAgent(id, agent),
   deleteAgent: (id: string) => agentsApi.deleteAgent(id),
-  getAgentByGroup: (groupId: string) => agentsApi.getAgentByGroup(groupId)
+  getAgentByGroup: (groupId: string) => agentsApi.getAgentByGroup(groupId),
+  addAgentToGroup: (agentId: string, groupId: string) =>
+    agentsApi.addAgentToGroup(agentId, groupId),
+  removeAgentFromGroup: (agentId: string, groupId: string) =>
+    agentsApi.removeAgentFromGroup(agentId, groupId)
 };
 
 /**
@@ -154,6 +246,11 @@ export type UseAgentsApiReturn = Pick<
   | "updateAgent"
   | "deleteAgent"
   | "getAgentByGroup"
+  | "createAgentGroup"
+  | "updateAgentGroup"
+  | "deleteAgentGroup"
+  | "addAgentToGroup"
+  | "removeAgentFromGroup"
 >;
 
 /**
@@ -188,6 +285,21 @@ export const useAgentsApi = (): UseAgentsApiReturn => {
     ) as UseAgentsApiReturn["deleteAgent"],
     getAgentByGroup: agentsApi.getAgentByGroup.bind(
       agentsApi
-    ) as UseAgentsApiReturn["getAgentByGroup"]
+    ) as UseAgentsApiReturn["getAgentByGroup"],
+    createAgentGroup: agentsApi.createAgentGroup.bind(
+      agentsApi
+    ) as UseAgentsApiReturn["createAgentGroup"],
+    updateAgentGroup: agentsApi.updateAgentGroup.bind(
+      agentsApi
+    ) as UseAgentsApiReturn["updateAgentGroup"],
+    deleteAgentGroup: agentsApi.deleteAgentGroup.bind(
+      agentsApi
+    ) as UseAgentsApiReturn["deleteAgentGroup"],
+    addAgentToGroup: agentsApi.addAgentToGroup.bind(
+      agentsApi
+    ) as UseAgentsApiReturn["addAgentToGroup"],
+    removeAgentFromGroup: agentsApi.removeAgentFromGroup.bind(
+      agentsApi
+    ) as UseAgentsApiReturn["removeAgentFromGroup"]
   };
 };

@@ -60,8 +60,32 @@ export const groupParamSchema = z.object({
 // Agent 分组列表 Response Schema - 返回分组对象数组
 export const AgentGroupsResponseSchema = z.array(AgentGroupSchema);
 
+// AgentGroup 单项 Response Schema
+export const AgentGroupResponseSchema = AgentGroupSchema;
+
+// AgentGroup 创建 Schema
+export const createAgentGroupSchema = AgentGroupSchema.pick({
+  name: true,
+  label: true
+}).extend({
+  name: z.string().min(1, "分组名称不能为空"),
+  label: z.string().min(1, "分组标签不能为空")
+});
+
+// AgentGroup 更新 Schema
+export const updateAgentGroupSchema = AgentGroupSchema.pick({
+  name: true,
+  label: true
+}).partial();
+
+// Agent-Group 关系操作 Schema
+export const agentGroupRelationSchema = z.object({
+  agentId: z.string().min(1, "智能体ID不能为空"),
+  groupId: z.string().min(1, "分组ID不能为空")
+});
+
 // zod类型推导
-
 export type CreateAgentInput = z.infer<typeof createAgentSchema>;
-
 export type UpdateAgentInput = z.infer<typeof updateAgentSchema>;
+export type CreateAgentGroupInput = z.infer<typeof createAgentGroupSchema>;
+export type UpdateAgentGroupInput = z.infer<typeof updateAgentGroupSchema>;
