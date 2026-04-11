@@ -36,6 +36,8 @@ async function* streamTitle(response: Response) {
   }
 }
 
+const DYNAMIC_AGENT_ID = "dynamic-agent";
+
 /**
  * mastra的兼容
  * @param param0
@@ -58,6 +60,8 @@ export function useMastraRuntime({
 
   const newThreadId = useRef<string | null>(null);
   const hasCreatedThread = useRef<string | null>(null);
+  // 缓存 createMemoryThread 的返回值，供 onNewThreadFirstFinish 使用
+  const newThreadRef = useRef<StorageThreadType | null>(null);
 
   const { refresh } = useAssistantThreadsSWR(activeAssistantId || null);
   const { generateTitleWithAssistant } = useAssistantsApi();
@@ -65,12 +69,16 @@ export function useMastraRuntime({
   const { mastraClient } = useMastraClient();
 
   /**
-   * 新建的对话第一次完成
+   * 新建的对话第一次完成后：生成标题并刷新列表
    */
   const onNewThreadFirstFinish = async (
     _options: Parameters<ChatOnFinishCallback<UIMessage>>[0]
   ): Promise<void> => {
-    if (!activeAssistantIdRef.current || !newThreadId.current) {
+    if (
+      !activeAssistantIdRef.current ||
+      !newThreadId.current ||
+      !newThreadRef.current
+    ) {
       return;
     }
 
@@ -82,12 +90,7 @@ export function useMastraRuntime({
 
     const threadId = newThreadId.current;
     const assistantId = activeAssistantIdRef.current;
-
-    const newThread = await mastraClient.createMemoryThread({
-      resourceId: assistantId,
-      threadId,
-      agentId: ""
-    });
+    const newThread = newThreadRef.current;
 
     setStreamingTitle(assistantId, newThread);
 
@@ -137,7 +140,7 @@ export function useMastraRuntime({
   const runtime = useChatRuntime({
     transport: new AssistantChatTransport({
       api,
-      prepareSendMessagesRequest: (requestParams) => {
+      prepareSendMessagesRequest: async (requestParams) => {
         const currentAssistantId = activeAssistantIdRef.current;
         const currentThread = activeThreadIdRef.current;
 
@@ -151,14 +154,23 @@ export function useMastraRuntime({
         }
 
         const { body, ...rest } = requestParams;
+
+        // 新对话：在发送消息前先创建 thread
         if (!currentThread) {
-          newThreadId.current = generateId();
+          const threadId = generateId();
+          newThreadId.current = threadId;
+
+          newThreadRef.current = await mastraClient.createMemoryThread({
+            resourceId: currentAssistantId,
+            threadId,
+            agentId: DYNAMIC_AGENT_ID
+          });
 
           return {
             ...rest,
             body: {
               ...(body || {}),
-              threadId: newThreadId.current,
+              threadId,
               assistantId: currentAssistantId,
               messages: requestParams.messages
             }

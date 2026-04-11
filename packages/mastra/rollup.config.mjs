@@ -71,7 +71,18 @@ export default [
     external,
     plugins: [dts()],
   },
-  // 2. schemas 导出 - 类型声明 (composed schema types)
+  // 2. schemas 导出 - 代码打包
+  {
+    input: "generated/schemas/composed/index.ts",
+    output: {
+      file: "dist/schemas.js",
+      format: "esm",
+      sourcemap: true,
+    },
+    external,
+    plugins: basePlugins,
+  },
+  // 2b. schemas 导出 - 类型声明 (composed schema types)
   {
     input: "generated/schemas/composed/index.ts",
     output: {
