@@ -4,12 +4,15 @@ import { useRouter } from "next/navigation";
 
 import type { StorageThreadType } from "@mocean/mastra/apiClient";
 
+import { toast } from "sonner";
+
 import { useStore } from "@/app/store/useStore";
 import {
   useAssistantSWR,
   useAssistantThreadsSWR,
   useAssistantUIMessageSWR
 } from "@/hooks/useAssistantsSWR";
+import { useMastraClient } from "@/hooks/useMastraClient";
 
 import ThreadList from "./thead/ThreadList";
 
@@ -31,6 +34,8 @@ const ThreadSelect: React.FC<ThreadSelectProps> = ({ onBack }) => {
   const { threads, refresh } = useAssistantThreadsSWR(
     activeAssistantId || null
   );
+
+  const { mastraClient } = useMastraClient();
 
   const streamingTitles = useStore((s) => s.streamingTitles);
 
@@ -72,6 +77,40 @@ const ThreadSelect: React.FC<ThreadSelectProps> = ({ onBack }) => {
     }
   };
 
+  const onRenameThread = useCallback(
+    async (thread: StorageThreadType, newTitle: string) => {
+      await mastraClient
+        .getMemoryThread({ threadId: thread.id, agentId: "dynamic-agent" })
+        .update({ title: newTitle });
+      await refresh();
+    },
+    [mastraClient, refresh]
+  );
+
+  const onDeleteThread = useCallback(
+    async (thread: StorageThreadType) => {
+      await mastraClient
+        .getMemoryThread({ threadId: thread.id, agentId: "dynamic-agent" })
+        .delete();
+      toast.success("对话已删除");
+      if (activeThread === thread.id) {
+        setActiveThread(null);
+        void refreshUIMessage();
+        router.push(`/${activeAssistantId}`);
+      }
+      await refresh();
+    },
+    [
+      mastraClient,
+      refresh,
+      activeThread,
+      activeAssistantId,
+      setActiveThread,
+      refreshUIMessage,
+      router
+    ]
+  );
+
   return (
     <div className="h-full w-full">
       <ThreadList
@@ -80,6 +119,8 @@ const ThreadSelect: React.FC<ThreadSelectProps> = ({ onBack }) => {
         assistantEmoji={assistant?.emoji || undefined}
         onCreateThread={onCreateThread}
         onThreadClick={onThreadClick}
+        onRenameThread={onRenameThread}
+        onDeleteThread={onDeleteThread}
         onBack={onBack}
       />
     </div>

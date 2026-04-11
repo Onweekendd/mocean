@@ -1,7 +1,25 @@
+import { useRef, useState } from "react";
+
 import type { StorageThreadType } from "@mocean/mastra/apiClient";
-import { ArrowLeft, Bot, MessageCircle } from "lucide-react";
+import { ArrowLeft, Bot, MessageCircle, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 
 import { useStore } from "@/app/store/useStore";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from "@/components/ui/alert-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
 interface ThreadListProps {
@@ -10,26 +28,126 @@ interface ThreadListProps {
   assistantEmoji?: string;
   onCreateThread?: () => void;
   onThreadClick?: (thread: StorageThreadType) => void;
+  onRenameThread?: (thread: StorageThreadType, newTitle: string) => void;
+  onDeleteThread?: (thread: StorageThreadType) => void;
   onBack?: () => void;
 }
 
 const ThreadItem: React.FC<{
   thread: StorageThreadType;
-  onClick: (thread: StorageThreadType) => void;
   isActive: boolean;
-}> = ({ thread, onClick, isActive }) => {
+  onClick: (thread: StorageThreadType) => void;
+  onRename: (thread: StorageThreadType, newTitle: string) => void;
+  onDelete: (thread: StorageThreadType) => void;
+}> = ({ thread, isActive, onClick, onRename, onDelete }) => {
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [renameValue, setRenameValue] = useState(thread.title ?? "");
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleRenameStart = () => {
+    setRenameValue(thread.title ?? "");
+    setIsRenaming(true);
+    setTimeout(() => inputRef.current?.focus(), 0);
+  };
+
+  const handleRenameSubmit = () => {
+    const trimmed = renameValue.trim();
+    if (trimmed && trimmed !== thread.title) {
+      onRename(thread, trimmed);
+    }
+    setIsRenaming(false);
+  };
+
+  const handleRenameKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") handleRenameSubmit();
+    if (e.key === "Escape") setIsRenaming(false);
+  };
+
   return (
-    <button
-      className={cn(
-        "group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[13px] transition-colors duration-150",
-        isActive
-          ? "bg-foreground/[0.06] font-medium text-foreground"
-          : "text-foreground/70 hover:bg-foreground/[0.04]"
-      )}
-      onClick={() => onClick(thread)}
-    >
-      <span className="truncate">{thread.title}</span>
-    </button>
+    <>
+      <div
+        className={cn(
+          "group flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-left text-[13px] transition-colors duration-150",
+          isActive
+            ? "bg-foreground/[0.06] font-medium text-foreground"
+            : "text-foreground/70 hover:bg-foreground/[0.04]"
+        )}
+        onClick={() => !isRenaming && onClick(thread)}
+      >
+        {isRenaming ? (
+          <input
+            ref={inputRef}
+            value={renameValue}
+            onChange={(e) => setRenameValue(e.target.value)}
+            onBlur={handleRenameSubmit}
+            onKeyDown={handleRenameKeyDown}
+            onClick={(e) => e.stopPropagation()}
+            className="flex-1 border-b border-foreground/30 bg-transparent py-0.5 outline-none"
+          />
+        ) : (
+          <span className="flex-1 truncate">{thread.title}</span>
+        )}
+
+        {!isRenaming && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="flex h-5 w-5 items-center justify-center rounded opacity-0 transition-opacity hover:bg-foreground/10 group-hover:opacity-100"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <MoreHorizontal className="h-3.5 w-3.5" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="w-40"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleRenameStart();
+                }}
+              >
+                <Pencil className="mr-2 h-3.5 w-3.5" />
+                重命名对话
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDeleteDialogOpen(true);
+                }}
+                className="text-destructive focus:text-destructive"
+              >
+                <Trash2 className="mr-2 h-3.5 w-3.5" />
+                删除对话
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </div>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>删除对话</AlertDialogTitle>
+            <AlertDialogDescription>
+              确定要删除「{thread.title}」吗？此操作无法撤销。
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>取消</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => onDelete(thread)}
+              className="bg-destructive hover:bg-destructive/90"
+            >
+              删除
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 };
 
@@ -38,6 +156,8 @@ const ThreadList: React.FC<ThreadListProps> = ({
   assistantName,
   assistantEmoji,
   onThreadClick,
+  onRenameThread,
+  onDeleteThread,
   onBack
 }) => {
   const { activeThreadId: activeThread } = useStore();
@@ -72,8 +192,10 @@ const ThreadList: React.FC<ThreadListProps> = ({
               <ThreadItem
                 key={thread.id}
                 thread={thread}
-                onClick={(t) => onThreadClick?.(t)}
                 isActive={activeThread === thread.id}
+                onClick={(t) => onThreadClick?.(t)}
+                onRename={(t, title) => onRenameThread?.(t, title)}
+                onDelete={(t) => onDeleteThread?.(t)}
               />
             ))
           ) : (

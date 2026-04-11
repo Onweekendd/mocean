@@ -12,7 +12,7 @@ export type {
   JsonValue
 } from "@mocean/mastra/json-types";
 
-export { API_URL } from "./base-client";
+export { API_URL, BASE_URL } from "./base-client";
 
 export { type StorageThreadType } from "@mastra/core/memory";
 
