@@ -16,6 +16,7 @@ import {
   getProvidersByType,
   getProvidersByTypeWithModels,
   getProvidersWithModels,
+  testProviderConnection,
   toggleProviderEnabled,
   updateProvider
 } from "../server/provider";
@@ -531,6 +532,40 @@ const getProvidersByModelWithModelsRouter = registerApiRoute(
   }
 );
 
+/**
+ * 测试提供商连通性的路由处理器
+ * @description 向提供商的 /v1/models 发送请求，验证 API Key 和 Host 是否有效
+ */
+const testProviderConnectionRouter = registerApiRoute(
+  providerRoutes.testProviderConnection.path,
+  {
+    method: "POST",
+    openapi: {
+      summary: "测试提供商连通性",
+      tags: ["Providers"],
+      responses: {
+        200: {
+          description: "返回连通性测试结果",
+          content: {
+            "application/json": {
+              // @ts-expect-error hono-openapi response schema type doesn't support ZodSchema
+              schema: providerRoutes["testProviderConnection"]["responseSchema"]
+            }
+          }
+        }
+      }
+    },
+    handler: async (c) => {
+      const body = providerRoutes["testProviderConnection"][
+        "requestSchema"
+      ].parse(await c.req.json());
+
+      const result = await testProviderConnection(body);
+      return c.json(result, 200);
+    }
+  }
+);
+
 // 导出所有路由
 // 注意：具体路径必须在参数化路径(:id)之前注册，否则会被错误匹配
 const providersRouter = [
@@ -545,6 +580,7 @@ const providersRouter = [
   getProvidersByModelRouter,
   getProvidersByModelWithModelsRouter,
   // 写操作（POST 不会与 GET :id 冲突）
+  testProviderConnectionRouter,
   createProviderRouter,
   // 参数化路径（:id）放最后
   getProviderByIdRouter,

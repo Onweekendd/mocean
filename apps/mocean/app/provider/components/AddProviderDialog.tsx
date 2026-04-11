@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, Server } from "lucide-react";
+import { CheckCircle2, Loader2, Plus, Server, XCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -37,7 +37,10 @@ export function AddProviderDialog({
     validateName,
     validateApiKey,
     validateApiHost,
-    onSubmit
+    onSubmit,
+    onTestConnection,
+    testStatus,
+    testMessage
   } = useAddProviderForm({ onOpenChange });
 
   return (
@@ -184,17 +187,52 @@ export function AddProviderDialog({
           </Form>
         </div>
 
-        <div className="flex shrink-0 items-center justify-between border-t bg-background px-6 py-4">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            取消
-          </Button>
-          <Button
-            onClick={onSubmit}
-            className="bg-brand-primary-500 hover:bg-brand-primary-600 focus-visible:ring-brand-primary-600"
-          >
-            <Plus className="mr-1 h-4 w-4" />
-            新增提供商
-          </Button>
+        <div className="flex shrink-0 flex-col gap-2 border-t bg-background px-6 py-4">
+          {testStatus !== "idle" && (
+            <div
+              className={cn(
+                "flex items-center gap-1.5 text-xs",
+                testStatus === "success"
+                  ? "text-green-600 dark:text-green-400"
+                  : testStatus === "error"
+                    ? "text-red-600 dark:text-red-400"
+                    : "text-muted-foreground"
+              )}
+            >
+              {testStatus === "testing" && (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              )}
+              {testStatus === "success" && (
+                <CheckCircle2 className="h-3.5 w-3.5" />
+              )}
+              {testStatus === "error" && <XCircle className="h-3.5 w-3.5" />}
+              {testStatus === "testing" ? "正在测试..." : testMessage}
+            </div>
+          )}
+          <div className="flex items-center justify-between">
+            <Button variant="outline" onClick={() => onOpenChange(false)}>
+              取消
+            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={onTestConnection}
+                disabled={testStatus === "testing"}
+              >
+                {testStatus === "testing" && (
+                  <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                )}
+                测试连通性
+              </Button>
+              <Button
+                onClick={onSubmit}
+                className="bg-brand-primary-500 hover:bg-brand-primary-600 focus-visible:ring-brand-primary-600"
+              >
+                <Plus className="mr-1 h-4 w-4" />
+                新增提供商
+              </Button>
+            </div>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

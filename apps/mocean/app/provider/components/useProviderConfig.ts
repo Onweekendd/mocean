@@ -1,6 +1,7 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import type { Provider } from "@mocean/mastra/prismaType";
+import { useProvidersApi } from "@mocean/mastra/apiClient";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -58,6 +59,8 @@ export const providerConfigSchema = z.object({
  * @param provider 供应商数据
  * @returns 表单方法和状态
  */
+type TestStatus = "idle" | "testing" | "success" | "error";
+
 export const useProviderConfig = ({
   provider,
   open,
@@ -65,6 +68,10 @@ export const useProviderConfig = ({
   onSuccess
 }: ProviderConfigDialogProps) => {
   const { update } = useProviderActions(onSuccess);
+  const { testProviderConnection } = useProvidersApi();
+
+  const [testStatus, setTestStatus] = useState<TestStatus>("idle");
+  const [testMessage, setTestMessage] = useState("");
 
   const form = useForm<ProviderConfigFormData>({
     resolver: zodResolver(providerConfigSchema),
@@ -132,12 +139,42 @@ export const useProviderConfig = ({
     [provider.id, update, onDialogOpenChange]
   );
 
+  const onTestConnection = async () => {
+    const values = form.getValues();
+    const apiHost = values.apiHost?.trim();
+
+    if (!apiHost) {
+      setTestStatus("error");
+      setTestMessage("请先填写 API 地址");
+      return;
+    }
+
+    setTestStatus("testing");
+    setTestMessage("");
+
+    const result = await testProviderConnection({
+      apiKey: values.apiKey?.trim() ?? "",
+      apiHost
+    });
+
+    if (result?.data?.success) {
+      setTestStatus("success");
+      setTestMessage(result.data.message);
+    } else {
+      setTestStatus("error");
+      setTestMessage(result?.data?.message ?? "连接失败");
+    }
+  };
+
   return {
     isSubmitting: formState.isSubmitting,
     provider,
     open,
     form,
     onDialogOpenChange,
-    onSubmit
+    onSubmit,
+    onTestConnection,
+    testStatus,
+    testMessage
   };
 };

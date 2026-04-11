@@ -5,6 +5,7 @@ import type z from "zod";
 import type { providerRoutes } from "../router/type";
 import {
   type CreateProviderInput,
+  type TestProviderConnectionInput,
   type UpdateProviderInput
 } from "../schema/provider";
 import { prisma } from "./index";
@@ -19,7 +20,6 @@ export function createProviderService(db: PrismaClient) {
   const getProviders = async (): Promise<
     z.infer<(typeof providerRoutes)["getProviders"]["responseSchema"]>
   > => {
-    console.log("getProviders");
     try {
       return await db.provider.findMany({
         orderBy: {
@@ -53,7 +53,10 @@ export function createProviderService(db: PrismaClient) {
       ...provider,
       models: provider.groups.flatMap((group) => group.models),
       _count: {
-        models: provider.groups.reduce((sum, group) => sum + group.models.length, 0)
+        models: provider.groups.reduce(
+          (sum, group) => sum + group.models.length,
+          0
+        )
       }
     }));
   };
@@ -96,7 +99,10 @@ export function createProviderService(db: PrismaClient) {
       ...provider,
       models: provider.groups.flatMap((group) => group.models),
       _count: {
-        models: provider.groups.reduce((sum, group) => sum + group.models.length, 0)
+        models: provider.groups.reduce(
+          (sum, group) => sum + group.models.length,
+          0
+        )
       }
     };
   };
@@ -137,7 +143,10 @@ export function createProviderService(db: PrismaClient) {
       ...provider,
       models: provider.groups.flatMap((group) => group.models),
       _count: {
-        models: provider.groups.reduce((sum, group) => sum + group.models.length, 0)
+        models: provider.groups.reduce(
+          (sum, group) => sum + group.models.length,
+          0
+        )
       }
     }));
   };
@@ -174,7 +183,10 @@ export function createProviderService(db: PrismaClient) {
       ...provider,
       models: provider.groups.flatMap((group) => group.models),
       _count: {
-        models: provider.groups.reduce((sum, group) => sum + group.models.length, 0)
+        models: provider.groups.reduce(
+          (sum, group) => sum + group.models.length,
+          0
+        )
       }
     }));
   };
@@ -231,7 +243,10 @@ export function createProviderService(db: PrismaClient) {
       ...provider,
       models: provider.groups.flatMap((group) => group.models),
       _count: {
-        models: provider.groups.reduce((sum, group) => sum + group.models.length, 0)
+        models: provider.groups.reduce(
+          (sum, group) => sum + group.models.length,
+          0
+        )
       }
     }));
   };
@@ -369,7 +384,44 @@ export function createProviderService(db: PrismaClient) {
     createProvider,
     updateProvider,
     deleteProvider,
-    toggleProviderEnabled
+    toggleProviderEnabled,
+
+    /**
+     * 测试提供商连通性
+     * 向 apiHost 发请求，验证 API Key 和 Host 是否有效
+     */
+    testProviderConnection: async ({
+      apiKey,
+      apiHost
+    }: TestProviderConnectionInput): Promise<{
+      success: boolean;
+      message: string;
+    }> => {
+      try {
+        const res = await fetch(`${apiHost}/models`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            "Content-Type": "application/json"
+          },
+          signal: AbortSignal.timeout(10000)
+        });
+
+        if (res.ok) {
+          return { success: true, message: "连接成功" };
+        }
+
+        const text = await res.text().catch(() => "");
+        return {
+          success: false,
+          message: `请求失败 (${res.status})：${text.slice(0, 200)}`
+        };
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "连接超时或网络错误";
+        return { success: false, message };
+      }
+    }
   };
 }
 
@@ -404,6 +456,8 @@ const updateProvider = (provider: UpdateProviderInput) =>
 const deleteProvider = (id: string) => getDefaultService().deleteProvider(id);
 const toggleProviderEnabled = (id: string) =>
   getDefaultService().toggleProviderEnabled(id);
+const testProviderConnection = (data: TestProviderConnectionInput) =>
+  getDefaultService().testProviderConnection(data);
 
 // 类型导出：从函数返回值推导
 export type ProviderResult = Awaited<ReturnType<typeof getProviderById>>;
@@ -456,5 +510,6 @@ export {
   createProvider,
   updateProvider,
   deleteProvider,
-  toggleProviderEnabled
+  toggleProviderEnabled,
+  testProviderConnection
 };

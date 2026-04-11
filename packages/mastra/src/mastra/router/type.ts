@@ -51,6 +51,7 @@ import {
   ProviderHierarchySchema,
   SimpleProvidersArraySchema,
   createProviderSchema,
+  testProviderConnectionSchema,
   updateProviderSchema
 } from "../schema/provider";
 
@@ -115,6 +116,11 @@ export const providerRoutes = {
   toggleProviderEnabled: {
     path: `${PREFIX}/providers/:id/toggle`,
     responseSchema: ProviderHierarchySchema
+  },
+  testProviderConnection: {
+    path: `${PREFIX}/providers/test-connection`,
+    requestSchema: testProviderConnectionSchema,
+    responseSchema: z.object({ success: z.boolean(), message: z.string() })
   }
 } as const;
 

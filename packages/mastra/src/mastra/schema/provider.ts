@@ -88,9 +88,19 @@ export const updateProviderSchema = ProviderSchema.pick({
     id: z.string().min(1, "提供商ID不能为空")
   });
 
+export const testProviderConnectionSchema = z.object({
+  apiKey: z.string(),
+  apiHost: z.string().refine((val) => isValidUrl(val), {
+    message: "API地址格式不正确"
+  })
+});
+
 // zod类型推导
 export type CreateProviderInput = z.infer<typeof createProviderSchema>;
 export type UpdateProviderInput = z.infer<typeof updateProviderSchema>;
+export type TestProviderConnectionInput = z.infer<
+  typeof testProviderConnectionSchema
+>;
 
 // 响应类型
 export type SimpleProvider = z.infer<typeof SimpleProvidersArraySchema>[number];

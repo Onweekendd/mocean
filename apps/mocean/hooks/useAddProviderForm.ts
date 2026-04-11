@@ -1,4 +1,7 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+
+import { useProvidersApi } from "@mocean/mastra/apiClient";
 
 import { useProviderActions } from "./useProvidersSWR";
 
@@ -14,8 +17,14 @@ interface UseAddProviderFormProps {
   onOpenChange: (open: boolean) => void;
 }
 
+type TestStatus = "idle" | "testing" | "success" | "error";
+
 export function useAddProviderForm({ onOpenChange }: UseAddProviderFormProps) {
   const { create } = useProviderActions();
+  const { testProviderConnection } = useProvidersApi();
+
+  const [testStatus, setTestStatus] = useState<TestStatus>("idle");
+  const [testMessage, setTestMessage] = useState("");
 
   const form = useForm<FormData>({
     defaultValues: {
@@ -42,12 +51,7 @@ export function useAddProviderForm({ onOpenChange }: UseAddProviderFormProps) {
     return true;
   };
 
-  const validateApiKey = (value: string) => {
-    if (!value.trim()) {
-      return "请输入 API 密钥";
-    }
-    return true;
-  };
+  const validateApiKey = () => true;
 
   const validateApiHost = (value: string) => {
     if (!value.trim()) {
@@ -61,6 +65,33 @@ export function useAddProviderForm({ onOpenChange }: UseAddProviderFormProps) {
     }
   };
 
+  const onTestConnection = async () => {
+    const values = form.getValues();
+    const apiHost = values.apiHost.trim();
+
+    if (!apiHost) {
+      setTestStatus("error");
+      setTestMessage("请先填写 API 地址");
+      return;
+    }
+
+    setTestStatus("testing");
+    setTestMessage("");
+
+    const result = await testProviderConnection({
+      apiKey: values.apiKey.trim(),
+      apiHost
+    });
+
+    if (result?.data?.success) {
+      setTestStatus("success");
+      setTestMessage(result.data.message);
+    } else {
+      setTestStatus("error");
+      setTestMessage(result?.data?.message ?? "连接失败");
+    }
+  };
+
   const onSubmit = async () => {
     const values = form.getValues();
 
@@ -70,10 +101,6 @@ export function useAddProviderForm({ onOpenChange }: UseAddProviderFormProps) {
     }
     if (!values.name.trim()) {
       form.setError("name", { type: "required", message: "请输入供应商名称" });
-      return;
-    }
-    if (!values.apiKey.trim()) {
-      form.setError("apiKey", { type: "required", message: "请输入 API 密钥" });
       return;
     }
     if (!values.apiHost.trim()) {
@@ -111,7 +138,10 @@ export function useAddProviderForm({ onOpenChange }: UseAddProviderFormProps) {
     validateName,
     validateApiKey,
     validateApiHost,
-    onSubmit
+    onSubmit,
+    onTestConnection,
+    testStatus,
+    testMessage
   };
 }
 

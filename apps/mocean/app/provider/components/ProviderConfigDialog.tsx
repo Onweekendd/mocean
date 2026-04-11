@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Loader2 } from "lucide-react";
+import { CheckCircle2, Loader2, XCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -29,8 +29,17 @@ import { useProviderConfig } from "./useProviderConfig";
 export const ProviderConfigDialog: React.FC<ProviderConfigDialogProps> = (
   props
 ) => {
-  const { isSubmitting, provider, open, form, onDialogOpenChange, onSubmit } =
-    useProviderConfig(props);
+  const {
+    isSubmitting,
+    provider,
+    open,
+    form,
+    onDialogOpenChange,
+    onSubmit,
+    onTestConnection,
+    testStatus,
+    testMessage
+  } = useProviderConfig(props);
 
   return (
     <Dialog open={open} onOpenChange={onDialogOpenChange}>
@@ -145,30 +154,65 @@ export const ProviderConfigDialog: React.FC<ProviderConfigDialogProps> = (
               />
             </div>
 
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onDialogOpenChange(false)}
-                disabled={isSubmitting}
-                className="bg-brand-slate-200/20 hover:bg-brand-slate-200/60"
-              >
-                取消
-              </Button>
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="bg-brand-primary-500 hover:bg-brand-primary-600"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    保存中...
-                  </>
-                ) : (
-                  "保存配置"
-                )}
-              </Button>
+            <DialogFooter className="flex-col gap-2 sm:flex-col">
+              {testStatus !== "idle" && (
+                <div
+                  className={
+                    testStatus === "success"
+                      ? "flex items-center gap-1.5 text-xs text-green-600 dark:text-green-400"
+                      : testStatus === "error"
+                        ? "flex items-center gap-1.5 text-xs text-red-600 dark:text-red-400"
+                        : "flex items-center gap-1.5 text-xs text-muted-foreground"
+                  }
+                >
+                  {testStatus === "testing" && (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  )}
+                  {testStatus === "success" && (
+                    <CheckCircle2 className="h-3.5 w-3.5" />
+                  )}
+                  {testStatus === "error" && (
+                    <XCircle className="h-3.5 w-3.5" />
+                  )}
+                  {testStatus === "testing" ? "正在测试..." : testMessage}
+                </div>
+              )}
+              <div className="flex justify-end gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => onDialogOpenChange(false)}
+                  disabled={isSubmitting}
+                  className="bg-brand-slate-200/20 hover:bg-brand-slate-200/60"
+                >
+                  取消
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={onTestConnection}
+                  disabled={testStatus === "testing"}
+                >
+                  {testStatus === "testing" && (
+                    <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                  )}
+                  测试连通性
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-brand-primary-500 hover:bg-brand-primary-600"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      保存中...
+                    </>
+                  ) : (
+                    "保存配置"
+                  )}
+                </Button>
+              </div>
             </DialogFooter>
           </form>
         </Form>

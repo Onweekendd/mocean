@@ -5,6 +5,7 @@ import type { z } from "zod";
 import { providerRoutes } from "../router/type";
 import type {
   CreateProviderInput,
+  TestProviderConnectionInput,
   UpdateProviderInput
 } from "../schema/provider";
 import type { ApiClientConfig, ApiResponse } from "./base-client";
@@ -260,6 +261,26 @@ export class ProvidersApiClient extends BaseApiClient {
   }
 
   /**
+   * 测试提供商连通性
+   * @description 向提供商的 /v1/models 发请求验证 API Key 和 Host 是否有效
+   */
+  async testProviderConnection(
+    data: TestProviderConnectionInput
+  ): Promise<
+    ApiResponse<
+      z.infer<
+        (typeof providerRoutes)["testProviderConnection"]["responseSchema"]
+      >
+    >
+  > {
+    return this.post<
+      z.infer<
+        (typeof providerRoutes)["testProviderConnection"]["responseSchema"]
+      >
+    >(providerRoutes.testProviderConnection.path, data);
+  }
+
+  /**
    * 切换提供商启用状态
    * @description 切换提供商的启用/禁用状态
    * @param id - 提供商的唯一标识符
@@ -317,7 +338,10 @@ export const providersApiMethods = {
   updateProvider: (id: string, providerData: UpdateProviderInput) =>
     providersApi.updateProvider(id, providerData),
   deleteProvider: (id: string) => providersApi.deleteProvider(id),
-  toggleProviderEnabled: (id: string) => providersApi.toggleProviderEnabled(id)
+  toggleProviderEnabled: (id: string) =>
+    providersApi.toggleProviderEnabled(id),
+  testProviderConnection: (data: TestProviderConnectionInput) =>
+    providersApi.testProviderConnection(data)
 };
 
 /**
@@ -343,6 +367,7 @@ export type UseProvidersApiReturn = Pick<
   | "updateProvider"
   | "deleteProvider"
   | "toggleProviderEnabled"
+  | "testProviderConnection"
 >;
 
 /**
@@ -406,6 +431,9 @@ export const useProvidersApi = (): UseProvidersApiReturn => {
     ) as UseProvidersApiReturn["deleteProvider"],
     toggleProviderEnabled: providersApi.toggleProviderEnabled.bind(
       providersApi
-    ) as UseProvidersApiReturn["toggleProviderEnabled"]
+    ) as UseProvidersApiReturn["toggleProviderEnabled"],
+    testProviderConnection: providersApi.testProviderConnection.bind(
+      providersApi
+    ) as UseProvidersApiReturn["testProviderConnection"]
   };
 };
