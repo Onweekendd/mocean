@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 
-import type { Provider } from "@mocean/mastra/prismaType";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useProvidersApi } from "@mocean/mastra/apiClient";
+import type { Provider } from "@mocean/mastra/prismaType";
+import { ProviderFullSchema } from "@mocean/mastra/schemas";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useProviderActions } from "@/hooks/useProvidersSWR";
 
@@ -23,42 +24,26 @@ export interface ProviderConfigDialogProps {
 }
 
 /**
- * 供应商配置表单数据
- */
-export type ProviderConfigFormData = {
-  name: string;
-  apiKey: string;
-  apiHost: string;
-  enabled: boolean;
-  notes: string;
-};
-
-/**
  * 供应商配置表单验证 Schema
  */
-export const providerConfigSchema = z.object({
-  name: z
-    .string()
-    .min(1, "供应商名称不能为空")
-    .trim()
-    .min(1, "供应商名称不能为空"),
-  apiKey: z.string().trim().optional(),
-  apiHost: z
-    .string()
-    .min(1, "API 接口地址不能为空")
-    .url("请输入有效的 URL")
-    .or(z.literal(""))
-    .transform((val) => val.trim())
-    .refine((val) => val !== "", { message: "API 接口地址不能为空" }),
+const providerConfigSchema = ProviderFullSchema.pick({
+  name: true,
+  apiKey: true,
+  apiHost: true,
+  enabled: true,
+  notes: true
+}).extend({
+  name: z.string().min(1, "供应商名称不能为空"),
+  apiHost: z.string().min(1, "API 接口地址不能为空").url("请输入有效的 URL"),
   enabled: z.boolean(),
-  notes: z.string().optional()
+  notes: z.string()
 });
 
 /**
- * 供应商配置表单 Hook
- * @param provider 供应商数据
- * @returns 表单方法和状态
+ * 供应商配置表单数据（从 schema 推导，确保类型一致）
  */
+export type ProviderConfigFormData = z.infer<typeof providerConfigSchema>;
+
 type TestStatus = "idle" | "testing" | "success" | "error";
 
 export const useProviderConfig = ({

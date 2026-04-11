@@ -86,7 +86,8 @@
       "Bash(pnpm prisma:*)",
       "Bash(pnpm test:run agent)",
       "Bash(pnpm import-agents:*)",
-      "Bash(dotenvx run -- npx tsx -e \":*)"
+      "Bash(dotenvx run -- npx tsx -e \":*)",
+      "WebFetch(domain:tecktol.com)"
     ],
     "deny": [],
     "ask": []

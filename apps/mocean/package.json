@@ -86,7 +86,7 @@
     "tailwindcss-animate": "^1.0.7",
     "tw-shimmer": "^0.4.6",
     "vaul": "^1.1.2",
-    "zod": "^4.1.8",
+    "zod": "^4.3.6",
     "zustand": "^5.0.5"
   },
   "devDependencies": {
