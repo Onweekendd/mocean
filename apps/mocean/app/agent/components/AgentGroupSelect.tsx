@@ -98,7 +98,7 @@ export const AgentGroupSelect: React.FC<AgentGroupSelectProps> = ({
           <Plus className="h-3.5 w-3.5" />
         </Button>
       </div>
-      <div className="flex-1 overflow-hidden pb-4">
+      <div className="flex-1 overflow-hidden">
         <ItemList
           items={groupList}
           renderItem={renderGroupItem}
