@@ -181,6 +181,7 @@ export function useAddServerForm({ onOpenChange }: UseAddServerFormProps) {
 
     await create({
       name: values.serverName.trim(),
+      isActive: true,
       type: values.serverType,
       command: values.command.trim() || undefined,
       baseUrl: values.baseUrl.trim() || undefined,

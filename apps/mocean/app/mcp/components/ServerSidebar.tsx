@@ -47,17 +47,21 @@ export function ServerSidebar({
   };
 
   return (
-    <aside className="flex h-full w-[18rem] shrink-0 flex-col bg-brand-main p-4">
-      <Button
-        variant="ghost"
-        className="mb-4 flex w-full items-center justify-start rounded-md border border-dashed text-brand-text/60"
-        onClick={() => setOpen(true)}
-      >
-        <Plus className="mr-1 h-4 w-4" />
-        新增服务
-      </Button>
+    <aside className="flex h-full w-[18rem] shrink-0 flex-col bg-brand-main">
+      <div className="group mt-2 flex items-center justify-between px-3 pt-4">
+        <span className="font-bold text-brand-text">MCP服务</span>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6 text-brand-text-muted hover:text-primary"
+          onClick={() => setOpen(true)}
+          title="新增服务"
+        >
+          <Plus className="h-3.5 w-3.5" />
+        </Button>
+      </div>
 
-      <div className="flex flex-1 flex-col gap-2 overflow-y-auto">
+      <div className="flex flex-1 flex-col gap-2 overflow-y-auto pb-4">
         {isLoading
           ? Array.from({ length: 4 }).map((_, i) => (
               <div

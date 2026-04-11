@@ -4,11 +4,14 @@ import { useState } from "react";
 
 import { useParams, useRouter } from "next/navigation";
 
+import { Plus } from "lucide-react";
 import { toast } from "sonner";
 
+import { AddAgentDialog } from "@/app/agent/components/AddAgentDialog";
 import { AgentList } from "@/app/agent/components/AgentList";
 import type { AgentWithGroups } from "@/app/agent/lib/parse-group-json";
 import { useStore } from "@/app/store/useStore";
+import { Button } from "@/components/ui/button";
 import { useAgentGroupsSWR, useAgentsByGroupSWR } from "@/hooks/useAgentsSWR";
 import { useAssistantActions } from "@/hooks/useAssistantsSWR";
 
@@ -27,6 +30,7 @@ export default function AgentTypePage() {
   const setActiveAssistantId = useStore((s) => s.setActiveAssistantId);
 
   const [isCreatingAssistant, setIsCreatingAssistant] = useState(false);
+  const [addAgentOpen, setAddAgentOpen] = useState(false);
 
   const onCreateAssistant = async (
     agent: AgentWithGroups
@@ -90,13 +94,30 @@ export default function AgentTypePage() {
   }
 
   return (
-    <AgentList
-      agents={agents as AgentWithGroups[]}
-      selectedGroup={currentGroup?.name ?? null}
-      isLoading={isLoading}
-      onCreateAssistant={onCreateAssistant}
-      isCreatingAssistant={isCreatingAssistant}
-      className="pb-16"
-    />
+    <>
+      <div className="flex items-center justify-end px-4 pt-4">
+        <Button
+          variant="ghost"
+          className="flex items-center justify-start rounded-md border border-dashed text-brand-text/60"
+          onClick={() => setAddAgentOpen(true)}
+        >
+          <Plus className="mr-1 h-4 w-4" />
+          新增 Agent
+        </Button>
+      </div>
+      <AgentList
+        agents={agents as AgentWithGroups[]}
+        selectedGroup={currentGroup?.name ?? null}
+        isLoading={isLoading}
+        onCreateAssistant={onCreateAssistant}
+        isCreatingAssistant={isCreatingAssistant}
+        className="pb-16"
+      />
+      <AddAgentDialog
+        open={addAgentOpen}
+        onOpenChange={setAddAgentOpen}
+        groupId={currentGroupId}
+      />
+    </>
   );
 }

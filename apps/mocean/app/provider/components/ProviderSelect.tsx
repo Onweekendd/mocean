@@ -1,11 +1,16 @@
 "use client";
 
+import { useState } from "react";
+
 import { useRouter } from "next/navigation";
 
 import { type Provider } from "@mocean/mastra/prismaType";
+import { Plus } from "lucide-react";
 
 import { ItemList } from "@/components/custom/item-list";
+import { Button } from "@/components/ui/button";
 
+import { AddProviderDialog } from "./AddProviderDialog";
 import { renderProviderAvatar } from "./CustomerIcon";
 
 export interface ProviderSelectProps {
@@ -24,6 +29,7 @@ export const ProviderSelect: React.FC<ProviderSelectProps> = ({
   selectedProviderId
 }) => {
   const router = useRouter();
+  const [open, setOpen] = useState<boolean>(false);
 
   /**
    * 处理提供商选择
@@ -91,6 +97,18 @@ export const ProviderSelect: React.FC<ProviderSelectProps> = ({
 
   return (
     <div className="flex h-full flex-col">
+      <div className="group mt-2 flex items-center justify-between px-3 pt-4">
+        <span className="font-bold text-brand-text">模型提供商</span>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6 text-brand-text-muted hover:text-primary"
+          onClick={() => setOpen(true)}
+          title="新增提供商"
+        >
+          <Plus className="h-3.5 w-3.5" />
+        </Button>
+      </div>
       <div className="flex-1 overflow-hidden">
         <ItemList
           items={providers}
@@ -125,6 +143,7 @@ export const ProviderSelect: React.FC<ProviderSelectProps> = ({
           </span>
         </div>
       )}
+      <AddProviderDialog open={open} onOpenChange={setOpen} />
     </div>
   );
 };

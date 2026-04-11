@@ -1,8 +1,11 @@
 "use client";
 
+import { useState } from "react";
+
 import { useParams, useRouter } from "next/navigation";
 
 import type { AgentGroup } from "@mocean/mastra/prismaType";
+import { Plus } from "lucide-react";
 
 import {
   AGENT_GROUPS,
@@ -11,7 +14,9 @@ import {
   getGroupLabel
 } from "@/app/agent/lib/agent-groups";
 import { ItemList } from "@/components/custom/item-list";
+import { Button } from "@/components/ui/button";
 
+import { AddAgentGroupDialog } from "./AddAgentGroupDialog";
 import { AgentGroupIcon } from "./AgentGroupIcon";
 
 export interface AgentGroupSelectProps {
@@ -25,9 +30,9 @@ export const AgentGroupSelect: React.FC<AgentGroupSelectProps> = ({
   const router = useRouter();
   const params = useParams<{ type: string }>();
   const currentGroupId = params.type ?? DEFAULT_GROUP;
+  const [open, setOpen] = useState<boolean>(false);
 
-  // 只显示后端存在且在 AGENT_GROUPS 中已定义的分组
-  const groupList = groups.filter((g) => AGENT_GROUPS[g.name]);
+  const groupList = groups;
 
   const onGroupClick = (groupId: string) => {
     // 如果点击已选中的分组，则取消选中
@@ -81,6 +86,18 @@ export const AgentGroupSelect: React.FC<AgentGroupSelectProps> = ({
 
   return (
     <div className="flex h-full flex-col">
+      <div className="group mt-2 flex items-center justify-between px-3 pt-4">
+        <span className="font-bold text-brand-text">智能体分组</span>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6 text-brand-text-muted hover:text-primary"
+          onClick={() => setOpen(true)}
+          title="新增分组"
+        >
+          <Plus className="h-3.5 w-3.5" />
+        </Button>
+      </div>
       <div className="flex-1 overflow-hidden pb-4">
         <ItemList
           items={groupList}
@@ -115,6 +132,7 @@ export const AgentGroupSelect: React.FC<AgentGroupSelectProps> = ({
           </span>
         </div>
       )}
+      <AddAgentGroupDialog open={open} onOpenChange={setOpen} />
     </div>
   );
 };
