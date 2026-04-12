@@ -86,7 +86,7 @@ export const IconPreview: React.FC<{
   }
   if (value) {
     return (
-      <span className={cn("flex items-center justify-center text-2xl", size)}>
+      <span className={cn("flex items-center justify-center text-xl", size)}>
         {value}
       </span>
     );
