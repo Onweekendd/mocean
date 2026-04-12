@@ -2,6 +2,7 @@
 
 import { Loader2, Pencil } from "lucide-react";
 
+import { ModelSelector } from "@/components/custom/model-selector";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -19,9 +20,10 @@ import {
   FormLabel,
   FormMessage
 } from "@/components/ui/form";
-import { ModelSelector } from "@/components/custom/model-selector";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+
+import AssistantIconPicker from "./AssistantIconPicker";
 
 import type { EditAssistantDialogProps } from "./useAssistantEdit";
 import { useAssistantEdit } from "./useAssistantEdit";
@@ -62,12 +64,9 @@ const EditAssistantDialog: React.FC<EditAssistantDialogProps> = (props) => {
                     <FormItem>
                       <FormLabel>图标</FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          value={field.value ?? ""}
-                          placeholder="😊"
-                          className="w-16 text-center text-lg"
-                          maxLength={2}
+                        <AssistantIconPicker
+                          value={field.value}
+                          onChange={field.onChange}
                         />
                       </FormControl>
                       <FormMessage />

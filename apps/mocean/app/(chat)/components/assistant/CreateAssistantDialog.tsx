@@ -23,6 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
+import AssistantIconPicker from "./AssistantIconPicker";
 import type { CreateAssistantDialogProps } from "./useAssistantCreate";
 import { useAssistantCreate } from "./useAssistantCreate";
 
@@ -57,12 +58,9 @@ const CreateAssistantDialog: React.FC<CreateAssistantDialogProps> = (props) => {
                     <FormItem>
                       <FormLabel>图标</FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          value={field.value ?? ""}
-                          placeholder="😊"
-                          className="w-16 text-center text-lg"
-                          maxLength={2}
+                        <AssistantIconPicker
+                          value={field.value}
+                          onChange={field.onChange}
                         />
                       </FormControl>
                       <FormMessage />

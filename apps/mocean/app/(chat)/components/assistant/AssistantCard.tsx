@@ -1,8 +1,7 @@
 import { useState } from "react";
 
 import type { Assistant } from "@mocean/mastra/prismaType";
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
-import { Bot, Sparkles } from "lucide-react";
+import { MoreHorizontal, Pencil, Sparkles, Trash2 } from "lucide-react";
 
 import {
   AlertDialog,
@@ -25,6 +24,7 @@ import {
 import { useAssistantActions } from "@/hooks/useAssistantsSWR";
 
 import { useStore } from "../../../store/useStore";
+import { IconPreview } from "./AssistantIconPicker";
 import EditAssistantDialog from "./EditAssistantDialog";
 
 interface AssistantCardProps {
@@ -68,12 +68,10 @@ const AssistantCard: React.FC<AssistantCardProps> = ({
         <div className="flex items-center gap-3">
           <div
             className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-sm ${
-              isActive
-                ? "bg-primary/10 text-primary"
-                : "bg-muted text-muted-foreground"
+              isActive ? "text-primary" : "bg-muted text-muted-foreground"
             }`}
           >
-            {assistant.emoji || <Bot className="h-4 w-4" />}
+            <IconPreview value={assistant.emoji} size="h-8 w-8" />
           </div>
 
           <div className="min-w-0 flex-1">

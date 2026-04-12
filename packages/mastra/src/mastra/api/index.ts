@@ -71,6 +71,13 @@ export {
 // MCP相关API
 export { McpApiClient, mcpApi, mcpApiMethods, useMcpApi } from "./mcp-client";
 
+// 文件上传
+export {
+  UploadsClient,
+  uploadsClient,
+  type FileRecord
+} from "./uploads-client";
+
 /**
  * 所有API方法的统一导出
  * @description 方便前端一次性导入所有API方法

@@ -4,6 +4,7 @@ import { groupsRouter } from "./groups";
 import { mcpRouter } from "./mcp";
 import { modelsRouter } from "./models";
 import { providersRouter } from "./providers";
+import { uploadsRouter } from "./uploads";
 
 const apiRoutes = [
   ...agentsRouter,
@@ -11,7 +12,8 @@ const apiRoutes = [
   ...providersRouter,
   ...modelsRouter,
   ...groupsRouter,
-  ...mcpRouter
+  ...mcpRouter,
+  ...uploadsRouter
 ];
 
 export { apiRoutes };
