@@ -23,6 +23,73 @@ server/      ← 业务逻辑（Prisma 数据库操作）
 api/         ← 前端客户端（BaseApiClient 子类 + useHook）
 ```
 
+---
+
+## 文件上传接口（特殊模式）
+
+文件上传使用 `multipart/form-data`，**不走** JSON 路由的标准 6 步流程，有以下差异：
+
+### 路由层（router/uploads.ts）
+
+不在 `router/type.ts` 注册（无 requestSchema，因为是 multipart 不是 JSON）。  
+直接在路由处理器中用 `c.req.parseBody()` 解析：
+
+```typescript
+const body = await c.req.parseBody();
+const file = body["file"];           // File 对象
+const category = body["category"];   // string
+```
+
+响应二进制文件时用 `c.body(buffer, 200, { "Content-Type": mimeType })`。
+
+### 业务逻辑层（server/upload.ts）
+
+- 文件存放路径：`{MASTRA_WORKSPACE_PATH}/uploads/{category}/{uuid}.{ext}`
+- 使用 Node.js `fs/promises`（mkdir / writeFile / readFile / unlink）
+- 写入 Prisma `FileType` 表（已有模型，字段：id / name / origin_name / path / size / ext / type / count）
+
+### 客户端层（api/uploads-client.ts）
+
+**不继承 BaseApiClient**（因为需要发 FormData，BaseApiClient 只支持 JSON）。  
+独立类，单独导出 `uploadsClient` 单例：
+
+```typescript
+export class UploadsClient {
+  async upload(file: File, category?: string): Promise<FileRecord>
+  getFileUrl(fileId: string): string   // 拼出可直接用于 <img> 的 URL
+  async deleteFile(fileId: string): Promise<FileRecord>
+}
+export const uploadsClient = new UploadsClient();
+```
+
+在 `api/index.ts` 中手动导出（不走 useHook 模式）：
+
+```typescript
+export { UploadsClient, uploadsClient, type FileRecord } from "./uploads-client";
+```
+
+### 前端使用
+
+打包后（`npm run bundle`）直接从 `@mocean/mastra/apiClient` 导入：
+
+```typescript
+import { uploadsClient } from "@mocean/mastra/apiClient";
+
+const record = await uploadsClient.upload(file, "avatars");
+const url = uploadsClient.getFileUrl(record.id);  // http://localhost:4112/customApi/uploads/{uuid}
+```
+
+图片 URL 存入数据库字段（如 `emoji`），渲染时用 `isImage(val)` 判断：
+
+```typescript
+export function isImage(val: string | null | undefined): boolean {
+  return !!val && (val.startsWith("data:image/") || val.startsWith("http"));
+}
+```
+
+`next.config.js` 需加 localhost 到 `images.remotePatterns`；  
+对 localhost URL 的 `<Image>` 组件需设 `unoptimized={true}`。
+
 参考模板：
 - `packages/mastra/src/mastra/router/assistants.ts` — 路由处理器
 - `packages/mastra/src/mastra/api/assistants-client.ts` — 客户端
