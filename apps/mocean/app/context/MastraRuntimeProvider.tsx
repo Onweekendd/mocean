@@ -1,8 +1,12 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useMemo, type ReactNode } from "react";
 
-import { AssistantRuntimeProvider } from "@assistant-ui/react";
+import {
+  AssistantRuntimeProvider,
+  RuntimeAdapterProvider,
+  SimpleImageAttachmentAdapter
+} from "@assistant-ui/react";
 import { API_URL } from "@mocean/mastra/apiClient";
 import type { UIMessage } from "ai";
 
@@ -22,9 +26,16 @@ export function MastraRuntimeProvider({
     initialMessages: messages
   });
 
+  const adapters = useMemo(
+    () => ({ attachments: new SimpleImageAttachmentAdapter() }),
+    []
+  );
+
   return (
     <AssistantRuntimeProvider runtime={runtime}>
-      {children}
+      <RuntimeAdapterProvider adapters={adapters}>
+        {children}
+      </RuntimeAdapterProvider>
     </AssistantRuntimeProvider>
   );
 }

@@ -1,5 +1,6 @@
 import type { FC } from "react";
 
+import { AuiProvider, useAui } from "@assistant-ui/react";
 import type { UIMessage } from "ai";
 
 import { MastraRuntimeProvider } from "@/app/context/MastraRuntimeProvider";
@@ -10,10 +11,14 @@ interface ChatViewProps {
 }
 
 const ChatView: FC<ChatViewProps> = ({ messages = [] }) => {
+  const aui = useAui();
+
   return (
-    <MastraRuntimeProvider messages={messages}>
-      <Thread />
-    </MastraRuntimeProvider>
+    <AuiProvider value={aui}>
+      <MastraRuntimeProvider messages={messages}>
+        <Thread />
+      </MastraRuntimeProvider>
+    </AuiProvider>
   );
 };
 

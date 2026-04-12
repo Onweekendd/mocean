@@ -5,11 +5,7 @@ import { ThreadPrimitive } from "@assistant-ui/react";
 import { ChatToolbar } from "@/app/(chat)/components/ChatToolbar";
 
 import { AssistantMessage } from "./thread/assistant-message";
-import {
-  Composer,
-  ComposerExtras,
-  ComposerImagesProvider
-} from "./thread/composer";
+import { Composer, ComposerExtras } from "./thread/composer";
 import { ThreadScrollToBottom } from "./thread/shared";
 import { ThreadWelcome } from "./thread/thread-welcome";
 import { EditComposer, UserMessage } from "./thread/user-message";
@@ -39,10 +35,8 @@ export const Thread: FC = () => {
       <ThreadScrollToBottom />
       <div className="flex w-full justify-center">
         <div className="flex min-h-[10.5rem] w-2/3 flex-col gap-[0.5rem] rounded-t-2xl border border-brand-slate-200 bg-brand-slate/30 px-2 py-3 shadow-sm">
-          <ComposerImagesProvider>
-            <Composer />
-            <ComposerExtras />
-          </ComposerImagesProvider>
+          <Composer />
+          <ComposerExtras />
         </div>
       </div>
     </ThreadPrimitive.Root>

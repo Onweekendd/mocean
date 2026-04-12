@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 
+import { useAui } from "@assistant-ui/react";
 import {
   AssistantChatTransport,
   useChatRuntime
