@@ -9,7 +9,8 @@ import {
   ComposerPrimitive,
   ThreadPrimitive,
   useAttachmentRuntime,
-  useAui
+  useAui,
+  useAuiState
 } from "@assistant-ui/react";
 import { CameraIcon, PaperclipIcon, SendHorizontalIcon, X } from "lucide-react";
 
@@ -151,10 +152,13 @@ export const ComposerExtras: FC = () => {
 // ─── Toolbar & Action ─────────────────────────────────────────────────────────
 
 const ComposerToolbar: FC = () => {
+  const text = useAuiState((s) => s.composer.text);
   return (
     <div className="flex w-full items-center justify-end px-3 pb-2">
       <div className="flex items-center gap-2">
-        <span className="text-xs text-muted-foreground">0/1000</span>
+        <span className="text-xs text-muted-foreground">
+          {text.length}/1000
+        </span>
         <ComposerAction />
       </div>
     </div>

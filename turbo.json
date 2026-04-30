@@ -22,10 +22,14 @@
       "dependsOn": ["^check-types"]
     },
     "dev": {
-      "dependsOn": ["^bundle"],
+      "dependsOn": ["@mocean/mastra#build:client"],
       "cache": false,
       "inputs": [".env"],
       "persistent": true
+    },
+    "build:client": {
+      "cache": true,
+      "outputs": ["dist/**"]
     },
     "bundle": {
       "dependsOn": ["^bundle"],

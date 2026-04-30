@@ -2,6 +2,7 @@ import { toAISdkStream } from "@mastra/ai-sdk";
 import { convertMessages } from "@mastra/core/agent";
 import type { StorageThreadType } from "@mastra/core/memory";
 import type { RequestContext } from "@mastra/core/request-context";
+import type { LanguageModelUsage } from "@mastra/core/stream";
 import type { UIMessage } from "ai";
 import { createUIMessageStreamResponse } from "ai";
 import type { KnowledgeRecognition } from "generated/prisma/enums";
@@ -256,6 +257,10 @@ const executeChatWithAssistant = async (
     throw new Error("助手不存在");
   }
 
+  let lastUsage: LanguageModelUsage | null = null;
+
+  const memory = await DynamicAgent.getMemory();
+
   const stream = await DynamicAgent.stream(messages, {
     memory: {
       thread: threadId,
@@ -271,6 +276,17 @@ const executeChatWithAssistant = async (
     }),
     modelSettings: {
       temperature: 1
+    },
+    onStepFinish: async ({ usage }) => {
+      lastUsage = usage;
+      if (memory && usage) {
+        const thread = await memory.getThreadById({ threadId });
+        if (thread) {
+          await memory.saveThread({
+            thread: { ...thread, metadata: { lastUsage: usage } }
+          });
+        }
+      }
     }
   });
 
@@ -278,8 +294,31 @@ const executeChatWithAssistant = async (
     from: "agent",
     sendReasoning: true
   });
+
+  type AiSdkChunk =
+    typeof aiSdkStream extends ReadableStream<infer T> ? T : never;
+
+  const processedStream = new ReadableStream<AiSdkChunk>({
+    async start(controller) {
+      try {
+        for await (const chunk of aiSdkStream as unknown as AsyncIterable<AiSdkChunk>) {
+          controller.enqueue(chunk);
+        }
+        if (lastUsage) {
+          controller.enqueue({
+            type: "data-token-usage",
+            data: lastUsage
+          } as AiSdkChunk);
+        }
+        controller.close();
+      } catch (error) {
+        controller.error(error);
+      }
+    }
+  });
+
   return createUIMessageStreamResponse({
-    stream: aiSdkStream as ReadableStream
+    stream: processedStream as ReadableStream
   });
 };
 
@@ -291,6 +330,7 @@ const executeChatWithAssistant = async (
  */
 const getThreadsByAssistantId = async (assistantId: string) => {
   const memory = await DynamicAgent.getMemory();
+
   const storage = await memory.storage.getStore("memory");
 
   const result = await storage?.listThreads({
@@ -397,8 +437,6 @@ const generateThreadTitle = async (assistantId: string, threadId: string) => {
     assistant: titleGenerationAssistant,
     task: AgentTaskEnum.GENERATE_TITLE
   });
-
-  console.log(JSON.stringify(messages, null, 2));
 
   const stream = await DynamicAgent.stream(messages, {
     requestContext,
