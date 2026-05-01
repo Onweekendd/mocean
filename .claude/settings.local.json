@@ -87,7 +87,11 @@
       "Bash(pnpm test:run agent)",
       "Bash(pnpm import-agents:*)",
       "Bash(dotenvx run -- npx tsx -e \":*)",
-      "WebFetch(domain:tecktol.com)"
+      "WebFetch(domain:tecktol.com)",
+      "Bash(git -C d:/projects/EaseClip log --oneline -5)",
+      "Bash(git -C d:/projects/EaseClip add apps/mocean/app/\\\\\\(chat\\\\\\)/\\\\[assistantId\\\\]/\\\\[threadId\\\\]/page.tsx apps/mocean/app/\\\\\\(chat\\\\\\)/components/ThreadSelect.tsx apps/mocean/components/thread/composer.tsx packages/mastra/package.json packages/mastra/src/mastra/server/assistant.ts turbo.json packages/mastra/src/mastra/public/)",
+      "Bash(git -C d:/projects/EaseClip commit -m ' *)",
+      "Bash(pnpm build:client)"
     ],
     "deny": [],
     "ask": []

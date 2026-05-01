@@ -6,6 +6,7 @@ import {
   MessageCircle,
   MoreHorizontal,
   Pencil,
+  Settings,
   Trash2
 } from "lucide-react";
 
@@ -31,6 +32,7 @@ import { cn } from "@/lib/utils";
 
 interface ThreadListProps {
   threads: StorageThreadType[];
+  streamingThreadIds?: Set<string>;
   assistantName: string;
   assistantEmoji?: string;
   onCreateThread?: () => void;
@@ -38,15 +40,17 @@ interface ThreadListProps {
   onRenameThread?: (thread: StorageThreadType, newTitle: string) => void;
   onDeleteThread?: (thread: StorageThreadType) => void;
   onBack?: () => void;
+  onSettings?: () => void;
 }
 
 const ThreadItem: React.FC<{
   thread: StorageThreadType;
   isActive: boolean;
+  isStreaming?: boolean;
   onClick: (thread: StorageThreadType) => void;
   onRename: (thread: StorageThreadType, newTitle: string) => void;
   onDelete: (thread: StorageThreadType) => void;
-}> = ({ thread, isActive, onClick, onRename, onDelete }) => {
+}> = ({ thread, isActive, isStreaming, onClick, onRename, onDelete }) => {
   const [isRenaming, setIsRenaming] = useState(false);
   const [renameValue, setRenameValue] = useState(thread.title ?? "");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -92,11 +96,16 @@ const ThreadItem: React.FC<{
             onClick={(e) => e.stopPropagation()}
             className="flex-1 border-b border-foreground/30 bg-transparent py-0.5 outline-none"
           />
+        ) : isStreaming ? (
+          <span className="relative flex-1 overflow-hidden truncate text-foreground/50">
+            {thread.title || "新对话"}
+            <span className="shimmer pointer-events-none absolute inset-0 motion-reduce:animate-none" />
+          </span>
         ) : (
           <span className="flex-1 truncate">{thread.title}</span>
         )}
 
-        {!isRenaming && (
+        {!isRenaming && !isStreaming && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
@@ -160,29 +169,39 @@ const ThreadItem: React.FC<{
 
 const ThreadList: React.FC<ThreadListProps> = ({
   threads,
+  streamingThreadIds,
   assistantName,
   assistantEmoji,
   onThreadClick,
   onRenameThread,
   onDeleteThread,
-  onBack
+  onBack,
+  onSettings
 }) => {
   const { activeThreadId: activeThread } = useStore();
 
   return (
     <div className="flex h-full flex-col">
-      {/* Header: back + new thread */}
-      <div className="flex shrink-0 items-center justify-between pb-1 pt-4">
+      {/* Header: back + settings */}
+      <div className="flex shrink-0 items-center gap-1 pb-1 pt-4">
         {onBack && (
           <button
             onClick={onBack}
-            className="group flex w-full min-w-0 items-center gap-1 rounded-lg px-1 py-1.5 transition-colors duration-150 hover:bg-foreground/[0.04]"
+            className="group flex min-w-0 flex-1 items-center gap-1 rounded-lg px-1 py-1.5 transition-colors duration-150 hover:bg-foreground/[0.04]"
           >
             <ArrowLeft className="h-3.5 w-3.5 shrink-0 text-brand-text-muted transition-transform duration-150 group-hover:-translate-x-0.5" />
             <IconPreview value={assistantEmoji} size="h-5 w-5" />
             <span className="truncate text-[13px] font-medium text-brand-text">
               {assistantName}
             </span>
+          </button>
+        )}
+        {onSettings && (
+          <button
+            onClick={onSettings}
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-brand-text-muted transition-colors duration-150 hover:bg-foreground/[0.04] hover:text-brand-text"
+          >
+            <Settings className="h-3.5 w-3.5" />
           </button>
         )}
       </div>
@@ -196,6 +215,7 @@ const ThreadList: React.FC<ThreadListProps> = ({
                 key={thread.id}
                 thread={thread}
                 isActive={activeThread === thread.id}
+                isStreaming={streamingThreadIds?.has(thread.id)}
                 onClick={(t) => onThreadClick?.(t)}
                 onRename={(t, title) => onRenameThread?.(t, title)}
                 onDelete={(t) => onDeleteThread?.(t)}

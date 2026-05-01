@@ -3,7 +3,6 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 
 import type { StorageThreadType } from "@mocean/mastra/apiClient";
-
 import { toast } from "sonner";
 
 import { useStore } from "@/app/store/useStore";
@@ -18,9 +17,10 @@ import ThreadList from "./thead/ThreadList";
 
 interface ThreadSelectProps {
   onBack: () => void;
+  onSettings: () => void;
 }
 
-const ThreadSelect: React.FC<ThreadSelectProps> = ({ onBack }) => {
+const ThreadSelect: React.FC<ThreadSelectProps> = ({ onBack, onSettings }) => {
   const {
     activeAssistantId,
     activeThreadId: activeThread,
@@ -39,12 +39,19 @@ const ThreadSelect: React.FC<ThreadSelectProps> = ({ onBack }) => {
 
   const streamingTitles = useStore((s) => s.streamingTitles);
 
-  const threadsWithCreating = useMemo<StorageThreadType[]>(() => {
-    const currentAssistantCreatingThread =
-      streamingTitles[activeAssistantId || ""] ?? [];
+  const currentAssistantStreamingThreads = useMemo(
+    () => streamingTitles[activeAssistantId || ""] ?? [],
+    [streamingTitles, activeAssistantId]
+  );
 
-    return [...currentAssistantCreatingThread, ...threads];
-  }, [threads, streamingTitles, activeAssistantId]);
+  const threadsWithCreating = useMemo<StorageThreadType[]>(() => {
+    return [...currentAssistantStreamingThreads, ...threads];
+  }, [threads, currentAssistantStreamingThreads]);
+
+  const streamingThreadIds = useMemo(
+    () => new Set(currentAssistantStreamingThreads.map((t) => t.id)),
+    [currentAssistantStreamingThreads]
+  );
 
   const { refresh: refreshUIMessage } = useAssistantUIMessageSWR(
     activeAssistantId || null,
@@ -113,6 +120,7 @@ const ThreadSelect: React.FC<ThreadSelectProps> = ({ onBack }) => {
     <div className="h-full w-full">
       <ThreadList
         threads={threadsWithCreating}
+        streamingThreadIds={streamingThreadIds}
         assistantName={assistant?.name || "助手"}
         assistantEmoji={assistant?.emoji || undefined}
         onCreateThread={onCreateThread}
@@ -120,6 +128,7 @@ const ThreadSelect: React.FC<ThreadSelectProps> = ({ onBack }) => {
         onRenameThread={onRenameThread}
         onDeleteThread={onDeleteThread}
         onBack={onBack}
+        onSettings={onSettings}
       />
     </div>
   );

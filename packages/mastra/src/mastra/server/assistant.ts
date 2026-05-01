@@ -177,19 +177,48 @@ const updateAssistant = async (
 ): Promise<
   z.infer<(typeof assistantRoutes)["updateAssistant"]["responseSchema"]>
 > => {
-  // Filter out undefined values to avoid overwriting with undefined
-  const updateData = {
+  const { settings, ...rest } = assistant;
+
+  const assistantData = {
     updatedAt: new Date(),
     ...Object.fromEntries(
-      Object.entries(assistant).filter(([_, value]) => value !== undefined)
+      Object.entries(rest).filter(([_, value]) => value !== undefined)
     )
   };
 
+  const settingsUpdate = settings
+    ? Object.fromEntries(
+        Object.entries(settings as Record<string, unknown>).filter(
+          ([_, v]) => v !== undefined
+        )
+      )
+    : undefined;
+
   const updatedAssistant = await prisma.assistant.update({
-    where: {
-      id
+    where: { id },
+    data: {
+      ...(assistantData as Parameters<
+        typeof prisma.assistant.update
+      >[0]["data"]),
+      ...(settingsUpdate
+        ? {
+            settings: {
+              upsert: {
+                create: {
+                  contextCount: 20,
+                  temperature: 0.7,
+                  topP: 1,
+                  enableMaxTokens: false,
+                  streamOutput: true,
+                  hideMessages: false,
+                  ...settingsUpdate
+                },
+                update: settingsUpdate
+              }
+            }
+          }
+        : {})
     },
-    data: updateData as Parameters<typeof prisma.assistant.update>[0]["data"],
     include: {
       model: true,
       settings: true

@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import type { Assistant } from "@mocean/mastra/prismaType";
-import { MoreHorizontal, Pencil, Sparkles, Trash2 } from "lucide-react";
+import { MoreHorizontal, Pencil, Settings, Sparkles, Trash2 } from "lucide-react";
 
 import {
   AlertDialog,
@@ -25,24 +25,24 @@ import { useAssistantActions } from "@/hooks/useAssistantsSWR";
 
 import { useStore } from "../../../store/useStore";
 import { IconPreview } from "./AssistantIconPicker";
-import EditAssistantDialog from "./EditAssistantDialog";
 
 interface AssistantCardProps {
   assistant: Assistant;
   onClick: (assistant: Assistant) => void;
+  onEdit: (assistant: Assistant) => void;
   onDeleted?: (assistantId: string) => void;
 }
 
 const AssistantCard: React.FC<AssistantCardProps> = ({
   assistant,
   onClick,
+  onEdit,
   onDeleted
 }) => {
   const { activeAssistantId } = useStore();
   const isActive = activeAssistantId === assistant.id;
   const { remove } = useAssistantActions();
 
-  const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -90,7 +90,6 @@ const AssistantCard: React.FC<AssistantCardProps> = ({
             )}
           </div>
 
-          {/* 三点菜单按钮：hover 时显示 */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -106,9 +105,9 @@ const AssistantCard: React.FC<AssistantCardProps> = ({
               align="end"
               onClick={(e) => e.stopPropagation()}
             >
-              <DropdownMenuItem onClick={() => setEditOpen(true)}>
-                <Pencil className="mr-2 h-4 w-4" />
-                编辑
+              <DropdownMenuItem onClick={() => onEdit(assistant)}>
+                <Settings className="mr-2 h-4 w-4" />
+                设置
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -122,12 +121,6 @@ const AssistantCard: React.FC<AssistantCardProps> = ({
           </DropdownMenu>
         </div>
       </div>
-
-      <EditAssistantDialog
-        assistant={assistant}
-        open={editOpen}
-        onOpenChange={setEditOpen}
-      />
 
       <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <AlertDialogContent>

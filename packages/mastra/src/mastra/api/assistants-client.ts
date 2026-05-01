@@ -12,6 +12,18 @@ import type {
 import type { ApiClientConfig, ApiResponse } from "./base-client";
 import { BaseApiClient } from "./base-client";
 
+export type ThreadTokenUsage = {
+  inputTokens: number;
+  outputTokens: number;
+  totalTokens: number;
+  reasoningTokens: number;
+  cachedInputTokens: number;
+};
+
+export type ThreadMetadata = {
+  lastUsage?: ThreadTokenUsage;
+};
+
 /**
  * 助手 API 客户端类
  * @description 提供类型安全的助手相关 API 调用方法
@@ -145,8 +157,10 @@ export class AssistantsApiClient extends BaseApiClient {
    */
   async getAssistantThreads(
     assistantId: string
-  ): Promise<ApiResponse<StorageThreadType[]>> {
-    return this.get<StorageThreadType[]>(
+  ): Promise<
+    ApiResponse<(StorageThreadType & { metadata: ThreadMetadata })[]>
+  > {
+    return this.get<(StorageThreadType & { metadata: ThreadMetadata })[]>(
       assistantRoutes.getAssistantThreads.path.replace(
         ":assistantId",
         assistantId

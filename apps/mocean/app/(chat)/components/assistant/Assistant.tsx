@@ -12,9 +12,10 @@ import CreateAssistantCard from "./CreateAssistantCard";
 
 interface AssistantListProps {
   onClick: (assistant: Assistant) => void;
+  onEdit: (assistant: Assistant) => void;
 }
 
-const AssistantList: React.FC<AssistantListProps> = ({ onClick }) => {
+const AssistantList: React.FC<AssistantListProps> = ({ onClick, onEdit }) => {
   const router = useRouter();
   const { assistants, isLoading, error } = useAssistantsSWR();
   const { activeAssistantId, setActiveAssistantId, setActiveThreadId } =
@@ -42,6 +43,7 @@ const AssistantList: React.FC<AssistantListProps> = ({ onClick }) => {
               key={assistant.id}
               assistant={assistant as Assistant}
               onClick={onClick}
+              onEdit={onEdit}
               onDeleted={handleDeleted}
             />
           ))}

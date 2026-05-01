@@ -2,7 +2,6 @@
 
 import { useRef } from "react";
 
-import { useAui } from "@assistant-ui/react";
 import {
   AssistantChatTransport,
   useChatRuntime
@@ -162,6 +161,7 @@ export function useMastraRuntime({
           newThreadId.current = threadId;
 
           newThreadRef.current = await mastraClient.createMemoryThread({
+            title: "新对话",
             resourceId: currentAssistantId,
             threadId,
             agentId: DYNAMIC_AGENT_ID
@@ -190,6 +190,9 @@ export function useMastraRuntime({
       }
     }),
     messages: initialMessages,
+    onData: (...args) => {
+      console.log("onData", ...args);
+    },
     onFinish: (...args) => void onNewThreadFirstFinish(...args)
   });
 

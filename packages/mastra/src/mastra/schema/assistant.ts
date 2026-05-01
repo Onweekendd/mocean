@@ -59,6 +59,19 @@ export const createAssistantSchema = z.object({
   providerId: z.string().nullable().optional()
 });
 
+const assistantSettingsUpdateSchema = z.object({
+  contextCount: z.number().int().optional(),
+  temperature: z.number().optional(),
+  topP: z.number().optional(),
+  maxTokens: z.number().int().nullish(),
+  enableMaxTokens: z.boolean().optional(),
+  streamOutput: z.boolean().optional(),
+  hideMessages: z.boolean().optional(),
+  reasoning_effort: z.string().nullish(),
+  qwenThinkMode: z.boolean().nullish(),
+  toolUseMode: z.string().nullish()
+});
+
 export const updateAssistantSchema = z.object({
   name: z.string().min(1, "助手名称不能为空").optional(),
   prompt: z.string().min(1, "提示词不能为空").optional(),
@@ -70,7 +83,8 @@ export const updateAssistantSchema = z.object({
   enableGenerateImage: z.boolean().optional(),
   knowledgeRecognition: z.string().nullish().optional(),
   modelId: z.string().nullable().optional(),
-  providerId: z.string().nullable().optional()
+  providerId: z.string().nullable().optional(),
+  settings: assistantSettingsUpdateSchema.optional()
 });
 
 export const assistantIdParamSchema = z.object({

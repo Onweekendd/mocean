@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { FC } from "react";
 
 import Image from "next/image";
@@ -14,10 +14,16 @@ import {
 } from "@assistant-ui/react";
 import { CameraIcon, PaperclipIcon, SendHorizontalIcon, X } from "lucide-react";
 
+import { useStore } from "@/app/store/useStore";
 import { TooltipIconButton } from "@/components/tooltip-icon-button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import {
+  useAssistantSWR,
+  useAssistantThreadsSWR
+} from "@/hooks/useAssistantsSWR";
 
 import { AdvanceInput } from "../custom/advance-input";
+import { CircularProgress } from "../ui/circular-progress";
 import { CircleStopIcon } from "./shared";
 
 // ─── ComposerImageAttachment ──────────────────────────────────────────────────
@@ -36,7 +42,9 @@ const ComposerImageAttachment: FC = () => {
     return () => URL.revokeObjectURL(url);
   }, [file]);
 
-  if (!objectUrl) return null;
+  if (!objectUrl) {
+    return null;
+  }
 
   return (
     <>
@@ -103,9 +111,49 @@ export const Composer: FC = () => {
   );
 };
 
-// ─── ComposerExtras ───────────────────────────────────────────────────────────
+const TOKEN_USAGE_SEGMENTS = [
+  { threshold: 70, color: "#22c55e" },
+  { threshold: 90, color: "#eab308" },
+  { threshold: 100, color: "#ef4444" }
+];
 
-export const ComposerExtras: FC = () => {
+const TokenUsageVisualizer: FC = () => {
+  const { activeAssistantId, activeThreadId } = useStore();
+
+  const { assistant } = useAssistantSWR(activeAssistantId || null);
+  const { threads } = useAssistantThreadsSWR(activeAssistantId || null);
+
+  const thread = threads.find((t) => t.id === activeThreadId) ?? null;
+
+  const maxContextLength = useMemo(() => {
+    return assistant?.model?.contextLength ?? 200_000;
+  }, [assistant?.model]);
+
+  const usagePct = useMemo(() => {
+    const used = thread?.metadata.lastUsage?.totalTokens ?? 0;
+    return maxContextLength > 0
+      ? Math.min(100, (used / maxContextLength) * 100)
+      : 0;
+  }, [thread, maxContextLength]);
+
+  return (
+    <TooltipIconButton
+      tooltip={`上下文已用 ${usagePct.toFixed(1)}%`}
+      side="top"
+      variant="ghost"
+      className="size-8 rounded-full p-1.5 text-greyscale-800 hover:bg-greyscale-100"
+    >
+      <CircularProgress
+        size={18}
+        strokeWidth={2}
+        value={usagePct}
+        segments={TOKEN_USAGE_SEGMENTS}
+      />
+    </TooltipIconButton>
+  );
+};
+
+const ComposerAttachmentTrigger: FC = () => {
   const aui = useAui();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -145,6 +193,15 @@ export const ComposerExtras: FC = () => {
       >
         <CameraIcon />
       </TooltipIconButton>
+    </div>
+  );
+};
+
+export const ComposerExtras: FC = () => {
+  return (
+    <div className="flex items-center justify-between">
+      <ComposerAttachmentTrigger />
+      <TokenUsageVisualizer />
     </div>
   );
 };

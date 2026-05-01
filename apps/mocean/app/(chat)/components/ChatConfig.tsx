@@ -10,8 +10,18 @@ import { useStore } from "@/app/store/useStore";
 
 import ThreadSelect from "./ThreadSelect";
 import AssistantList from "./assistant/Assistant";
+import AssistantSettingsPanel from "./assistant/AssistantSettingsPanel";
 
-type View = "assistants" | "threads";
+type View = "assistants" | "threads" | "settings";
+
+const getTranslateClass = (panelView: View, currentView: View): string => {
+  const order: View[] = ["assistants", "threads", "settings"];
+  const panelIdx = order.indexOf(panelView);
+  const currentIdx = order.indexOf(currentView);
+  if (panelIdx === currentIdx) return "translate-x-0";
+  if (panelIdx < currentIdx) return "-translate-x-full";
+  return "translate-x-full";
+};
 
 const ChatConfig: React.FC = () => {
   const router = useRouter();
@@ -21,48 +31,59 @@ const ChatConfig: React.FC = () => {
     setActiveThreadId: setActiveThread
   } = useStore();
 
-  // Track current and previous view for animation direction
   const [view, setView] = useState<View>(
     activeAssistantId ? "threads" : "assistants"
   );
   const [isAnimating, setIsAnimating] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Sync view with activeAssistantId from URL params
   useEffect(() => {
     if (activeAssistantId && view === "assistants") {
       setView("threads");
     }
   }, [activeAssistantId]);
 
+  const navigateTo = useCallback((nextView: View) => {
+    setIsAnimating(true);
+    setView(nextView);
+  }, []);
+
   const onAssistantSelect = useCallback(
     (assistant: Assistant) => {
-      // 如果点击已选中的助手，则取消选中
-      if (activeAssistantId === assistant.id) {
-        setActiveThread(null);
-        setActiveAssistantId(null);
-        setIsAnimating(true);
-        setView("assistants");
-        router.push("/");
-      } else {
-        setActiveThread(null);
-        setActiveAssistantId(assistant.id);
-        setIsAnimating(true);
-        setView("threads");
-        router.push(`/${assistant.id}`);
-      }
+      setActiveThread(null);
+      setActiveAssistantId(assistant.id);
+      navigateTo("threads");
+      router.push(`/${assistant.id}`);
     },
-    [router, setActiveAssistantId, setActiveThread, activeAssistantId]
+    [router, setActiveAssistantId, setActiveThread, navigateTo]
+  );
+
+  const onAssistantEdit = useCallback(
+    (assistant: Assistant) => {
+      setActiveAssistantId(assistant.id);
+      navigateTo("settings");
+      router.push(`/${assistant.id}`);
+    },
+    [router, setActiveAssistantId, navigateTo]
   );
 
   const onBack = useCallback(() => {
-    setIsAnimating(true);
-    setView("assistants");
-  }, []);
+    navigateTo("assistants");
+  }, [navigateTo]);
+
+  const onSettings = useCallback(() => {
+    navigateTo("settings");
+  }, [navigateTo]);
+
+  const onSettingsBack = useCallback(() => {
+    navigateTo("threads");
+  }, [navigateTo]);
 
   const handleAnimationEnd = useCallback(() => {
     setIsAnimating(false);
   }, []);
+
+  const isVisible = (panelView: View) => isAnimating || view === panelView;
 
   return (
     <div
@@ -71,24 +92,33 @@ const ChatConfig: React.FC = () => {
     >
       {/* Assistants View */}
       <div
-        className={`absolute inset-0 px-2 transition-transform duration-300 ease-out ${
-          view === "assistants" ? "translate-x-0" : "-translate-x-full"
-        } ${!isAnimating && view !== "assistants" ? "invisible" : ""}`}
+        className={`absolute inset-0 px-2 transition-transform duration-300 ease-out ${getTranslateClass("assistants", view)} ${!isVisible("assistants") ? "invisible" : ""}`}
         onTransitionEnd={handleAnimationEnd}
       >
         <AssistantList
           onClick={(assistant) => void onAssistantSelect(assistant)}
+          onEdit={(assistant) => void onAssistantEdit(assistant)}
         />
       </div>
 
       {/* Threads View */}
       <div
-        className={`absolute inset-0 px-2 transition-transform duration-300 ease-out ${
-          view === "threads" ? "translate-x-0" : "translate-x-full"
-        } ${!isAnimating && view !== "threads" ? "invisible" : ""}`}
+        className={`absolute inset-0 px-2 transition-transform duration-300 ease-out ${getTranslateClass("threads", view)} ${!isVisible("threads") ? "invisible" : ""}`}
         onTransitionEnd={handleAnimationEnd}
       >
-        <ThreadSelect onBack={onBack} />
+        <ThreadSelect onBack={onBack} onSettings={onSettings} />
+      </div>
+
+      {/* Settings View */}
+      <div
+        className={`absolute inset-0 px-2 transition-transform duration-300 ease-out ${getTranslateClass("settings", view)} ${!isVisible("settings") ? "invisible" : ""}`}
+        onTransitionEnd={handleAnimationEnd}
+      >
+        <AssistantSettingsPanel
+          assistantId={activeAssistantId}
+          onBack={onSettingsBack}
+          onSaved={onSettingsBack}
+        />
       </div>
     </div>
   );
