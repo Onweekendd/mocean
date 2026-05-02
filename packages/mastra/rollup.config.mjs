@@ -95,7 +95,7 @@ export default [
   },
   // 3. apiClient 导出 - 代码打包
   {
-    input: "src/mastra/api/index.ts",
+    input: "src/mastra/api/client.ts",
     output: {
       file: "dist/apiClient.js",
       format: "esm",
@@ -106,7 +106,7 @@ export default [
   },
   // 4. apiClient 导出 - 类型声明
   {
-    input: "src/mastra/api/index.ts",
+    input: "src/mastra/api/client.ts",
     output: {
       file: "dist/apiClient.d.ts",
       format: "esm",

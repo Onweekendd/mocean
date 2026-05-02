@@ -3,7 +3,6 @@ import { LibSQLStore } from "@mastra/libsql";
 import { PinoLogger } from "@mastra/loggers";
 
 import { DynamicAgent } from "./agents/dynamicAgent";
-import { apiRoutes } from "./router";
 import { workspace } from "./workspace";
 
 export const mastra = new Mastra({
@@ -17,9 +16,8 @@ export const mastra = new Mastra({
     timeout: 30000,
     port: Number(process.env.DEV_PORT) || 4111,
     build: {
-      swaggerUI: true // Enable in production builds
-    },
-    apiRoutes
+      swaggerUI: true
+    }
   },
 
   storage: new LibSQLStore({

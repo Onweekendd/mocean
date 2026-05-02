@@ -24,6 +24,10 @@ export type ThreadMetadata = {
   lastUsage?: ThreadTokenUsage;
 };
 
+export type CustomStorageThreadType = StorageThreadType & {
+  metadata: ThreadMetadata;
+};
+
 /**
  * 助手 API 客户端类
  * @description 提供类型安全的助手相关 API 调用方法
@@ -157,10 +161,8 @@ export class AssistantsApiClient extends BaseApiClient {
    */
   async getAssistantThreads(
     assistantId: string
-  ): Promise<
-    ApiResponse<(StorageThreadType & { metadata: ThreadMetadata })[]>
-  > {
-    return this.get<(StorageThreadType & { metadata: ThreadMetadata })[]>(
+  ): Promise<ApiResponse<CustomStorageThreadType[]>> {
+    return this.get<CustomStorageThreadType[]>(
       assistantRoutes.getAssistantThreads.path.replace(
         ":assistantId",
         assistantId

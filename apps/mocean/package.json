@@ -66,6 +66,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "embla-carousel-react": "^8.6.0",
+    "hono": "^4.11.8",
     "input-otp": "^1.4.2",
     "konva": "^9.3.16",
     "lucide-react": "^0.511.0",

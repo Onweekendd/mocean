@@ -1,27 +1,12 @@
-import { useAgentsApi } from "@mocean/mastra/apiClient";
+import { apiClient } from "@mocean/mastra/apiClient";
 import type { AgentGroup } from "@mocean/mastra/prismaType";
 import useSWR from "swr";
 
-/**
- * 使用 SWR 的代理数据获取 hooks
- * @description 在前端应用层提供带缓存的代理数据获取功能
- */
-
-/**
- * 获取所有代理列表 - 使用 SWR
- * @returns 包含代理数据、加载状态、错误信息和刷新方法的对象
- *
- * @example
- * // 获取所有代理
- * const { agents, isLoading, error, refresh } = useAgentsSWR();
- * console.log(agents); // -> Agent[]
- */
 export function useAgentsSWR() {
-  const { getAgents } = useAgentsApi();
-
   const { data, error, isLoading, mutate } = useSWR("agents", async () => {
-    const result = await getAgents();
-    return result?.data || [];
+    const res = await apiClient.customApi.agents.$get();
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
   });
 
   return {
@@ -32,25 +17,16 @@ export function useAgentsSWR() {
   };
 }
 
-/**
- * 获取单个代理 - 使用 SWR
- * @param id - 代理的唯一标识符（为空时不发起请求）
- * @returns 包含代理数据、加载状态、错误信息和刷新方法的对象
- *
- * @example
- * // 获取特定代理
- * const { agent, isLoading, error, refresh } = useAgentSWR("agent-id");
- * console.log(agent); // -> Agent | null
- */
 export function useAgentSWR(id: string | null) {
-  const { getAgentById } = useAgentsApi();
-
   const { data, error, isLoading, mutate } = useSWR(
     id ? `agent-${id}` : null,
     async () => {
       if (!id) return null;
-      const result = await getAgentById(id);
-      return result?.data || null;
+      const res = await apiClient.customApi.agents[":id"].$get({
+        param: { id }
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
     }
   );
 
@@ -62,28 +38,19 @@ export function useAgentSWR(id: string | null) {
   };
 }
 
-/**
- * 根据分组获取代理 - 使用 SWR
- * @param group - 代理分组名称（为空时不发起请求）
- * @returns 包含代理数据、加载状态、错误信息和刷新方法的对象
- *
- * @example
- * // 获取特定分组的代理
- * const { agents, isLoading, error, refresh } = useAgentsByGroupSWR("writing");
- * console.log(agents); // -> Agent[]
- */
 export function useAgentsByGroupSWR(group: string | null) {
-  const { getAgentByGroup } = useAgentsApi();
-
   const { data, error, isLoading, mutate } = useSWR(
     group ? `agents-group-${group}` : null,
     async () => {
       if (!group) return [];
-      const result = await getAgentByGroup(group);
-      return result?.data || [];
+      const res = await apiClient.customApi.agents.group[":group"].$get({
+        param: { group }
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
     },
     {
-      dedupingInterval: 30000 // 30秒内的重复请求会被去重（分组数据更新频率适中）
+      dedupingInterval: 30000
     }
   );
 
@@ -95,23 +62,13 @@ export function useAgentsByGroupSWR(group: string | null) {
   };
 }
 
-/**
- * 获取所有代理分组 - 使用 SWR
- * @returns 包含分组数组、加载状态、错误信息和刷新方法的对象
- *
- * @example
- * // 获取所有分组
- * const { groups, isLoading, error, refresh } = useAgentGroupsSWR();
- * console.log(groups); // -> AgentGroup[]
- */
 export function useAgentGroupsSWR() {
-  const { getAgentGroups } = useAgentsApi();
-
   const { data, error, isLoading, mutate } = useSWR(
     "agent-groups",
     async () => {
-      const result = await getAgentGroups();
-      return result?.data ?? [];
+      const res = await apiClient.customApi.agents.groups.$get();
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
     }
   );
 
@@ -123,77 +80,67 @@ export function useAgentGroupsSWR() {
   };
 }
 
-/**
- * 增强的代理 API hooks - 结合 CRUD 操作和 SWR 缓存
- * @returns 包含代理数据、CRUD 操作方法和缓存管理的对象
- *
- * @example
- * // 完整的代理管理功能
- * const { agents, isLoading, create, update, remove, refresh } = useAgentsWithActions();
- *
- * // 创建代理
- * await create({ name: "新代理", description: "描述", prompt: "提示词", type: "text" });
- *
- * // 更新代理
- * await update("agent-id", { name: "更新后的名称" });
- *
- * // 删除代理
- * await remove("agent-id");
- */
 export function useAgentsWithActions() {
   const { agents, isLoading, error, refresh } = useAgentsSWR();
-  const { createAgent, updateAgent, deleteAgent } = useAgentsApi();
+
+  const create = async (
+    data: Parameters<typeof apiClient.customApi.agents.$post>[0]["json"]
+  ) => {
+    try {
+      const res = await apiClient.customApi.agents.$post({ json: data });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const result = await res.json();
+      await refresh();
+      return result;
+    } catch (error) {
+      console.error("创建代理失败:", error);
+      throw error;
+    }
+  };
+
+  const update = async (
+    id: string,
+    data: Parameters<
+      (typeof apiClient.customApi.agents)[":id"]["$put"]
+    >[0]["json"]
+  ) => {
+    try {
+      const res = await apiClient.customApi.agents[":id"].$put({
+        param: { id },
+        json: data
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const result = await res.json();
+      await refresh();
+      return result;
+    } catch (error) {
+      console.error("更新代理失败:", error);
+      throw error;
+    }
+  };
+
+  const remove = async (id: string) => {
+    try {
+      const res = await apiClient.customApi.agents[":id"].$delete({
+        param: { id }
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const result = await res.json();
+      await refresh();
+      return result;
+    } catch (error) {
+      console.error("删除代理失败:", error);
+      throw error;
+    }
+  };
 
   return {
-    // SWR 数据
     agents,
     isLoading,
     error,
-
-    // CRUD 操作（带缓存更新）
-    async create(data: Parameters<typeof createAgent>[0]) {
-      try {
-        const result = await createAgent(data);
-        if (result) {
-          // 创建成功后，刷新缓存
-          await refresh();
-        }
-        return result;
-      } catch (error) {
-        console.error("创建代理失败:", error);
-        throw error;
-      }
-    },
-
-    async update(id: string, data: Parameters<typeof updateAgent>[1]) {
-      try {
-        const result = await updateAgent(id, data);
-        if (result) {
-          // 更新成功后，刷新缓存
-          await refresh();
-        }
-        return result;
-      } catch (error) {
-        console.error("更新代理失败:", error);
-        throw error;
-      }
-    },
-
-    async remove(id: string) {
-      try {
-        const result = await deleteAgent(id);
-        if (result) {
-          // 删除成功后，刷新缓存
-          await refresh();
-        }
-        return result;
-      } catch (error) {
-        console.error("删除代理失败:", error);
-        throw error;
-      }
-    },
-
-    // 手动刷新
+    create,
+    update,
+    remove,
     refresh
   };
 }

@@ -1,8 +1,7 @@
 import { useState } from "react";
 
+import { apiClient } from "@mocean/mastra/apiClient";
 import { useForm } from "react-hook-form";
-
-import { useAgentsApi } from "@mocean/mastra/apiClient";
 import { toast } from "sonner";
 
 import { useAgentsByGroupSWR } from "./useAgentsSWR";
@@ -21,7 +20,6 @@ interface UseAddAgentFormProps {
 
 export function useAddAgentForm({ groupId, onOpenChange }: UseAddAgentFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { createAgent, addAgentToGroup } = useAgentsApi();
   const { refresh } = useAgentsByGroupSWR(groupId);
 
   const form = useForm<FormData>({
@@ -62,24 +60,27 @@ export function useAddAgentForm({ groupId, onOpenChange }: UseAddAgentFormProps)
 
     setIsSubmitting(true);
     try {
-      const result = await createAgent({
-        name: values.name.trim(),
-        prompt: values.prompt.trim(),
-        type: "agent",
-        emoji: values.emoji.trim() || undefined,
-        description: values.description.trim() || undefined
+      const res = await apiClient.customApi.agents.$post({
+        json: {
+          name: values.name.trim(),
+          prompt: values.prompt.trim(),
+          type: "agent",
+          emoji: values.emoji.trim() || undefined,
+          description: values.description.trim() || undefined
+        }
       });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const agent = await res.json();
 
-      if (result?.data) {
-        const newAgentId = (result.data as { id: string }).id;
-        await addAgentToGroup(newAgentId, groupId);
-        await refresh();
-        toast.success("创建成功", {
-          description: `Agent "${values.name}" 已成功创建`
-        });
-        onOpenChange(false);
-        form.reset();
-      }
+      await apiClient.customApi.agents["group-relations"].$post({
+        json: { agentId: agent.id, groupId }
+      });
+      await refresh();
+      toast.success("创建成功", {
+        description: `Agent "${values.name}" 已成功创建`
+      });
+      onOpenChange(false);
+      form.reset();
     } catch (err) {
       toast.error("创建失败", {
         description: err instanceof Error ? err.message : "创建 Agent 时发生未知错误"

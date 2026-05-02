@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 
-import { useAgentsApi } from "@mocean/mastra/apiClient";
+import { apiClient } from "@mocean/mastra/apiClient";
 
 import { useAgentGroupsSWR } from "./useAgentsSWR";
 
@@ -16,7 +16,6 @@ interface UseAddAgentGroupFormProps {
 export function useAddAgentGroupForm({
   onOpenChange
 }: UseAddAgentGroupFormProps) {
-  const { createAgentGroup } = useAgentsApi();
   const { refresh } = useAgentGroupsSWR();
 
   const form = useForm<FormData>({
@@ -66,10 +65,13 @@ export function useAddAgentGroupForm({
       return;
     }
 
-    await createAgentGroup({
-      name: values.name.trim(),
-      label: values.label.trim()
+    const res = await apiClient.customApi.agents.groups.$post({
+      json: {
+        name: values.name.trim(),
+        label: values.label.trim()
+      }
     });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     await refresh();
     onOpenChange(false);

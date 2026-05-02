@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 
-import { useProvidersApi } from "@mocean/mastra/apiClient";
+import { apiClient } from "@mocean/mastra/apiClient";
+import { useForm } from "react-hook-form";
 
 import { useProviderActions } from "./useProvidersSWR";
 
@@ -21,7 +21,6 @@ type TestStatus = "idle" | "testing" | "success" | "error";
 
 export function useAddProviderForm({ onOpenChange }: UseAddProviderFormProps) {
   const { create } = useProviderActions();
-  const { testProviderConnection } = useProvidersApi();
 
   const [testStatus, setTestStatus] = useState<TestStatus>("idle");
   const [testMessage, setTestMessage] = useState("");
@@ -78,17 +77,26 @@ export function useAddProviderForm({ onOpenChange }: UseAddProviderFormProps) {
     setTestStatus("testing");
     setTestMessage("");
 
-    const result = await testProviderConnection({
-      apiKey: values.apiKey.trim(),
-      apiHost
-    });
+    try {
+      const res = await apiClient.customApi.providers["test-connection"].$post({
+        json: {
+          apiKey: values.apiKey.trim(),
+          apiHost
+        }
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const result = await res.json();
 
-    if (result?.data?.success) {
-      setTestStatus("success");
-      setTestMessage(result.data.message);
-    } else {
+      if (result.success) {
+        setTestStatus("success");
+        setTestMessage(result.message);
+      } else {
+        setTestStatus("error");
+        setTestMessage(result.message ?? "连接失败");
+      }
+    } catch {
       setTestStatus("error");
-      setTestMessage(result?.data?.message ?? "连接失败");
+      setTestMessage("连接失败");
     }
   };
 
@@ -104,7 +112,10 @@ export function useAddProviderForm({ onOpenChange }: UseAddProviderFormProps) {
       return;
     }
     if (!values.apiHost.trim()) {
-      form.setError("apiHost", { type: "required", message: "请输入 API 地址" });
+      form.setError("apiHost", {
+        type: "required",
+        message: "请输入 API 地址"
+      });
       return;
     }
     try {
@@ -117,7 +128,6 @@ export function useAddProviderForm({ onOpenChange }: UseAddProviderFormProps) {
       return;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await create({
       type: values.type.trim() as any,
       name: values.name.trim(),

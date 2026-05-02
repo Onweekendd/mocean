@@ -6,8 +6,7 @@ import {
   AssistantChatTransport,
   useChatRuntime
 } from "@assistant-ui/react-ai-sdk";
-import type { StorageThreadType } from "@mocean/mastra/apiClient";
-import { useAssistantsApi } from "@mocean/mastra/apiClient";
+import { type StorageThreadType, apiClient } from "@mocean/mastra/apiClient";
 import type { ChatOnFinishCallback, UIMessage } from "ai";
 import { generateId } from "ai";
 
@@ -64,7 +63,6 @@ export function useMastraRuntime({
   const newThreadRef = useRef<StorageThreadType | null>(null);
 
   const { refresh } = useAssistantThreadsSWR(activeAssistantId || null);
-  const { generateTitleWithAssistant } = useAssistantsApi();
   const { setStreamingTitle, clearStreamingTitle } = useStore();
   const { mastraClient } = useMastraClient();
 
@@ -94,10 +92,9 @@ export function useMastraRuntime({
 
     setStreamingTitle(assistantId, newThread);
 
-    const response = await generateTitleWithAssistant({
-      assistantId,
-      threadId
-    });
+    const response = await apiClient.customApi.assistants[
+      "generate-title"
+    ].$post({ json: { assistantId, threadId } });
 
     let accumulatedTitle = "";
     for await (const chunk of streamTitle(response)) {
@@ -124,7 +121,7 @@ export function useMastraRuntime({
     const finalThread: StorageThreadType = {
       ...newThread,
       title: accumulatedTitle,
-      metadata: {}
+      Metadata: {}
     };
 
     clearStreamingTitle(assistantId);

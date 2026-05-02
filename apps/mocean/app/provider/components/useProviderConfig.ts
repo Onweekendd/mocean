@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useProvidersApi } from "@mocean/mastra/apiClient";
+import { apiClient } from "@mocean/mastra/apiClient";
 import type { Provider } from "@mocean/mastra/prismaType";
 import { ProviderFullSchema } from "@mocean/mastra/schemas";
 import { useForm } from "react-hook-form";
@@ -9,23 +9,13 @@ import { z } from "zod";
 
 import { useProviderActions } from "@/hooks/useProvidersSWR";
 
-/**
- * 供应商配置编辑对话框属性
- */
 export interface ProviderConfigDialogProps {
-  /** 供应商数据 */
   provider: Provider;
-  /** 对话框开启状态 */
   open: boolean;
-  /** 对话框状态变更回调 */
   onOpenChange: (open: boolean) => void;
-  /** 供应商更新成功回调 */
   onSuccess?: () => Promise<void>;
 }
 
-/**
- * 供应商配置表单验证 Schema
- */
 const providerConfigSchema = ProviderFullSchema.pick({
   name: true,
   apiKey: true,
@@ -39,9 +29,6 @@ const providerConfigSchema = ProviderFullSchema.pick({
   notes: z.string()
 });
 
-/**
- * 供应商配置表单数据（从 schema 推导，确保类型一致）
- */
 export type ProviderConfigFormData = z.infer<typeof providerConfigSchema>;
 
 type TestStatus = "idle" | "testing" | "success" | "error";
@@ -53,7 +40,6 @@ export const useProviderConfig = ({
   onSuccess
 }: ProviderConfigDialogProps) => {
   const { update } = useProviderActions(onSuccess);
-  const { testProviderConnection } = useProvidersApi();
 
   const [testStatus, setTestStatus] = useState<TestStatus>("idle");
   const [testMessage, setTestMessage] = useState("");
@@ -85,9 +71,6 @@ export const useProviderConfig = ({
     updateFormDataWithProvider();
   }, [updateFormDataWithProvider]);
 
-  /**
-   * 处理对话框打开状态变更
-   */
   const onDialogOpenChange = useCallback(
     (isOpen: boolean) => {
       if (isOpen) {
@@ -99,9 +82,6 @@ export const useProviderConfig = ({
     [onOpenChange, updateFormDataWithProvider]
   );
 
-  /**
-   * 处理表单提交
-   */
   const onSubmit = useCallback(
     async (data: ProviderConfigFormData) => {
       try {
@@ -137,17 +117,26 @@ export const useProviderConfig = ({
     setTestStatus("testing");
     setTestMessage("");
 
-    const result = await testProviderConnection({
-      apiKey: values.apiKey?.trim() ?? "",
-      apiHost
-    });
+    try {
+      const res = await apiClient.customApi.providers["test-connection"].$post({
+        json: {
+          apiKey: values.apiKey?.trim() ?? "",
+          apiHost
+        }
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const result = await res.json();
 
-    if (result?.data?.success) {
-      setTestStatus("success");
-      setTestMessage(result.data.message);
-    } else {
+      if (result.success) {
+        setTestStatus("success");
+        setTestMessage(result.message);
+      } else {
+        setTestStatus("error");
+        setTestMessage(result.message ?? "连接失败");
+      }
+    } catch {
       setTestStatus("error");
-      setTestMessage(result?.data?.message ?? "连接失败");
+      setTestMessage("连接失败");
     }
   };
 

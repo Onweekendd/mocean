@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAssistantsApi } from "@mocean/mastra/apiClient";
+import { apiClient } from "@mocean/mastra/apiClient";
 import {
   AssistantFullSchema,
   AssistantSettingsFullSchema
@@ -55,7 +55,6 @@ export const useAssistantSettingsPanel = (assistantId: string | null) => {
     isLoading,
     refresh: mutateAssistant
   } = useFullAssistant(assistantId);
-  const { updateAssistant } = useAssistantsApi();
   const { providers } = useEnabledProvidersWithModels();
   const [isSaving, setIsSaving] = useState(false);
 
@@ -165,15 +164,16 @@ export const useAssistantSettingsPanel = (assistantId: string | null) => {
 
       await mutateAssistant(
         async () => {
-          await updateAssistant(assistant.id, payload);
-          // Return optimistic to hold until revalidation fetches fresh full data.
-          // updateAssistant endpoint only returns partial data (no provider relation).
+          await apiClient.customApi.assistants[":assistantId"].$put({
+            param: { assistantId: assistant.id },
+            json: payload
+          });
           return optimistic;
         },
         { optimisticData: optimistic, revalidate: true }
       );
     },
-    [assistant, updateAssistant, mutateAssistant, modelSelection]
+    [assistant, mutateAssistant, modelSelection]
   );
 
   const onSubmitRef = useRef(onSubmit);

@@ -1,3 +1,5 @@
+import { Hono } from "hono";
+
 import { agentsRouter } from "./agents";
 import { assistantsRouter } from "./assistants";
 import { groupsRouter } from "./groups";
@@ -6,14 +8,16 @@ import { modelsRouter } from "./models";
 import { providersRouter } from "./providers";
 import { uploadsRouter } from "./uploads";
 
-const apiRoutes = [
-  ...agentsRouter,
-  ...assistantsRouter,
-  ...providersRouter,
-  ...modelsRouter,
-  ...groupsRouter,
-  ...mcpRouter,
-  ...uploadsRouter
-];
+export const customRoutes = new Hono()
+  .route("/customApi/agents", agentsRouter)
+  .route("/customApi/assistants", assistantsRouter)
+  .route("/customApi/groups", groupsRouter)
+  .route("/customApi/mcp/servers", mcpRouter)
+  .route("/customApi/models", modelsRouter)
+  .route("/customApi/providers", providersRouter)
+  .route("/customApi/uploads", uploadsRouter);
 
-export { apiRoutes };
+export type AppType = typeof customRoutes;
+
+// Legacy export for backward compatibility during migration
+export const apiRoutes = customRoutes;

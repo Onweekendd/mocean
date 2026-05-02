@@ -1,22 +1,14 @@
-import { useProvidersApi } from "@mocean/mastra/apiClient";
 import type { ProviderType } from "@mocean/mastra/prismaType";
+import { apiClient } from "@mocean/mastra/apiClient";
 import useSWR, { useSWRConfig } from "swr";
-
-/**
- * 注意：全局已配置 defaultSWRConfig，此处只需配置与全局不同的部分
- */
 
 // ==================== 基础版本（不包含关联模型）====================
 
-/**
- * 获取所有提供商列表（基础版本）- 使用 SWR
- */
 export function useProviders() {
-  const { getProviders } = useProvidersApi();
-
   const { data, error, isLoading, mutate } = useSWR("providers", async () => {
-    const result = await getProviders();
-    return result?.data || [];
+    const res = await apiClient.customApi.providers.$get();
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
   });
 
   return {
@@ -27,18 +19,13 @@ export function useProviders() {
   };
 }
 
-/**
- * 获取启用的提供商列表（基础版本）- 使用 SWR
- */
 export function useEnabledProviders() {
-  const { getEnabledProviders } = useProvidersApi();
-
   const { data, error, isLoading, mutate } = useSWR(
     "providers-enabled",
     async () => {
-      const result = await getEnabledProviders();
-
-      return result?.data || [];
+      const res = await apiClient.customApi.providers.enabled.$get();
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
     }
   );
 
@@ -50,18 +37,16 @@ export function useEnabledProviders() {
   };
 }
 
-/**
- * 获取单个提供商（基础版本）- 使用 SWR
- */
 export function useProvider(id: string | null) {
-  const { getProviderById } = useProvidersApi();
-
   const { data, error, isLoading, mutate } = useSWR(
     id ? `provider-${id}` : null,
     async () => {
       if (!id) return null;
-      const result = await getProviderById(id);
-      return result?.data || null;
+      const res = await apiClient.customApi.providers[":id"].$get({
+        param: { id }
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
     }
   );
 
@@ -73,18 +58,16 @@ export function useProvider(id: string | null) {
   };
 }
 
-/**
- * 根据类型获取提供商列表（基础版本）- 使用 SWR
- */
 export function useProvidersByType(type: string | null) {
-  const { getProvidersByType } = useProvidersApi();
-
   const { data, error, isLoading, mutate } = useSWR(
     type ? `providers-type-${type}` : null,
     async () => {
       if (!type) return [];
-      const result = await getProvidersByType(type as ProviderType);
-      return result?.data || [];
+      const res = await apiClient.customApi.providers.type[":type"].$get({
+        param: { type }
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
     },
     { dedupingInterval: 30000 }
   );
@@ -99,17 +82,13 @@ export function useProvidersByType(type: string | null) {
 
 // ==================== WithModels 版本（包含模型列表）====================
 
-/**
- * 获取所有提供商列表（包含模型）- 使用 SWR
- */
 export function useProvidersWithModels() {
-  const { getProvidersWithModels } = useProvidersApi();
-
   const { data, error, isLoading, mutate } = useSWR(
     "providers-with-models",
     async () => {
-      const result = await getProvidersWithModels();
-      return result?.data || [];
+      const res = await apiClient.customApi.providers["with-models"].$get();
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
     }
   );
 
@@ -121,17 +100,14 @@ export function useProvidersWithModels() {
   };
 }
 
-/**
- * 获取启用的提供商列表（包含模型）- 使用 SWR
- */
 export function useEnabledProvidersWithModels() {
-  const { getEnabledProvidersWithModels } = useProvidersApi();
-
   const { data, error, isLoading, mutate } = useSWR(
     "providers-enabled-with-models",
     async () => {
-      const result = await getEnabledProvidersWithModels();
-      return result?.data || [];
+      const res =
+        await apiClient.customApi.providers.enabled["with-models"].$get();
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
     }
   );
 
@@ -143,18 +119,16 @@ export function useEnabledProvidersWithModels() {
   };
 }
 
-/**
- * 获取单个提供商（包含模型）- 使用 SWR
- */
 export function useProviderWithModels(id: string | null) {
-  const { getProviderWithModelsById } = useProvidersApi();
-
   const { data, error, isLoading, mutate } = useSWR(
     id ? `provider-with-models-${id}` : null,
     async () => {
       if (!id) return null;
-      const result = await getProviderWithModelsById(id);
-      return result?.data || null;
+      const res = await apiClient.customApi.providers[":id"]["with-models"].$get(
+        { param: { id } }
+      );
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
     }
   );
 
@@ -166,18 +140,16 @@ export function useProviderWithModels(id: string | null) {
   };
 }
 
-/**
- * 根据类型获取提供商列表（包含模型）- 使用 SWR
- */
 export function useProvidersByTypeWithModels(type: string | null) {
-  const { getProvidersByTypeWithModels } = useProvidersApi();
-
   const { data, error, isLoading, mutate } = useSWR(
     type ? `providers-type-with-models-${type}` : null,
     async () => {
       if (!type) return [];
-      const result = await getProvidersByTypeWithModels(type as ProviderType);
-      return result?.data || [];
+      const res = await apiClient.customApi.providers.type[":type"][
+        "with-models"
+      ].$get({ param: { type } });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
     },
     { dedupingInterval: 30000 }
   );
@@ -192,42 +164,13 @@ export function useProvidersByTypeWithModels(type: string | null) {
 
 // ==================== 操作 Hooks（与数据获取解耦）====================
 
-/**
- * Provider 操作 hooks - 与数据获取解耦
- * @param customMutate 可选的自定义刷新函数，如果不传则自动刷新所有相关缓存
- *
- * @example
- * // 场景1: 自动刷新所有相关数据
- * const { create, update, remove } = useProviderActions();
- *
- * @example
- * // 场景2: 只刷新特定列表
- * const { providers, refresh } = useProviders();
- * const { create, update } = useProviderActions(refresh);
- *
- * @example
- * // 场景3: 刷新多个数据源
- * const { refresh: refreshList } = useProviders();
- * const { refresh: refreshDetail } = useProvider(id);
- * const actions = useProviderActions(async () => {
- *   await Promise.all([refreshList(), refreshDetail()]);
- * });
- */
 export function useProviderActions(customMutate?: () => Promise<unknown>) {
   const { mutate: globalMutate } = useSWRConfig();
-  const {
-    createProvider,
-    updateProvider,
-    deleteProvider,
-    toggleProviderEnabled
-  } = useProvidersApi();
 
-  // 刷新逻辑：优先使用自定义 mutate，否则使用全局刷新
   const refreshData = async () => {
     if (customMutate) {
       await customMutate();
     } else {
-      // 刷新所有 provider 相关的缓存
       await globalMutate(
         (key) => typeof key === "string" && key.startsWith("provider"),
         undefined,
@@ -236,38 +179,49 @@ export function useProviderActions(customMutate?: () => Promise<unknown>) {
     }
   };
 
-  const create = async (data: Parameters<typeof createProvider>[0]) => {
-    const result = await createProvider(data);
-    if (result) {
-      await refreshData();
-    }
+  const create = async (
+    data: Parameters<typeof apiClient.customApi.providers.$post>[0]["json"]
+  ) => {
+    const res = await apiClient.customApi.providers.$post({ json: data });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const result = await res.json();
+    await refreshData();
     return result;
   };
 
   const update = async (
     id: string,
-    data: Parameters<typeof updateProvider>[1]
+    data: Parameters<
+      typeof apiClient.customApi.providers[":id"]["$put"]
+    >[0]["json"]
   ) => {
-    const result = await updateProvider(id, data);
-    if (result) {
-      await refreshData();
-    }
+    const res = await apiClient.customApi.providers[":id"].$put({
+      param: { id },
+      json: data
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const result = await res.json();
+    await refreshData();
     return result;
   };
 
   const remove = async (id: string) => {
-    const result = await deleteProvider(id);
-    if (result) {
-      await refreshData();
-    }
+    const res = await apiClient.customApi.providers[":id"].$delete({
+      param: { id }
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const result = await res.json();
+    await refreshData();
     return result;
   };
 
   const toggleEnabled = async (id: string) => {
-    const result = await toggleProviderEnabled(id);
-    if (result) {
-      await refreshData();
-    }
+    const res = await apiClient.customApi.providers[":id"].toggle.$put({
+      param: { id }
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const result = await res.json();
+    await refreshData();
     return result;
   };
 
