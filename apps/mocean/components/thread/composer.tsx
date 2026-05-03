@@ -210,6 +210,8 @@ export const ComposerExtras: FC = () => {
 
 const ComposerToolbar: FC = () => {
   const text = useAuiState((s) => s.composer.text);
+
+  console.log(text);
   return (
     <div className="flex w-full items-center justify-end px-3 pb-2">
       <div className="flex items-center gap-2">

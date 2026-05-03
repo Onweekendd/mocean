@@ -137,7 +137,7 @@ export type MCPAssistantServerGroupByOutputType = {
   _max: MCPAssistantServerMaxAggregateOutputType | null
 }
 
-type GetMCPAssistantServerGroupByPayload<T extends MCPAssistantServerGroupByArgs> = Prisma.PrismaPromise<
+export type GetMCPAssistantServerGroupByPayload<T extends MCPAssistantServerGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<MCPAssistantServerGroupByOutputType, T['by']> &
       {
@@ -1124,6 +1124,11 @@ export type MCPAssistantServerFindManyArgs<ExtArgs extends runtime.Types.Extensi
    * Skip the first `n` MCPAssistantServers.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of MCPAssistantServers.
+   */
   distinct?: Prisma.MCPAssistantServerScalarFieldEnum | Prisma.MCPAssistantServerScalarFieldEnum[]
 }
 

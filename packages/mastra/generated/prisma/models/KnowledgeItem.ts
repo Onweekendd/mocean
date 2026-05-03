@@ -244,7 +244,7 @@ export type KnowledgeItemGroupByOutputType = {
   _max: KnowledgeItemMaxAggregateOutputType | null
 }
 
-type GetKnowledgeItemGroupByPayload<T extends KnowledgeItemGroupByArgs> = Prisma.PrismaPromise<
+export type GetKnowledgeItemGroupByPayload<T extends KnowledgeItemGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<KnowledgeItemGroupByOutputType, T['by']> &
       {
@@ -1439,6 +1439,11 @@ export type KnowledgeItemFindManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Skip the first `n` KnowledgeItems.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of KnowledgeItems.
+   */
   distinct?: Prisma.KnowledgeItemScalarFieldEnum | Prisma.KnowledgeItemScalarFieldEnum[]
 }
 

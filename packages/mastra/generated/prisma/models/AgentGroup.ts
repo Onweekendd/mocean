@@ -158,7 +158,7 @@ export type AgentGroupGroupByOutputType = {
   _max: AgentGroupMaxAggregateOutputType | null
 }
 
-type GetAgentGroupGroupByPayload<T extends AgentGroupGroupByArgs> = Prisma.PrismaPromise<
+export type GetAgentGroupGroupByPayload<T extends AgentGroupGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<AgentGroupGroupByOutputType, T['by']> &
       {
@@ -1088,6 +1088,11 @@ export type AgentGroupFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Skip the first `n` AgentGroups.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of AgentGroups.
+   */
   distinct?: Prisma.AgentGroupScalarFieldEnum | Prisma.AgentGroupScalarFieldEnum[]
 }
 

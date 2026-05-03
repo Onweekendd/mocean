@@ -5,8 +5,8 @@ import { memo } from "react";
 import type { Model, Provider } from "@mocean/mastra/prismaType";
 
 import {
-  renderModelAvatar,
-  renderProviderAvatar as RenderProviderAvatar
+  renderProviderAvatar as RenderProviderAvatar,
+  renderModelAvatar
 } from "@/app/provider/components/CustomerIcon";
 import { Button } from "@/components/ui/button";
 import {

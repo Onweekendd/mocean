@@ -271,7 +271,7 @@ export type MCPToolGroupByOutputType = {
   _max: MCPToolMaxAggregateOutputType | null
 }
 
-type GetMCPToolGroupByPayload<T extends MCPToolGroupByArgs> = Prisma.PrismaPromise<
+export type GetMCPToolGroupByPayload<T extends MCPToolGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<MCPToolGroupByOutputType, T['by']> &
       {
@@ -1602,6 +1602,11 @@ export type MCPToolFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Skip the first `n` MCPTools.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of MCPTools.
+   */
   distinct?: Prisma.MCPToolScalarFieldEnum | Prisma.MCPToolScalarFieldEnum[]
 }
 

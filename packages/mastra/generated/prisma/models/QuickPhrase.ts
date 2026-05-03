@@ -199,7 +199,7 @@ export type QuickPhraseGroupByOutputType = {
   _max: QuickPhraseMaxAggregateOutputType | null
 }
 
-type GetQuickPhraseGroupByPayload<T extends QuickPhraseGroupByArgs> = Prisma.PrismaPromise<
+export type GetQuickPhraseGroupByPayload<T extends QuickPhraseGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<QuickPhraseGroupByOutputType, T['by']> &
       {
@@ -1026,6 +1026,11 @@ export type QuickPhraseFindManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Skip the first `n` QuickPhrases.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of QuickPhrases.
+   */
   distinct?: Prisma.QuickPhraseScalarFieldEnum | Prisma.QuickPhraseScalarFieldEnum[]
 }
 

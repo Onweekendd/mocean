@@ -268,7 +268,7 @@ export type KnowledgeBaseGroupByOutputType = {
   _max: KnowledgeBaseMaxAggregateOutputType | null
 }
 
-type GetKnowledgeBaseGroupByPayload<T extends KnowledgeBaseGroupByArgs> = Prisma.PrismaPromise<
+export type GetKnowledgeBaseGroupByPayload<T extends KnowledgeBaseGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<KnowledgeBaseGroupByOutputType, T['by']> &
       {
@@ -1925,6 +1925,11 @@ export type KnowledgeBaseFindManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Skip the first `n` KnowledgeBases.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of KnowledgeBases.
+   */
   distinct?: Prisma.KnowledgeBaseScalarFieldEnum | Prisma.KnowledgeBaseScalarFieldEnum[]
 }
 

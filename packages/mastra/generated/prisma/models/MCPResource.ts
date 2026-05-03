@@ -234,7 +234,7 @@ export type MCPResourceGroupByOutputType = {
   _max: MCPResourceMaxAggregateOutputType | null
 }
 
-type GetMCPResourceGroupByPayload<T extends MCPResourceGroupByArgs> = Prisma.PrismaPromise<
+export type GetMCPResourceGroupByPayload<T extends MCPResourceGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<MCPResourceGroupByOutputType, T['by']> &
       {
@@ -1375,6 +1375,11 @@ export type MCPResourceFindManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Skip the first `n` MCPResources.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of MCPResources.
+   */
   distinct?: Prisma.MCPResourceScalarFieldEnum | Prisma.MCPResourceScalarFieldEnum[]
 }
 

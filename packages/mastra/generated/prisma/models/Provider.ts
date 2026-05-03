@@ -262,7 +262,7 @@ export type ProviderGroupByOutputType = {
   _max: ProviderMaxAggregateOutputType | null
 }
 
-type GetProviderGroupByPayload<T extends ProviderGroupByArgs> = Prisma.PrismaPromise<
+export type GetProviderGroupByPayload<T extends ProviderGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ProviderGroupByOutputType, T['by']> &
       {
@@ -1617,6 +1617,11 @@ export type ProviderFindManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Skip the first `n` Providers.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Providers.
+   */
   distinct?: Prisma.ProviderScalarFieldEnum | Prisma.ProviderScalarFieldEnum[]
 }
 

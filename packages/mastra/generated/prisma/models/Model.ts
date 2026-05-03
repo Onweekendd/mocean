@@ -302,7 +302,7 @@ export type ModelGroupByOutputType = {
   _max: ModelMaxAggregateOutputType | null
 }
 
-type GetModelGroupByPayload<T extends ModelGroupByArgs> = Prisma.PrismaPromise<
+export type GetModelGroupByPayload<T extends ModelGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ModelGroupByOutputType, T['by']> &
       {
@@ -2004,6 +2004,11 @@ export type ModelFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Skip the first `n` Models.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Models.
+   */
   distinct?: Prisma.ModelScalarFieldEnum | Prisma.ModelScalarFieldEnum[]
 }
 

@@ -150,7 +150,7 @@ export type MCPConfigSampleGroupByOutputType = {
   _max: MCPConfigSampleMaxAggregateOutputType | null
 }
 
-type GetMCPConfigSampleGroupByPayload<T extends MCPConfigSampleGroupByArgs> = Prisma.PrismaPromise<
+export type GetMCPConfigSampleGroupByPayload<T extends MCPConfigSampleGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<MCPConfigSampleGroupByOutputType, T['by']> &
       {
@@ -1060,6 +1060,11 @@ export type MCPConfigSampleFindManyArgs<ExtArgs extends runtime.Types.Extensions
    * Skip the first `n` MCPConfigSamples.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of MCPConfigSamples.
+   */
   distinct?: Prisma.MCPConfigSampleScalarFieldEnum | Prisma.MCPConfigSampleScalarFieldEnum[]
 }
 

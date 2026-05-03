@@ -1,5 +1,5 @@
-import type { ProviderType } from "@mocean/mastra/prismaType";
 import { apiClient } from "@mocean/mastra/apiClient";
+import type { ProviderType } from "@mocean/mastra/prismaType";
 import useSWR, { useSWRConfig } from "swr";
 
 // ==================== 基础版本（不包含关联模型）====================
@@ -124,9 +124,9 @@ export function useProviderWithModels(id: string | null) {
     id ? `provider-with-models-${id}` : null,
     async () => {
       if (!id) return null;
-      const res = await apiClient.customApi.providers[":id"]["with-models"].$get(
-        { param: { id } }
-      );
+      const res = await apiClient.customApi.providers[":id"][
+        "with-models"
+      ].$get({ param: { id } });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return res.json();
     }
@@ -192,7 +192,7 @@ export function useProviderActions(customMutate?: () => Promise<unknown>) {
   const update = async (
     id: string,
     data: Parameters<
-      typeof apiClient.customApi.providers[":id"]["$put"]
+      (typeof apiClient.customApi.providers)[":id"]["$put"]
     >[0]["json"]
   ) => {
     const res = await apiClient.customApi.providers[":id"].$put({

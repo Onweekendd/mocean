@@ -168,7 +168,7 @@ export type MCPPromptGroupByOutputType = {
   _max: MCPPromptMaxAggregateOutputType | null
 }
 
-type GetMCPPromptGroupByPayload<T extends MCPPromptGroupByArgs> = Prisma.PrismaPromise<
+export type GetMCPPromptGroupByPayload<T extends MCPPromptGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<MCPPromptGroupByOutputType, T['by']> &
       {
@@ -1185,6 +1185,11 @@ export type MCPPromptFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Skip the first `n` MCPPrompts.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of MCPPrompts.
+   */
   distinct?: Prisma.MCPPromptScalarFieldEnum | Prisma.MCPPromptScalarFieldEnum[]
 }
 

@@ -349,7 +349,7 @@ export type MCPServerGroupByOutputType = {
   _max: MCPServerMaxAggregateOutputType | null
 }
 
-type GetMCPServerGroupByPayload<T extends MCPServerGroupByArgs> = Prisma.PrismaPromise<
+export type GetMCPServerGroupByPayload<T extends MCPServerGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<MCPServerGroupByOutputType, T['by']> &
       {
@@ -2783,6 +2783,11 @@ export type MCPServerFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Skip the first `n` MCPServers.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of MCPServers.
+   */
   distinct?: Prisma.MCPServerScalarFieldEnum | Prisma.MCPServerScalarFieldEnum[]
 }
 

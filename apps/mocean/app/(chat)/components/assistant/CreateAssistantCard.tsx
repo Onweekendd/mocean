@@ -24,7 +24,10 @@ const CreateAssistantCard: React.FC = () => {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Card className="group cursor-pointer border border-dashed border-foreground/10 bg-transparent transition-all duration-200 hover:border-foreground/20 hover:bg-foreground/[0.02]">
+          <Card
+            id="model-selector-trigger"
+            className="group cursor-pointer border border-dashed border-foreground/10 bg-transparent transition-all duration-200 hover:border-foreground/20 hover:bg-foreground/[0.02]"
+          >
             <CardContent className="flex items-center p-4">
               <div className="flex w-full items-center space-x-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground transition-colors duration-200 group-hover:text-foreground">

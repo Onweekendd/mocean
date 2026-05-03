@@ -263,7 +263,7 @@ export type AssistantSettingsGroupByOutputType = {
   _max: AssistantSettingsMaxAggregateOutputType | null
 }
 
-type GetAssistantSettingsGroupByPayload<T extends AssistantSettingsGroupByArgs> = Prisma.PrismaPromise<
+export type GetAssistantSettingsGroupByPayload<T extends AssistantSettingsGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<AssistantSettingsGroupByOutputType, T['by']> &
       {
@@ -1428,6 +1428,11 @@ export type AssistantSettingsFindManyArgs<ExtArgs extends runtime.Types.Extensio
    * Skip the first `n` AssistantSettings.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of AssistantSettings.
+   */
   distinct?: Prisma.AssistantSettingsScalarFieldEnum | Prisma.AssistantSettingsScalarFieldEnum[]
 }
 

@@ -1,7 +1,13 @@
 import { useState } from "react";
 
 import type { Assistant } from "@mocean/mastra/prismaType";
-import { MoreHorizontal, Pencil, Settings, Sparkles, Trash2 } from "lucide-react";
+import {
+  MoreHorizontal,
+  Pencil,
+  Settings,
+  Sparkles,
+  Trash2
+} from "lucide-react";
 
 import {
   AlertDialog,
