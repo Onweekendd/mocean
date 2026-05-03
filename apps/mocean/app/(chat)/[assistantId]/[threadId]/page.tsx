@@ -1,7 +1,5 @@
 "use client";
 
-import type { UIMessage } from "ai";
-
 import { useParams } from "next/navigation";
 
 import { useStore } from "@/app/store/useStore";
@@ -33,10 +31,7 @@ export default function Chat() {
 
   return (
     <div className="h-full flex-1">
-      <ChatView
-        key={(threadId as string) ?? "new"}
-        messages={(messages || []) as UIMessage[]}
-      />
+      <ChatView key={(threadId as string) ?? "new"} messages={messages || []} />
     </div>
   );
 }

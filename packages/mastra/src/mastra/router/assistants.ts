@@ -6,12 +6,16 @@ import { HTTPException } from "hono/http-exception";
 import {
   chatWithAssistantSchema,
   createAssistantSchema,
+  createThreadSchema,
   generateTitleSchema,
+  renameThreadSchema,
   updateAssistantSchema
 } from "../schema/assistant";
 import {
   createAssistant,
+  createThread,
   deleteAssistant,
+  deleteThread,
   executeChatWithAssistant,
   generateThreadTitle,
   getAssistantById,
@@ -19,6 +23,7 @@ import {
   getFullAssistantById,
   getThreadsByAssistantId,
   getUIMessagesByThreadId,
+  renameThread,
   updateAssistant
 } from "../server/assistant";
 
@@ -26,6 +31,24 @@ export const assistantsRouter = new Hono()
   .get("/", async (c) => {
     const result = await getAssistants();
     return c.json(result);
+  })
+  .post("/threads", zValidator("json", createThreadSchema), async (c) => {
+    const { threadId, resourceId, title } = c.req.valid("json");
+    const thread = await createThread(threadId, resourceId, title);
+    return c.json(thread, 201);
+  })
+  .put(
+    "/threads/:threadId",
+    zValidator("json", renameThreadSchema),
+    async (c) => {
+      const { title } = c.req.valid("json");
+      const thread = await renameThread(c.req.param("threadId"), title);
+      return c.json(thread);
+    }
+  )
+  .delete("/threads/:threadId", async (c) => {
+    await deleteThread(c.req.param("threadId"));
+    return c.json({ success: true });
   })
   .post("/chat", zValidator("json", chatWithAssistantSchema), async (c) => {
     const { assistantId, messages, threadId } = c.req.valid("json");

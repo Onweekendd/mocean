@@ -102,6 +102,16 @@ export const chatWithAssistantSchema = z.object({
   threadId: z.string().optional()
 });
 
+export const createThreadSchema = z.object({
+  threadId: z.string().min(1, "线程ID不能为空"),
+  resourceId: z.string().min(1, "资源ID不能为空"),
+  title: z.string().optional().default("新对话")
+});
+
+export const renameThreadSchema = z.object({
+  title: z.string().min(1, "标题不能为空")
+});
+
 export const generateTitleSchema = z.object({
   assistantId: z.string().min(1, "助手ID不能为空"),
   threadId: z.string().min(1, "线程ID不能为空")

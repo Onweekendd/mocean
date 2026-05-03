@@ -13,7 +13,6 @@ import { generateId } from "ai";
 import { useStore } from "@/app/store/useStore";
 
 import { useAssistantThreadsSWR } from "./useAssistantsSWR";
-import { useMastraClient } from "./useMastraClient";
 
 // 提取 experimental_prepareRequestBody 返回值类型
 export type PrepareRequestBodyReturnType = {
@@ -34,8 +33,6 @@ async function* streamTitle(response: Response) {
     yield decoder.decode(value);
   }
 }
-
-const DYNAMIC_AGENT_ID = "dynamic-agent";
 
 /**
  * mastra的兼容
@@ -59,12 +56,11 @@ export function useMastraRuntime({
 
   const newThreadId = useRef<string | null>(null);
   const hasCreatedThread = useRef<string | null>(null);
-  // 缓存 createMemoryThread 的返回值，供 onNewThreadFirstFinish 使用
+  // 缓存创建线程的返回值，供 onNewThreadFirstFinish 使用
   const newThreadRef = useRef<StorageThreadType | null>(null);
 
   const { refresh } = useAssistantThreadsSWR(activeAssistantId || null);
   const { setStreamingTitle, clearStreamingTitle } = useStore();
-  const { mastraClient } = useMastraClient();
 
   /**
    * 新建的对话第一次完成后：生成标题并刷新列表
@@ -121,7 +117,7 @@ export function useMastraRuntime({
     const finalThread: StorageThreadType = {
       ...newThread,
       title: accumulatedTitle,
-      Metadata: {}
+      metadata: {}
     };
 
     clearStreamingTitle(assistantId);
@@ -157,12 +153,14 @@ export function useMastraRuntime({
           const threadId = generateId();
           newThreadId.current = threadId;
 
-          newThreadRef.current = await mastraClient.createMemoryThread({
-            title: "新对话",
-            resourceId: currentAssistantId,
-            threadId,
-            agentId: DYNAMIC_AGENT_ID
+          const res = await apiClient.customApi.assistants.threads.$post({
+            json: {
+              title: "新对话",
+              resourceId: currentAssistantId,
+              threadId
+            }
           });
+          newThreadRef.current = await res.json();
 
           return {
             ...rest,

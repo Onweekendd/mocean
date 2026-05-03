@@ -8,7 +8,6 @@ import Image from "next/image";
 import {
   ComposerPrimitive,
   ThreadPrimitive,
-  useAttachmentRuntime,
   useAui,
   useAuiState
 } from "@assistant-ui/react";
@@ -29,8 +28,10 @@ import { CircleStopIcon } from "./shared";
 // ─── ComposerImageAttachment ──────────────────────────────────────────────────
 
 const ComposerImageAttachment: FC = () => {
-  const attachmentRuntime = useAttachmentRuntime();
+  const aui = useAui();
+  const attachmentRuntime = aui.attachment();
   const state = attachmentRuntime.getState();
+
   const file = "file" in state ? state.file : null;
   const [objectUrl, setObjectUrl] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
@@ -209,15 +210,12 @@ export const ComposerExtras: FC = () => {
 // ─── Toolbar & Action ─────────────────────────────────────────────────────────
 
 const ComposerToolbar: FC = () => {
-  const text = useAuiState((s) => s.composer.text);
+  // const text = useAuiState((s) => s.composer.text);
 
-  console.log(text);
   return (
     <div className="flex w-full items-center justify-end px-3 pb-2">
       <div className="flex items-center gap-2">
-        <span className="text-xs text-muted-foreground">
-          {text.length}/1000
-        </span>
+        <span className="text-xs text-muted-foreground">/1000</span>
         <ComposerAction />
       </div>
     </div>

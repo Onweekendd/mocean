@@ -82,11 +82,7 @@ const getAssistants = async (): Promise<
  * @param id - 助手的唯一标识符
  * @returns 助手对象，如果不存在则返回null
  */
-const getAssistantById = async (
-  id: string
-): Promise<
-  z.infer<(typeof assistantRoutes)["getAssistantById"]["responseSchema"]>
-> => {
+const getAssistantById = async (id: string) => {
   const assistant = await prisma.assistant.findUnique({
     where: {
       id
@@ -100,9 +96,7 @@ const getAssistantById = async (
       mcpServers: true
     }
   });
-  return assistant as z.infer<
-    (typeof assistantRoutes)["getAssistantById"]["responseSchema"]
-  > | null;
+  return assistant;
 };
 
 /**
@@ -337,7 +331,7 @@ const executeChatWithAssistant = async (
           controller.enqueue({
             type: "data-token-usage",
             data: lastUsage
-          } as AiSdkChunk);
+          });
         }
         controller.close();
       } catch (error) {
@@ -347,7 +341,7 @@ const executeChatWithAssistant = async (
   });
 
   return createUIMessageStreamResponse({
-    stream: processedStream as ReadableStream
+    stream: processedStream
   });
 };
 
@@ -359,6 +353,7 @@ const executeChatWithAssistant = async (
  */
 const getThreadsByAssistantId = async (assistantId: string) => {
   const memory = await DynamicAgent.getMemory();
+  if (!memory) throw new Error("Memory 未初始化");
 
   const storage = await memory.storage.getStore("memory");
 
@@ -368,6 +363,64 @@ const getThreadsByAssistantId = async (assistantId: string) => {
   });
 
   return result?.threads ?? [];
+};
+
+/**
+ * 创建对话线程
+ * @param threadId - 线程ID
+ * @param resourceId - 资源ID（助手ID）
+ * @param title - 线程标题
+ * @returns 新创建的线程对象
+ */
+const createThread = async (
+  threadId: string,
+  resourceId: string,
+  title: string
+): Promise<StorageThreadType> => {
+  const memory = await DynamicAgent.getMemory();
+  if (!memory) throw new Error("Memory 未初始化");
+
+  const thread = await memory.createThread({
+    threadId,
+    resourceId,
+    title
+  });
+
+  return thread;
+};
+
+/**
+ * 更新对话线程标题
+ * @param threadId - 线程ID
+ * @param title - 新标题
+ * @returns 更新后的线程对象
+ */
+const renameThread = async (
+  threadId: string,
+  title: string
+): Promise<StorageThreadType> => {
+  const memory = await DynamicAgent.getMemory();
+  if (!memory) throw new Error("Memory 未初始化");
+
+  const thread = await memory.getThreadById({ threadId });
+  if (!thread) throw new Error("线程不存在");
+
+  const updated = await memory.saveThread({
+    thread: { ...thread, title }
+  });
+
+  return updated;
+};
+
+/**
+ * 删除对话线程
+ * @param threadId - 线程ID
+ */
+const deleteThread = async (threadId: string): Promise<void> => {
+  const memory = await DynamicAgent.getMemory();
+
+  if (!memory) throw new Error("Memory 未初始化");
+  await memory.deleteThread(threadId);
 };
 
 /**
@@ -392,6 +445,7 @@ const getUIMessagesByThreadId = async (
       assistant
     }) as RequestContext<unknown>
   });
+  if (!memory) throw new Error("Memory 未初始化");
 
   const result = await memory.recall({
     threadId,
@@ -433,6 +487,10 @@ const generateThreadTitle = async (assistantId: string, threadId: string) => {
     throw new Error("助手不存在");
   }
 
+  if (!fullAssistant.providerId) {
+    throw new Error("助手未配置供应商");
+  }
+
   const providerWithModel = await getProviderWithModelsById(
     fullAssistant.providerId
   );
@@ -450,6 +508,7 @@ const generateThreadTitle = async (assistantId: string, threadId: string) => {
       assistant: titleGenerationAssistant
     }) as RequestContext<unknown>
   });
+  if (!memory) throw new Error("Memory 未初始化");
 
   const { messages: threadMessages } = await memory.recall({
     threadId,
@@ -482,7 +541,7 @@ const generateThreadTitle = async (assistantId: string, threadId: string) => {
   });
 
   return createUIMessageStreamResponse({
-    stream: aiSdkStream as ReadableStream
+    stream: aiSdkStream
   });
 };
 
@@ -498,6 +557,8 @@ export type AssistantThreadsResult = StorageThreadType[];
 export type AssistantUIMessagesResult = UIMessage[];
 
 export {
+  createThread,
+  deleteThread,
   getAssistants,
   getAssistantById,
   getFullAssistantById,
@@ -508,5 +569,6 @@ export {
   executeChatWithAssistant,
   getThreadsByAssistantId,
   getUIMessagesByThreadId,
-  generateThreadTitle
+  generateThreadTitle,
+  renameThread
 };

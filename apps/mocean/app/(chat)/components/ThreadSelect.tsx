@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo } from "react";
 
 import { useRouter } from "next/navigation";
 
-import type { StorageThreadType } from "@mocean/mastra/apiClient";
+import { type StorageThreadType, apiClient } from "@mocean/mastra/apiClient";
 import { toast } from "sonner";
 
 import { useStore } from "@/app/store/useStore";
@@ -11,7 +11,6 @@ import {
   useAssistantThreadsSWR,
   useAssistantUIMessageSWR
 } from "@/hooks/useAssistantsSWR";
-import { useMastraClient } from "@/hooks/useMastraClient";
 
 import ThreadList from "./thead/ThreadList";
 
@@ -34,8 +33,6 @@ const ThreadSelect: React.FC<ThreadSelectProps> = ({ onBack, onSettings }) => {
   const { threads, refresh } = useAssistantThreadsSWR(
     activeAssistantId || null
   );
-
-  const { mastraClient } = useMastraClient();
 
   const streamingTitles = useStore((s) => s.streamingTitles);
 
@@ -84,19 +81,20 @@ const ThreadSelect: React.FC<ThreadSelectProps> = ({ onBack, onSettings }) => {
 
   const onRenameThread = useCallback(
     async (thread: StorageThreadType, newTitle: string) => {
-      await mastraClient
-        .getMemoryThread({ threadId: thread.id, agentId: "dynamic-agent" })
-        .update({ title: newTitle });
+      await apiClient.customApi.assistants.threads[":threadId"].$put({
+        param: { threadId: thread.id },
+        json: { title: newTitle }
+      });
       await refresh();
     },
-    [mastraClient, refresh]
+    [refresh]
   );
 
   const onDeleteThread = useCallback(
     async (thread: StorageThreadType) => {
-      await mastraClient
-        .getMemoryThread({ threadId: thread.id, agentId: "dynamic-agent" })
-        .delete();
+      await apiClient.customApi.assistants.threads[":threadId"].$delete({
+        param: { threadId: thread.id }
+      });
       toast.success("对话已删除");
       if (activeThread === thread.id) {
         setActiveThread(null);
@@ -106,7 +104,6 @@ const ThreadSelect: React.FC<ThreadSelectProps> = ({ onBack, onSettings }) => {
       await refresh();
     },
     [
-      mastraClient,
       refresh,
       activeThread,
       activeAssistantId,
