@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { useMcpServerActions } from "./useMcpSWR";
 
@@ -25,6 +26,21 @@ interface UseAddServerFormProps {
   onOpenChange: (open: boolean) => void;
 }
 
+const serverConfigSchema = z.object({
+  command: z.string().optional(),
+  url: z.string().optional(),
+  args: z.array(z.string()).optional(),
+  env: z.record(z.string()).optional()
+});
+
+const mcpServersSchema = z.object({
+  mcpServers: z.record(serverConfigSchema)
+});
+
+const singleServerSchema = serverConfigSchema.extend({
+  name: z.string().optional()
+});
+
 type ParsedServerConfig = {
   name?: string;
   type?: "stdio" | "sse" | "streamableHttp" | "inMemory";
@@ -34,58 +50,46 @@ type ParsedServerConfig = {
   env?: Record<string, string>;
 };
 
+function extractServerConfig(
+  config: z.infer<typeof serverConfigSchema>,
+  name?: string
+): ParsedServerConfig {
+  const result: ParsedServerConfig = {};
+  if (name) result.name = name;
+
+  if (config.command) {
+    result.type = "stdio";
+    result.command = config.command;
+  }
+  if (config.url) {
+    result.baseUrl = config.url;
+    result.type = config.url.includes("/sse") ? "sse" : "streamableHttp";
+  }
+  if (config.args && config.args.length > 0) {
+    result.args = config.args;
+  }
+  if (config.env && Object.keys(config.env).length > 0) {
+    result.env = config.env;
+  }
+  return result;
+}
+
 function parseMcpJson(input: string): ParsedServerConfig {
   const json = JSON.parse(input.trim());
 
-  // Claude Desktop format: { "mcpServers": { "name": { ... } } }
-  if (json.mcpServers && typeof json.mcpServers === "object") {
-    const entries = Object.entries(json.mcpServers);
+  // Try Claude Desktop format first
+  const mcpResult = mcpServersSchema.safeParse(json);
+  if (mcpResult.success) {
+    const entries = Object.entries(mcpResult.data.mcpServers);
     if (entries.length === 0) throw new Error("mcpServers 为空");
-    const [name, config] = entries[0] as [string, Record<string, unknown>];
-    const result: ParsedServerConfig = { name };
-
-    if (typeof config.command === "string") {
-      result.type = "stdio";
-      result.command = config.command;
-    }
-    if (typeof config.url === "string") {
-      result.baseUrl = config.url;
-      result.type = config.url.includes("/sse") ? "sse" : "streamableHttp";
-    }
-    if (Array.isArray(config.args)) {
-      result.args = config.args.map(String);
-    }
-    if (config.env && typeof config.env === "object") {
-      result.env = Object.fromEntries(
-        Object.entries(config.env).map(([k, v]) => [k, String(v)])
-      );
-    }
-    return result;
+    const [name, config] = entries[0];
+    return extractServerConfig(config, name);
   }
 
-  // Single server config: { "command": "...", ... }
-  if (typeof json === "object" && !Array.isArray(json)) {
-    const result: ParsedServerConfig = {};
-    if (typeof json.command === "string") {
-      result.type = "stdio";
-      result.command = json.command;
-    }
-    if (typeof json.url === "string") {
-      result.baseUrl = json.url;
-      result.type = json.url.includes("/sse") ? "sse" : "streamableHttp";
-    }
-    if (Array.isArray(json.args)) {
-      result.args = json.args.map(String);
-    }
-    if (json.env && typeof json.env === "object") {
-      result.env = Object.fromEntries(
-        Object.entries(json.env).map(([k, v]) => [k, String(v)])
-      );
-    }
-    if (typeof json.name === "string") {
-      result.name = json.name;
-    }
-    return result;
+  // Try single server config
+  const singleResult = singleServerSchema.safeParse(json);
+  if (singleResult.success) {
+    return extractServerConfig(singleResult.data, singleResult.data.name);
   }
 
   throw new Error("无法识别的 JSON 格式");
