@@ -11,7 +11,7 @@ interface KeyValuePair {
   value: string;
 }
 
-interface FormData {
+interface ServerFormData {
   serverName: string;
   serverType: "stdio" | "sse" | "streamableHttp" | "inMemory";
   command: string;
@@ -30,11 +30,11 @@ const serverConfigSchema = z.object({
   command: z.string().optional(),
   url: z.string().optional(),
   args: z.array(z.string()).optional(),
-  env: z.record(z.string()).optional()
+  env: z.record(z.string(), z.string()).optional()
 });
 
 const mcpServersSchema = z.object({
-  mcpServers: z.record(serverConfigSchema)
+  mcpServers: z.record(z.string(), serverConfigSchema)
 });
 
 const singleServerSchema = serverConfigSchema.extend({
@@ -82,7 +82,10 @@ function parseMcpJson(input: string): ParsedServerConfig {
   if (mcpResult.success) {
     const entries = Object.entries(mcpResult.data.mcpServers);
     if (entries.length === 0) throw new Error("mcpServers 为空");
-    const [name, config] = entries[0];
+    const [name, config] = entries[0] as [
+      string,
+      z.infer<typeof serverConfigSchema>
+    ];
     return extractServerConfig(config, name);
   }
 
@@ -103,7 +106,7 @@ export function useAddServerForm({ onOpenChange }: UseAddServerFormProps) {
   const [showJsonView, setShowJsonView] = useState(false);
   const { create } = useMcpServerActions();
 
-  const form = useForm<FormData>({
+  const form = useForm<ServerFormData>({
     defaultValues: {
       serverName: "",
       serverType: "stdio",
@@ -353,4 +356,4 @@ export function useAddServerForm({ onOpenChange }: UseAddServerFormProps) {
   };
 }
 
-export type { FormData, KeyValuePair };
+export type { ServerFormData, KeyValuePair };
