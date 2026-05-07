@@ -3,7 +3,7 @@ import { hc } from "hono/client";
 
 import type { AppType } from "../router/index";
 
-export const BASE_URL = `http://localhost:${process.env["DEV_PORT"] ?? 4111}`;
+export const BASE_URL = `http://localhost:${process.env["DEV_PORT"] ?? 4112}`;
 export const API_URL = `${BASE_URL}/customApi`;
 
 export const apiClient = hc<AppType>(BASE_URL);
