@@ -36,7 +36,7 @@ export type ProviderSumAggregateOutputType = {
 
 export type ProviderMinAggregateOutputType = {
   id: string | null
-  type: $Enums.ProviderType | null
+  type: string | null
   name: string | null
   apiKey: string | null
   apiHost: string | null
@@ -54,7 +54,7 @@ export type ProviderMinAggregateOutputType = {
 
 export type ProviderMaxAggregateOutputType = {
   id: string | null
-  type: $Enums.ProviderType | null
+  type: string | null
   name: string | null
   apiKey: string | null
   apiHost: string | null
@@ -241,7 +241,7 @@ export type ProviderGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 
 export type ProviderGroupByOutputType = {
   id: string
-  type: $Enums.ProviderType
+  type: string
   name: string
   apiKey: string
   apiHost: string
@@ -282,7 +282,7 @@ export type ProviderWhereInput = {
   OR?: Prisma.ProviderWhereInput[]
   NOT?: Prisma.ProviderWhereInput | Prisma.ProviderWhereInput[]
   id?: Prisma.StringFilter<"Provider"> | string
-  type?: Prisma.EnumProviderTypeFilter<"Provider"> | $Enums.ProviderType
+  type?: Prisma.StringFilter<"Provider"> | string
   name?: Prisma.StringFilter<"Provider"> | string
   apiKey?: Prisma.StringFilter<"Provider"> | string
   apiHost?: Prisma.StringFilter<"Provider"> | string
@@ -325,7 +325,7 @@ export type ProviderWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ProviderWhereInput | Prisma.ProviderWhereInput[]
   OR?: Prisma.ProviderWhereInput[]
   NOT?: Prisma.ProviderWhereInput | Prisma.ProviderWhereInput[]
-  type?: Prisma.EnumProviderTypeFilter<"Provider"> | $Enums.ProviderType
+  type?: Prisma.StringFilter<"Provider"> | string
   name?: Prisma.StringFilter<"Provider"> | string
   apiKey?: Prisma.StringFilter<"Provider"> | string
   apiHost?: Prisma.StringFilter<"Provider"> | string
@@ -371,7 +371,7 @@ export type ProviderScalarWhereWithAggregatesInput = {
   OR?: Prisma.ProviderScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ProviderScalarWhereWithAggregatesInput | Prisma.ProviderScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Provider"> | string
-  type?: Prisma.EnumProviderTypeWithAggregatesFilter<"Provider"> | $Enums.ProviderType
+  type?: Prisma.StringWithAggregatesFilter<"Provider"> | string
   name?: Prisma.StringWithAggregatesFilter<"Provider"> | string
   apiKey?: Prisma.StringWithAggregatesFilter<"Provider"> | string
   apiHost?: Prisma.StringWithAggregatesFilter<"Provider"> | string
@@ -389,7 +389,7 @@ export type ProviderScalarWhereWithAggregatesInput = {
 
 export type ProviderCreateInput = {
   id?: string
-  type: $Enums.ProviderType
+  type: string
   name: string
   apiKey?: string
   apiHost?: string
@@ -409,7 +409,7 @@ export type ProviderCreateInput = {
 
 export type ProviderUncheckedCreateInput = {
   id?: string
-  type: $Enums.ProviderType
+  type: string
   name: string
   apiKey?: string
   apiHost?: string
@@ -429,7 +429,7 @@ export type ProviderUncheckedCreateInput = {
 
 export type ProviderUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumProviderTypeFieldUpdateOperationsInput | $Enums.ProviderType
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   apiHost?: Prisma.StringFieldUpdateOperationsInput | string
@@ -449,7 +449,7 @@ export type ProviderUpdateInput = {
 
 export type ProviderUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumProviderTypeFieldUpdateOperationsInput | $Enums.ProviderType
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   apiHost?: Prisma.StringFieldUpdateOperationsInput | string
@@ -469,7 +469,7 @@ export type ProviderUncheckedUpdateInput = {
 
 export type ProviderCreateManyInput = {
   id?: string
-  type: $Enums.ProviderType
+  type: string
   name: string
   apiKey?: string
   apiHost?: string
@@ -487,7 +487,7 @@ export type ProviderCreateManyInput = {
 
 export type ProviderUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumProviderTypeFieldUpdateOperationsInput | $Enums.ProviderType
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   apiHost?: Prisma.StringFieldUpdateOperationsInput | string
@@ -505,7 +505,7 @@ export type ProviderUpdateManyMutationInput = {
 
 export type ProviderUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumProviderTypeFieldUpdateOperationsInput | $Enums.ProviderType
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   apiHost?: Prisma.StringFieldUpdateOperationsInput | string
@@ -597,10 +597,6 @@ export type StringFieldUpdateOperationsInput = {
   set?: string
 }
 
-export type EnumProviderTypeFieldUpdateOperationsInput = {
-  set?: $Enums.ProviderType
-}
-
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
@@ -653,7 +649,7 @@ export type ProviderUpdateOneRequiredWithoutGroupsNestedInput = {
 
 export type ProviderCreateWithoutAssistantInput = {
   id?: string
-  type: $Enums.ProviderType
+  type: string
   name: string
   apiKey?: string
   apiHost?: string
@@ -672,7 +668,7 @@ export type ProviderCreateWithoutAssistantInput = {
 
 export type ProviderUncheckedCreateWithoutAssistantInput = {
   id?: string
-  type: $Enums.ProviderType
+  type: string
   name: string
   apiKey?: string
   apiHost?: string
@@ -707,7 +703,7 @@ export type ProviderUpdateToOneWithWhereWithoutAssistantInput = {
 
 export type ProviderUpdateWithoutAssistantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumProviderTypeFieldUpdateOperationsInput | $Enums.ProviderType
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   apiHost?: Prisma.StringFieldUpdateOperationsInput | string
@@ -726,7 +722,7 @@ export type ProviderUpdateWithoutAssistantInput = {
 
 export type ProviderUncheckedUpdateWithoutAssistantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumProviderTypeFieldUpdateOperationsInput | $Enums.ProviderType
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   apiHost?: Prisma.StringFieldUpdateOperationsInput | string
@@ -745,7 +741,7 @@ export type ProviderUncheckedUpdateWithoutAssistantInput = {
 
 export type ProviderCreateWithoutGroupsInput = {
   id?: string
-  type: $Enums.ProviderType
+  type: string
   name: string
   apiKey?: string
   apiHost?: string
@@ -764,7 +760,7 @@ export type ProviderCreateWithoutGroupsInput = {
 
 export type ProviderUncheckedCreateWithoutGroupsInput = {
   id?: string
-  type: $Enums.ProviderType
+  type: string
   name: string
   apiKey?: string
   apiHost?: string
@@ -799,7 +795,7 @@ export type ProviderUpdateToOneWithWhereWithoutGroupsInput = {
 
 export type ProviderUpdateWithoutGroupsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumProviderTypeFieldUpdateOperationsInput | $Enums.ProviderType
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   apiHost?: Prisma.StringFieldUpdateOperationsInput | string
@@ -818,7 +814,7 @@ export type ProviderUpdateWithoutGroupsInput = {
 
 export type ProviderUncheckedUpdateWithoutGroupsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumProviderTypeFieldUpdateOperationsInput | $Enums.ProviderType
+  type?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   apiHost?: Prisma.StringFieldUpdateOperationsInput | string
@@ -967,7 +963,7 @@ export type $ProviderPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    type: $Enums.ProviderType
+    type: string
     name: string
     apiKey: string
     apiHost: string
@@ -1407,7 +1403,7 @@ export interface Prisma__ProviderClient<T, Null = never, ExtArgs extends runtime
  */
 export interface ProviderFieldRefs {
   readonly id: Prisma.FieldRef<"Provider", 'String'>
-  readonly type: Prisma.FieldRef<"Provider", 'ProviderType'>
+  readonly type: Prisma.FieldRef<"Provider", 'String'>
   readonly name: Prisma.FieldRef<"Provider", 'String'>
   readonly apiKey: Prisma.FieldRef<"Provider", 'String'>
   readonly apiHost: Prisma.FieldRef<"Provider", 'String'>

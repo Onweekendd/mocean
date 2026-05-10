@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "generatorVersion": "1.0.0",
-  "generatedAt": "2026-05-03T09:40:10.566Z",
-  "outputPath": "C:\\projects\\mocean\\packages\\mastra\\generated",
+  "generatedAt": "2026-05-10T08:50:21.801Z",
+  "outputPath": "D:\\projects\\mocean\\packages\\mastra\\generated",
   "files": [
     "schemas\\enums\\TransactionIsolationLevel.schema.ts",
     "schemas\\enums\\ProviderScalarFieldEnum.schema.ts",
@@ -31,7 +31,6 @@
     "schemas\\enums\\NullsOrder.schema.ts",
     "schemas\\enums\\JsonNullValueFilter.schema.ts",
     "schemas\\enums\\QueryMode.schema.ts",
-    "schemas\\enums\\ProviderType.schema.ts",
     "schemas\\enums\\KnowledgeRecognition.schema.ts"
   ],
   "directories": [

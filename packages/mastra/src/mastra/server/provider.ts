@@ -1,5 +1,4 @@
 import type { Prisma, PrismaClient } from "generated/prisma/client";
-import type { ProviderType } from "generated/prisma/enums";
 import type z from "zod";
 
 import type { providerRoutes } from "../router/type";
@@ -108,7 +107,7 @@ export function createProviderService(db: PrismaClient) {
   };
 
   const getProvidersByType = async (
-    type: ProviderType
+    type: string
   ): Promise<
     z.infer<(typeof providerRoutes)["getProvidersByType"]["responseSchema"]>
   > => {
@@ -120,7 +119,7 @@ export function createProviderService(db: PrismaClient) {
   };
 
   const getProvidersByTypeWithModels = async (
-    type: ProviderType
+    type: string
   ): Promise<
     z.infer<
       (typeof providerRoutes)["getProvidersByTypeWithModels"]["responseSchema"]
@@ -438,9 +437,9 @@ const getProvidersWithModels = () =>
   getDefaultService().getProvidersWithModels();
 const getProviderWithModelsById = (id: string) =>
   getDefaultService().getProviderWithModelsById(id);
-const getProvidersByType = (type: ProviderType) =>
+const getProvidersByType = (type: string) =>
   getDefaultService().getProvidersByType(type);
-const getProvidersByTypeWithModels = (type: ProviderType) =>
+const getProvidersByTypeWithModels = (type: string) =>
   getDefaultService().getProvidersByTypeWithModels(type);
 const getEnabledProviders = () => getDefaultService().getEnabledProviders();
 const getEnabledProvidersWithModels = () =>

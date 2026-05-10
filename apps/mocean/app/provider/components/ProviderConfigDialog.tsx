@@ -192,6 +192,7 @@ export const ProviderConfigDialog: React.FC<ProviderConfigDialogProps> = (
                   variant="outline"
                   onClick={onTestConnection}
                   disabled={testStatus === "testing"}
+                  className="bg-brand-slate-200/20 hover:bg-brand-slate-200/60"
                 >
                   {testStatus === "testing" && (
                     <Loader2 className="mr-1 h-4 w-4 animate-spin" />

@@ -16,16 +16,17 @@ import {
  * 将 "openai&gpt-4o" 转换为 "openai/gpt-4o"
  */
 function normalizeModelId(modelId: string): `${string}/${string}` {
-  // 如果已经包含 /，直接返回
   if (modelId.includes("/")) {
     return modelId as `${string}/${string}`;
   }
-  // 按 & 分割并转换为小写，用 / 连接
-  const [provider, model] = modelId.split("&");
-  if (!provider || !model) {
-    return modelId as `${string}/${string}`;
+  if (modelId.includes("&")) {
+    const [provider, model] = modelId.split("&");
+    if (provider && model) {
+      return `${provider.toLowerCase()}/${model.toLowerCase()}`;
+    }
   }
-  return `${provider.toLowerCase()}/${model.toLowerCase()}`;
+  // 原始 model id，无 provider 前缀（自定义 OpenAI 兼容端点）
+  return `openai/${modelId}`;
 }
 
 export const DynamicAgent = new Agent({
@@ -57,22 +58,17 @@ export const DynamicAgent = new Agent({
 
     const provider = assistant.provider;
 
-    if (provider.isSystem) {
-      /**
-       * providerId&modelId
-       */
-      const model = assistant.model;
+    const model = assistant.model;
 
-      if (!provider || !provider.apiHost || !provider.apiKey) {
-        throw new Error("Provider not configured");
-      }
-
-      return {
-        url: provider.apiHost,
-        apiKey: provider.apiKey,
-        id: normalizeModelId(model.id)
-      };
+    if (!provider.apiHost || !provider.apiKey) {
+      throw new Error("Provider not configured");
     }
+
+    return {
+      url: provider.apiHost,
+      apiKey: provider.apiKey,
+      id: normalizeModelId(model.id)
+    };
   },
 
   memory: new Memory({

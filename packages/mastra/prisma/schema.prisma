@@ -20,119 +20,6 @@ generator zod {
   config   = "./zod-generator.json"
 }
 
-// 枚举类型定义
-enum ProviderType {
-  // 主流供应商
-  openai
-  openai_compatible
-  anthropic
-  google
-  gemini
-  deepseek
-  groq
-  mistral
-  // 网关供应商
-  netlify
-  openrouter
-  vercel
-  // 中国供应商
-  qwenlm
-  alibaba
-  alibaba_cn
-  zhipuai
-  moonshotai
-  moonshotai_cn
-  modelscope
-  // Azure 和其他
-  azure_openai
-  xai
-  xai_cn
-  // 其他供应商
-  abacus
-  agentrouter
-  aihubmix
-  amazon_bedrock
-  azure
-  azure_cognitive_services
-  bailing
-  baseten
-  berget
-  cerebras
-  chutes
-  cloudferro_sherlock
-  cloudflare_ai_gateway
-  cloudflare_workers_ai
-  cohere
-  cortecs
-  deepinfra
-  evroc
-  fastrouter
-  fireworks_ai
-  firmware
-  friendli
-  github_copilot
-  github_models
-  gitlab
-  google_vertex
-  google_vertex_anthropic
-  helicone
-  huggingface
-  iflowcn
-  inception
-  inference
-  io_net
-  jiekou
-  kilo
-  kimi_for_coding
-  kuae_cloud_coding_plan
-  llama
-  lmstudio
-  lucidquery
-  meganova
-  minimax
-  minimax_cn
-  minimax_cn_coding_plan
-  minimax_coding_plan
-  moark
-  morph
-  nano_gpt
-  nebius
-  nova
-  novita_ai
-  nvidia
-  ollama_cloud
-  opencode
-  opencode_go
-  ovhcloud
-  perplexity
-  poe
-  privatemode_ai
-  provider_302ai
-  qihang_ai
-  qiniu_ai
-  requesty
-  sap_ai_core
-  scaleway
-  siliconflow
-  siliconflow_cn
-  stackit
-  stepfun
-  submodel
-  synthetic
-  togetherai
-  upstage
-  v0
-  venice
-  vivgrid
-  vultr
-  wandb
-  xiaomi
-  zai
-  zai_coding_plan
-  zenmux
-  zhipuai_coding_plan
-}
-
 enum KnowledgeRecognition {
   off
   on
@@ -141,7 +28,7 @@ enum KnowledgeRecognition {
 // Provider模型
 model Provider {
   id         String       @id @default(uuid())
-  type       ProviderType
+  type       String
   name       String
   apiKey     String       @default("")
   apiHost    String       @default("")

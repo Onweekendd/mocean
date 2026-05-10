@@ -28,13 +28,6 @@ export type StringFilter<$PrismaModel = never> = {
   not?: Prisma.NestedStringFilter<$PrismaModel> | string
 }
 
-export type EnumProviderTypeFilter<$PrismaModel = never> = {
-  equals?: $Enums.ProviderType | Prisma.EnumProviderTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.ProviderType[]
-  notIn?: $Enums.ProviderType[]
-  not?: Prisma.NestedEnumProviderTypeFilter<$PrismaModel> | $Enums.ProviderType
-}
-
 export type StringNullableFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
   in?: string[] | null
@@ -96,16 +89,6 @@ export type StringWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedStringFilter<$PrismaModel>
   _max?: Prisma.NestedStringFilter<$PrismaModel>
-}
-
-export type EnumProviderTypeWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.ProviderType | Prisma.EnumProviderTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.ProviderType[]
-  notIn?: $Enums.ProviderType[]
-  not?: Prisma.NestedEnumProviderTypeWithAggregatesFilter<$PrismaModel> | $Enums.ProviderType
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumProviderTypeFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumProviderTypeFilter<$PrismaModel>
 }
 
 export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -395,13 +378,6 @@ export type NestedStringFilter<$PrismaModel = never> = {
   not?: Prisma.NestedStringFilter<$PrismaModel> | string
 }
 
-export type NestedEnumProviderTypeFilter<$PrismaModel = never> = {
-  equals?: $Enums.ProviderType | Prisma.EnumProviderTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.ProviderType[]
-  notIn?: $Enums.ProviderType[]
-  not?: Prisma.NestedEnumProviderTypeFilter<$PrismaModel> | $Enums.ProviderType
-}
-
 export type NestedStringNullableFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
   in?: string[] | null
@@ -469,16 +445,6 @@ export type NestedIntFilter<$PrismaModel = never> = {
   gt?: number | Prisma.IntFieldRefInput<$PrismaModel>
   gte?: number | Prisma.IntFieldRefInput<$PrismaModel>
   not?: Prisma.NestedIntFilter<$PrismaModel> | number
-}
-
-export type NestedEnumProviderTypeWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.ProviderType | Prisma.EnumProviderTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.ProviderType[]
-  notIn?: $Enums.ProviderType[]
-  not?: Prisma.NestedEnumProviderTypeWithAggregatesFilter<$PrismaModel> | $Enums.ProviderType
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumProviderTypeFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumProviderTypeFilter<$PrismaModel>
 }
 
 export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {

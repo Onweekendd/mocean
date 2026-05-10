@@ -1,5 +1,4 @@
-import type { Model, Provider, ProviderType } from "generated/prisma/client";
-import { ProviderType as ProviderTypeEnum } from "generated/prisma/enums";
+import type { Model, Provider } from "generated/prisma/client";
 import { z } from "zod";
 
 import { prisma } from "../src/mastra/server/index.js";
@@ -372,11 +371,8 @@ function ensureValidIdentifier(
   return value;
 }
 
-// 从 Prisma 枚举获取有效的 ProviderType 值
-const VALID_PROVIDER_TYPES = new Set(Object.values(ProviderTypeEnum));
-
-// 特殊映射：API ID -> Schema 枚举值（处理不规则命名）
-const PROVIDER_TYPE_MAPPING: Record<string, ProviderType> = {
+// 特殊映射：API ID -> 标准化类型字符串（处理不规则命名）
+const PROVIDER_TYPE_MAPPING: Record<string, string> = {
   fireworks: "fireworks_ai",
   github: "github_models",
   grok: "xai",
@@ -388,29 +384,17 @@ const PROVIDER_TYPE_MAPPING: Record<string, ProviderType> = {
 };
 
 /**
- * 将供应商ID映射到ProviderType枚举值
+ * 将供应商ID映射到类型字符串
  * @param providerId - 供应商ID（如 "fireworks-ai"）
- * @returns ProviderType枚举值（如 "fireworks_ai"）或 null（如果无效）
+ * @returns 类型字符串（如 "fireworks_ai"）
  */
-function mapProviderIdToType(providerId: string): ProviderType | null {
-  // 1. 检查特殊映射表
+function mapProviderIdToType(providerId: string): string {
   if (PROVIDER_TYPE_MAPPING[providerId]) {
     return PROVIDER_TYPE_MAPPING[providerId];
   }
 
-  // 2. 默认转换：kebab-case -> snake_case
-  let result = convertKebabToSnake(providerId);
-
-  // 3. 确保不以数字开头（添加 provider_ 前缀）
-  result = ensureValidIdentifier(result);
-
-  // 4. 验证是否为有效的枚举值
-  if (VALID_PROVIDER_TYPES.has(result as ProviderType)) {
-    return result as ProviderType;
-  }
-
-  // 如果不是有效值，返回 null
-  return null;
+  // 默认转换：kebab-case -> snake_case，确保不以数字开头
+  return ensureValidIdentifier(convertKebabToSnake(providerId));
 }
 
 /**
@@ -437,12 +421,6 @@ async function insertProvidersAndModels(data: ScrapedData) {
         console.log("\n📦 插入供应商数据并创建默认分组...");
         for (const provider of data.providers) {
           const providerType = mapProviderIdToType(provider.id);
-
-          // 跳过无效的供应商类型
-          if (!providerType) {
-            console.log(`⏭️  ${provider.id}: 无效的供应商类型，跳过`);
-            continue;
-          }
 
           // 检查是否已存在
           const existing = await tx.provider.findUnique({

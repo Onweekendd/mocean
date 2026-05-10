@@ -131,7 +131,8 @@ const TokenUsageVisualizer: FC = () => {
   }, [assistant?.model]);
 
   const usagePct = useMemo(() => {
-    const used = thread?.metadata.lastUsage?.totalTokens ?? 0;
+    const lastUsage = thread?.metadata?.lastUsage as { totalTokens?: number } | null | undefined;
+    const used = lastUsage?.totalTokens ?? 0;
     return maxContextLength > 0
       ? Math.min(100, (used / maxContextLength) * 100)
       : 0;

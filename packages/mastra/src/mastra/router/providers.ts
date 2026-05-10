@@ -1,5 +1,4 @@
 import { zValidator } from "@hono/zod-validator";
-import type { ProviderType } from "generated/prisma/enums";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 
@@ -45,14 +44,12 @@ export const providersRouter = new Hono()
   })
   .get("/type/:type", async (c) => {
     const result = await getProvidersByType(
-      c.req.param("type") as ProviderType
-    );
+      c.req.param("type")    );
     return c.json(result);
   })
   .get("/type/:type/with-models", async (c) => {
     const result = await getProvidersByTypeWithModels(
-      c.req.param("type") as ProviderType
-    );
+      c.req.param("type")    );
     return c.json(result);
   })
   .get("/by-model/:modelId", async (c) => {

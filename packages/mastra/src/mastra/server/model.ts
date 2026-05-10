@@ -253,14 +253,16 @@ const getModelsByGroupWithProviders = async (
 const createModel = async (
   model: CreateModelInput
 ): Promise<z.infer<(typeof modelRoutes)["createModel"]["responseSchema"]>> => {
+  const groupId = model.providers[0].groupId;
+
   // 验证分组是否存在
   const group = await prisma.group.findUnique({
-    where: { id: model.groupId },
+    where: { id: groupId },
     include: { provider: true }
   });
 
   if (!group) {
-    throw new Error(`分组 ${model.groupId} 不存在`);
+    throw new Error(`分组 ${groupId} 不存在`);
   }
 
   const newModel = await prisma.model.create({
@@ -281,7 +283,7 @@ const createModel = async (
       inputPricePerMillion: model.inputPricePerMillion,
       outputPricePerMillion: model.outputPricePerMillion,
       group: {
-        connect: { id: model.groupId }
+        connect: { id: groupId }
       }
     },
     include: {
@@ -400,7 +402,7 @@ const createManyModels = async (
   z.infer<(typeof modelRoutes)["createManyModels"]["responseSchema"]>
 > => {
   // 验证所有分组是否存在
-  const allGroupIds = [...new Set(models.map((m) => m.groupId))];
+  const allGroupIds = [...new Set(models.map((m) => m.providers[0].groupId))];
   const groups = await prisma.group.findMany({
     where: { id: { in: allGroupIds } },
     select: { id: true }
@@ -418,9 +420,11 @@ const createManyModels = async (
     const createdModels = [];
 
     for (const model of models) {
+      const { providers, ...modelData } = model;
       const createdModel = await tx.model.create({
         data: {
-          ...model,
+          ...modelData,
+          groupId: providers[0].groupId,
           createdAt: new Date(),
           updatedAt: new Date()
         }

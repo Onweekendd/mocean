@@ -74,7 +74,6 @@ export const createModelSchema = ModelSchema.pick({
 }).extend({
   id: z.string().min(1, "模型ID不能为空"),
   name: z.string().min(1, "模型名称不能为空"),
-  groupId: z.string().min(1, "分组ID不能为空"),
   isSystem: z.boolean().optional().default(false),
   supportsAttachments: z.boolean().optional().default(false),
   supportsTools: z.boolean().optional().default(false),
@@ -83,8 +82,12 @@ export const createModelSchema = ModelSchema.pick({
   supportsAudio: z.boolean().optional().default(false),
   supportsVideo: z.boolean().optional().default(false),
   supportsEmbedding: z.boolean().optional().default(false),
-  // 扩展 providers 字段（用于 modelGroups 关联）
-  providers: ProviderSchema.partial()
+  providers: z.array(
+    z.object({
+      providerId: z.string().min(1),
+      groupId: z.string().min(1)
+    })
+  ).min(1, "至少需要一个分组")
 });
 
 export const updateModelSchema = ModelSchema.pick({

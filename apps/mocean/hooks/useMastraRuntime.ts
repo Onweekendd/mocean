@@ -150,6 +150,19 @@ export function useMastraRuntime({
 
         // 新对话：在发送消息前先创建 thread
         if (!currentThread) {
+          // 若首条消息报错后重发，复用已创建的 thread 而不是再建一个
+          if (newThreadId.current) {
+            return {
+              ...rest,
+              body: {
+                ...(body || {}),
+                threadId: newThreadId.current,
+                assistantId: currentAssistantId,
+                messages: requestParams.messages
+              }
+            };
+          }
+
           const threadId = generateId();
           newThreadId.current = threadId;
 

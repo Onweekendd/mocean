@@ -1,5 +1,4 @@
 /// <reference lib="dom" />
-import type { ProviderType } from "generated/prisma/enums";
 import type { z } from "zod";
 
 import { providerRoutes } from "../router/type";
@@ -73,7 +72,7 @@ export class ProvidersApiClient extends BaseApiClient {
    * @param type - 提供商类型
    */
   async getProvidersByType(
-    type: ProviderType
+    type: string
   ): Promise<
     ApiResponse<
       z.infer<(typeof providerRoutes)["getProvidersByType"]["responseSchema"]>
@@ -166,7 +165,7 @@ export class ProvidersApiClient extends BaseApiClient {
    * @param type - 提供商类型
    */
   async getProvidersByTypeWithModels(
-    type: ProviderType
+    type: string
   ): Promise<
     ApiResponse<
       z.infer<
@@ -316,7 +315,7 @@ export const providersApiMethods = {
   getProviders: () => providersApi.getProviders(),
   getEnabledProviders: () => providersApi.getEnabledProviders(),
   getProviderById: (id: string) => providersApi.getProviderById(id),
-  getProvidersByType: (type: ProviderType) =>
+  getProvidersByType: (type: string) =>
     providersApi.getProvidersByType(type),
   getProvidersByModel: (modelId: string) =>
     providersApi.getProvidersByModel(modelId),
@@ -327,7 +326,7 @@ export const providersApiMethods = {
     providersApi.getEnabledProvidersWithModels(),
   getProviderWithModelsById: (id: string) =>
     providersApi.getProviderWithModelsById(id),
-  getProvidersByTypeWithModels: (type: ProviderType) =>
+  getProvidersByTypeWithModels: (type: string) =>
     providersApi.getProvidersByTypeWithModels(type),
   getProvidersByModelWithModels: (modelId: string) =>
     providersApi.getProvidersByModelWithModels(modelId),

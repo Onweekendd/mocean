@@ -1,5 +1,4 @@
 import type { PrismaClient } from "generated/prisma/client";
-import type { ProviderType } from "generated/prisma/enums";
 
 /**
  * Provider 数据工厂
@@ -13,7 +12,7 @@ export const providerFactory = {
       Parameters<PrismaClient["provider"]["create"]>[0]["data"]
     >
   ) => ({
-    type: "openai" as ProviderType,
+    type: "openai",
     name: "Test Provider",
     apiKey: "test-api-key",
     apiHost: "https://api.openai.com",

@@ -45,7 +45,7 @@ export function AddProviderDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex max-h-[85vh] flex-col gap-0 p-0 sm:max-w-[560px]">
+      <DialogContent className="flex max-h-[85vh] flex-col gap-0 bg-brand-slate-100 p-0 sm:max-w-[560px]">
         <DialogHeader className="shrink-0 px-6 pb-4 pt-6">
           <DialogTitle className="flex items-center gap-2 text-lg font-semibold">
             <Server className="h-5 w-5 text-primary" />
@@ -70,6 +70,7 @@ export function AddProviderDialog({
                           placeholder="例如：我的 OpenAI"
                           {...field}
                           className={cn(
+                            "border border-brandSlate-300 focus-visible:shadow-md focus-visible:ring-brand-primary-500",
                             errors.name &&
                               "border-red-500 focus-visible:ring-red-500"
                           )}
@@ -95,6 +96,7 @@ export function AddProviderDialog({
                           placeholder="例如：openai"
                           {...field}
                           className={cn(
+                            "border border-brandSlate-300 focus-visible:shadow-md focus-visible:ring-brand-primary-500",
                             errors.type &&
                               "border-red-500 focus-visible:ring-red-500"
                           )}
@@ -124,6 +126,7 @@ export function AddProviderDialog({
                         placeholder="sk-..."
                         {...field}
                         className={cn(
+                          "border border-brandSlate-300 focus-visible:shadow-md focus-visible:ring-brand-primary-500",
                           errors.apiKey &&
                             "border-red-500 focus-visible:ring-red-500"
                         )}
@@ -151,6 +154,7 @@ export function AddProviderDialog({
                         placeholder="https://api.example.com"
                         {...field}
                         className={cn(
+                          "border border-brandSlate-300 focus-visible:shadow-md focus-visible:ring-brand-primary-500",
                           errors.apiHost &&
                             "border-red-500 focus-visible:ring-red-500"
                         )}
@@ -178,7 +182,12 @@ export function AddProviderDialog({
                       </span>
                     </FormLabel>
                     <FormControl>
-                      <Textarea rows={3} placeholder="备注信息..." {...field} />
+                      <Textarea
+                        rows={3}
+                        placeholder="备注信息..."
+                        {...field}
+                        className="border border-brandSlate-300 focus-visible:shadow-md focus-visible:ring-brand-primary-500"
+                      />
                     </FormControl>
                   </FormItem>
                 )}
@@ -187,7 +196,7 @@ export function AddProviderDialog({
           </Form>
         </div>
 
-        <div className="flex shrink-0 flex-col gap-2 border-t bg-background px-6 py-4">
+        <div className="flex shrink-0 flex-col gap-2 border-t bg-brand-slate-100 px-6 py-4">
           {testStatus !== "idle" && (
             <div
               className={cn(
@@ -210,7 +219,11 @@ export function AddProviderDialog({
             </div>
           )}
           <div className="flex items-center justify-between">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
+            <Button
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              className="bg-brand-slate-200/20 hover:bg-brand-slate-200/60"
+            >
               取消
             </Button>
             <div className="flex gap-2">
@@ -218,6 +231,7 @@ export function AddProviderDialog({
                 variant="outline"
                 onClick={onTestConnection}
                 disabled={testStatus === "testing"}
+                className="bg-brand-slate-200/20 hover:bg-brand-slate-200/60"
               >
                 {testStatus === "testing" && (
                   <Loader2 className="mr-1 h-4 w-4 animate-spin" />
@@ -226,7 +240,7 @@ export function AddProviderDialog({
               </Button>
               <Button
                 onClick={onSubmit}
-                className="bg-brand-primary-500 hover:bg-brand-primary-600 focus-visible:ring-brand-primary-600"
+                className="bg-brand-primary-500 hover:bg-brand-primary-600"
               >
                 <Plus className="mr-1 h-4 w-4" />
                 新增提供商

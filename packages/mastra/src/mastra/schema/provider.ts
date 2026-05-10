@@ -62,7 +62,8 @@ export const createProviderSchema = ProviderSchema.pick({
     message: "API地址格式不正确"
   }),
   enabled: z.boolean().optional().default(true),
-  isSystem: z.boolean().optional().default(false)
+  isSystem: z.boolean().optional().default(false),
+  isAuthed: z.boolean().optional().default(false)
 });
 
 export const updateProviderSchema = ProviderSchema.pick({

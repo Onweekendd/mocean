@@ -1,9 +1,8 @@
 import * as z from 'zod';
-import { ProviderTypeSchema } from '../enums/ProviderType.schema';
 
 export const ProviderSchema = z.object({
   id: z.string(),
-  type: ProviderTypeSchema,
+  type: z.string(),
   name: z.string(),
   apiKey: z.string(),
   apiHost: z.string(),
