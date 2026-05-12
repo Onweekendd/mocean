@@ -57,7 +57,7 @@ const basePlugins = [
  *
  * // 使用打包后的模块
  * import type { Agent } from '@mocean/mastra/prismaType'
- * import { agentsApi } from '@mocean/mastra/apiClient'
+ * import { apiClient, uploadsClient } from '@mocean/mastra/apiClient'
  */
 export default [
   // 1. prismaType 导出 - 类型声明
