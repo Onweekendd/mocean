@@ -3,7 +3,7 @@ import { hc } from "hono/client";
 
 import type { AppType } from "../router/index";
 
-export const BASE_URL = `http://localhost:${process.env["DEV_PORT"] ?? 4112}`;
+export const BASE_URL = `http://localhost:${process.env["NEXT_PUBLIC_DEV_PORT"] ?? process.env["DEV_PORT"] ?? 4112}`;
 export const API_URL = `${BASE_URL}/customApi`;
 
 export const apiClient = hc<AppType>(BASE_URL);
@@ -26,45 +26,34 @@ export interface FileRecord {
 }
 
 export class UploadsClient {
-  private apiUrl: string;
-
-  constructor(baseUrl: string = BASE_URL) {
-    this.apiUrl = `${baseUrl}/customApi`;
-  }
-
   async upload(file: File, category: string = "general"): Promise<FileRecord> {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("category", category);
-
-    const response = await fetch(`${this.apiUrl}/uploads`, {
-      method: "POST",
-      body: formData
+    const res = await apiClient.customApi.uploads.$post({
+      form: { file, category }
     });
 
-    if (!response.ok) {
-      const text = await response.text().catch(() => "");
-      throw new Error(`上传失败 (${response.status}): ${text}`);
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      throw new Error(`上传失败 (${res.status}): ${text}`);
     }
 
-    return response.json() as Promise<FileRecord>;
+    return res.json() as Promise<FileRecord>;
   }
 
   getFileUrl(fileId: string): string {
-    return `${this.apiUrl}/uploads/${fileId}`;
+    return `${API_URL}/uploads/${fileId}`;
   }
 
   async deleteFile(fileId: string): Promise<FileRecord> {
-    const response = await fetch(`${this.apiUrl}/uploads/${fileId}`, {
-      method: "DELETE"
+    const res = await apiClient.customApi.uploads[":fileId"].$delete({
+      param: { fileId }
     });
 
-    if (!response.ok) {
-      const text = await response.text().catch(() => "");
-      throw new Error(`删除失败 (${response.status}): ${text}`);
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      throw new Error(`删除失败 (${res.status}): ${text}`);
     }
 
-    return response.json() as Promise<FileRecord>;
+    return res.json() as Promise<FileRecord>;
   }
 }
 
