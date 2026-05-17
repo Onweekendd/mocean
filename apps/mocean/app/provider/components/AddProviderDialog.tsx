@@ -21,6 +21,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAddProviderForm } from "@/hooks/useAddProviderForm";
 import { cn } from "@/lib/utils";
 
+import { ProviderIconPicker } from "./ProviderIconPicker";
+
 interface AddProviderDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -165,6 +167,29 @@ export function AddProviderDialog({
                         {errors.apiHost.message}
                       </p>
                     )}
+                  </FormItem>
+                )}
+              />
+
+              {/* Row 3.5: 图标选择 */}
+              <FormField
+                control={form.control}
+                name="iconType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      供应商图标{" "}
+                      <span className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
+                        可选
+                      </span>
+                    </FormLabel>
+                    <FormControl>
+                      <ProviderIconPicker
+                        value={field.value || undefined}
+                        onChange={(v) => field.onChange(v ?? "")}
+                        fallbackType={form.watch("type")}
+                      />
+                    </FormControl>
                   </FormItem>
                 )}
               />

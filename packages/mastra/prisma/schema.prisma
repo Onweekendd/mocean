@@ -37,6 +37,7 @@ model Provider {
   isSystem   Boolean      @default(false)
   isAuthed   Boolean      @default(false)
   notes      String?
+  iconType   String? // 自定义图标类型（对应 @lobehub/icons ModelProvider 值）
   isGateway  Boolean      @default(false) // 是否为网关
   modelCount Int?         @default(0) // 模型数量统计
   docsUrl    String? // 文档URL

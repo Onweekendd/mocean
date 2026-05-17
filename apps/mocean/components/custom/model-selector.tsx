@@ -117,7 +117,8 @@ const ModelSelectorComponent = ({
                                 {renderModelAvatar({
                                   modelId: model.id,
                                   modelName: model.name,
-                                  size: 14
+                                  size: 14,
+                                  providerIconType: (provider as Provider).iconType ?? undefined
                                 })}
                               </div>
                               <span className="truncate text-[13px]">

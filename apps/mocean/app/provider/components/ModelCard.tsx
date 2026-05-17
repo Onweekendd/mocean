@@ -81,6 +81,7 @@ export interface ModelCardProps {
   onEdit?: (model: Model) => void;
   onDelete?: (model: Model) => void;
   className?: string;
+  providerIconType?: string;
 }
 
 export const ModelCard: React.FC<ModelCardProps> = ({
@@ -88,7 +89,8 @@ export const ModelCard: React.FC<ModelCardProps> = ({
   onClick,
   onEdit,
   onDelete,
-  className = ""
+  className = "",
+  providerIconType
 }) => {
   const modelTypes: string[] = [];
   if (model.supportsTools) modelTypes.push("function_calling");
@@ -108,7 +110,7 @@ export const ModelCard: React.FC<ModelCardProps> = ({
       <CardHeader className="pb-3">
         <div className="flex items-center space-x-3">
           <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg">
-            {renderModelAvatar({ modelId: model.id, modelName: model.name })}
+            {renderModelAvatar({ modelId: model.id, modelName: model.name, providerIconType })}
           </div>
           <div className="min-w-0 flex-1">
             <CardTitle className="truncate text-base font-semibold text-brand-text group-hover:text-primary">

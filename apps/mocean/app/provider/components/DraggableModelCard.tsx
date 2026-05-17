@@ -11,6 +11,7 @@ interface DraggableModelCardProps {
   onClick?: (model: Model) => void;
   onEdit?: (model: Model) => void;
   onDelete?: (model: Model) => void;
+  providerIconType?: string;
 }
 
 /**
@@ -21,7 +22,8 @@ export function DraggableModelCard({
   model,
   onClick,
   onEdit,
-  onDelete
+  onDelete,
+  providerIconType
 }: DraggableModelCardProps) {
   const {
     attributes,
@@ -58,6 +60,7 @@ export function DraggableModelCard({
         onClick={onClick}
         onEdit={onEdit}
         onDelete={onDelete}
+        providerIconType={providerIconType}
       />
     </div>
   );

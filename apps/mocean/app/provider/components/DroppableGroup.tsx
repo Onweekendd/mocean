@@ -25,6 +25,7 @@ interface DroppableGroupProps {
   onModelClick?: (model: Model) => void;
   onModelEdit?: (model: Model) => void;
   onModelDelete?: (model: Model) => void;
+  providerIconType?: string;
 }
 
 /**
@@ -37,7 +38,8 @@ export function DroppableGroup({
   onAddModel,
   onModelClick,
   onModelEdit,
-  onModelDelete
+  onModelDelete,
+  providerIconType
 }: DroppableGroupProps) {
   const { setNodeRef, isOver } = useDroppable({
     id: `group-${group.groupId}`
@@ -104,6 +106,7 @@ export function DroppableGroup({
                       onClick={onModelClick}
                       onEdit={onModelEdit}
                       onDelete={onModelDelete}
+                      providerIconType={providerIconType}
                     />
                   ))
                 )}

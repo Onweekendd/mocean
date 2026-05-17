@@ -21,12 +21,14 @@ const providerConfigSchema = ProviderFullSchema.pick({
   apiKey: true,
   apiHost: true,
   enabled: true,
-  notes: true
+  notes: true,
+  iconType: true
 }).extend({
   name: z.string().min(1, "供应商名称不能为空"),
   apiHost: z.string().min(1, "API 接口地址不能为空").url("请输入有效的 URL"),
   enabled: z.boolean(),
-  notes: z.string()
+  notes: z.string(),
+  iconType: z.string().nullish()
 });
 
 export type ProviderConfigFormData = z.infer<typeof providerConfigSchema>;
@@ -51,7 +53,8 @@ export const useProviderConfig = ({
       apiKey: provider.apiKey,
       apiHost: provider.apiHost,
       enabled: provider.enabled,
-      notes: provider.notes || ""
+      notes: provider.notes || "",
+      iconType: provider.iconType ?? null
     }
   });
 
@@ -63,7 +66,8 @@ export const useProviderConfig = ({
       apiKey: provider.apiKey,
       apiHost: provider.apiHost,
       enabled: provider.enabled,
-      notes: provider.notes || ""
+      notes: provider.notes || "",
+      iconType: provider.iconType ?? null
     });
   }, [provider, form]);
 
@@ -91,7 +95,8 @@ export const useProviderConfig = ({
           apiKey: data.apiKey?.trim() || "",
           apiHost: data.apiHost.trim(),
           enabled: data.enabled,
-          notes: data.notes?.trim() || null
+          notes: data.notes?.trim() || null,
+          iconType: data.iconType?.trim() || null
         };
 
         await update(provider.id, updateData);

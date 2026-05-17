@@ -72,7 +72,9 @@ export const renderProviderAvatar = ({
     );
   }
 
-  const modelProvider = convertProviderTypeToProviderIcon(provider.type);
+  const modelProvider = provider.iconType
+    ? provider.iconType
+    : convertProviderTypeToProviderIcon(provider.type);
 
   return (
     <ProviderIcon
@@ -87,6 +89,7 @@ export const renderProviderAvatar = ({
 interface RenderModelAvatarProps {
   modelId: string;
   modelName: string;
+  providerIconType?: string;
   size?: number;
   className?: string;
 }
@@ -97,11 +100,14 @@ interface RenderModelAvatarProps {
 export const renderModelAvatar = ({
   modelId,
   modelName,
+  providerIconType,
   size = 40,
   className
 }: RenderModelAvatarProps): ReactNode => {
   const providerId = modelId.split("&")[0];
-  const modelProvider = convertProviderTypeToProviderIcon(providerId ?? "");
+  const modelProvider = providerIconType
+    ? providerIconType
+    : convertProviderTypeToProviderIcon(providerId ?? "");
 
   if (modelProvider) {
     return (

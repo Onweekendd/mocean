@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "generatorVersion": "1.0.0",
-  "generatedAt": "2026-05-10T08:50:21.801Z",
+  "generatedAt": "2026-05-17T08:06:37.151Z",
   "outputPath": "D:\\projects\\mocean\\packages\\mastra\\generated",
   "files": [
     "schemas\\enums\\TransactionIsolationLevel.schema.ts",

@@ -11,6 +11,7 @@ export const ProviderSchema = z.object({
   isSystem: z.boolean(),
   isAuthed: z.boolean(),
   notes: z.string().nullish(),
+  iconType: z.string().nullish(),
   isGateway: z.boolean(),
   modelCount: z.number().int().nullish(),
   docsUrl: z.string().nullish(),

@@ -25,6 +25,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 import type { ProviderConfigDialogProps } from "./useProviderConfig";
 import { useProviderConfig } from "./useProviderConfig";
+import { ProviderIconPicker } from "./ProviderIconPicker";
 
 export const ProviderConfigDialog: React.FC<ProviderConfigDialogProps> = (
   props
@@ -105,6 +106,25 @@ export const ProviderConfigDialog: React.FC<ProviderConfigDialogProps> = (
                         {...field}
                         placeholder="https://api.example.com"
                         className="border border-brandSlate-300 focus-visible:shadow-md focus-visible:ring-brand-primary-500"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* 供应商图标 */}
+              <FormField
+                control={form.control}
+                name="iconType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>供应商图标</FormLabel>
+                    <FormControl>
+                      <ProviderIconPicker
+                        value={field.value ?? undefined}
+                        onChange={(v) => field.onChange(v ?? null)}
+                        fallbackType={provider.type}
                       />
                     </FormControl>
                     <FormMessage />

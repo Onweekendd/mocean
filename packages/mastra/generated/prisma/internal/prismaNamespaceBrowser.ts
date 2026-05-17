@@ -97,6 +97,7 @@ export const ProviderScalarFieldEnum = {
   isSystem: 'isSystem',
   isAuthed: 'isAuthed',
   notes: 'notes',
+  iconType: 'iconType',
   isGateway: 'isGateway',
   modelCount: 'modelCount',
   docsUrl: 'docsUrl',

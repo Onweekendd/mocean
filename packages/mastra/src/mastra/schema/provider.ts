@@ -54,7 +54,8 @@ export const createProviderSchema = ProviderSchema.pick({
   enabled: true,
   isSystem: true,
   isAuthed: true,
-  notes: true
+  notes: true,
+  iconType: true
 }).extend({
   name: z.string().min(1, "提供商名称不能为空"),
   apiKey: z.string().min(1, "API密钥不能为空"),
@@ -75,7 +76,8 @@ export const updateProviderSchema = ProviderSchema.pick({
   enabled: true,
   isSystem: true,
   isAuthed: true,
-  notes: true
+  notes: true,
+  iconType: true
 })
   .partial()
   .extend({

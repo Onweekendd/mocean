@@ -11,6 +11,7 @@ interface FormData {
   apiKey: string;
   apiHost: string;
   notes: string;
+  iconType: string;
 }
 
 interface UseAddProviderFormProps {
@@ -31,7 +32,8 @@ export function useAddProviderForm({ onOpenChange }: UseAddProviderFormProps) {
       name: "",
       apiKey: "",
       apiHost: "",
-      notes: ""
+      notes: "",
+      iconType: ""
     },
     mode: "onBlur"
   });
@@ -134,7 +136,8 @@ export function useAddProviderForm({ onOpenChange }: UseAddProviderFormProps) {
       apiKey: values.apiKey.trim(),
       apiHost: values.apiHost.trim(),
       enabled: true,
-      notes: values.notes.trim() || undefined
+      notes: values.notes.trim() || undefined,
+      iconType: values.iconType.trim() || undefined
     });
 
     onOpenChange(false);

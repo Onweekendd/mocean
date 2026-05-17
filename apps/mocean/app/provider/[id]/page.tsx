@@ -276,6 +276,7 @@ export default function ProviderDetailPage() {
                   onModelClick={onModelClick}
                   onModelEdit={onModelEdit}
                   onModelDelete={onModelDelete}
+                  providerIconType={provider.iconType ?? undefined}
                 />
               ))}
             </div>
