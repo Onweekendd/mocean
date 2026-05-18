@@ -23,9 +23,9 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 
+import { ProviderIconPicker } from "./ProviderIconPicker";
 import type { ProviderConfigDialogProps } from "./useProviderConfig";
 import { useProviderConfig } from "./useProviderConfig";
-import { ProviderIconPicker } from "./ProviderIconPicker";
 
 export const ProviderConfigDialog: React.FC<ProviderConfigDialogProps> = (
   props

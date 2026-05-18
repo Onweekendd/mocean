@@ -67,7 +67,7 @@ const AssistantSettingsPanel: React.FC<AssistantSettingsPanelProps> = ({
 
       {/* Scrollable form */}
       <ScrollArea className="flex-1">
-        <div className="pb-4 pr-2 pt-1">
+        <div className="pb-4 pl-2 pr-2 pt-1">
           <Form {...form}>
             <form className="space-y-5">
               {/* ── 基本信息 ── */}
