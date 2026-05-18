@@ -151,6 +151,7 @@ const createAssistant = async (
     },
     include: {
       model: true,
+      provider: true,
       settings: true
     }
   });
@@ -215,6 +216,7 @@ const updateAssistant = async (
     },
     include: {
       model: true,
+      provider: true,
       settings: true
     }
   });
@@ -280,6 +282,8 @@ const executeChatWithAssistant = async (
     throw new Error("助手不存在");
   }
 
+  const setting = assistant.settings;
+
   let lastUsage: LanguageModelUsage | null = null;
 
   const memory = await DynamicAgent.getMemory();
@@ -290,15 +294,19 @@ const executeChatWithAssistant = async (
       resource: assistantId
     },
     providerOptions: {
-      openai: {
-        reasoningEffort: "low"
-      }
+      ...(setting.reasoning_effort != null
+        ? { openai: { reasoningEffort: setting.reasoning_effort } }
+        : {})
     },
     requestContext: createCommonRunTime({
       assistant
     }),
     modelSettings: {
-      temperature: 1
+      temperature: setting.temperature,
+      topP: setting.topP,
+      ...(setting.enableMaxTokens && setting.maxTokens
+        ? { maxTokens: setting.maxTokens }
+        : {})
     },
     onStepFinish: async ({ usage }) => {
       lastUsage = usage;
@@ -318,13 +326,13 @@ const executeChatWithAssistant = async (
     sendReasoning: true
   });
 
-  type AiSdkChunk =
+  type AISdkChunk =
     typeof aiSdkStream extends ReadableStream<infer T> ? T : never;
 
-  const processedStream = new ReadableStream<AiSdkChunk>({
+  const processedStream = new ReadableStream<AISdkChunk>({
     async start(controller) {
       try {
-        for await (const chunk of aiSdkStream as unknown as AsyncIterable<AiSdkChunk>) {
+        for await (const chunk of aiSdkStream as unknown as AsyncIterable<AISdkChunk>) {
           controller.enqueue(chunk);
         }
         if (lastUsage) {

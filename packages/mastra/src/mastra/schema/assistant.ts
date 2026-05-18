@@ -6,7 +6,8 @@ import { AssistantFullSchema } from "generated/schemas/composed";
 import {
   AssistantSchema,
   AssistantSettingsSchema,
-  ModelSchema
+  ModelSchema,
+  ProviderSchema
 } from "generated/schemas/models/index";
 import { z } from "zod";
 
@@ -34,6 +35,7 @@ export const AssistantWithModelsAndSettingsSchema = AssistantSchema.pick({
   updatedAt: true
 }).extend({
   model: ModelSchema.partial().nullish(),
+  provider: ProviderSchema.partial().nullish(),
   settings: AssistantSettingsSchema.partial().nullish(),
   topics: z.array(z.any()).nullish(),
   knowledgeBases: z.array(z.any()).nullish(),

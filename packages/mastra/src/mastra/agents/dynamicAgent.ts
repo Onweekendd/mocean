@@ -44,13 +44,9 @@ export const DynamicAgent = new Agent({
   },
 
   model: ({ requestContext }) => {
-    const assistant = (requestContext as RequestContext<CommonRunTimeType>).get(
-      "assistant"
-    );
+    const assistant = requestContext.get("assistant");
 
-    const task = (requestContext as RequestContext<CommonRunTimeType>).get(
-      "task"
-    );
+    const task = requestContext.get("task");
 
     if (task === AgentTaskEnum.GENERATE_TITLE) {
       return aihubmix(QUICK_MODELS);
@@ -60,7 +56,7 @@ export const DynamicAgent = new Agent({
 
     const model = assistant.model;
 
-    if (!provider.apiHost || !provider.apiKey) {
+    if (!provider || !provider.apiHost || !provider.apiKey) {
       throw new Error("Provider not configured");
     }
 
