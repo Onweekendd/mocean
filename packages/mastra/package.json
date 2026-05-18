@@ -7,7 +7,7 @@
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "serve": "dotenvx run -- tsx src/server.ts --watch",
+    "serve": "dotenvx run -- tsx watch src/server.ts",
     "build": "mastra build",
     "build:client": "rollup -c",
     "lint": "eslint .",
