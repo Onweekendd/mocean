@@ -9,8 +9,10 @@ import {
   ComposerPrimitive,
   ThreadPrimitive,
   useAui,
-  useThreadComposer
+  useAuiState
 } from "@assistant-ui/react";
+import { invoke } from "@tauri-apps/api/core";
+import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { CameraIcon, PaperclipIcon, SendHorizontalIcon, X } from "lucide-react";
 
 import { useStore } from "@/app/store/useStore";
@@ -37,7 +39,10 @@ const ComposerImageAttachment: FC = () => {
   const [showPreview, setShowPreview] = useState(false);
 
   useEffect(() => {
-    if (!file) return;
+    if (!file) {
+      return;
+    }
+
     const url = URL.createObjectURL(file);
     setObjectUrl(url);
     return () => URL.revokeObjectURL(url);
@@ -86,29 +91,96 @@ const ComposerImageAttachment: FC = () => {
 
 // ─── Composer ─────────────────────────────────────────────────────────────────
 
-export const Composer: FC = () => {
-  return (
-    <ComposerPrimitive.Root className="flex w-full flex-col gap-2">
-      {/* 附件缩略图区域（输入框上方） */}
-      <div className="flex flex-wrap gap-2 px-1 empty:hidden">
-        <ComposerPrimitive.Attachments
-          components={{ Image: ComposerImageAttachment }}
-        />
-      </div>
+const IMAGE_EXTS = new Set(["jpg", "jpeg", "png", "gif", "webp", "bmp"]);
 
-      {/* 白色输入框 */}
-      <div className="flex flex-col rounded-xl border border-brand-slate-200 bg-brand-slate-100 px-[0.375rem] shadow-sm transition-colors ease-in focus-within:border-ring/20">
-        <ComposerPrimitive.Input asChild>
-          <AdvanceInput
-            rows={2}
-            autoFocus
-            placeholder="有什么可以帮你的吗..."
-            className="flex-grow resize-none border-none bg-transparent text-sm shadow-none outline-none placeholder:text-muted-foreground focus:ring-0 focus-visible:ring-0 disabled:cursor-not-allowed"
+export const Composer: FC = () => {
+  const aui = useAui();
+  const [isDragging, setIsDragging] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    let unlisten: (() => void) | undefined;
+
+    void getCurrentWebview()
+      .onDragDropEvent(async (event) => {
+        if (!active) return;
+        const { type } = event.payload;
+
+        if (type === "enter") {
+          setIsDragging(true);
+        } else if (type === "drop") {
+          setIsDragging(false);
+          for (const filePath of event.payload.paths) {
+            const ext = filePath.split(".").pop()?.toLowerCase() ?? "";
+            if (!IMAGE_EXTS.has(ext)) continue;
+
+            const data = await invoke<ArrayBuffer>("read_file", {
+              path: filePath
+            });
+            const mimeType = `image/${ext === "jpg" ? "jpeg" : ext}`;
+            const filename = filePath.split(/[\\/]/).pop() ?? "image";
+            const file = new File([data], filename, { type: mimeType });
+            void aui.composer().addAttachment(file);
+          }
+        } else if (type === "leave") {
+          setIsDragging(false);
+        }
+      })
+      .then((fn) => {
+        // fn() calls 4 async unlisten functions that each produce a rejected
+        // Promise when __TAURI_EVENT_PLUGIN_INTERNALS__ is undefined (HMR).
+        // Guard the call so those unhandled rejections never fire.
+        const tauriReady = () =>
+          !!(window as unknown as Record<string, unknown>)
+            .__TAURI_EVENT_PLUGIN_INTERNALS__;
+        const safeCleanup = () => {
+          if (tauriReady()) fn();
+        };
+        if (active) {
+          unlisten = safeCleanup;
+        } else {
+          safeCleanup();
+        }
+      });
+
+    return () => {
+      active = false;
+      unlisten?.();
+      setIsDragging(false);
+    };
+  }, [aui]);
+
+  return (
+    <div className="relative flex w-full flex-col gap-2">
+      {isDragging && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl border-2 border-dashed border-brand-primary bg-brand-slate-100/80">
+          <span className="text-sm font-medium text-brand-primary">
+            松开以添加图片...
+          </span>
+        </div>
+      )}
+      <ComposerPrimitive.Root className="flex w-full flex-col gap-2">
+        {/* 附件缩略图区域（输入框上方） */}
+        <div className="flex flex-wrap gap-2 px-1 empty:hidden">
+          <ComposerPrimitive.Attachments
+            components={{ Image: ComposerImageAttachment }}
           />
-        </ComposerPrimitive.Input>
-        <ComposerToolbar />
-      </div>
-    </ComposerPrimitive.Root>
+        </div>
+
+        {/* 白色输入框 */}
+        <div className="flex flex-col rounded-xl border border-brand-slate-200 bg-brand-slate-100 px-[0.375rem] shadow-sm transition-colors ease-in focus-within:border-ring/20">
+          <ComposerPrimitive.Input asChild>
+            <AdvanceInput
+              rows={2}
+              autoFocus
+              placeholder="有什么可以帮你的吗..."
+              className="flex-grow resize-none border-none bg-transparent text-sm shadow-none outline-none placeholder:text-muted-foreground focus:ring-0 focus-visible:ring-0 disabled:cursor-not-allowed"
+            />
+          </ComposerPrimitive.Input>
+          <ComposerToolbar />
+        </div>
+      </ComposerPrimitive.Root>
+    </div>
   );
 };
 
@@ -131,7 +203,10 @@ const TokenUsageVisualizer: FC = () => {
   }, [assistant?.model]);
 
   const usagePct = useMemo(() => {
-    const lastUsage = thread?.metadata?.lastUsage as { totalTokens?: number } | null | undefined;
+    const lastUsage = thread?.metadata?.lastUsage as
+      | { totalTokens?: number }
+      | null
+      | undefined;
     const used = lastUsage?.totalTokens ?? 0;
     return maxContextLength > 0
       ? Math.min(100, (used / maxContextLength) * 100)
@@ -211,7 +286,9 @@ export const ComposerExtras: FC = () => {
 // ─── Toolbar & Action ─────────────────────────────────────────────────────────
 
 const CharacterCount: FC = () => {
-  const length = useThreadComposer((s) => s.text.length);
+  const composer = useAuiState((s) => s.thread.composer);
+  const length = composer.text.length;
+
   return <span className="text-xs text-muted-foreground">{length}/1000</span>;
 };
 
